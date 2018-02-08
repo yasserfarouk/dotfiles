@@ -37,10 +37,11 @@ case "$(uname -s)" in
 
     echo "Installing Linuxbrew"
     echo "---------------------"
-    git clone https://github.com/Linuxbrew/brew.git ~/.linuxbrew
-    PATH="$HOME/.linuxbrew/bin:$PATH"
-    export MANPATH="$(brew --prefix)/share/man:$MANPATH"
-    export INFOPATH="$(brew --prefix)/share/info:$INFOPATH"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+    test -d ~/.linuxbrew && PATH="$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH"
+    test -d /home/linuxbrew/.linuxbrew && PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
+    test -r ~/.bash_profile && echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
+    echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.profile
 
     echo "installing RCM"
     echo "--------------"
@@ -106,7 +107,8 @@ case "$(uname -s)" in
     rcup
     ;;
    Linux)
-    $HOME/bin/rcm/bin/rcup
+    rcup    
+    test -r ~/.bash_profile && echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
     ;;
 esac
 echo "---------------------------------------------------------"
