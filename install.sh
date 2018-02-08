@@ -9,7 +9,6 @@ packages=(
 
 
 case "$(uname -s)" in
-
    Darwin)
     brew="/usr/local/bin/brew"
     if [ -f "$brew" ]
@@ -42,7 +41,21 @@ case "$(uname -s)" in
     chmod u+x ~/bin/nvim.appimage
     echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation" 
-    echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"   
+    echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" 
+
+    echo "installing RCM"
+    echo "--------------"
+    curl -LO https://thoughtbot.github.io/rcm/dist/rcm-1.3.1.tar.gz && \
+
+    sha=$(sha256 rcm-1.3.1.tar.gz | cut -f1 -d' ') && \
+    [ "$sha" = "9c8f92dba63ab9cb8a6b3d0ccf7ed8edf3f0fb388b044584d74778145fae7f8f" ] && \
+
+    tar -xvf rcm-1.3.1.tar.gz && \
+    cd rcm-1.3.1 && \
+
+    ./configure --prefix=$HOME/bin/rcm && \
+    make && \
+    make install
     ;;
 esac
 command -v git 2>&1 >/dev/null # improvement by tripleee
@@ -77,8 +90,14 @@ echo "This is symlink the rc files in .dofiles"
 echo "with the rc files in $HOME"
 echo "---------------------------------------------------------"
 
-rcup
-
+case "$(uname -s)" in
+   Darwin)
+    rcup
+    ;;
+   Linux)
+    $HOME/bin/rcm/bin/rcup
+    ;;
+esac
 echo "---------------------------------------------------------"
 
 echo "Changing to zsh"
@@ -98,6 +117,9 @@ case "$(uname -s)" in
    Darwin)
      echo "running oxs defaults"
      ~./osx.sh
+     echo "Correcting group permissions"
+     echo "----------------------------"
+     compaudit | xargs chmod g-w
      ;;
 
    Linux)
@@ -105,10 +127,6 @@ case "$(uname -s)" in
      ;;
 esac
 
-echo "Correcting group permissions"
-echo "---------------------------------------------------------"
-
-compaudit | xargs chmod g-w
 
 echo "Installing Plug"
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
