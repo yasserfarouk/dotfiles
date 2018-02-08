@@ -35,7 +35,9 @@ case "$(uname -s)" in
     ;;
 
    Linux)
-    mkdir ~/bin
+    if ! [-f $HOME/bin]; then
+        mkdir $HOME/bin
+    fi
 
     curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage ~/bin
     chmod u+x ~/bin/nvim.appimage

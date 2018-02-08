@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # NOTE: specify the absolutepath to the directory to use when

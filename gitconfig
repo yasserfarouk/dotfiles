@@ -47,7 +47,7 @@
   newNormal = "green bold"
   newHighlight = "green bold 22"
 [ghi]
-	token = !security find-internet-password -a mhartington -s github.com -l 'ghi token' -w
+	token = !security find-internet-password -a yasserfarouk -s github.com -l 'ghi token' -w
 [commit]
 	gpgsign = false
 [gpg]
