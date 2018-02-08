@@ -440,7 +440,7 @@ vnoremap K :m '<-2<CR>gv=gv
 nnoremap <Leader>o :.Gbrowse<CR>
 
 " make ; behave like : in command line
-nnormap ; :
+nnoremap ; :
 
 "*****************************************************************************
 "" Custom configs
