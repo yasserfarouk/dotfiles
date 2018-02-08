@@ -20,17 +20,7 @@ case "$(uname -s)" in
       echo "Homebrew requires osx command lines tools, please download xcode first"
       ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-    fi
-    for i in "${packages[@]}"
-    do
-      brew install $i
-      echo "---------------------------------------------------------"
-    done
-
-    echo "installing RCM, for dotfiles management"
-    brew tap thoughtbot/formulae
-    brew install rcm
-    echo "---------------------------------------------------------"
+    fi    
 
     ;;
 
@@ -44,6 +34,13 @@ case "$(uname -s)" in
     echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation" 
     echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" 
+
+    echo "Installing Linuxbrew"
+    echo "---------------------"
+    git clone https://github.com/Linuxbrew/brew.git ~/.linuxbrew
+    PATH="$HOME/.linuxbrew/bin:$PATH"
+    export MANPATH="$(brew --prefix)/share/man:$MANPATH"
+    export INFOPATH="$(brew --prefix)/share/info:$INFOPATH"
 
     echo "installing RCM"
     echo "--------------"
@@ -60,6 +57,18 @@ case "$(uname -s)" in
     make install
     ;;
 esac
+
+for i in "${packages[@]}"
+    do
+      brew install $i
+      echo "---------------------------------------------------------"
+    done
+
+echo "installing RCM, for dotfiles management"
+brew tap thoughtbot/formulae
+brew install rcm
+echo "---------------------------------------------------------"
+
 command -v git 2>&1 >/dev/null # improvement by tripleee
 GIT_IS_AVAILABLE=$?
 
