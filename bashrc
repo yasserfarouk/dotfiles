@@ -1,7 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 # This is for android crap
-export PATH=$HOME/anaconda/bin:$HOME/anaconda3/bin:${PATH}:~/Library/Android/sdk/platform-tools:~/Library/Android/sdk/tools
 export JAVA_HOME=$(/usr/libexec/java_home)
 export PATH=${JAVA_HOME}/bin:$PATH
 export PATH=/usr/local/bin:$PATH
@@ -290,3 +289,9 @@ alias x=extract
 
 # [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+if [-f $HOME/anaconda/bin/activate.sh]
+    source $HOME/anaconda/bin/activate.sh
+fi
+if [-f $HOME/anaconda3/bin/activate.sh]
+    source $HOME/anaconda3/bin/activate.sh
+fi
