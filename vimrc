@@ -218,7 +218,7 @@ if exists("*fugitive#statusline")
 endif
 
 " vim-airline
-let g:airline_theme = 'oceanic-next'
+let g:airline_theme = 'oceanicnext'
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -438,6 +438,9 @@ vnoremap K :m '<-2<CR>gv=gv
 
 "" Open current line on GitHub
 nnoremap <Leader>o :.Gbrowse<CR>
+
+" make ; behave like : in command line
+nnormap ; :
 
 "*****************************************************************************
 "" Custom configs

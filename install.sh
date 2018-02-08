@@ -1,17 +1,4 @@
 #!/bin/sh
-
-brew="/usr/local/bin/brew"
-if [ -f "$brew" ]
-then
-  echo "Homebrew is installed, nothing to do here"
-else
-  echo "Homebrew is not installed, installing now"
-  echo "This may take a while"
-  echo "Homebrew requires osx command lines tools, please download xcode first"
-  ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-
-fi
-
 packages=(
 "git"
 "node"
@@ -20,23 +7,58 @@ packages=(
 "zsh"
 )
 
-for i in "${packages[@]}"
-do
-  brew install $i
-  echo "---------------------------------------------------------"
-done
 
-echo "installing RCM, for dotfiles management"
-brew tap thoughtbot/formulae
-brew install rcm
-echo "---------------------------------------------------------"
+case "$(uname -s)" in
 
-localGit="/usr/local/bin/git"
-if [ -f "$localGit" ]
+   Darwin)
+    brew="/usr/local/bin/brew"
+    if [ -f "$brew" ]
+    then
+      echo "Homebrew is installed, nothing to do here"
+    else
+      echo "Homebrew is not installed, installing now"
+      echo "This may take a while"
+      echo "Homebrew requires osx command lines tools, please download xcode first"
+      ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+    fi
+    for i in "${packages[@]}"
+    do
+      brew install $i
+      echo "---------------------------------------------------------"
+    done
+
+    echo "installing RCM, for dotfiles management"
+    brew tap thoughtbot/formulae
+    brew install rcm
+    echo "---------------------------------------------------------"
+
+    ;;
+
+   Linux)
+    mkdir ~/bin
+
+    curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage ~/bin
+    chmod u+x ~/bin/nvim.appimage
+    echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+    echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation" 
+    echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"   
+    ;;
+esac
+command -v git 2>&1 >/dev/null # improvement by tripleee
+GIT_IS_AVAILABLE=$?
+
+if [ GIT_IS_AVAILABLE ]
 then
   echo "git is all good"
-else
-  echo "git is not installed"
+else  
+  case "$(uname -s)" in
+    Darwin)
+        brew install git
+        ;;
+    Linux)
+        echo "git is not installed" 
+  esac
 fi
 # Okay so everything should be good
 # Fingers cross at least
@@ -62,23 +84,47 @@ echo "---------------------------------------------------------"
 echo "Changing to zsh"
 chsh -s $(which zsh)
 
+echo "Installing antigen for zsh"
+echo "--------------------------"
+mkdir ~/antigen
+curl -L git.io/antigen > ~/antigen/antigen.zsh
+
 echo "You'll need to log out for this to take effect"
 echo "---------------------------------------------------------"
 
-echo "running oxs defaults"
-~./osx.sh
+
+case "$(uname -s)" in
+
+   Darwin)
+     echo "running oxs defaults"
+     ~./osx.sh
+     ;;
+
+   Linux)
+     echo 'Linux ... no osx defaults'
+     ;;
+esac
 
 echo "Correcting group permissions"
 echo "---------------------------------------------------------"
 
 compaudit | xargs chmod g-w
 
+echo "Installing Plug"
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+echo "Sourcing all files"
+echo "------------------"
+
+source ~/.bashrc
+source ~/.zshrc
+vim +PlugInstall +qa
 
 echo "---------------------------------------------------------"
 echo "All done!"
 echo "and change your terminal font to source code pro"
 echo "Cheers"
 echo "---------------------------------------------------------"
-
 
 exit 0
