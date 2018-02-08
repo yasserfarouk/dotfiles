@@ -289,9 +289,9 @@ alias x=extract
 
 # [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-if [-f $HOME/anaconda/bin/activate.sh]
+if [-f $HOME/anaconda/bin/activate.sh]; then
     source $HOME/anaconda/bin/activate.sh
 fi
-if [-f $HOME/anaconda3/bin/activate.sh]
+if [-f $HOME/anaconda3/bin/activate.sh]; then
     source $HOME/anaconda3/bin/activate.sh
 fi
