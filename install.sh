@@ -46,7 +46,7 @@ echo "---------------------------------------------------------"
 echo "Cloning my dotfiles insto .dotfiles"
 git clone https://github.com/yasserfarouk/dotfiles.git ~/.dotfiles
 
-cd .dotfiles
+cd ~/.dotfiles
 git submodule update --init --recursive
 
 cd $HOME
@@ -68,10 +68,17 @@ echo "---------------------------------------------------------"
 echo "running oxs defaults"
 ~./osx.sh
 
+echo "Correcting group permissions"
+echo "---------------------------------------------------------"
+
+compaudit | xargs chmod g-w
+
+
 echo "---------------------------------------------------------"
 echo "All done!"
 echo "and change your terminal font to source code pro"
 echo "Cheers"
 echo "---------------------------------------------------------"
+
 
 exit 0
