@@ -56,9 +56,5 @@ zstyle ':notify:*' success-title "Success"
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 
-if [-f $HOME/anaconda/bin/activate.sh]; then
-    source $HOME/anaconda/bin/activate.sh
-fi
-if [-f $HOME/anaconda3/bin/activate.sh]; then
-    source $HOME/anaconda3/bin/activate.sh
-fi
+[[ -e "$HOME/anaconda/bin/activate.sh" ]] && source "$HOME/anaconda/bin/activate.sh"
+[[ -e "$HOME/anaconda3/bin/activate.sh" ]] && source "$HOME/anaconda3/bin/activate.sh"
