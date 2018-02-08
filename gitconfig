@@ -2,24 +2,44 @@
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
 [user]
-  name = mhartington
-	email = mikehartington@gmail.com
-	signingkey = 493BFB24814E6209
+  name = Yasser Mohammad
+  email = yasserfarouk@gmail.com
+
 [credential]
 	helper = osxkeychain
+
 [filter "hawser"]
 	clean = git hawser clean %f
 	smudge = git hawser smudge %f
 	required = true
+
 [filter "lfs"]
 	clean = git lfs clean %f
 	smudge = git lfs smudge %f
 	required = true
+
 [github]
-  user = mhartington
+  user = yasserfarouk
+
+[merge]
+    tool = vim
 
 [core]
   pager = zsh -lc 'diff-highlight | strip_diff_leading_symbols | less -r' -
+  editor = nano
+  autocrlf = input
+  excludesfile = /Users/yasser/.gitignore_global
+
+[difftool "sourcetree"]
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    path = 
+
+[mergetool "sourcetree"]
+    cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true
+
+[commit]
+    template = /Users/yasser/.stCommitMsg
 
 [color "diff-highlight"]
   oldNormal = "red bold"
@@ -29,6 +49,6 @@
 [ghi]
 	token = !security find-internet-password -a mhartington -s github.com -l 'ghi token' -w
 [commit]
-	gpgsign = true
+	gpgsign = false
 [gpg]
 	program = /usr/local/bin/gpg

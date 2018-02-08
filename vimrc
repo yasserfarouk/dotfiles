@@ -1,13 +1,3 @@
-"|  \/  (_) |             | | | (_)
-"| .  . |_| | _____  ___  | | | |_ _ __ ___  _ __ ___
-"| |\/| | | |/ / _ \/ __| | | | | | '_ ` _ \| '__/ __|
-"| |  | | |   <  __/\__ \ \ \_/ / | | | | | | | | (__
-"\_|  |_/_|_|\_\___||___/  \___/|_|_| |_| |_|_|  \___|
-"
-" Author: Mike Hartington
-" repo  : https://github.com/mhartington/dotfiles/
-"
-
 " Setup NeoBundle  ----------------------------------------------------------{{{
 " If vundle is not installed, do it first
   if (!isdirectory(expand('$HOME/.vim/repos/github.com/Shougo/dein.vim')))
@@ -30,7 +20,7 @@
 	call dein#add('roxma/vim-hug-neovim-rpc')
 	call dein#add('roxma/nvim-yarp')
   call dein#add('Shougo/deoplete.nvim')
-	call dein#local('~/GitHub', {},['nvim-typescript', 'test-vim'])
+	"call dein#local('~/GitHub', {},['nvim-typescript', 'test-vim'])
 
   call dein#add('mhartington/oceanic-next')
   if dein#check_install()
@@ -51,7 +41,7 @@ let $NVIM_PYTHON_LOG_LEVEL="DEBUG"
   set noswapfile
   filetype on
   set relativenumber number
-  set tabstop=2 shiftwidth=2 expandtab
+  set tabstop=4 shiftwidth=4 expandtab
   set conceallevel=0
 " block select not limited by shortest line
   set virtualedit=

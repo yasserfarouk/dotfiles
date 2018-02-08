@@ -1,6 +1,6 @@
 export KEYTIMEOUT=1
 export TERMINAL_DARK=1
-export TERM=xterm-256color-italic
+export TERM=xterm-256color
 export CLICOLOR=1
 export EDITOR=nvim
 export GOPATH=$HOME/go

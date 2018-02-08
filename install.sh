@@ -43,8 +43,8 @@ fi
 # Now lets clone my dotfiles repo into .dotfiles/
 echo "---------------------------------------------------------"
 
-echo "Cloning Mike's dotfiles insto .dotfiles"
-git clone https://github.com/mhartington/dotfiles.git ~/.dotfiles
+echo "Cloning my dotfiles insto .dotfiles"
+git clone https://github.com/yasserfarouk/dotfiles.git ~/.dotfiles
 
 cd .dotfiles
 git submodule update --init --recursive
