@@ -146,6 +146,10 @@ source ~/.bashrc
 source ~/.zshrc
 vim +PlugInstall +qa
 
+echo "Editing neovim"
+echo "--------------"
+brew edit neovim
+
 echo "---------------------------------------------------------"
 echo "All done!"
 echo "and change your terminal font to source code pro"
