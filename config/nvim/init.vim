@@ -69,6 +69,7 @@ let g:vim_bootstrap_editor = "nvim"       " nvim or vim
 
 " navigation
   call dein#add('scrooloose/nerdtree')
+  call dein#local('ctrlpvim/ctrlp.vim')
 
 " git
   call dein#add('tpope/vim-fugitive')
@@ -91,7 +92,7 @@ let g:vim_bootstrap_editor = "nvim"       " nvim or vim
 " linting and formating
   call dein#local('~/GitHub/', {}, ['neomake'])
   call dein#add('neomake/neomake')
-  call dein#add('w0rp/ale')
+  " call dein#add('w0rp/ale')
   " call dein#add('scrooloose/syntastic')
   call dein#add('sbdchd/neoformat')
   call dein#add('davidhalter/jedi-vim', {'on_ft': 'python'})
@@ -154,7 +155,8 @@ let g:vim_bootstrap_editor = "nvim"       " nvim or vim
   call dein#add('drzel/vim-line-no-indicator')
   call dein#add('Quramy/vison')
   call dein#add('ryanoasis/vim-devicons')
-  call dein#local('~/GitHub', {},['oceanic-next'])
+  call dein#local('~/GitHub', {},['oceanic-next'])  
+  call dein#local(flazz/vim-colorschemes')
   
   if dein#check_install()
     call dein#install()
