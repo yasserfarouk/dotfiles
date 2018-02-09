@@ -90,7 +90,7 @@ let g:vim_bootstrap_editor = "nvim"       " nvim or vim
   
 " linting and formating
   call dein#local('~/GitHub/', {}, ['neomake'])
-  " call dein#add('neomake/neomake')
+  call dein#add('neomake/neomake')
   call dein#add('w0rp/ale')
   " call dein#add('scrooloose/syntastic')
   call dein#add('sbdchd/neoformat')

@@ -84,7 +84,7 @@ fi
 # Now lets clone my dotfiles repo into .dotfiles/
 echo "---------------------------------------------------------"
 
-echo "Cloning my dotfiles insto .dotfiles"
+echo "Cloning my dotfiles into .dotfiles"
 git clone https://github.com/yasserfarouk/dotfiles.git ~/.dotfiles
 
 cd ~/.dotfiles
@@ -145,6 +145,14 @@ echo "------------------"
 source ~/.bashrc
 source ~/.zshrc
 vim +PlugInstall +qa
+
+echo "Installing Neobundle"
+echo "--------------------"
+mkdir ~/tmp 2>&1 >/dev/null
+curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh > ~/tmp/install.sh
+sh ~/tmp/install.sh
+rm ~/tmp/install.sh
+rmdir ~/tmp 2>&1 >/dev/null
 
 echo "Editing neovim"
 echo "--------------"
