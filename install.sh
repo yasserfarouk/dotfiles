@@ -61,10 +61,12 @@ for i in "${packages[@]}"
       echo "---------------------------------------------------------"
     done
 
-echo "installing RCM, for dotfiles management"
+echo "installing RCM, for dotfiles management and terminal-notifier"
 brew tap thoughtbot/formulae
 brew install rcm
 brew upgrade rcm
+brew install terminal-notifier
+brew upgrade terminal-notifier
 echo "---------------------------------------------------------"
 
 command -v git 2>&1 >/dev/null # improvement by tripleee
@@ -97,6 +99,7 @@ echo "---------------------------------------------------------"
 case "$(uname -s)" in
    Darwin)
     rcup
+
     ;;
    Linux)
     rcup    

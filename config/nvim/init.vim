@@ -1,3 +1,4 @@
+
 let g:vim_bootstrap_langs = "python"
 let g:vim_bootstrap_editor = "nvim"       " nvim or vim
 
