@@ -25,9 +25,7 @@ case "$(uname -s)" in
     ;;
 
    Linux)
-    if ! [-f $HOME/bin]; then
-        mkdir $HOME/bin
-    fi
+    [[ -e "$HOME/bin" ]] || mkdir "$HOME/bin"
 
     curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage ~/bin
     chmod u+x ~/bin/nvim.appimage
@@ -42,20 +40,16 @@ case "$(uname -s)" in
     test -d /home/linuxbrew/.linuxbrew && PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
     test -r ~/.bash_profile && echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
     echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.profile
+    brew install gcc
+    # echo "installing RCM"
+    # echo "--------------"
+    # curl -LO https://thoughtbot.github.io/rcm/dist/rcm-1.3.1.tar.gz && \
+    # tar -xvf rcm-1.3.1.tar.gz && \
+    # cd rcm-1.3.1 && \
 
-    echo "installing RCM"
-    echo "--------------"
-    curl -LO https://thoughtbot.github.io/rcm/dist/rcm-1.3.1.tar.gz && \
-
-    sha=$(sha256 rcm-1.3.1.tar.gz | cut -f1 -d' ') && \
-    [ "$sha" = "9c8f92dba63ab9cb8a6b3d0ccf7ed8edf3f0fb388b044584d74778145fae7f8f" ] && \
-
-    tar -xvf rcm-1.3.1.tar.gz && \
-    cd rcm-1.3.1 && \
-
-    ./configure --prefix=$HOME/bin/rcm && \
-    make && \
-    make install
+    # ./configure --prefix=$HOME/bin/rcm && \
+    # make && \
+    # make install
     ;;
 esac
 
