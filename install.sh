@@ -148,6 +148,7 @@ vim +PlugInstall +qa
 
 echo "Editing neovim"
 echo "--------------"
+mkdir ~/bin 2>&1 >/dev/null
 rm ~/bin/python2 2>&1 >/dev/null
 rm ~/bin/python3 2>&1 >/dev/null
 ln -s `which python2` ~/bin/python2
