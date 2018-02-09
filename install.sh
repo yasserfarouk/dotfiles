@@ -38,9 +38,10 @@ case "$(uname -s)" in
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
     test -d ~/.linuxbrew && PATH="$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH"
     test -d /home/linuxbrew/.linuxbrew && PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
-    test -r ~/.bash_profile && echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
-    echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.profile
+    export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
+    echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
     brew install gcc
+    brew upgrade gcc
     # echo "installing RCM"
     # echo "--------------"
     # curl -LO https://thoughtbot.github.io/rcm/dist/rcm-1.3.1.tar.gz && \
@@ -56,12 +57,14 @@ esac
 for i in "${packages[@]}"
     do
       brew install $i
+      brew upgrad $i
       echo "---------------------------------------------------------"
     done
 
 echo "installing RCM, for dotfiles management"
 brew tap thoughtbot/formulae
 brew install rcm
+brew upgrade rcm
 echo "---------------------------------------------------------"
 
 command -v git 2>&1 >/dev/null # improvement by tripleee
@@ -71,13 +74,8 @@ if [ GIT_IS_AVAILABLE ]
 then
   echo "git is all good"
 else  
-  case "$(uname -s)" in
-    Darwin)
-        brew install git
-        ;;
-    Linux)
-        echo "git is not installed" 
-  esac
+  brew install git
+  brew upgrad git
 fi
 # Okay so everything should be good
 # Fingers cross at least
@@ -102,7 +100,8 @@ case "$(uname -s)" in
     ;;
    Linux)
     rcup    
-    test -r ~/.bash_profile && echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
+    export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
+    echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
     ;;
 esac
 echo "---------------------------------------------------------"
