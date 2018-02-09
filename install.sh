@@ -122,7 +122,7 @@ case "$(uname -s)" in
 
    Darwin)
      echo "running oxs defaults"
-     ./osx.sh
+     ~/.dotfiles/osx.sh
      echo "Correcting group permissions"
      echo "----------------------------"
      compaudit | xargs chmod g-w
