@@ -148,6 +148,11 @@ vim +PlugInstall +qa
 
 echo "Editing neovim"
 echo "--------------"
+rm ~/bin/python2 2>&1 >/dev/null
+rm ~/bin/python3 2>&1 >/dev/null
+ln -s `which python2` ~/bin/python2
+ln -s `which python3` ~/bin/python3
+touch ~/.local.vim
 brew edit neovim
 
 echo "---------------------------------------------------------"
