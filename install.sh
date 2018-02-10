@@ -93,7 +93,7 @@ esac
 echo "installing RCM, for dotfiles management and terminal-notifier"
 brew tap thoughtbot/formulae
 brew unlink $i
-brew uinstall $i
+brew uninstall $i
 brew install rcm
 brew upgrade rcm
 brew install terminal-notifier

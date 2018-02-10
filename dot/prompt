@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-fpath=( ~/bin/faster-vcs-info "${fpath[@]}" )
+fpath=( ~/.ysupport/faster-vcs-info "${fpath[@]}" )
 
 
 autoload -Uz vcs_info
