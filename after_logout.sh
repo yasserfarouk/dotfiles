@@ -5,7 +5,7 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 
 echo "Sourcing all files"
 echo "------------------"
-
+vim --cmd "helptags $HOME/.vim/doc" --cmd "q"
 source ~/.bashrc
 source ~/.zshrc
 vim +PlugInstall +qa

@@ -13,7 +13,7 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 setopt completeinword
 zstyle ':completion:*:*:git:*' script /usr/local/etc/bash_completion.d/git-completion.bash
 
-set editing-mode vi
+# set editing-mode vi
 set blink-matching-paren on
 
 fpath=(/usr/local/share/zsh-completions $fpath)

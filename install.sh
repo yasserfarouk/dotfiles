@@ -137,6 +137,15 @@ case "$(uname -s)" in
 esac
 
 
+echo "Installing vimemacs"
+echo "-------------------"
+
+mkdir -p $HOME/.vim/doc 2>&1 >/dev/null
+mkdir -p $HOME/.vim/plugin 2>&1 >/dev/null
+cp -R ~/.dotfiles/misc/vimacs-0.93/doc $HOME/.vim
+cp -R ~/.dotfiles/misc/vimacs-0.93/plugin $HOME/.vim
+
+
 echo "---------------------------------------------------------"
 echo "All done!"
 echo "and change your terminal font to source code pro"
