@@ -10,10 +10,10 @@ setopt PROMPT_SUBST
 
 add-zsh-hook precmd precmd_vcs_info
 add-zsh-hook precmd __promptline
-prompt_line_sep=$'\n'
+prompt_line_sep=$''
 
 zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:git:*' formats " %b"
+zstyle ':vcs_info:git:*' formats "  %b"
 
 precmd_vcs_info() { vcs_info }
 
@@ -90,7 +90,7 @@ __promptline_left_prompt() {
   __promptline_wrapper "$(__promptline_git_status)" "$slice_prefix" "$slice_suffix" && { slice_prefix="$slice_joiner"; is_prompt_empty=0; }
   # __promptline_wrapper "" "$slice_prefix" "$slice_suffix" && { slice_prefix="$slice_joiner"; is_prompt_empty=0; }
 
-  printf "%s" "${reset_bg}${sep}$reset$space${prompt_line_sep}\$$space"
+  printf "%s" "${reset_bg}${sep}$reset$space${prompt_line_sep}$space"
 }
 
 __promptline_wrapper() {
@@ -108,7 +108,7 @@ __promptline_git_status() {
   local unmerged_symbol="✗"
   local modified_symbol="+"
   # local clean_symbol="✔"
-  local clean_symbol=""
+  local clean_symbol="✔"
   local has_untracked_files_symbol="…"
 
   local ahead_symbol="↑"

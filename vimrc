@@ -48,6 +48,34 @@ Plug 'scrooloose/syntastic'
 Plug 'Yggdroot/indentLine'
 Plug 'avelino/vim-bootstrap-updater'
 Plug 'sheerun/vim-polyglot'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-surround'
+Plug 'junegunn/vim-easy-align'
+Plug 'tomtom/tcomment_vim'
+Plug 'junegunn/limelight.vim'
+Plug 'mhinz/vim-sayonara'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'MartinLafreniere/vim-PairTools'
+Plug 'elzr/vim-json'
+Plug 'tpope/vim-markdown', {'on_ft': 'markdown'}
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'ryanoasis/vim-devicons'
+
+" git
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+Plug 'chemzqm/vim-easygit'
+Plug 'jreybert/vimagit', {'on_cmd': ['Magit', 'MagitOnly']}
+Plug 'rhysd/committia.vim'
+Plug 'sgeb/vim-diff-fold'
+Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/gv.vim'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'mattn/gist-vim'
+
+
+
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 else

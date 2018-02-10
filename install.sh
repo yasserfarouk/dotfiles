@@ -117,10 +117,15 @@ fi
 echo "---------------------------------------------------------"
 
 echo "Cloning my dotfiles into .dotfiles"
-git clone https://github.com/yasserfarouk/dotfiles.git ~/.dotfiles
-
-cd ~/.dotfiles
-git submodule update --init --recursive
+git submodule init
+git submodule update --recursive
+rm -rf ~/.dotfiles
+mkdir ~/.dotfiles 2>&1 >/dev/null
+cp -r ./dot/* ~/.dotfiles
+mkdir ~/z-data  2>&1 >/dev/null
+rm -rf ~/.ysupport
+mkdir ~/.ysupport 2>&1 >/dev/null
+cp -r ./dot/* ~/.ysupport
 
 cd $HOME
 echo "running RCM's rcup command"
@@ -154,7 +159,6 @@ echo "----------------------------------------------"
 
 
 case "$(uname -s)" in
-
    Darwin)
      echo "running oxs defaults"
      ~/.dotfiles/osx.sh
@@ -177,12 +181,41 @@ mkdir -p $HOME/.vim/plugin 2>&1 >/dev/null
 cp -R ~/.dotfiles/misc/vimacs-0.93/doc $HOME/.vim
 cp -R ~/.dotfiles/misc/vimacs-0.93/plugin $HOME/.vim
 
+#!/usr/bin/env bash
+echo "Installing Plug"
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-echo "---------------------------------------------------------"
-echo "All done!"
-echo "and change your terminal font to source code pro"
-echo "YOU MUST restart your terminal then run:"
-echo ">> sh ~/.dotfiles/after_logout.sh"
-echo "---------------------------------------------------------"
+echo "Sourcing all files"
+echo "------------------"
+vim --cmd "helptags $HOME/.vim/doc" --cmd "q"
+source ~/.bashrc
+source ~/.zshrc
+vim +PlugInstall +qa
+
+echo "Installing Neobundle"
+echo "--------------------"
+mkdir ~/.tmp 2>&1 >/dev/null
+curl -fLo > ~/.tmp/install_neobundle.sh --create-dirs \
+    https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh 
+sh ~/.tmp/install_neobundle.sh
+rm ~/.tmp/install_neobundle.sh
+rmdir ~/.tmp 2>&1 >/dev/null
+
+echo "Editing neovim"
+echo "--------------"
+mkdir ~/bin 2>&1 >/dev/null
+
+#rm ~/bin/python2 2>&1 >/dev/null
+#rm ~/bin/python3 2>&1 >/dev/null
+#ln -s `which python2` ~/bin/python2
+#ln -s `which python3` ~/bin/python3
+touch ~/.local.vim
+brew edit neovim
+
+echo "------------------------------------------------------------"
+echo "                             All done!                      "
+echo "Change your terminal font to <Source Code Pro for Powerline>"
+echo "------------------------------------------------------------"
 
 exit 0
