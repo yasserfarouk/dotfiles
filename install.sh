@@ -3,7 +3,6 @@ packages=(
 "git"
 "node"
 "tmux"
-"vim"
 "neovim"
 "zsh"
 )
@@ -13,7 +12,7 @@ linux_packages=(
 )
 
 mac_packages=(
-"vim"
+"macvim"
 )
 
 case "$(uname -s)" in
@@ -47,18 +46,10 @@ case "$(uname -s)" in
     test -d ~/.linuxbrew && PATH="$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH"
     test -d /home/linuxbrew/.linuxbrew && PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
     export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
-    echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
+    echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc    
     brew install gcc
     brew upgrade gcc
-    # echo "installing RCM"
-    # echo "--------------"
-    # curl -LO https://thoughtbot.github.io/rcm/dist/rcm-1.3.1.tar.gz && \
-    # tar -xvf rcm-1.3.1.tar.gz && \
-    # cd rcm-1.3.1 && \
-
-    # ./configure --prefix=$HOME/bin/rcm && \
-    # make && \
-    # make install
+    brew link gcc    
     ;;
 esac
 

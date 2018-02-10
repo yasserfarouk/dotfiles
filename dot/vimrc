@@ -10,7 +10,7 @@ endif
 let vimplug_exists=expand('~/.config/nvim/autoload/plug.vim')
 
 let g:vim_bootstrap_langs = "python"
-let g:vim_bootstrap_editor = "nvim"       " nvim or vim
+let g:vim_bootstrap_editor = "vim"       " nvim or vim
 
 if !filereadable(vimplug_exists)
   if !executable("curl")
@@ -53,7 +53,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/vim-easy-align'
 Plug 'tomtom/tcomment_vim'
-Plug 'junegunn/limelight.vim
+Plug 'junegunn/limelight.vim'
 Plug 'mhinz/vim-sayonara'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'MartinLafreniere/vim-PairTools'
@@ -214,7 +214,6 @@ else
   let g:indentLine_char = '┆'
   let g:indentLine_faster = 1
 
-  
 endif
 
 
