@@ -3,8 +3,10 @@ packages=(
 "git"
 "node"
 "tmux"
+"vim"
 "neovim"
 "zsh"
+
 )
 
 
@@ -58,6 +60,7 @@ for i in "${packages[@]}"
     do
       brew install $i
       brew upgrade $i
+      brew link $i
       echo "---------------------------------------------------------"
     done
 
