@@ -13,6 +13,7 @@ linux_packages=(
 
 mac_packages=(
 "macvim"
+"terminal-notifier"
 )
 
 case "$(uname -s)" in
@@ -54,50 +55,50 @@ case "$(uname -s)" in
 esac
 
 for i in "${packages[@]}"
+do
+  #brew unlink $i
+  #brew uninstall $i
+  brew install $i
+  brew upgrade $i
+  brew link $i
+  echo "---------------------------------------------------------"
+done
+
+case "$(uname -s)" in
+   Darwin)
+    for i in "${mac_packages[@]}"
     do
-      brew unlink $i
-      brew uninstall --force $i
+      #brew unlink $i
+      #brew uninstall $i
       brew install $i
       brew upgrade $i
       brew link $i
       echo "---------------------------------------------------------"
     done
-
-case "$(uname -s)" in
-   Darwin)
-    for i in "${mac_packages[@]}"
-      do
-        brew unlink $i
-        brew uninstall --force $i
-        brew install $i
-        brew upgrade $i
-        brew link $i
-        echo "---------------------------------------------------------"
-      done
+    
     ;;
 
    Linux)
     for i in "${linux_packages[@]}"
-      do
-        brew unlink $i
-        brew uninstall --force $i
-        brew install $i
-        brew upgrade $i
-        brew link $i
-        echo "---------------------------------------------------------"
-      done
+    do
+      #brew unlink $i
+      #brew uninstall $i
+      brew install $i
+      brew upgrade $i
+      brew link $i
+      echo "---------------------------------------------------------"
+    done
     ;;
 esac
 
 
 echo "installing RCM, for dotfiles management and terminal-notifier"
 brew tap thoughtbot/formulae
-brew unlink $i
-brew uninstall --force $i
+#brew unlink $i
+#brew uninstall $i
 brew install rcm
 brew upgrade rcm
-brew install terminal-notifier
-brew upgrade terminal-notifier
+brew link rcm
 echo "---------------------------------------------------------"
 
 command -v git 2>&1 >/dev/null # improvement by tripleee
