@@ -56,7 +56,7 @@ esac
 for i in "${packages[@]}"
     do
       brew unlink $i
-      brew uinstall $i
+      brew uninstall $i
       brew install $i
       brew upgrade $i
       brew link $i
@@ -68,7 +68,7 @@ case "$(uname -s)" in
     for i in "${mac_packages[@]}"
       do
         brew unlink $i
-        brew uinstall $i
+        brew uninstall $i
         brew install $i
         brew upgrade $i
         brew link $i
@@ -80,7 +80,7 @@ case "$(uname -s)" in
     for i in "${linux_packages[@]}"
       do
         brew unlink $i
-        brew uinstall $i
+        brew uninstall $i
         brew install $i
         brew upgrade $i
         brew link $i
