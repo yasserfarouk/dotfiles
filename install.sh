@@ -6,9 +6,15 @@ packages=(
 "vim"
 "neovim"
 "zsh"
-
 )
 
+linux_packages=(
+"vim"
+)
+
+mac_packages=(
+"vim"
+)
 
 case "$(uname -s)" in
    Darwin)
@@ -63,6 +69,29 @@ for i in "${packages[@]}"
       brew link $i
       echo "---------------------------------------------------------"
     done
+
+case "$(uname -s)" in
+   Darwin)
+    for i in "${mac_packages[@]}"
+      do
+        brew install $i
+        brew upgrade $i
+        brew link $i
+        echo "---------------------------------------------------------"
+      done
+    ;;
+
+   Linux)
+    for i in "${linux_packages[@]}"
+      do
+        brew install $i
+        brew upgrade $i
+        brew link $i
+        echo "---------------------------------------------------------"
+      done
+    ;;
+esac
+
 
 echo "installing RCM, for dotfiles management and terminal-notifier"
 brew tap thoughtbot/formulae
