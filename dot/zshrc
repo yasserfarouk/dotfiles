@@ -11,15 +11,15 @@ bindkey -v
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 setopt completeinword
-zstyle ':completion:*:*:git:*' script /usr/local/etc/bash_completion.d/git-completion.bash
+zstyle ':completion:*:*:git:*' script $HOME/.ysupport/git-completion.bash
 
 # set editing-mode vi
 set blink-matching-paren on
 
-#fpath=(/usr/local/share/zsh-completions $fpath)
-#autoload -U compinit && compinit
-#zmodload -i zsh/complist
-#compinit -d ~/.zcompdump_capture
+fpath=($HOME/.ysupport/zsh-completions $fpath)
+autoload -U compinit && compinit
+zmodload -i zsh/complist
+compinit -d ~/.zcompdump_capture
 
 # . <(npm completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -42,7 +42,6 @@ antigen bundle zsh-users/zsh-syntax-highlighting
 antigen apply
 
 source ~/.z/z.sh
-#alias journal=~/.journal.sh
 
 #zstyle ':notify:*' command-complete-timeout 5
 #zstyle ':notify:*' error-icon "https://media3.giphy.com/media/10ECejNtM1GyRy/200_s.gif"

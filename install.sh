@@ -55,6 +55,8 @@ esac
 
 for i in "${packages[@]}"
     do
+      brew unlink $i
+      brew uinstall $i
       brew install $i
       brew upgrade $i
       brew link $i
@@ -65,6 +67,8 @@ case "$(uname -s)" in
    Darwin)
     for i in "${mac_packages[@]}"
       do
+        brew unlink $i
+        brew uinstall $i
         brew install $i
         brew upgrade $i
         brew link $i
@@ -75,6 +79,8 @@ case "$(uname -s)" in
    Linux)
     for i in "${linux_packages[@]}"
       do
+        brew unlink $i
+        brew uinstall $i
         brew install $i
         brew upgrade $i
         brew link $i
@@ -86,6 +92,8 @@ esac
 
 echo "installing RCM, for dotfiles management and terminal-notifier"
 brew tap thoughtbot/formulae
+brew unlink $i
+brew uinstall $i
 brew install rcm
 brew upgrade rcm
 brew install terminal-notifier
@@ -116,7 +124,7 @@ cp -r ./dot/* ~/.dotfiles
 mkdir ~/z-data  2>&1 >/dev/null
 rm -rf ~/.ysupport
 mkdir ~/.ysupport 2>&1 >/dev/null
-cp -r ./dot/* ~/.ysupport
+cp -r ./nondot/* ~/.ysupport
 
 cd $HOME
 echo "running RCM's rcup command"
@@ -164,13 +172,7 @@ case "$(uname -s)" in
 esac
 
 
-echo "Installing vimemacs"
-echo "-------------------"
 
-mkdir -p $HOME/.vim/doc 2>&1 >/dev/null
-mkdir -p $HOME/.vim/plugin 2>&1 >/dev/null
-cp -R ~/.dotfiles/misc/vimacs-0.93/doc $HOME/.vim
-cp -R ~/.dotfiles/misc/vimacs-0.93/plugin $HOME/.vim
 
 #!/usr/bin/env bash
 echo "Installing Plug"
@@ -183,6 +185,14 @@ vim --cmd "helptags $HOME/.vim/doc" --cmd "q"
 source ~/.bashrc
 source ~/.zshrc
 vim +PlugInstall +qa
+
+echo "Installing vimemacs"
+echo "-------------------"
+
+mkdir -p $HOME/.vim/doc 2>&1 >/dev/null
+mkdir -p $HOME/.vim/plugin 2>&1 >/dev/null
+cp -R ~/nondot/vimacs-0.93/doc $HOME/.vim/doc/
+cp -R ~/nondot/vimacs-0.93/plugin $HOME/.vim/plugin/
 
 echo "Installing Neobundle"
 echo "--------------------"

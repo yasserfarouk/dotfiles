@@ -10,3 +10,6 @@
 [submodule "dot/tmux/plugins/tmux-cpu"]
 	path = dot/tmux/plugins/tmux-cpu
 	url = https://github.com/tmux-plugins/tmux-cpu
+[submodule "nondot/zsh-completions"]
+	path = nondot/zsh-completions
+	url = https://github.com/zsh-users/zsh-completions.git

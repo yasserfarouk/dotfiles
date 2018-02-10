@@ -3,8 +3,7 @@
 # This is for android crap
 #export JAVA_HOME=$(/usr/libexec/java_home)
 #export PATH=${JAVA_HOME}/bin:$PATH
-export PATH=/usr/local/bin:$PATH
-
+export PATH = $HOME/bin:$HOME/sbin:$HOME/bin-this:$PATH
 export _Z_DATA="$HOME/z-data"
 
 source ~/.z/z.sh
@@ -289,5 +288,5 @@ alias x=extract
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-[[ -e "$HOME/anaconda/bin/activate.sh" ]] && source "$HOME/anaconda/bin/activate.sh"
-[[ -e "$HOME/anaconda3/bin/activate.sh" ]] && source "$HOME/anaconda3/bin/activate.sh"
+[[ -e "$HOME/anaconda/bin/activate" ]] && source "$HOME/anaconda/bin/activate"
+[[ -e "$HOME/anaconda3/bin/activate" ]] && source "$HOME/anaconda3/bin/activate"
