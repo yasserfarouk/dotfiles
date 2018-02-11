@@ -90,7 +90,7 @@ Plug 'Shougo/vimproc.vim', {'do': g:make}
 "" Vim-Session
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
-
+"
 if v:version >= 703
   Plug 'Shougo/vimshell.vim'
 endif
@@ -555,5 +555,5 @@ endif
 
 " opening init.vim 
   autocmd! bufwritepost .vimrc source %
-  nnoremap <leader><leaader> :e ~/.vimrc
+  nnoremap <leader><leader> :e ~/.vimrc<cr>
 

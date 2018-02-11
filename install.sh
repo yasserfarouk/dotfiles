@@ -32,18 +32,18 @@ case "$(uname -s)" in
       echo "Homebrew requires osx command lines tools, please download xcode first"
       ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-    fi    
+    fi
 
     ;;
 
    Linux)
-    [[ -e "$HOME/bin" ]] || mkdir "$HOME/bin"
+    # [[ -e "$HOME/bin" ]] || mkdir "$HOME/bin"
 
-    curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage ~/bin
-    chmod u+x ~/bin/nvim.appimage
-    echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-    echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation" 
-    echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" 
+    # curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage ~/bin
+    # chmod u+x ~/bin/nvim.appimage
+    # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+    # echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation" 
+    # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" 
 
     echo "Installing Linuxbrew"
     echo "---------------------"

@@ -254,7 +254,7 @@
 " System mappings  ----------------------------------------------------------{{{
 " opening init.vim 
   autocmd! bufwritepost init.vim source %
-  nnoremap <leader><leaader> :e ~/.config/nvim/init.vim
+  nnoremap <leader><leader> :e ~/.config/nvim/init.vim<cr>
 
 " No need for ex mode
   nnoremap Q <nop>
@@ -1102,7 +1102,7 @@ nnoremap <leader>ss :SaveSession<Space>
 nnoremap <leader>sd :DeleteSession<CR>
 nnoremap <leader>sc :CloseSession<CR>
 
-"" Tabs
+"" gabs
 nnoremap <Tab> gt
 nnoremap <S-Tab> gT
 nnoremap <silent> <S-t> :tabnew<CR>
