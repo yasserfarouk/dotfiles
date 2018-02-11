@@ -252,6 +252,9 @@
 " }}}
 
 " System mappings  ----------------------------------------------------------{{{
+" opening init.vim 
+  autocmd! bufwritepost init.vim source %
+  nnoremap <leader><leaader> :e ~/.config/nvim/init.vim
 
 " No need for ex mode
   nnoremap Q <nop>

@@ -3,7 +3,9 @@
 # This is for android crap
 #export JAVA_HOME=$(/usr/libexec/java_home)
 #export PATH=${JAVA_HOME}/bin:$PATH
-export PATH = $HOME/bin:$HOME/sbin:$HOME/bin-this:$PATH
+export PATH="$HOME/.pyenv/bin:$PATH"
+export PATH=$HOME/bin:$HOME/sbin:$HOME/bin-this:$PATH
+export PYENV_ROOT=$HOME/.pyenv
 export _Z_DATA="$HOME/z-data"
 
 source ~/.z/z.sh
@@ -58,7 +60,7 @@ function _git_changes {
   local unmerged_count=0 modified_count=0 has_untracked_files=0 added_count=0 is_clean=""
 
   set -- $(git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null)
-  local behind_count=$1
+  local behind_count=$2
   local ahead_count=$2
 
   # Added (A), Copied (C), Deleted (D), Modified (M), Renamed (R), changed (T), Unmerged (U), Unknown (X), Broken (B)
@@ -134,7 +136,7 @@ python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHa
 
 
 function download(){
-  curl -O "$1"
+  curl -O "$2"
 }
 
 
@@ -150,10 +152,10 @@ alias cls='clear'
 # archive file or folder
 function compress() {
   dirPriorToExe=`pwd`
-  dirName=`dirname $1`
-  baseName=`basename $1`
+  dirName=`dirname $2`
+  baseName=`basename $2`
 
-  if [ -f $1 ] ; then
+  if [ -f $2 ] ; then
     echo "It was a file change directory to $dirName"
     cd $dirName
     case $2 in
@@ -180,7 +182,7 @@ function compress() {
     echo "Back to Directory $dirPriorToExe"
     cd $dirPriorToExe
   else
-    if [ -d $1 ] ; then
+    if [ -d $2 ] ; then
       echo "It was a Directory change directory to $dirName"
       cd $dirName
       case $2 in
@@ -207,7 +209,7 @@ function compress() {
       echo "Back to Directory $dirPriorToExe"
       cd $dirPriorToExe
     else
-      echo "'$1' is not a valid file/folder"
+      echo "'$2' is not a valid file/folder"
     fi
   fi
   echo "Done"
@@ -230,39 +232,39 @@ function extract() {
   fi
 
   remove_archive=1
-  if [[ "$1" == "-r" ]] || [[ "$1" == "--remove" ]]; then
+  if [[ "$2" == "-r" ]] || [[ "$2" == "--remove" ]]; then
     remove_archive=0
     shift
   fi
 
   while (( $# > 0 )); do
-    if [[ ! -f "$1" ]]; then
-      echo "extract: '$1' is not a valid file" 1>&2
+    if [[ ! -f "$2" ]]; then
+      echo "extract: '$2' is not a valid file" 1>&2
       shift
       continue
     fi
 
     success=0
-    file_name="$( basename "$1" )"
+    file_name="$( basename "$2" )"
     extract_dir="$( echo "$file_name" | sed "s/\.${1##*.}//g" )"
-    case "$1" in
-      (*.tar.gz|*.tgz) [ -z $commands[pigz] ] && tar zxvf "$1" || pigz -dc "$1" | tar xv ;;
-      (*.tar.bz2|*.tbz|*.tbz2) tar xvjf "$1" ;;
+    case "$2" in
+      (*.tar.gz|*.tgz) [ -z $commands[pigz] ] && tar zxvf "$2" || pigz -dc "$2" | tar xv ;;
+      (*.tar.bz2|*.tbz|*.tbz2) tar xvjf "$2" ;;
       (*.tar.xz|*.txz) tar --xz --help &> /dev/null \
-      && tar --xz -xvf "$1" \
-      || xzcat "$1" | tar xvf - ;;
+      && tar --xz -xvf "$2" \
+      || xzcat "$2" | tar xvf - ;;
       (*.tar.zma|*.tlz) tar --lzma --help &> /dev/null \
-      && tar --lzma -xvf "$1" \
-      || lzcat "$1" | tar xvf - ;;
-      (*.tar) tar xvf "$1" ;;
-      (*.gz) [ -z $commands[pigz] ] && gunzip "$1" || pigz -d "$1" ;;
-      (*.bz2) bunzip2 "$1" ;;
-      (*.xz) unxz "$1" ;;
-      (*.lzma) unlzma "$1" ;;
-      (*.Z) uncompress "$1" ;;
-      (*.zip|*.war|*.jar|*.sublime-package) unzip "$1" -d $extract_dir ;;
-      (*.rar) unrar x -ad "$1" ;;
-      (*.7z) 7za x "$1" ;;
+      && tar --lzma -xvf "$2" \
+      || lzcat "$2" | tar xvf - ;;
+      (*.tar) tar xvf "$2" ;;
+      (*.gz) [ -z $commands[pigz] ] && gunzip "$2" || pigz -d "$2" ;;
+      (*.bz2) bunzip2 "$2" ;;
+      (*.xz) unxz "$2" ;;
+      (*.lzma) unlzma "$2" ;;
+      (*.Z) uncompress "$2" ;;
+      (*.zip|*.war|*.jar|*.sublime-package) unzip "$2" -d $extract_dir ;;
+      (*.rar) unrar x -ad "$2" ;;
+      (*.7z) 7za x "$2" ;;
       (*.deb)
       mkdir -p "$extract_dir/control"
       mkdir -p "$extract_dir/data"
@@ -273,13 +275,13 @@ function extract() {
       cd ..
       ;;
       (*)
-      echo "extract: '$1' cannot be extracted" 1>&2
+      echo "extract: '$2' cannot be extracted" 1>&2
       success=1
       ;;
     esac
 
     (( success = $success > 0 ? $success : $? ))
-    (( $success == 0 )) && (( $remove_archive == 0 )) && rm "$1"
+    (( $success == 0 )) && (( $remove_archive == 0 )) && rm "$2"
     shift
   done
 }
@@ -290,3 +292,7 @@ alias x=extract
 
 [[ -e "$HOME/anaconda/bin/activate" ]] && source "$HOME/anaconda/bin/activate"
 [[ -e "$HOME/anaconda3/bin/activate" ]] && source "$HOME/anaconda3/bin/activate"
+
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"

@@ -1,15 +1,41 @@
-echo "---------------------------------------------------------"
-
-echo "Cloning my dotfiles into .dotfiles"
+echo "Cloning my dotfiles into .dotfiles and others to .ysupport"
+echo "----------------------------------------------------------"
 git submodule init
 git submodule update --recursive
 rm -rf ~/.dotfiles
 mkdir ~/.dotfiles 2>&1 >/dev/null
 cp -r ./dot/* ~/.dotfiles
-mkdir ~/z-data  2>&1 >/dev/null
+mkdir ~/z-data 2>&1 >/dev/null
 rm -rf ~/.ysupport
 mkdir ~/.ysupport 2>&1 >/dev/null
 cp -r ./nondot/* ~/.ysupport
+
+echo "Updating init files with replacements"
+echo "-------------------------------------"
+export PATH="~/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+pyenv activate neovim2
+neovim2_py=`pyenv which python`  # Note the path
+echo "neovim2 in $neovim2_py"
+pyenv activate neovim3
+neovim3_py=`pyenv which python`  # Note the path
+echo "neovim3 in $neovim3_py"
+
+function replace_tag_in_all(){  
+  for file_name in $(find ~/.dotfiles -type f -and ! -name '*.otf' -and ! -name '.*' -and ! -path '*tmux/plugins*' -and ! -name '*.png' -and ! -name 'Makefile' -and ! -path '*z*' ); 
+  do
+    python -c "s=open('$file_name', 'r').read().replace('$1','$2'); open('$file_name', 'w').write(s)"    
+  done  
+  for file_name in $(find ~/.ysupport -type f -and ! -name '*.otf' -and ! -name '.*' -and ! -path '*tmux/plugins*' -and ! -name 'Makefile' -and ! -name '*.png' -and ! -path '*z*'); 
+  do 
+    python -c "s=open('$file_name', 'r').read().replace('$1','$2'); open('$file_name', 'w').write(s)"
+  done  
+}
+
+replace_tag_in_all '<<nvimpy2>>' $neovim2_py
+replace_tag_in_all '<<nvimpy3>>' $neovim3_py
+
 
 cd $HOME
 echo "running RCM's rcup command"
@@ -29,6 +55,14 @@ case "$(uname -s)" in
     ;;
 esac
 echo "---------------------------------------------------------"
+
+echo "Sourcing all files"
+echo "------------------"
+mkdir $HOME/.vim/doc 2>&1 >/dev/null
+vim --cmd "helptags $HOME/.vim/doc" --cmd "q"
+source ~/.bashrc
+source ~/.zshrc
+vim +PlugInstall +qa
 
 echo "Changing to zsh"
 chsh -s $(which zsh)
@@ -64,8 +98,8 @@ echo "Installing Plug"
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-echo "Sourcing all files"
-echo "------------------"
+echo "Installing vim plugins"
+echo "----------------------"
 mkdir $HOME/.vim/doc 2>&1 >/dev/null
 vim --cmd "helptags $HOME/.vim/doc" --cmd "q"
 source ~/.bashrc
@@ -98,7 +132,7 @@ mkdir ~/bin 2>&1 >/dev/null
 #ln -s `which python2` ~/bin/python2
 #ln -s `which python3` ~/bin/python3
 touch ~/.local.vim
-brew edit neovim
+#brew edit neovim
 
 echo "------------------------------------------------------------"
 echo "                             All done!                      "

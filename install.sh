@@ -120,14 +120,20 @@ fi
 # Now lets clone my dotfiles repo into .dotfiles/
 
 echo "Installing neovim2/3 python envs"
+echo "--------------------------------"
 curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
+export PATH="~/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 
 pyenv install 2.7
-pyenv install 3.6
+pyenv install 3.6.4
 
-pyenv virtualenv 2.7 neovim2
-pyenv virtualenv 3.6 neovim3
+pyenv virtualenv 2.7 neovim2 2>&1 >/dev/null
+pyenv virtualenv 3.6.4 neovim3 2>&1 >/dev/null
 
+echo "Installing neovim for python, ruby, and node"
+echo "--------------------------------------------"
 pyenv activate neovim2
 for i in "${python_packages[@]}"
 do
@@ -139,21 +145,12 @@ neovim2_py=`pyenv which python`  # Note the path
 pyenv activate neovim3
 for i in "${python_packages[@]}"
 do
-  pip install $i
+  pip install $i 2>&1 >/dev/null
 done
 neovim3_py=`pyenv which python`  # Note the path
 
-
-echo "Updating init files with replacements"
-
-function replace_tag_in_all(){  
-  for f in $(find ./dot -type f -and ! -name '*.otf' -and ! -name '.*' -and ! -path '*tmux/plugins*' -and ! -name 'Makefile' -and ! -path '*z*'); 
-  do 
-    sed -i 's/$1/$2/g'  
-  done  
-}
-replace_tag_in_all '<<nvimpy2>>' $neovim2_py
-replace_tag_in_all '<<nvimpy3>>' $neovim3_py
+gem install neovim
+npm install -g neovim
 
 echo "----------------------"
 echo "Installed prerequisits"

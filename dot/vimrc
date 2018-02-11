@@ -553,4 +553,7 @@ else
   let g:airline_symbols.linenr = ''
 endif
 
+" opening init.vim 
+  autocmd! bufwritepost .vimrc source %
+  nnoremap <leader><leaader> :e ~/.vimrc
 
