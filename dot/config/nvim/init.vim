@@ -926,12 +926,12 @@
 
 " Python --------------------------------------------------------------------{{{
 
-  let g:python_host_prog = './bin/python2'
-  let g:python3_host_prog = './bin/python3'
+  let g:python_host_prog = '<<nvimpy2>>'
+  let g:python3_host_prog = '<<nvimpy3>>'
   " let $NVIM_PYTHON_LOG_FILE='nvim-python.log'
-  let g:jedi#auto_vim_configuration = 0
+  let g:jedi#auto_vim_configuration = 1
   let g:jedi#documentation_command = "<leader>k"
-  let g:jedi#completions_enabled = 0
+  let g:jedi#completions_enabled = 1
 " }}}
 
 
@@ -1221,14 +1221,14 @@ augroup vimrc-python
 augroup END
 
 " jedi-vim
-let g:jedi#popup_on_dot = 1
+let g:jedi#popup_on_dot = 0
 let g:jedi#goto_assignments_command = "<leader>g"
 let g:jedi#goto_definitions_command = "<leader>d"
 let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>n"
 let g:jedi#rename_command = "<leader>r"
-let g:jedi#show_call_signatures = "0"
-let g:jedi#completions_command = "<C-Space>"
+let g:jedi#show_call_signatures = "1"
+let g:jedi#completions_command = "<tab>"
 let g:jedi#smart_auto_mappings = 0
 
 " syntastic
@@ -1290,13 +1290,3 @@ else
   let g:airline_symbols.readonly = ''
   let g:airline_symbols.linenr = ''
 endif
-
-
-
-
-"" Include user's extra bundle
-if filereadable(expand("~/.config/nvim/local_bundles.vim"))
-  source ~/.config/nvim/local_bundles.vim
-endif
-
-call plug#end()

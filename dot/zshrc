@@ -14,7 +14,7 @@ setopt completeinword
 zstyle ':completion:*:*:git:*' script $HOME/.ysupport/git-completion.bash
 
 # set editing-mode vi
-set blink-matching-paren on
+# set blink-matching-paren on
 
 fpath=($HOME/.ysupport/zsh-completions $fpath)
 autoload -U compinit && compinit

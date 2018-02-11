@@ -16,6 +16,10 @@ mac_packages=(
 "terminal-notifier"
 )
 
+python_packages = (
+"neovim"
+"flake8"
+)
 case "$(uname -s)" in
    Darwin)
     brew="/usr/local/bin/brew"
@@ -50,7 +54,7 @@ case "$(uname -s)" in
     echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc    
     brew install gcc
     brew upgrade gcc
-    brew link gcc    
+    brew unlink gcc && brew link gcc    
     ;;
 esac
 
@@ -60,7 +64,7 @@ do
   #brew uninstall $i
   brew install $i
   brew upgrade $i
-  brew link $i
+  brew unlink $i && brew link $i
   echo "---------------------------------------------------------"
 done
 
@@ -72,7 +76,7 @@ case "$(uname -s)" in
       #brew uninstall $i
       brew install $i
       brew upgrade $i
-      brew link $i
+      brew unlink $i && brew link $i
       echo "---------------------------------------------------------"
     done
     
@@ -85,7 +89,7 @@ case "$(uname -s)" in
       #brew uninstall $i
       brew install $i
       brew upgrade $i
-      brew link $i
+      brew unlink $i && brew link $i
       echo "---------------------------------------------------------"
     done
     ;;
@@ -98,7 +102,7 @@ brew tap thoughtbot/formulae
 #brew uninstall $i
 brew install rcm
 brew upgrade rcm
-brew link rcm
+brew unlink $i && brew link $i
 echo "---------------------------------------------------------"
 
 command -v git 2>&1 >/dev/null # improvement by tripleee
@@ -114,6 +118,42 @@ fi
 # Okay so everything should be good
 # Fingers cross at least
 # Now lets clone my dotfiles repo into .dotfiles/
+
+echo "Installing neovim2/3 python envs"
+curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
+
+pyenv install 2.7
+pyenv install 3.6
+
+pyenv virtualenv 2.7 neovim2
+pyenv virtualenv 3.6 neovim3
+
+pyenv activate neovim2
+for i in "${python_packages[@]}"
+do
+  pip install $i
+done
+
+neovim2_py=`pyenv which python`  # Note the path
+
+pyenv activate neovim3
+for i in "${python_packages[@]}"
+do
+  pip install $i
+done
+neovim3_py=`pyenv which python`  # Note the path
+
+
+echo "Updating init files with replacements"
+
+function replace_tag_in_all(){  
+  for f in $(find ./dot -type f -and ! -name '*.otf' -and ! -name '.*' -and ! -path '*tmux/plugins*' -and ! -name 'Makefile' -and ! -path '*z*'); 
+  do 
+    sed -i 's/$1/$2/g'  
+  done  
+}
+replace_tag_in_all '<<nvimpy2>>' $neovim2_py
+replace_tag_in_all '<<nvimpy3>>' $neovim3_py
 
 echo "----------------------"
 echo "Installed prerequisits"
