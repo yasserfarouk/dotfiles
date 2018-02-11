@@ -16,7 +16,7 @@ mac_packages=(
 "terminal-notifier"
 )
 
-python_packages = (
+python_packages=(
 "neovim"
 "flake8"
 )
