@@ -87,6 +87,10 @@ case "$(uname -s)" in
 
    Linux)
      echo 'Linux ... no osx defaults'
+     echo "Correcting group permissions"
+     echo "----------------------------"
+     compaudit | xargs chmod g-w
+     ;
      ;;
 esac
 
