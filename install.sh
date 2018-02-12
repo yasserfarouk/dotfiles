@@ -2,7 +2,6 @@
 packages=(
 "git"
 "node"
-"tmux"
 "neovim"
 "zsh"
 )
@@ -79,7 +78,11 @@ case "$(uname -s)" in
       brew unlink $i && brew link $i
       echo "---------------------------------------------------------"
     done
-    
+    brew tap caskroom/fonts
+    brew cask install font-hack-nerd-font
+    npm install devicons
+    brew insstall tmux --HEAD
+    brew link tmux
     ;;
 
    Linux)
@@ -91,7 +94,15 @@ case "$(uname -s)" in
       brew upgrade $i
       brew unlink $i && brew link $i
       echo "---------------------------------------------------------"
+      brew install tmux --HEAD
+      brew link tmux
     done
+    brew tap caskroom/fonts
+    brew cask install font-hack-nerd-font
+    current_dir=`pwd`
+    cd $HOME
+    npm install -g devicons
+    cd $current_dir
     ;;
 esac
 

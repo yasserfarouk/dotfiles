@@ -1,1 +1,1 @@
-EXCLUDES="README.md install.sh osx.sh update.sh"
+EXCLUDES="README README.md quick-install.sh install.sh osx.sh update.sh"

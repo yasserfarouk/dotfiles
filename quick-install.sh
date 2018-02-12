@@ -90,7 +90,6 @@ case "$(uname -s)" in
      echo "Correcting group permissions"
      echo "----------------------------"
      compaudit | xargs chmod g-w
-     ;
      ;;
 esac
 
