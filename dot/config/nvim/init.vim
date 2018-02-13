@@ -56,7 +56,7 @@
   call dein#add('tpope/vim-markdown', {'on_ft': 'markdown'})
   call dein#add('dhruvasagar/vim-table-mode')
   call dein#add('nelstrom/vim-markdown-folding', {'on_ft': 'markdown'})
-  call dein#add('rhysd/vim-grammarous')                                 " grammer checker  
+  call dein#add('rhysd/vim-grammarous')                                 " grammer checker
   call dein#add('tmux-plugins/vim-tmux')
   call dein#add('itmammoth/doorboy.vim')
   call dein#add('valloric/MatchTagAlways', {'on_ft': 'html'})
@@ -82,11 +82,11 @@
   call dein#add('Xuyuanp/nerdtree-git-plugin')
   call dein#local('~/GitHub', {}, ['nerdtree-git-plugin'])
   call dein#add('chemzqm/denite-git')
-  call dein#add('chemzqm/denite-extra')  
+  call dein#add('chemzqm/denite-extra')
   call dein#add('pocari/vim-denite-gists')
   call dein#add('mattn/gist-vim')
-  
-  
+
+
 " linting and formating
   call dein#local('~/GitHub/', {}, ['neomake'])
   call dein#add('neomake/neomake')
@@ -100,11 +100,11 @@
 " playing nice with others
   call dein#add('editorconfig/editorconfig-vim')
   call dein#add('christoomey/vim-tmux-navigator')
-  
+
 " go lang
   " call dein#add('fatih/vim-go')
   " call dein#add('zchee/deoplete-go', {'build': 'make'})
-  
+
 " deoplete stuff
   call dein#add('Shougo/deoplete.nvim')
   " call dein#add('roxma/nvim-completion-manager')
@@ -124,26 +124,26 @@
   call dein#add('Shougo/echodoc.vim')
   call dein#add('honza/vim-snippets')
 
-  
+
 " Misc
   call dein#add('neoclide/todoapp.vim')
   call dein#add('junegunn/gv.vim')
   call dein#local('~/GitHub', {},['vim-folds'])
-  
-  
+
+
 " Shougo staff
   call dein#add('Shougo/neco-vim')
   call dein#add('Shougo/neoinclude.vim')
   call dein#add('ujihisa/neco-look')
   call dein#add('Shougo/vimfiler.vim')
   call dein#add('Shougo/unite.vim')
-  
-  
-  
+
+
+
 " appearance
   call dein#add('mhartington/oceanic-next')
   call dein#add('vim-airline/vim-airline')
-  
+
   call dein#add('junegunn/goyo.vim')
   call dein#add('amix/vim-zenroom2')
   call dein#local('~/GitHub', {}, ['ionic-snippets'])
@@ -153,9 +153,9 @@
   call dein#add('drzel/vim-line-no-indicator')
   call dein#add('Quramy/vison')
   call dein#add('ryanoasis/vim-devicons')
-  call dein#local('~/GitHub', {},['oceanic-next'])  
+  call dein#local('~/GitHub', {},['oceanic-next'])
   call dein#local('flazz/vim-colorschemes')
-  
+
   if dein#check_install()
     call dein#install()
     let pluginsExist=1
@@ -252,7 +252,7 @@
 " }}}
 
 " System mappings  ----------------------------------------------------------{{{
-" opening init.vim 
+" opening init.vim
   autocmd! bufwritepost init.vim source %
   nnoremap <leader><leader> :e ~/.config/nvim/init.vim<cr>
 
@@ -1293,3 +1293,56 @@ else
   let g:airline_symbols.readonly = ''
   let g:airline_symbols.linenr = ''
 endif
+
+
+" Basic cursor movement and deletion keybindings from emacs, for vim.
+
+" insert mode
+inoremap <C-a> <C-o>:call <SID>home()<CR>
+inoremap <C-e> <End>
+inoremap <C-d> <Del>
+inoremap <C-h> <BS>
+inoremap <C-k> <Esc>lDa
+inoremap <C-u> <Esc>d0xi
+inoremap <C-y> <Esc>Pa
+inoremap <C-s> <Esc>:w<CR>a
+inoremap <C-M-s> <Esc>:w<CR>a
+
+" command line mode
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-d> <Del>
+cnoremap <C-h> <BS>
+cnoremap <M-j> :call split_line_text_at_cursor()<CR>
+
+" command-T window
+let g:CommandTCursorLeftMap  = ['<Left>',  '<C-b>']
+let g:CommandTCursorRightMap = ['<Right>', '<C-f>']
+let g:CommandTBackspaceMap   = ['<BS>',    '<C-h>']
+let g:CommandTDeleteMap      = ['<Del>',   '<C-d>']
+
+function! s:home()
+  let start_col = col('.')
+  normal! ^
+  if col('.') == start_col
+    normal! 0
+  endif
+  return ''
+endfunction
+
+function! s:kill_line()
+  let [text_before_cursor, text_after_cursor] = s:split_line_text_at_cursor()
+  if len(text_after_cursor) == 0
+    normal! J
+  else
+    call setline(line('.'), text_before_cursor)
+  endif
+  return ''
+endfunction
+
+function! s:split_line_text_at_cursor()
+  let line_text = getline(line('.'))
+  let text_after_cursor  = line_text[col('.')-1 :]
+  let text_before_cursor = (col('.') > 1) ? line_text[: col('.')-2] : ''
+  return [text_before_cursor, text_after_cursor]
+endfunction
