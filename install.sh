@@ -83,12 +83,7 @@ case "$(uname -s)" in
       brew upgrade $i
       brew unlink $i && brew link $i
       echo "---------------------------------------------------------"
-    done
-    brew tap caskroom/fonts
-    brew cask install font-hack-nerd-font
-    npm install devicons
-    brew insstall tmux --HEAD
-    brew link tmux
+    done    
     ;;
 
    Linux)
@@ -100,23 +95,22 @@ case "$(uname -s)" in
       brew upgrade $i
       brew unlink $i && brew link $i
       echo "---------------------------------------------------------"
-      brew install tmux --HEAD
-      brew link tmux
-    done
-    brew tap caskroom/fonts
-    brew cask install font-hack-nerd-font
-    current_dir=`pwd`
-    cd $HOME
-    npm install -g devicons
-    cd $current_dir
+    done    
     ;;
 esac
 
+# installing programs that require special care (e.g. tmux from HEAD and devicons usin npm)
+brew install tmux --HEAD
+brew link tmux
+brew tap caskroom/fonts
+brew cask install font-hack-nerd-font
+current_dir=`pwd`
+cd $HOME
+npm install -g devicons
+cd $current_dir
 
 echo "installing RCM, for dotfiles management and terminal-notifier"
 brew tap thoughtbot/formulae
-#brew unlink $i
-#brew uninstall $i
 brew install rcm
 brew upgrade rcm
 brew unlink $i && brew link $i

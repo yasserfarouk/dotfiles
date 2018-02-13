@@ -5,7 +5,7 @@ git submodule update --recursive
 rm -rf ~/.dotfiles
 mkdir ~/.dotfiles 2>&1 >/dev/null
 cp -r ./dot/* ~/.dotfiles
-mkdir ~/z-data 2>&1 >/dev/null
+
 rm -rf ~/.ysupport
 mkdir ~/.ysupport 2>&1 >/dev/null
 cp -r ./nondot/* ~/.ysupport
@@ -69,7 +69,7 @@ chsh -s $(which zsh)
 
 echo "Installing antigen for zsh"
 echo "--------------------------"
-mkdir ~/antigen
+mkdir ~/antigen 2>&1 >/dev/null
 curl -L git.io/antigen > ~/antigen/antigen.zsh
 
 echo "You'll need to log out for this to take effect"
