@@ -168,6 +168,7 @@ npm install -g neovim
 
 echo "Installing diff-so-fancy"
 echo "------------------------"
+mkdir ~/bin 2>&1 >/dev/null
 curl https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party/build_fatpack/diff-so-fancy >~/bin/diff-so-fancy
 chmod +x ~/bin/diff-so-fancy
 
