@@ -56,11 +56,13 @@ case "$(uname -s)" in
       test -d /home/linuxbrew/.linuxbrew && PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
       export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
       echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc    
-      brew install gcc
-      brew upgrade gcc
-      brew unlink gcc && brew link gcc    
     fi
+    brew install gcc
+    brew upgrade gcc
+    brew unlink gcc && brew link gcc 
+
     ;;
+
 esac
 
 for i in "${packages[@]}"
@@ -104,6 +106,7 @@ brew install tmux --HEAD
 brew link tmux
 brew tap caskroom/fonts
 brew cask install font-hack-nerd-font
+brew cask link font-hack-nerd-font
 current_dir=`pwd`
 cd $HOME
 npm install -g devicons

@@ -5,7 +5,7 @@ git submodule update --recursive
 rm -rf ~/.dotfiles
 mkdir ~/.dotfiles 2>&1 >/dev/null
 cp -r ./dot/* ~/.dotfiles
-
+touch ~/z-data
 rm -rf ~/.ysupport
 mkdir ~/.ysupport 2>&1 >/dev/null
 cp -r ./nondot/* ~/.ysupport
