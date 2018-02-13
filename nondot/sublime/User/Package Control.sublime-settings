@@ -1,0 +1,27 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"A File Icon",
+		"AdvancedNewFile",
+		"All Autocomplete",
+		"Anaconda",
+		"BracketHighlighter",
+		"CSV",
+		"Git",
+		"GitGutter",
+		"Jedi - Python autocompletion",
+		"MarkdownLight",
+		"Material Theme",
+		"Package Control",
+		"PackageResourceViewer",
+		"Predawn",
+		"Python PEP8 Autoformat",
+		"PyYapf Python Formatter",
+		"SideBarEnhancements",
+		"SublimeREPL"
+	]
+}

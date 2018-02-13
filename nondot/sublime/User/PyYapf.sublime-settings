@@ -1,0 +1,6 @@
+{
+    "yapf_command": "yapf",
+    "config": {
+        "SPLIT_PENALTY_EXCESS_CHARACTER": 12500,
+    }
+}
