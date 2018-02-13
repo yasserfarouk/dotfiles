@@ -7,7 +7,7 @@ packages=(
 )
 
 linux_packages=(
-"vim"
+"terminal-notifier"
 )
 
 mac_packages=(
@@ -98,6 +98,9 @@ case "$(uname -s)" in
       brew unlink $i && brew link $i
       echo "---------------------------------------------------------"
     done    
+    brew install vim --HEAD --without-python --with-python3
+    brew unlink vim
+    brew link vim
     ;;
 esac
 
