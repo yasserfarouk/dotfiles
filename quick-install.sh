@@ -25,11 +25,11 @@ echo "neovim3 in $neovim3_py"
 function replace_tag_in_all(){
   for file_name in $(find ~/.dotfiles -type f -and ! -name '*.otf' -and ! -name '.*' -and ! -path '*tmux/plugins*' -and ! -name '*.png' -and ! -name 'Makefile' -and ! -path '*z*' );
   do
-    python -c "s=open('$file_name', 'r').read().replace('$1','$2'); open('$file_name', 'w').write(s)"
+    python -c "s=open('$file_name', 'r').read().replace('$1','$2'); open('$file_name', 'w').write(s)" 2>&1 >/dev/null
   done
   for file_name in $(find ~/.ysupport -type f -and ! -name '*.otf' -and ! -name '.*' -and ! -path '*tmux/plugins*' -and ! -name 'Makefile' -and ! -name '*.png' -and ! -path '*z*');
   do
-    python -c "s=open('$file_name', 'r').read().replace('$1','$2'); open('$file_name', 'w').write(s)"
+    python -c "s=open('$file_name', 'r').read().replace('$1','$2'); open('$file_name', 'w').write(s)"  2>&1 >/dev/null
   done
 }
 
@@ -146,7 +146,7 @@ case "$(uname -s)" in
 esac
 unlink $sublime_config_path/User 2>&1 >/dev/null
 rm -rf $sublime_config_path/User 2>&1 >/dev/null
-ln -s $HOME/.ysupport/sublime/User $sublime_config_path
+ln -s "$HOME/.ysupport/sublime/User" "$sublime_config_path"
 
 touch ~/.local.vim
 #brew edit neovim
