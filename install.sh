@@ -166,6 +166,11 @@ neovim3_py=`pyenv which python`  # Note the path
 gem install neovim
 npm install -g neovim
 
+echo "Installing diff-so-fancy"
+echo "------------------------"
+curl https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party/build_fatpack/diff-so-fancy >~/bin/diff-so-fancy
+chmod +x ~/bin/diff-so-fancy
+
 echo "----------------------"
 echo "Installed prerequisits"
 echo "----------------------"

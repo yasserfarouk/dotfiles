@@ -22,8 +22,8 @@
     tool = vim
 
 [core]
-  pager = zsh -lc 'diff-highlight | strip_diff_leading_symbols | less -r' -
-  editor = nano
+  pager = diff-so-fancy | less --tabs=4 -RFX
+  editor = vim
   autocrlf = input
   excludesfile = $HOME/.gitignore_global
 
