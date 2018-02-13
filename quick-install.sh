@@ -22,15 +22,15 @@ pyenv activate neovim3
 neovim3_py=`pyenv which python`  # Note the path
 echo "neovim3 in $neovim3_py"
 
-function replace_tag_in_all(){  
-  for file_name in $(find ~/.dotfiles -type f -and ! -name '*.otf' -and ! -name '.*' -and ! -path '*tmux/plugins*' -and ! -name '*.png' -and ! -name 'Makefile' -and ! -path '*z*' ); 
+function replace_tag_in_all(){
+  for file_name in $(find ~/.dotfiles -type f -and ! -name '*.otf' -and ! -name '.*' -and ! -path '*tmux/plugins*' -and ! -name '*.png' -and ! -name 'Makefile' -and ! -path '*z*' );
   do
-    python -c "s=open('$file_name', 'r').read().replace('$1','$2'); open('$file_name', 'w').write(s)"    
-  done  
-  for file_name in $(find ~/.ysupport -type f -and ! -name '*.otf' -and ! -name '.*' -and ! -path '*tmux/plugins*' -and ! -name 'Makefile' -and ! -name '*.png' -and ! -path '*z*'); 
-  do 
     python -c "s=open('$file_name', 'r').read().replace('$1','$2'); open('$file_name', 'w').write(s)"
-  done  
+  done
+  for file_name in $(find ~/.ysupport -type f -and ! -name '*.otf' -and ! -name '.*' -and ! -path '*tmux/plugins*' -and ! -name 'Makefile' -and ! -name '*.png' -and ! -path '*z*');
+  do
+    python -c "s=open('$file_name', 'r').read().replace('$1','$2'); open('$file_name', 'w').write(s)"
+  done
 }
 
 replace_tag_in_all '<<nvimpy2>>' $neovim2_py
@@ -49,7 +49,7 @@ case "$(uname -s)" in
 
     ;;
    Linux)
-    rcup    
+    rcup
     export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
     echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
     ;;
@@ -121,7 +121,7 @@ echo "Installing Neobundle"
 echo "--------------------"
 mkdir ~/.tmp 2>&1 >/dev/null
 curl -fLo > ~/.tmp/install_neobundle.sh --create-dirs \
-    https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh 
+    https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh
 sh ~/.tmp/install_neobundle.sh
 rm ~/.tmp/install_neobundle.sh
 rmdir ~/.tmp 2>&1 >/dev/null
@@ -130,10 +130,24 @@ echo "Editing neovim"
 echo "--------------"
 mkdir ~/bin 2>&1 >/dev/null
 
-#rm ~/bin/python2 2>&1 >/dev/null
-#rm ~/bin/python3 2>&1 >/dev/null
-#ln -s `which python2` ~/bin/python2
-#ln -s `which python3` ~/bin/python3
+echo "Installing sublime-text-3 preferences"
+echo "-------------------------------------"
+case "$(uname -s)" in
+   Darwin)
+     sublime_config_path="$HOME/Library/Application Support/Sublime Text 3/Packages/"
+
+     ;;
+
+   Linux)
+     sublime_config_path="$HOME/~/.config/sublime-text-3/Packages/"
+
+     ;;
+
+esac
+unlink $sublime_config_path/User 2>&1 >/dev/null
+rm -rf $sublime_config_path/User 2>&1 >/dev/null
+ln -s $HOME/.ysupport/sublime/User $sublime_config_path
+
 touch ~/.local.vim
 #brew edit neovim
 
