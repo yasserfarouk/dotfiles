@@ -43,17 +43,23 @@ case "$(uname -s)" in
     # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     # echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation" 
     # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" 
-
-    echo "Installing Linuxbrew"
-    echo "---------------------"
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
-    test -d ~/.linuxbrew && PATH="$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH"
-    test -d /home/linuxbrew/.linuxbrew && PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
-    export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
-    echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc    
-    brew install gcc
-    brew upgrade gcc
-    brew unlink gcc && brew link gcc    
+    command -v brew 2>&1 >/dev/null # improvement by tripleee
+    BREW_IS_AVAILABLE=$?
+    if [ $BREW_IS_AVAILABLE] 
+    then
+      echo "Homebrew is installed, nothing to do here"
+    else
+      echo "Installing Linuxbrew"
+      echo "---------------------"
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+      test -d ~/.linuxbrew && PATH="$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH"
+      test -d /home/linuxbrew/.linuxbrew && PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
+      export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
+      echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc    
+      brew install gcc
+      brew upgrade gcc
+      brew unlink gcc && brew link gcc    
+    fi
     ;;
 esac
 
