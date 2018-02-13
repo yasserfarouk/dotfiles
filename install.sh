@@ -45,7 +45,7 @@ case "$(uname -s)" in
     # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" 
     command -v brew 2>&1 >/dev/null # improvement by tripleee
     BREW_IS_AVAILABLE=$?
-    if [ $BREW_IS_AVAILABLE] 
+    if [ $BREW_IS_AVAILABLE ] 
     then
       echo "Homebrew is installed, nothing to do here"
     else
@@ -125,7 +125,7 @@ echo "---------------------------------------------------------"
 command -v git 2>&1 >/dev/null # improvement by tripleee
 GIT_IS_AVAILABLE=$?
 
-if [ GIT_IS_AVAILABLE ]
+if [ $GIT_IS_AVAILABLE ]
 then
   echo "git is all good"
 else  
