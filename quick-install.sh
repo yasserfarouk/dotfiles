@@ -87,7 +87,7 @@ case "$(uname -s)" in
 
    Linux)
      echo 'Linux ... no osx defaults'
-     echo "Correcting group permissions"
+https://github.com/gpakosz/.tmux?files=1     echo "Correcting group permissions"
      echo "----------------------------"
      compaudit | xargs chmod g-w
      ;;
@@ -146,7 +146,7 @@ case "$(uname -s)" in
 esac
 unlink $sublime_config_path/User 2>&1 >/dev/null
 rm -rf $sublime_config_path/User 2>&1 >/dev/null
-ln -s "$HOME/.ysupport/sublime/User" "$sublime_config_path"
+ln -s -f "$HOME/.ysupport/sublime/User" "$sublime_config_path"
 
 touch ~/.local.vim
 #brew edit neovim
