@@ -43,9 +43,7 @@ Install one of these fonts and you should be good to go. Don't forget to set you
 
 ## Tmux
 
-So if you can tell by now, I'm set on using true colors....everywhere.
-
-You can run `brew install tmux --head` and get all the colors for iterm nightly.
+The tmux script is based on [this one](https://github.com/gpakosz/.tmux?files=1)
 
 ## Inspiration
 - [Mark Hartington](https://github.com/mhartington/dotfiles)
