@@ -5,7 +5,8 @@ packages=(
 "neovim"
 "zsh"
 )
-
+pip_packages=(
+)
 linux_packages=(
 "terminal-notifier"
 )
@@ -13,6 +14,7 @@ linux_packages=(
 mac_packages=(
 "macvim"
 "terminal-notifier"
+"mackup"
 )
 
 python_packages=(
@@ -135,6 +137,14 @@ fi
 # Okay so everything should be good
 # Fingers cross at least
 # Now lets clone my dotfiles repo into .dotfiles/
+
+echo "Installing pip packages assuming that pip is available"
+echo "------------------------------------------------------"
+for i in "${pip_packages[@]}"
+do
+    pip install --upgrade $i
+  echo "---------------------------------------------------------"
+done
 
 echo "Installing neovim2/3 python envs"
 echo "--------------------------------"

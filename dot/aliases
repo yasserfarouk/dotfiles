@@ -253,3 +253,6 @@ function compress()
   eval $(ssh-agent);
   ssh-add ~/.ssh/id_rsa
 }
+
+alias vi=vim
+

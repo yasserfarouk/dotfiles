@@ -3,9 +3,7 @@
 "*****************************************************************************
 "" Vim-PLug core
 "*****************************************************************************
-if has('vim_starting')
-  set nocompatible               " Be iMproved
-endif
+set nocompatible               " Be iMproved
 
 let vimplug_exists=expand('~/.vim/autoload/plug.vim')
 
@@ -361,11 +359,9 @@ nnoremap <leader>ss :SaveSession<Space>
 nnoremap <leader>sd :DeleteSession<CR>
 nnoremap <leader>sc :CloseSession<CR>
 
-"" Tabs
-nnoremap <Tab> gt
-nnoremap <S-Tab> gT
-nnoremap <silent> <S-t> :tabnew<CR>
-
+"" Buffer management
+nnoremap <Tab> :bn<cr>
+nnoremap <S-Tab> :bp<cr>
 "" Set working directory
 nnoremap <leader>. :lcd %:p:h<CR>
 
@@ -454,6 +450,53 @@ noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 noremap <C-h> <C-w>h
+
+
+
+" WINDOW MANAGEMENT SETTINGS
+
+"moving from window to window
+nnoremap <C-h>  <C-w>h
+nnoremap <C-j>  <C-w>j
+nnoremap <C-k>  <C-w>k
+nnoremap <C-l>  <C-w>l
+
+"open new blank file
+nnoremap o<C-h> :lefta vsp new<cr>
+nnoremap o<C-j> :bel sp new<cr>
+nnoremap o<C-k> :abo sp new<cr>
+nnoremap o<C-l> :rightb vsp new<cr>
+
+"move window
+nnoremap <Leader><C-h> <C-W>H
+nnoremap <Leader><C-j> <C-W>J
+nnoremap <Leader><C-k> <C-W>K
+nnoremap <Leader><C-l> <C-W>L
+
+"maximise horizontally
+map <Leader>= <C-w><Bar>
+
+"maximise vertically
+map <Leader>- <C-w>_
+
+"make all windows equally sized
+map <Leader><Leader> <C-w>=
+
+"change windowsizes in visual mode
+"horizontally - always three chars else it takes ages
+vnoremap - 3<C-w><
+vnoremap = 3<C-w>>
+
+"vertically - always three chars else it takes ages
+vnoremap _ 3<C-w>-
+vnoremap + 3<C-w>+
+
+"moving from window to window in visual mode
+"that way you can move from window to window and resize with -,=,_,+ directly as needed
+vnoremap <C-h> <ESC><C-w>hv
+vnoremap <C-j> <ESC><C-w>jv
+vnoremap <C-k> <ESC><C-w>kv
+vnoremap <C-l> <ESC><C-w>lv
 
 "" Vmap for maintain Visual Mode after shifting > and <
 vmap < <gv
