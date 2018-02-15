@@ -43,11 +43,11 @@ case "$(uname -s)" in
     # curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage ~/bin
     # chmod u+x ~/bin/nvim.appimage
     # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-    # echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation" 
-    # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" 
+    # echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation"
+    # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     command -v brew 2>&1 >/dev/null # improvement by tripleee
     BREW_IS_AVAILABLE=$?
-    if [ $BREW_IS_AVAILABLE ] 
+    if [ $BREW_IS_AVAILABLE ]
     then
       echo "Homebrew is installed, nothing to do here"
     else
@@ -57,11 +57,11 @@ case "$(uname -s)" in
       test -d ~/.linuxbrew && PATH="$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH"
       test -d /home/linuxbrew/.linuxbrew && PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
       export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
-      echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc    
+      echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
     fi
     brew install gcc
     brew upgrade gcc
-    brew unlink gcc && brew link gcc 
+    brew unlink gcc && brew link gcc
 
     ;;
 
@@ -87,7 +87,7 @@ case "$(uname -s)" in
       brew upgrade $i
       brew unlink $i && brew link $i
       echo "---------------------------------------------------------"
-    done    
+    done
     ;;
 
    Linux)
@@ -99,7 +99,7 @@ case "$(uname -s)" in
       brew upgrade $i
       brew unlink $i && brew link $i
       echo "---------------------------------------------------------"
-    done    
+    done
     brew install vim --HEAD --without-python --with-python3
     brew unlink vim
     brew link vim
@@ -130,7 +130,7 @@ GIT_IS_AVAILABLE=$?
 if [ $GIT_IS_AVAILABLE ]
 then
   echo "git is all good"
-else  
+else
   brew install git
   brew upgrad git
 fi
@@ -184,6 +184,27 @@ echo "------------------------"
 mkdir ~/bin 2>&1 >/dev/null
 curl https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party/build_fatpack/diff-so-fancy >~/bin/diff-so-fancy
 chmod +x ~/bin/diff-so-fancy
+
+echo "Installing source code nerd font"
+echo "--------------------------------"
+$current_dir=`pwd`
+mkdir $HOME/fonts 2>&1 >/dev/null
+cd $HOME/fonts
+curl -OJL https://github.com/ryanoasis/nerd-fonts/releases/download/v1.2.0/SourceCodePro.zip
+unzip SourceCodePro.zip
+
+case "$(uname -s)" in
+   Darwin)
+	mkdir $HOME/Library/Fonts 2>&1 >/dev/null
+	mv *.ttf $HOME/Library/Fonts
+    ;;
+
+   Linux)
+	mkdir $HOME/.fonts 2>&1 >/dev/null
+	mv *.ttf $HOME/.fonts
+    ;;
+esac
+cd $current_dir
 
 echo "----------------------"
 echo "Installed prerequisits"
