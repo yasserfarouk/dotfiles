@@ -206,6 +206,11 @@ case "$(uname -s)" in
 esac
 cd $current_dir
 
+echo "Installing antigen for zsh"
+echo "--------------------------"
+mkdir ~/antigen 2>&1 >/dev/null
+curl -L git.io/antigen > ~/antigen/antigen.zsh
+
 echo "----------------------"
 echo "Installed prerequisits"
 echo "----------------------"

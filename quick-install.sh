@@ -5,7 +5,7 @@ git submodule update --recursive
 rm -rf ~/.dotfiles
 mkdir ~/.dotfiles 2>&1 >/dev/null
 cp -r ./dot/* ~/.dotfiles
-touch ~/z-data
+touch ~/.z-data
 rm -rf ~/.ysupport
 mkdir ~/.ysupport 2>&1 >/dev/null
 cp -r ./nondot/* ~/.ysupport
@@ -22,6 +22,10 @@ pyenv activate neovim3
 neovim3_py=`pyenv which python`  # Note the path
 echo "neovim3 in $neovim3_py"
 
+function replace_tag_in_file(){
+  python -c "s=open('$3', 'r').read().replace('$1','$2'); open('$3', 'w').write(s)" 2>&1 >/dev/null
+}
+
 function replace_tag_in_all(){
   for file_name in $(find ~/.dotfiles -type f -and ! -name '*.otf' -and ! -name '.*' -and ! -path '*tmux/plugins*' -and ! -name '*.png' -and ! -name 'Makefile' -and ! -path '*z*' );
   do
@@ -33,8 +37,8 @@ function replace_tag_in_all(){
   done
 }
 
-replace_tag_in_all '<<nvimpy2>>' $neovim2_py
-replace_tag_in_all '<<nvimpy3>>' $neovim3_py
+replace_tag_in_file '<<nvimpy2>>' $neovim2_py "$HOME/.dotfiles/local.vim"
+replace_tag_in_file '<<nvimpy3>>' $neovim3_py "$HOME/.dotfiles/local.vim"
 
 
 cd $HOME
@@ -59,63 +63,12 @@ echo "---------------------------------------------------------"
 echo "Sourcing all files"
 echo "------------------"
 mkdir $HOME/.vim/doc 2>&1 >/dev/null
-vim --cmd "helptags $HOME/.vim/doc" --cmd "q"
+#vim --cmd "helptags $HOME/.vim/doc" --cmd "q"
 source ~/.bashrc
 source ~/.zshrc
-vim +PlugInstall +qa
-
-echo "Changing to zsh"
-chsh -s $(which zsh)
-
-echo "Installing antigen for zsh"
-echo "--------------------------"
-mkdir ~/antigen 2>&1 >/dev/null
-curl -L git.io/antigen > ~/antigen/antigen.zsh
-
-echo "You'll need to log out for this to take effect"
-echo "----------------------------------------------"
-
-
-case "$(uname -s)" in
-   Darwin)
-     echo "running oxs defaults"
-     ~/.dotfiles/osx.sh
-     echo "Correcting group permissions"
-     echo "----------------------------"
-     compaudit | xargs chmod g-w
-     ;;
-
-   Linux)
-     echo 'Linux ... no osx defaults'
-https://github.com/gpakosz/.tmux?files=1     echo "Correcting group permissions"
-     echo "----------------------------"
-     compaudit | xargs chmod g-w
-     ;;
-esac
-
-
-
-
-#!/usr/bin/env bash
 echo "Installing Plug"
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-echo "Installing vim plugins"
-echo "----------------------"
-mkdir $HOME/.vim/doc 2>&1 >/dev/null
-vim --cmd "helptags $HOME/.vim/doc" --cmd "q"
-source ~/.bashrc
-source ~/.zshrc
-vim +PlugInstall +qa
-
-echo "Installing vimemacs"
-echo "-------------------"
-
-mkdir -p $HOME/.vim/doc 2>&1 >/dev/null
-mkdir -p $HOME/.vim/plugin 2>&1 >/dev/null
-cp -R ~/nondot/vimacs-0.93/doc $HOME/.vim/doc/
-cp -R ~/nondot/vimacs-0.93/plugin $HOME/.vim/plugin/
 
 echo "Installing Neobundle"
 echo "--------------------"
@@ -126,9 +79,46 @@ sh ~/.tmp/install_neobundle.sh
 rm ~/.tmp/install_neobundle.sh
 rmdir ~/.tmp 2>&1 >/dev/null
 
-echo "Editing neovim"
-echo "--------------"
-mkdir ~/bin 2>&1 >/dev/null
+
+echo "Installing vim plugins"
+echo "----------------------"
+vim +PlugInstall +UpdateRemotePlugins +qa
+nvim +UpdateRemotePlugins +CheckHealth +qa
+
+echo "Changing to zsh"
+chsh -s $(which zsh)
+
+
+echo "You'll need to log out for this to take effect"
+echo "----------------------------------------------"
+
+
+case "$(uname -s)" in
+   Darwin)
+     echo "running oxs defaults"
+     ~/.dotfiles/osx.sh
+
+     ;;
+
+   Linux)
+     echo 'Linux ... no osx defaults'
+
+     ;;
+esac
+
+echo "Correcting group permissions"
+echo "----------------------------"
+compaudit | xargs chmod g-w
+
+# echo "Installing vimemacs"
+# echo "-------------------"
+
+# mkdir -p $HOME/.vim/doc 2>&1 >/dev/null
+# mkdir -p $HOME/.vim/plugin 2>&1 >/dev/null
+# cp -R ~/nondot/vimacs-0.93/doc $HOME/.vim/doc/
+# cp -R ~/nondot/vimacs-0.93/plugin $HOME/.vim/plugin/
+
+
 
 echo "Installing sublime-text-3 preferences"
 echo "-------------------------------------"

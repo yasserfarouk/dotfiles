@@ -1,11 +1,7 @@
-
-# common settings for vim and nvim
-
-
+" common settings for vim and nvim
 " System Settings  ----------------------------------------------------------{{{
   " let &t_Cs = "\e[6m"
   " let &t_Ce = "\e[24m"
-  source ~/.local.vim
 " Neovim Settings
   " set termguicolors
   set mouse=a
@@ -78,7 +74,6 @@
   autocmd InsertEnter * let save_cwd = getcwd() | set autochdir
   autocmd InsertLeave * set noautochdir | execute 'cd' fnameescape(save_cwd)
   set formatoptions+=t
-  set inccommand=nosplit
   set shortmess=atIc
   set isfname-==
   set spell
@@ -258,88 +253,10 @@ nnoremap N Nzzzv
   nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
   nnoremap <silent> <C-h> :TmuxNavigateLeft<CR>
   nnoremap <silent> <C-;> :TmuxNavigatePrevious<cr>
-  tmap <C-j> <C-\><C-n>:TmuxNavigateDown<cr>
-  tmap <C-k> <C-\><C-n>:TmuxNavigateUp<cr>
-  tmap <C-l> <C-\><C-n>:TmuxNavigateRight<cr>
-  tmap <C-h> <C-\><C-n>:TmuxNavigateLeft<CR>
-  tmap <C-;> <C-\><C-n>:TmuxNavigatePrevious<cr>
 
 "}}}
 
-" vim-airline ---------------------------------------------------------------{{{
 
-  let g:webdevicons_enable_airline_statusline = 0
-  if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-  endif
-
-  let g:airline#extensions#tabline#enabled = 1
-  let g:airline#extensions#mike#enabled = 1
-  set hidden
-  let g:airline#extensions#tabline#fnamemod = ':t'
-  let g:airline#extensions#tabline#buffer_idx_mode = 1
-  let g:airline_powerline_fonts = 1
-  let g:airline_symbols.branch = ''
-  let g:airline_theme='oceanicnext'
-  cnoreabbrev <silent> <expr> x getcmdtype() == ":" && getcmdline() == 'x' ? 'Sayonara' : 'x'
-  tmap <leader>x <c-\><c-n>:bp! <BAR> bd! #<CR>
-  tmap <leader>1  <C-\><C-n><Plug>AirlineSelectTab1
-  tmap <leader>2  <C-\><C-n><Plug>AirlineSelectTab2
-  tmap <leader>3  <C-\><C-n><Plug>AirlineSelectTab3
-  tmap <leader>4  <C-\><C-n><Plug>AirlineSelectTab4
-  tmap <leader>5  <C-\><C-n><Plug>AirlineSelectTab5
-  tmap <leader>6  <C-\><C-n><Plug>AirlineSelectTab6
-  tmap <leader>7  <C-\><C-n><Plug>AirlineSelectTab7
-  tmap <leader>8  <C-\><C-n><Plug>AirlineSelectTab8
-  tmap <leader>9  <C-\><C-n><Plug>AirlineSelectTab9
-  nmap <leader>1 <Plug>AirlineSelectTab1
-  nmap <leader>2 <Plug>AirlineSelectTab2
-  nmap <leader>3 <Plug>AirlineSelectTab3
-  nmap <leader>4 <Plug>AirlineSelectTab4
-  nmap <leader>5 <Plug>AirlineSelectTab5
-  nmap <leader>6 <Plug>AirlineSelectTab6
-  nmap <leader>7 <Plug>AirlineSelectTab7
-  nmap <leader>8 <Plug>AirlineSelectTab8
-  nmap <leader>9 <Plug>AirlineSelectTab9
-  let g:airline#extensions#branch#format = 0
-  let g:airline_detect_spelllang=0
-  let g:airline_detect_spell=0
-  let g:airline#extensions#hunks#enabled = 0
-  let g:airline#extensions#wordcount#enabled = 0
-  let g:airline#extensions#whitespace#enabled = 0
-  " let g:airline_section_c = '%f%m'
-  " let g:airline_section_x = ''
-  let g:airline_section_y = ''
-  " let g:airline_section_z = '%l:%v'
-  let g:airline_section_z = '%{LineNoIndicator()} :%2c'
-  " let g:line_no_indicator_chars = [' ', '▁', '▂', '▃', '▄', '▅', '▆', '▇', '█']
-  let g:line_no_indicator_chars = ['⎺', '⎻', '⎼', '⎽', '_']
-  let g:airline_mode_map = {
-        \ 'n'  : '',
-        \ 'i' : '',
-        \ 'R' : '',
-        \ 'v' : '',
-        \ 'V' : '',
-        \ 'c' : '',
-        \ 's' : '',
-        \ 'S' : '',
-        \ ''  : '',
-        \ 't' : '',
-        \}
-  let g:airline#extensions#tabline#buffer_idx_format = {
-        \ '0': '0 ',
-        \ '1': '1 ',
-        \ '2': '2 ',
-        \ '3': '3 ',
-        \ '4': '4 ',
-        \ '5': '5 ',
-        \ '6': '6 ',
-        \ '7': '7 ',
-        \ '8': '8 ',
-        \ '9': '9 ',
-        \}
-
-"}}}
 
 " MultiCursor ---------------------------------------------------------------{{{
 
@@ -456,13 +373,6 @@ nnoremap <silent> <leader>f :Rgrep<CR>
 let Grep_Default_Options = '-IR'
 let Grep_Skip_Files = '*.log *.db'
 let Grep_Skip_Dirs = '.git node_modules'
-
-" terminal emulation
-if g:vim_bootstrap_editor == 'nvim'
-  nnoremap <silent> <leader>sh :terminal<CR>
-else
-  nnoremap <silent> <leader>sh :VimShellCreate<CR>
-endif
 
 " vimshell.vim
 let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
@@ -715,8 +625,6 @@ let g:jedi#show_call_signatures = "1"
 let g:jedi#completions_command = "<tab>"
 let g:jedi#smart_auto_mappings = 0
 
-" syntastic
-let g:syntastic_python_checkers=['python', 'flake8']
 
 " vim-airline
 let g:airline#extensions#virtualenv#enabled = 1

@@ -254,7 +254,6 @@ function compress()
   ssh-add ~/.ssh/id_rsa
 }
 
-alias gvim=nvim
+alias gvim=vim
 alias vi=nvim
 alias v=nvim
-alias vim=echo "use vi/nvim for nvim and gvim for vim"

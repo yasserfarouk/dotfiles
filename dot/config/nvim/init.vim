@@ -164,6 +164,7 @@
   call dein#end()
   filetype plugin indent on
 " }}}
+"
 
 
 let g:session_directory = "~/.config/nvim/session"
@@ -171,9 +172,10 @@ let g:session_directory = "~/.config/nvim/session"
 autocmd! bufwritepost init.vim source %
 nnoremap <S-F10> :e ~/.config/nvim/init.vim
 
+set inccommand=nosplit
+
 " Terminal mapping
 tmap <esc> <c-\><c-n><esc><cr>
-
 
 " Code formatting -----------------------------------------------------------{{{
 
@@ -185,7 +187,6 @@ tmap <esc> <c-\><c-n><esc><cr>
               \ 'stdin': 1,
               \ }
 " }}}
-
 
 " NERDTree ------------------------------------------------------------------{{{
   let g:vimfiler_ignore_pattern = ""
@@ -278,8 +279,6 @@ tmap <esc> <c-\><c-n><esc><cr>
 
 "}}}
 
-
-
 " Nvim terminal -------------------------------------------------------------{{{
 
   au BufEnter * if &buftype == 'terminal' | :startinsert | endif
@@ -287,7 +286,6 @@ tmap <esc> <c-\><c-n><esc><cr>
   autocmd TermOpen * set bufhidden=hide
 
 " }}}
-
 
 " Deoplete ------------------------------------------------------------------{{{
 
@@ -332,7 +330,6 @@ tmap <esc> <c-\><c-n><esc><cr>
   " call deoplete#enable_logging('DEBUG', 'deoplete.log')
   " call deoplete#custom#source('typescript', 'debug_enabled', 1)
 "}}}
-
 
 " Denite --------------------------------------------------------------------{{{
 
@@ -419,8 +416,6 @@ tmap <esc> <c-\><c-n><esc><cr>
     \] " Append ' --' after log to get commit info commit buffers
 "}}}
 
-
-
 " Linting -------------------------------------------------------------------{{{
 
   call neomake#configure#automake({
@@ -440,11 +435,11 @@ tmap <esc> <c-\><c-n><esc><cr>
   let g:airline#extensions#neomake#error_symbol='• '
   let g:airline#extensions#neomake#warning_symbol='•  '
 
-  hi link ALEError SpellBad
-  hi link ALEWarning SpellBad
+  "hi link ALEError SpellBad
+  "hi link ALEWarning SpellBad
   " Write this in your vimrc file
-  let g:ale_lint_on_text_changed = 'never'
-  let g:ale_lint_on_enter = 0
+  " let g:ale_lint_on_text_changed = 'never'
+  " let g:ale_lint_on_enter = 0
   " let g:neomake_verbose = 3
 "}}}
 
@@ -464,7 +459,6 @@ tmap <esc> <c-\><c-n><esc><cr>
   let g:neoformat_enabled_markdown = ['prettier']
 
 "}}}
-
 
 " Javascript ----------------------------------------------------------------{{{
 
@@ -536,8 +530,6 @@ tmap <esc> <c-\><c-n><esc><cr>
       \}
 " }}}
 
-
-
 " HTML ----------------------------------------------------------------------{{{
 
   let g:neomake_html_enabled_makers = []
@@ -566,6 +558,26 @@ tmap <esc> <c-\><c-n><esc><cr>
 " buffer management inside the terminal
 tmap <leader>, <C-\><C-n>:bnext<cr>
 tmap <leader>. <C-\><C-n>:bprevious<CR>
+
+" terminal emulation
+nnoremap <silent> <leader>sh :terminal<CR>
+
+" Tmux navigation
+tmap <C-j> <C-\><C-n>:TmuxNavigateDown<cr>
+tmap <C-k> <C-\><C-n>:TmuxNavigateUp<cr>
+tmap <C-l> <C-\><C-n>:TmuxNavigateRight<cr>
+tmap <C-h> <C-\><C-n>:TmuxNavigateLeft<CR>
+tmap <C-;> <C-\><C-n>:TmuxNavigatePrevious<cr>
+tmap <leader>x <c-\><c-n>:bp! <BAR> bd! #<CR>
+  tmap <leader>1  <C-\><C-n><Plug>AirlineSelectTab1
+  tmap <leader>2  <C-\><C-n><Plug>AirlineSelectTab2
+  tmap <leader>3  <C-\><C-n><Plug>AirlineSelectTab3
+  tmap <leader>4  <C-\><C-n><Plug>AirlineSelectTab4
+  tmap <leader>5  <C-\><C-n><Plug>AirlineSelectTab5
+  tmap <leader>6  <C-\><C-n><Plug>AirlineSelectTab6
+  tmap <leader>7  <C-\><C-n><Plug>AirlineSelectTab7
+  tmap <leader>8  <C-\><C-n><Plug>AirlineSelectTab8
+tmap <leader>9  <C-\><C-n><Plug>AirlineSelectTab9
 
 
 "*****************************************************************************
