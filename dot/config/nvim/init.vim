@@ -170,7 +170,7 @@
   " let &t_Ce = "\e[24m"
   source ~/.local.vim
 " Neovim Settings
-  set termguicolors
+  " set termguicolors
   set mouse=a
   " let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
   set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20
@@ -1236,6 +1236,10 @@ vnoremap <C-h> <ESC><C-w>hv
 vnoremap <C-j> <ESC><C-w>jv
 vnoremap <C-k> <ESC><C-w>kv
 vnoremap <C-l> <ESC><C-w>lv
+inoremap <C-h> <ESC><C-w>hv
+inoremap <C-j> <ESC><C-w>jv
+inoremap <C-k> <ESC><C-w>kv
+inoremap <C-l> <ESC><C-w>lv
 
 "" Vmap for maintain Visual Mode after shifting > and <
 vmap < <gv

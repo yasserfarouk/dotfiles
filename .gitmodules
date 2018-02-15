@@ -1,15 +1,6 @@
 [submodule "dot/z"]
 	path = dot/z
 	url = https://github.com/rupa/z
-[submodule "dot/tmux/plugins/tmux-battery"]
-	path = dot/tmux/plugins/tmux-battery
-	url = https://github.com/tmux-plugins/tmux-battery
-[submodule "dot/tmux/plugins/tpm"]
-	path = dot/tmux/plugins/tpm
-	url = https://github.com/tmux-plugins/tpm
-[submodule "dot/tmux/plugins/tmux-cpu"]
-	path = dot/tmux/plugins/tmux-cpu
-	url = https://github.com/tmux-plugins/tmux-cpu
 [submodule "nondot/zsh-completions"]
 	path = nondot/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions.git
