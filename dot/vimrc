@@ -226,6 +226,14 @@ nnoremap <silent> <leader>sh :VimShellCreate<CR>
 let g:syntastic_python_checkers=['python', 'flake8']
 
 
+" snippets
+let g:UltiSnipsExpandTrigger="F1"
+let g:UltiSnipsJumpForwardTrigger="F1"
+let g:UltiSnipsJumpBackwardTrigger="<C-F1>"
+let g:UltiSnipsEditSplit="vertical"
+
+
+
 "*****************************************************************************
 "*****************************************************************************
 

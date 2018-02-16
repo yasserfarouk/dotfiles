@@ -124,7 +124,11 @@
   call dein#add('Shougo/echodoc.vim')
   call dein#add('honza/vim-snippets')
 
+" Tag management
+  call dein#add('ludovicchabant/vim-gutentags')
 
+" Latex
+  call dein#add('')
 " Misc
   call dein#add('neoclide/todoapp.vim')
   call dein#add('junegunn/gv.vim')
@@ -645,6 +649,27 @@ tmap <leader>x <c-\><c-n>:bp! <BAR> bd! #<CR>
 tmap <leader>9  <C-\><C-n><Plug>AirlineSelectTab9
 
 
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <F1>     <Plug>(neosnippet_expand_or_jump)
+smap <F1>     <Plug>(neosnippet_expand_or_jump)
+xmap <F1>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <expr><TAB>
+\ pumvisible() ? "\<C-n>" :
+\ neosnippet#expandable_or_jumpable() ?
+\    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+
+
 "*****************************************************************************
 "*****************************************************************************
 
@@ -654,5 +679,4 @@ source ~/.local.vim
 if filereadable(expand("~/.config/nvim/local_init.vim"))
   source ~/.config/nvim/local_init.vim
 endif
-
 
