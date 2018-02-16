@@ -16,9 +16,6 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 setopt completeinword
 zstyle ':completion:*:*:git:*' script $HOME/.ysupport/git-completion.bash
 
-# set editing-mode vi
-# set blink-matching-paren on
-
 fpath=($HOME/.ysupport/zsh-completions $fpath)
 autoload -U compinit && compinit
 zmodload -i zsh/complist
@@ -39,18 +36,16 @@ antigen bundle pip
 antigen bundle lein
 antigen bundle command-not-found
 #antigen theme robbyrussell
-# Syntax highlighting bundle.
-antigen bundle zsh-users/zsh-syntax-highlighting
 
 antigen apply
 
 source ~/.z/z.sh
 
-#zstyle ':notify:*' command-complete-timeout 5
-#zstyle ':notify:*' error-icon "https://media3.giphy.com/media/10ECejNtM1GyRy/200_s.gif"
-#zstyle ':notify:*' error-title "Fail"
-#zstyle ':notify:*' success-icon "https://s-media-cache-ak0.pinimg.com/564x/b5/5a/18/b55a1805f5650495a74202279036ecd2.jpg"
-#zstyle ':notify:*' success-title "Success"
+zstyle ':notify:*' command-complete-timeout 5
+zstyle ':notify:*' error-icon "https://media3.giphy.com/media/10ECejNtM1GyRy/200_s.gif"
+zstyle ':notify:*' error-title "Fail"
+zstyle ':notify:*' success-icon "https://s-media-cache-ak0.pinimg.com/564x/b5/5a/18/b55a1805f5650495a74202279036ecd2.jpg"
+zstyle ':notify:*' success-title "Success"
 
 
 # export NVM_DIR="$HOME/.nvm"
@@ -66,3 +61,46 @@ eval "$(pyenv virtualenv-init -)"
 [[ -e "$HOME/anaconda3/bin/activate" ]] && source "$HOME/anaconda3/bin/activate"
 
 set -o emacs
+
+# Tell zsh where it can find the history file.
+# This is the default as suggested by the zsh wizard.
+export HISTFILE=~/.z_history
+# The maximum number of history entries to keep.
+export SAVEHIST=1000
+# The maximum number of history entries to keep alive in one session,
+# typically the same as SAVEHIST.
+export HISTSIZE=1000
+# Write new entries to the history incrementally instead of on
+# shell exit.
+setopt INC_APPEND_HISTORY
+# Let multiple instances of ZSH share the same active history. This doesn't
+# include bang expansions (!!, !$, etc...) which will still use the
+# local history.
+setopt SHARE_HISTORY
+# Stores start and elapsed time for each command in the history file.
+# Disable this for compatibility with other shells.
+setopt EXTENDED_HISTORY
+# Don't save duplicate history entries.
+setopt HIST_SAVE_NO_DUPS
+# Ignore unecessary whitespace (this is handled properly even with
+# quoting).
+setopt HIST_REDUCE_BLANKS
+# Don't save function definitions to the history file.
+setopt HIST_NO_FUNCTIONS
+# Don't store calls to `history` or `fc`.
+setopt HIST_NO_STORE
+# Disable that awful, annoying beep when you hit the edges of the history
+# file.
+setopt NO_HIST_BEEP
+
+# Normally the default, but bugs out in some versions of zsh + tmux and
+# needs to be set explicitly. Allows you to search your history using
+# ctrl-r.
+bindkey '^R' history-incremental-search-backward
+
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search # Up
+bindkey "^[[B" down-line-or-beginning-search # Down
