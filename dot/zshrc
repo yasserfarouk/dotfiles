@@ -5,11 +5,14 @@ for file in ~/.{aliases,prompt}; do
   [ -r "$file" ] && source "$file"
 done
 
+# load the correct .inputrc file
+ln -s -f $HOME/.dotfiles/inputrc_zsh ~/.inputrc
 source ~/.exports
+source ~/.zshenv
 
 autoload -U promptinit; promptinit
 unset file
-bindkey -v
+#bindkey -v
 # Disable zsh autocorrect
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
@@ -60,16 +63,14 @@ eval "$(pyenv virtualenv-init -)"
 [[ -e "$HOME/anaconda/bin/activate" ]] && source "$HOME/anaconda/bin/activate"
 [[ -e "$HOME/anaconda3/bin/activate" ]] && source "$HOME/anaconda3/bin/activate"
 
-set -o emacs
-
 # Tell zsh where it can find the history file.
 # This is the default as suggested by the zsh wizard.
 export HISTFILE=~/.z_history
 # The maximum number of history entries to keep.
-export SAVEHIST=1000
+export SAVEHIST=10000
 # The maximum number of history entries to keep alive in one session,
 # typically the same as SAVEHIST.
-export HISTSIZE=1000
+export HISTSIZE=10000
 # Write new entries to the history incrementally instead of on
 # shell exit.
 setopt INC_APPEND_HISTORY
@@ -104,3 +105,33 @@ zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
+
+# Better searching in command mode
+bindkey -M vicmd '?' history-incremental-search-backward
+bindkey -M vicmd '/' history-incremental-search-forward
+
+# Beginning search with arrow keys
+bindkey "^[OA" up-line-or-beginning-search
+bindkey "^[OB" down-line-or-beginning-search
+bindkey -M vicmd "k" up-line-or-beginning-search
+bindkey -M vicmd "j" down-line-or-beginning-search
+bindkey -M vicmd "^V" edit-command-line
+
+# Updates editor information when the keymap changes.
+function zle-keymap-select() {
+  zle reset-prompt
+  zle -R
+}
+
+zle -N zle-keymap-select
+
+function vi_mode_prompt_info() {
+  echo "${${KEYMAP/vicmd/[% NORMAL]%}/(main|viins)/[% INSERT]%}"
+}
+
+# define right prompt, regardless of whether the theme defined it
+RPS1='$(vi_mode_prompt_info)'
+RPS2=$RPS1
+
+
+source ~/.aliases

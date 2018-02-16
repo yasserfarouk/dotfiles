@@ -4,6 +4,8 @@ packages=(
 "node"
 "neovim"
 "zsh"
+"fzf"
+"fd"
 )
 pip_packages=(
 )
@@ -88,6 +90,7 @@ case "$(uname -s)" in
       brew unlink $i && brew link $i
       echo "---------------------------------------------------------"
     done
+
     ;;
 
    Linux)
@@ -105,6 +108,10 @@ case "$(uname -s)" in
     brew link vim
     ;;
 esac
+
+
+# installing fzf shortcuts
+$(brew --prefix)/opt/fzf/install
 
 # installing programs that require special care (e.g. tmux from HEAD and devicons usin npm)
 brew install tmux --HEAD
@@ -214,4 +221,4 @@ curl -L git.io/antigen > ~/antigen/antigen.zsh
 echo "----------------------"
 echo "Installed prerequisits"
 echo "----------------------"
-./quick-install.sh
+./quick-install

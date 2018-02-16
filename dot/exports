@@ -27,4 +27,14 @@ export HISTFILESIZE=1000000000
 export SAVEHIST=10000
 
 
+export FZF_DEFAULT_OPTS='--height 40% --reverse --border --ansi'
+export FZF_DEFAULT_COMMAND='fd --type file --follow  --color=always --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+
+export PATH="~/.pyenv/bin:$PATH"
+export PATH="$PATH:."
+
+
+
 

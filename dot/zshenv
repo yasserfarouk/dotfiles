@@ -2,13 +2,11 @@ export KEYTIMEOUT=1
 export TERMINAL_DARK=1
 export TERM=xterm-256color
 export CLICOLOR=1
-export EDITOR=vim
+#export EDITOR=vim
 export _Z_DATA="$HOME/.z-data"
-export JOURNAL_DIR="/Users/yasser/Journal"
+export JOURNAL_DIR="$HOME/Journal"
 export NVIM_PYTHON_LOG_FILE=/tmp/log
 export NVIM_PYTHON_LOG_LEVEL=INFO
-
-
 export ZLE_RPROMPT_INDENT=0
 export BULLETTRAIN_TIME_SHOW=false
 export BULLETTRAIN_STATUS_SHOW=false

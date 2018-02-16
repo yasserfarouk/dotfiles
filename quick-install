@@ -1,3 +1,4 @@
+#!/usr/bin/env zsh
 echo "Cloning my dotfiles into .dotfiles and others to .ysupport"
 echo "----------------------------------------------------------"
 git submodule init
