@@ -1,127 +1,45 @@
-" Initialized using vime-bootstrap for python then updated by me
-
 "*****************************************************************************
 "" Vim-PLug core
 "*****************************************************************************
-set nocompatible               " Be iMproved
+
+let g:make = 'gmake'
+if exists('make')
+    let g:make = 'make'
+endif
 
 let vimplug_exists=expand('~/.vim/autoload/plug.vim')
-
-" let g:vim_bootstrap_langs = "python"
-" let g:vim_bootstrap_editor = "vim"       " nvim or vim
-
 if !filereadable(vimplug_exists)
-  if !executable("curl")
-    echoerr "You have to install curl or first install vim-plug yourself!"
-    execute "q!"
-  endif
-  echo "Installing Vim-Plug..."
-  echo ""
-  silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  let g:not_finish_vimplug = "yes"
+    if !executable("curl")
+        echoerr "You have to install curl or first install vim-plug yourself!"
+        execute "q!"
+    endif
+    echo "Installing Vim-Plug..."
+    echo ""
+    silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    let g:not_finish_vimplug = "yes"
 
-  autocmd VimEnter * PlugInstall
+    autocmd VimEnter * PlugInstall
 endif
 
 " Required:
 call plug#begin(expand('~/.vim/plugged'))
-
 "*****************************************************************************
 "" Plug install packages
 "*****************************************************************************
-Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'mhartington/oceanic-next'
-Plug 'airblade/vim-gitgutter'
-Plug 'vim-scripts/grep.vim'
-Plug 'vim-scripts/CSApprox'
-Plug 'bronson/vim-trailing-whitespace'
-Plug 'Raimondi/delimitMate'
-Plug 'majutsushi/tagbar'
-Plug 'scrooloose/syntastic'
-Plug 'Yggdroot/indentLine'
-Plug 'avelino/vim-bootstrap-updater'
-Plug 'sheerun/vim-polyglot'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-surround'
-Plug 'junegunn/vim-easy-align'
-Plug 'tomtom/tcomment_vim'
-Plug 'junegunn/limelight.vim'
-Plug 'mhinz/vim-sayonara'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'MartinLafreniere/vim-PairTools'
-Plug 'elzr/vim-json'
-Plug 'tpope/vim-markdown', {'on_ft': 'markdown'}
-Plug 'dhruvasagar/vim-table-mode'
-
-" git
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-rhubarb'
-Plug 'chemzqm/vim-easygit'
-Plug 'jreybert/vimagit', {'on_cmd': ['Magit', 'MagitOnly']}
-Plug 'rhysd/committia.vim'
-Plug 'sgeb/vim-diff-fold'
-Plug 'airblade/vim-gitgutter'
-Plug 'junegunn/gv.vim'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'mattn/gist-vim'
-
-
-
-if isdirectory('/usr/local/opt/fzf')
-  Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
-else
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
-  Plug 'junegunn/fzf.vim'
+if filereadable(expand("~/.vim/common_plugins"))
+    source ~/.vim/common_plugins
 endif
-let g:make = 'gmake'
-if exists('make')
-        let g:make = 'make'
-endif
-Plug 'Shougo/vimproc.vim', {'do': g:make}
-
-"" Vim-Session
-Plug 'xolox/vim-misc'
-Plug 'xolox/vim-session'
-"
-if v:version >= 703
-  Plug 'Shougo/vimshell.vim'
+if filereadable(expand("~/.vim/vim_plugins"))
+    source ~/.vim/vim_plugins
 endif
 
-if v:version >= 704
-  "" Snippets
-  Plug 'SirVer/ultisnips'
+
+"" I keep local bundles that are specific to vim at local_bundles_vim
+if filereadable(expand("~/.vim/local_vim_plugins"))
+    source ~/.vim/local_vim_plugins
 endif
-
-Plug 'honza/vim-snippets'
-
-"" Color
-Plug 'tomasr/molokai'
-
-"*****************************************************************************
-"" Custom bundles
-"*****************************************************************************
-
-" python
-"" Python Bundle
-Plug 'davidhalter/jedi-vim'
-Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
-
-
-"*****************************************************************************
-"*****************************************************************************
-
-"" Include user's extra bundle
-if filereadable(expand("~/.vim/local_bundles.vim"))
-  source ~/.vim/local_bundles.vim
-endif
-
 call plug#end()
+
 
 " Required:
 filetype plugin indent on
@@ -134,86 +52,18 @@ let g:session_autosave = "no"
 let g:session_command_aliases = 1
 
 if !exists('g:not_finish_vimplug')
-  "colorscheme molokai
-  colorscheme OceanicNext
+	"colorscheme molokai
+	colorscheme OceanicNext
 endif
 
 " vim-airline ---------------------------------------------------------------{{{
 
-  let g:webdevicons_enable_airline_statusline = 0
-  if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-  endif
+let g:webdevicons_enable_airline_statusline = 0
+if !exists('g:airline_symbols')
+	let g:airline_symbols = {}
+endif
 
-  let g:airline#extensions#tabline#enabled = 1
-  let g:airline#extensions#mike#enabled = 1
-  set hidden
-  let g:airline#extensions#tabline#fnamemod = ':t'
-  let g:airline#extensions#tabline#buffer_idx_mode = 1
-  let g:airline_powerline_fonts = 1
-  let g:airline_symbols.branch = ''
-  let g:airline_theme='oceanicnext'
-  cnoreabbrev <silent> <expr> x getcmdtype() == ":" && getcmdline() == 'x' ? 'Sayonara' : 'x'
-  nmap <leader>1 <Plug>AirlineSelectTab1
-  nmap <leader>2 <Plug>AirlineSelectTab2
-  nmap <leader>3 <Plug>AirlineSelectTab3
-  nmap <leader>4 <Plug>AirlineSelectTab4
-  nmap <leader>5 <Plug>AirlineSelectTab5
-  nmap <leader>6 <Plug>AirlineSelectTab6
-  nmap <leader>7 <Plug>AirlineSelectTab7
-  nmap <leader>8 <Plug>AirlineSelectTab8
-  nmap <leader>9 <Plug>AirlineSelectTab9
-  let g:airline#extensions#branch#format = 0
-  let g:airline_detect_spelllang=0
-  let g:airline_detect_spell=0
-  let g:airline#extensions#hunks#enabled = 0
-  let g:airline#extensions#wordcount#enabled = 0
-  let g:airline#extensions#whitespace#enabled = 0
-  " let g:airline_section_c = '%f%m'
-  " let g:airline_section_x = ''
-  let g:airline_section_y = ''
-  " let g:airline_section_z = '%l:%v'
-  " let g:airline_section_z = '%{LineNoIndicator()} :%2c'
-  let g:line_no_indicator_chars = [' ', '▁', '▂', '▃', '▄', '▅', '▆', '▇', '█']
-  let g:line_no_indicator_chars = ['⎺', '⎻', '⎼', '⎽', '_']
-  let g:airline_mode_map = {
-        \ 'n'  : '',
-        \ 'i' : '',
-        \ 'R' : '',
-        \ 'v' : '',
-        \ 'V' : '',
-        \ 'c' : '',
-        \ 's' : '',
-        \ 'S' : '',
-        \ ''  : '',
-        \ 't' : '',
-        \}
-  let g:airline#extensions#tabline#buffer_idx_format = {
-        \ '0': '0 ',
-        \ '1': '1 ',
-        \ '2': '2 ',
-        \ '3': '3 ',
-        \ '4': '4 ',
-        \ '5': '5 ',
-        \ '6': '6 ',
-        \ '7': '7 ',
-        \ '8': '8 ',
-        \ '9': '9 ',
-        \}
 
-"}}}
-
-"" NERDTree configuration
-let g:NERDTreeChDirMode=2
-let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
-let g:NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
-let g:NERDTreeShowBookmarks=1
-let g:nerdtree_tabs_focus_on_files=1
-let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
-let g:NERDTreeWinSize = 50
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
-nnoremap <silent> <F2> :NERDTreeFind<CR>
-nnoremap <silent> <F3> :NERDTreeToggle<CR>
 
 " vimshell.vim
 let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
@@ -226,12 +76,13 @@ nnoremap <silent> <leader>sh :VimShellCreate<CR>
 let g:syntastic_python_checkers=['python', 'flake8']
 
 
-" snippets
-let g:UltiSnipsExpandTrigger="F1"
-let g:UltiSnipsJumpForwardTrigger="F1"
-let g:UltiSnipsJumpBackwardTrigger="<C-F1>"
-let g:UltiSnipsEditSplit="vertical"
-
+let g:esearch = {
+  \ 'adapter':    'ag',
+  \ 'backend':    'vimproc',
+  \ 'out':        'win',
+  \ 'batch_size': 1000,
+  \ 'use':        ['visual', 'hlsearch', 'last'],
+  \}
 
 
 "*****************************************************************************
@@ -241,7 +92,7 @@ source ~/.local.vim
 
 "" Include user's local vim config
 if filereadable(expand("~/.vim/local_init.vim"))
-  source ~/.vim/local_init.vim
+	source ~/.vim/local_init.vim
 endif
 
 

@@ -10,4 +10,4 @@ rm $HOME/.zshrc
 rm $HOME/.tmux.conf
 rm $HOME/.z-data
 
-./install
+./install.sh

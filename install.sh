@@ -221,4 +221,4 @@ curl -L git.io/antigen > ~/antigen/antigen.zsh
 echo "----------------------"
 echo "Installed prerequisits"
 echo "----------------------"
-./quick-install
+./quick-install.sh
