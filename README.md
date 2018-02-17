@@ -7,6 +7,12 @@ The main differences between this fork and the original repository are the follo
 - It works for both MacOSX and Linux
 - It installs more of the prerequisits and assumes very little about the machine
 - For linux machines, it installes linuxbrew and uses it to make all needed instlalations in the user's home directory without any need for root permissions
+- better restructuring of vim/nvim configuration
+- I use plug for both vim and nvim
+- I add backup and restoration of MacOSX program settings for may programs using (Mackup)[https://github.com/lra/mackup]
+- Sublime text settings are also synced in this repository.
+- .....
+
 
 ## Note to iterm
 I mostly use iterm2. Remember in this case use Source Code Pro for Powerline as the terminal font.
@@ -19,17 +25,6 @@ Once installed, click on the iterm color config in `config/colors` to add oceani
 ## Key VIM plugins
 Both .vimrc and .config/nvim/init.vim will be installed with more or less the same options. That allows you to use vim and nvim as needed.
 
-### Vim-Airline
-[vim-airline](https://github.com/vim-airline/vim-airline) is much lighterweight, intergrates with a bunch of plugins I
-already have, and is eaiser to set up.
-
-```
-call dein#add('vim-airline/vim-airline')
-```
-
-### Anything by Shougo
-The guy is big in the vim/neovim community and his plugins are top notch.
-Hell, even my plugin manager is made by him. If he ever sees this, thanks Shougo!
 
 ### [ryanoasis/vim-devicons](https://github.com/ryanoasis/vim-devicons)
 
