@@ -10,7 +10,9 @@ let mapleader = ','
 filetype on
 syntax on
 
-set termguicolors
+if has(termguicolors)
+	set termguicolors
+endif
 
 "" mouse settings
 set mouse=a
@@ -21,7 +23,6 @@ set fileencoding=utf-8
 set fileencodings=utf-8
 
 set hidden
-set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20
 set clipboard+=unnamedplus
 set nopaste
 set noshowmode
@@ -71,6 +72,7 @@ set ruler
 set nowrap
 
 set t_Co=256
+set background=dark
 "" Disable the blinking cursor.
 set gcr=a:blinkon0
 set scrolloff=3
@@ -87,13 +89,17 @@ set titlestring=%F
 
 "" underline current line
 set cursorline
-hi CursorLine term=NONE cterm=NONE ctermfg=NONE ctermbg=NONE guibg=NONE
-hi CursorLine cterm=underline
-hi CursorLine gui=underline
+highlight CursorLine term=NONE cterm=NONE ctermfg=NONE ctermbg=NONE guibg=NONE
+highlight CursorLine cterm=underline
+highlight CursorLine gui=underline
+highlight CursorLine term=underline
 
 "" GUI only options
-set guioptions=egmrti
-set gfn=Monospace\ 10
+if has('gui_running')
+	set guioptions=egmrti
+	set gfn=Monospace\ 10
+	set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20
+endif
 
 ""*************************************************************
 "" Mappings
@@ -128,13 +134,10 @@ inoremap <C-f> <C-x><C-f>
 "" insert mode
 inoremap <C-a> <C-o>:call <SID>home()<CR>
 inoremap <C-e> <End>
-inoremap <C-d> <Del>
-inoremap <C-h> <BS>
 inoremap <C-k> <Esc>lDa
-inoremap <C-u> <Esc>d0xi
-inoremap <C-y> <Esc>Pa
+inoremap <C-v> <Esc>Pa
 inoremap <C-s> <Esc>:w<CR>a
-inoremap <C-M-s> <Esc>:w<CR>a
+inoremap <C-M-s> <Esc>:wa<CR>a
 
 "moving from window to window in visual mode
 "that way you can move from window to window and resize with -,=,_,+ directly as needed
@@ -443,6 +446,13 @@ let g:session_command_aliases = 1
 "----------------------------------------------------------------------------}}}
 
 
+"" session management ----------------------------------------------------{{{
+let g:auto_save = 1  " enable AutoSave on Vim startup
+let g:auto_save_no_updatetime = 1  " do not change the 'updatetime' option
+let g:auto_save_silent = 1  " do not display the auto-save notification
+" let g:auto_save_postsave_hook = 'TagsGenerate'  " this will run :TagsGenerate after each save
+"----------------------------------------------------------------------------}}}
+
 "" MultiCursor ---------------------------------------------------------------{{{
 let g:multi_cursor_exit_from_visual_mode=0
 let g:multi_cursor_exit_from_insert_mode=0
@@ -546,9 +556,12 @@ let python_highlight_all = 1
 "" Visual Settings
 ""*****************************************************************************
 let no_buffers_menu=1
+let g:solarized_termcolors=256
+
 if !exists('g:not_finish_vimplug')
 	"colorscheme molokai
-	colorscheme OceanicNext
+	" colorscheme OceanicNext
+	colorscheme solarized
 endif
 
 

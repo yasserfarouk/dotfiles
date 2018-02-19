@@ -251,6 +251,19 @@ function compress()
   ssh-add ~/.ssh/id_rsa
 }
 
-alias gvim=vim
-alias vi=nvim
-alias v=nvim
+case "$(uname -s)" in
+   Darwin)
+    alias gvim=vim
+    alias vi=mvim
+    alias v=mvim
+
+    ;;
+
+   Linux)
+    alias gvim=vim
+    alias vi=nvim
+    alias v=nvim
+    ;;
+
+esac
+
