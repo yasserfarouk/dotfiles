@@ -10,7 +10,7 @@ let mapleader = ','
 filetype on
 syntax on
 
-if has(termguicolors)
+if has('termguicolors')
 	set termguicolors
 endif
 
@@ -89,89 +89,109 @@ set titlestring=%F
 
 "" underline current line
 set cursorline
-highlight CursorLine term=NONE cterm=NONE ctermfg=NONE ctermbg=NONE guibg=NONE
-highlight CursorLine cterm=underline
-highlight CursorLine gui=underline
-highlight CursorLine term=underline
+highlight CursorLine gui=underline cterm=underline ctermfg=None guifg=None
 
+"" customize search results colors
+highlight Search ctermbg=DarkBlue ctermfg=Yellow guibg=DarkBlue guifg=Yellow
 "" GUI only options
 if has('gui_running')
 	set guioptions=egmrti
-	set gfn=Monospace\ 10
+	set gfn=SourceCodePro\ NF
 	set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20
 endif
 
 ""*************************************************************
 "" Mappings
 ""*************************************************************
-set pastetoggle=<F6>
 
 "" --------------------
 "" General mappings
 "" --------------------
-"maximise horizontally
-map <Leader>= <C-w><Bar>
 
-"maximise vertically
-map <Leader>- <C-w>_
-
-"make all windows equally sized
-map <Leader><Leader> <C-w>=
-
+noremap  <silent> <Home> g<Home>
+noremap  <silent> <End>  g<End>
 
 "" --------------------
 "" Insert mode mappings
 "" --------------------
 
 "" duplicate a line
-inoremap <C-d> <Esc>ddi
+inoremap <C-d> <Esc>yyPji
+
 "" Navigate between display lines
+"" why <C-o> instead of <Esc>
 inoremap <silent> <Home> <C-o>g<Home>
 inoremap <silent> <End>  <C-o>g<End>
-inoremap <C-f> <C-x><C-f>
 
 "" Basic cursor movement and deletion keybindings from emacs, for vim.
 "" insert mode
 inoremap <C-a> <C-o>:call <SID>home()<CR>
 inoremap <C-e> <End>
-inoremap <C-k> <Esc>lDa
+inoremap <C-y> <Esc>lDa
 inoremap <C-v> <Esc>Pa
 inoremap <C-s> <Esc>:w<CR>a
 inoremap <C-M-s> <Esc>:wa<CR>a
+inoremap <M-Left> <Esc>ba
+inoremap <M-Right> <Esc>wa
 
-"moving from window to window in visual mode
-"that way you can move from window to window and resize with -,=,_,+ directly as needed
-inoremap <C-h> <ESC><C-w>hv
-inoremap <C-j> <ESC><C-w>jv
-inoremap <C-k> <ESC><C-w>kv
-inoremap <C-l> <ESC><C-w>lv
+" Split management
+inoremap <C-h> <ESC><C-w>h
+inoremap <C-j> <ESC><C-w>j
+inoremap <C-k> <ESC><C-w>k
+inoremap <C-l> <ESC><C-w>l
+inoremap <C-Left> <ESC><C-w>h
+inoremap <C-Down> <ESC><C-w>j
+inoremap <C-Up> <ESC><C-w>k
+inoremap <C-Right> <ESC><C-w>l
+inoremap <C--> <esc>:only<cr>a
+inoremap <C-\> <esc><C-w>_
+inoremap <C-=> <esc><C-w>=
+inoremap <C-q> <esc><C-w>c
+if has('macunix')
+	inoremap <D-c> <Esc>yy
+endif
+
+" ALlow shift-arrows to be used for selection
+inoremap <S-Down> <Esc>lvj
+inoremap <S-Up> <Esc>lvk
+inoremap <S-Left> <Esc>lvh
+inoremap <S-Right> <Esc>lvl
 
 "" --------------------
 "" Normal mode mappings
 "" --------------------
 nnoremap ; :
 
-nnoremap <S-F10> :e ~/.local.vimrc
-nnoremap <F10> :e ~/.config/nvim/init.vim
+" copy to end using Y because we cut to end with D
+nnoremap Y y$
 
+if has('nvim')
+	nnoremap <leader><leader>v :e ~/.local.vimrc ~/.config/nvim/init.vim<CR>
+else
+	nnoremap <leader><leader>v :e ~/.local.vimrc ~/.vimrc<CR>
+endif
+" function keys
 nnoremap <silent> <F2> :NERDTreeFind<CR>
 nnoremap <silent> <F3> :NERDTreeToggle<CR>
+nnoremap <silent> <F4> :TagbarToggle<CR>
+let g:UltiSnipsExpandTrigger="<F1>"
+let g:UltiSnipsJumpForwardTrigger="<F1>"
+let g:UltiSnipsJumpBackwardTrigger="<C-F1>"
+set pastetoggle=<F6>
 
-"" No need for ex mode
+"" No need for ex mode or s/S to move to insert mode.
 nnoremap Q <nop>
+nnoremap s :s
+nnoremap S <nop>
 
 "" Navigate between display lines
 nnoremap <silent><expr> k      v:count == 0 ? 'gk' : 'k'
 nnoremap <silent><expr> j      v:count == 0 ? 'gj' : 'j'
 nnoremap <silent><expr> <Up>   v:count == 0 ? 'gk' : 'k'
 nnoremap <silent><expr> <Down> v:count == 0 ? 'gj' : 'j'
-noremap  <silent> <Home> g<Home>
-noremap  <silent> <End>  g<End>
 
 "" copy current file path to clipboard
-nmap cp :let @+= expand("%") <cr>
-
-nnoremap Y y$
+nnoremap cp :let @+= expand("%") <cr>
 
 "" Search mappings: These will make it so that going to the next one in a
 "" search will center on the line it is found in.
@@ -185,8 +205,7 @@ nnoremap <silent> <esc> :noh<cr>
 nnoremap <leader>d "_d
 
 "" Align blocks of text and keep them selected
-nnoremap <leader>e :call <SID>SynStack()<CR>
-
+nnoremap <leader>a :call <SID>SynStack()<CR>
 
 "" Search mappings: These will make it so that going to the next one in a
 "" search will center on the line it's found in.
@@ -196,26 +215,23 @@ nnoremap N Nzzzv
 "" Space to toggle folds.
 nnoremap <Space> za
 
-"" Split
-noremap <Leader>- :<C-u>split<CR>
-noremap <Leader>\ :<C-u>vsplit<CR>
-
 "" Git
 noremap <Leader>ga :Gwrite<CR>
 noremap <Leader>gc :Gcommit<CR>
 noremap <Leader>gsh :Gpush<CR>
-noremap <Leader>gll :Gpull<CR>
+noremap <Leader>gpu :Gpull<CR>
 noremap <Leader>gs :Gstatus<CR>
 noremap <Leader>gb :Gblame<CR>
 noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
+nnoremap <leader>gm :Magit<CR>
+nnoremap <Leader>go :.Gbrowse<CR>
 
 " session management
 nnoremap <leader>so :OpenSession<Space>
 nnoremap <leader>ss :SaveSession<Space>
 nnoremap <leader>sd :DeleteSession<CR>
 nnoremap <leader>sc :CloseSession<CR>
-
 
 "" Set working directory
 nnoremap <leader>. :lcd %:p:h<CR>
@@ -227,69 +243,77 @@ noremap <Leader>E :e <C-R>=expand("%:p:h") . "/" <CR>
 noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
 
 "" FZF shortcuts
-nnoremap <silent> <leader>b :Buffers<CR>
+nnoremap <silent> <leader>b :Buffers<CR>uun
 nnoremap <silent> <leader>e :FZF -m<CR>
 
 "" terminal emulation
 nnoremap <silent> <leader>sh :terminal<CR>
 
-"" side bar
-nmap <silent> <F4> :TagbarToggle<CR>
-
-noremap YY "+y<CR>
-noremap <leader>p "+gP<CR>
-noremap XX "+x<CR>
-
-"" Open current line on GitHub
-nnoremap <Leader>o :.Gbrowse<CR>
-
-" make ; behave like : in command line
-nnoremap ; :
-
-"" Buffer nav
-noremap <leader>z :bp<CR>
-noremap <leader>q :bp<CR>
-noremap <leader>x :bn<CR>
-noremap <leader>w :bn<CR>
-
-"" Close buffer
-noremap <leader>c :bd<CR>
-
 "" Clean search (highlight)
 nnoremap <silent> <leader><space> :noh<cr>
 
 " Buffer management
-
+noremap <leader>c :bd<CR>
 nmap <leader>, :bnext<CR>
 nmap <leader>. :bprevious<CR>
 
 " WINDOW MANAGEMENT SETTINGS
+noremap <Leader>- :<C-u>split<CR>
+noremap <Leader>\ :<C-u>vsplit<CR>
+nnoremap <leader>o :only<cr>
+nnoremap <leader>w= <C-w>=
+nnoremap <leader>q :wincmd q<cr>
+nnoremap <leader>h     :call WinMove('h')<cr>
+nnoremap <leader>k     :call WinMove('k')<cr>
+nnoremap <leader>l     :call WinMove('l')<cr>
+nnoremap <leader>j     :call WinMove('j')<cr>
+nnoremap <leader><Left> :call WinMove('h')<cr>
+nnoremap <leader><Down> :call WinMove('j')<cr>
+nnoremap <leader><Up> :call WinMove('k')<cr>
+nnoremap <leader><Right> :call WinMove('l')<cr>
+nnoremap <leader>H              :wincmd H<cr>
+nnoremap <leader>K              :wincmd K<cr>
+nnoremap <leader>L              :wincmd L<cr>
+nnoremap <leader>J              :wincmd J<cr>
+nnoremap <M-Left> <Esc><C-w>
+nnoremap <M-Right> <Esc><C-w>l
+nnoremap <M-Up> <Esc><C-w>k
+nnoremap <M-Down> <Esc><C-w>j
+nnoremap <M-S-left>  :3wincmd <<cr>
+nnoremap <M-S-right> :3wincmd ><cr>
+nnoremap <M-S-up>    :3wincmd +<cr>
+nnoremap <M-S-down>  :3wincmd -<cr>
 
-"moving from window to window
-nnoremap <C-h>  <C-w>h
-nnoremap <C-j>  <C-w>j
-nnoremap <C-k>  <C-w>k
-nnoremap <C-l>  <C-w>l
-noremap <M-Left> <Esc><C-w>h
-noremap <M-Right> <Esc><C-w>l
-noremap <M-Up> <Esc><C-w>k
-noremap <M-Down> <Esc><C-w>j
 "open new blank file
 nnoremap o<C-h> :lefta vsp new<cr>
 nnoremap o<C-j> :bel sp new<cr>
 nnoremap o<C-k> :abo sp new<cr>
 nnoremap o<C-l> :rightb vsp new<cr>
 
-"move window
-nnoremap <Leader><C-h> <C-W>H
-nnoremap <Leader><C-j> <C-W>J
-nnoremap <Leader><C-k> <C-W>K
-nnoremap <Leader><C-l> <C-W>L
+" comment
+nnoremap <C-/> :TComment<cr>
 
+" allow shift arrows to copy
+nnoremap <S-Down> vj
+nnoremap <S-Up> vk
+nnoremap <S-Left> vh
+nnoremap <S-Right> vl
 
+" insert from mac keyboard in normal mode
+if has('macunix')
+	" pbcopy for OSX copy/paste
+	nmap <C-v> :r !pbpaste<cr>
+endif
 "" --------------------
 "" Visual mode mappings
 "" --------------------
+vnoremap ; :
+
+vnoremap <S-Down> j
+vnoremap <S-Up> k
+vnoremap <S-Left> h
+vnoremap <S-Right> l
+
 vmap < <gv
 vmap > >gv
 vnoremap <leader>d "_d
@@ -306,25 +330,9 @@ vnoremap <Space> za
 
 if has('macunix')
 	" pbcopy for OSX copy/paste
-	vmap <C-x> :!pbcopy<CR>
+	vmap <C-v> :r !pbpaste<CR>
 	vmap <C-c> :w !pbcopy<CR><CR>
 endif
-
-"change windowsizes in visual mode
-"horizontally - always three chars else it takes ages
-vnoremap - 3<C-w><
-vnoremap = 3<C-w>>
-
-"vertically - always three chars else it takes ages
-vnoremap _ 3<C-w>-
-vnoremap + 3<C-w>+
-
-"moving from window to window in visual mode
-"that way you can move from window to window and resize with -,=,_,+ directly as needed
-vnoremap <C-h> <ESC><C-w>hv
-vnoremap <C-j> <ESC><C-w>jv
-vnoremap <C-k> <ESC><C-w>kv
-vnoremap <C-l> <ESC><C-w>lv
 
 "" Vmap for maintain Visual Mode after shifting > and <
 vmap < <gv
@@ -367,14 +375,15 @@ cmap w!! w !sudo tee % >/dev/null
 
 "" auto-mappings
 "" automatic sourcing of this file after writing
-autocmd! bufwritepost .local.vimrc source %
+autocmd! bufwritepost .local.vim source %
+autocmd! bufwritepost .local.vim source %
+autocmd! bufwritepost init.vim source %
+autocmd! bufwritepost .vimrc source %
 if has('nvim')
 	autocmd! bufwritepost .local.vimrc source ~/.config/nvim/init.vim
 else
 	autocmd! bufwritepost .local.vimrc source ~/.vimrc
 endif
-autocmd! bufwritepost init.vim source %
-autocmd! bufwritepost .vimrc source %
 
 
 "" remove trailing whitespaces before writing a file
@@ -438,18 +447,23 @@ endif
 ""*************************************************************
 
 "" session management ----------------------------------------------------{{{
-let g:session_directory = "~/.config/nvim/session"
+if has('nvim')
+	let g:session_directory = "~/.config/nvim/session"
+else
+	let g:session_directory = "~/.vim/session"
+endif
+
 let g:session_autoload = "no"
 let g:session_autosave = "no"
-let g:session_command_aliases = 1
+let g:session_command_aliases = 0
 
 "----------------------------------------------------------------------------}}}
 
 
 "" session management ----------------------------------------------------{{{
-let g:auto_save = 1  " enable AutoSave on Vim startup
+let g:auto_save = 0  " enable AutoSave on Vim startup
 let g:auto_save_no_updatetime = 1  " do not change the 'updatetime' option
-let g:auto_save_silent = 1  " do not display the auto-save notification
+let g:auto_save_silent = 0  " do not display the auto-save notification
 " let g:auto_save_postsave_hook = 'TagsGenerate'  " this will run :TagsGenerate after each save
 "----------------------------------------------------------------------------}}}
 
@@ -473,7 +487,7 @@ let g:gitgutter_sign_modified_removed = '│'
 "-----------------------------------------------------------------------------}}}
 
 " Easy Git -------------------------------------------------------------------{{{
-let g:easygit_enable_command = 1
+let g:easygit_enable_command = 0
 "-----------------------------------------------------------------------------}}}
 
 "" NERDTree configuration ----------------------------------------------------{{{
@@ -587,7 +601,6 @@ endif
 let g:oceanic_next_terminal_bold = 1
 let g:oceanic_next_terminal_italic = 1
 let g:oceanic_next_highlight_current_line =1
-set cursorline
 colorscheme OceanicNext
 " colorscheme one
 " set background=dark
@@ -765,9 +778,6 @@ endif
 "----------------------------------------------------------------------------}}}
 
 " snippets ------------------------------------------------------------------{{{
-let g:UltiSnipsExpandTrigger="<F1>"
-let g:UltiSnipsJumpForwardTrigger="<F1>"
-let g:UltiSnipsJumpBackwardTrigger="<C-F1>"
 let g:UltiSnipsEditSplit="vertical"
 
 "----------------------------------------------------------------------------}}}
@@ -862,3 +872,17 @@ function! s:split_line_text_at_cursor()
 	let text_before_cursor = (col('.') > 1) ? line_text[: col('.')-2] : ''
 	return [text_before_cursor, text_after_cursor]
 endfunction
+
+function! WinMove(key)
+  let t:curwin = winnr()
+  exec "wincmd ".a:key
+  if (t:curwin == winnr()) "we havent moved
+    if (match(a:key,'[jk]')) "were we going up/down
+      wincmd v
+    else
+      wincmd s
+    endif
+    exec "wincmd ".a:key
+  endif
+endfunction
+

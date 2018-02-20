@@ -6,6 +6,7 @@ packages=(
 "zsh"
 "fzf"
 "fd"
+"ranger"
 )
 pip_packages=(
 )
