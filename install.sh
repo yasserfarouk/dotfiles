@@ -201,6 +201,11 @@ cd $HOME/fonts
 curl -OJL https://github.com/ryanoasis/nerd-fonts/releases/download/v1.2.0/SourceCodePro.zip
 unzip SourceCodePro.zip
 
+curl -OJL https://github.com/ryanoasis/nerd-fonts/releases/download/v1.2.0/FiraCode.zip
+unzip FiraCode.zip
+
+rm "*windows*" 2>&1 >/dev/null
+rm "*Windows*" 2>&1 >/dev/null
 case "$(uname -s)" in
    Darwin)
 	mkdir $HOME/Library/Fonts 2>&1 >/dev/null

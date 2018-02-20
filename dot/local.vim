@@ -71,8 +71,6 @@ syntax on
 set ruler
 set nowrap
 
-set t_Co=256
-set background=dark
 "" Disable the blinking cursor.
 set gcr=a:blinkon0
 set scrolloff=3
@@ -86,19 +84,6 @@ set modelines=10
 set title
 set titleold="Terminal"
 set titlestring=%F
-
-"" underline current line
-set cursorline
-highlight CursorLine gui=underline cterm=underline ctermfg=None guifg=None
-
-"" customize search results colors
-highlight Search ctermbg=DarkBlue ctermfg=Yellow guibg=DarkBlue guifg=Yellow
-"" GUI only options
-if has('gui_running')
-	set guioptions=egmrti
-	set gfn=SourceCodePro\ NF
-	set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20
-endif
 
 ""*************************************************************
 "" Mappings
@@ -570,41 +555,60 @@ let python_highlight_all = 1
 "" Visual Settings
 ""*****************************************************************************
 let no_buffers_menu=1
-let g:solarized_termcolors=256
+
+"" underline current line
+set cursorline
+highlight CursorLine gui=underline cterm=underline ctermfg=None guifg=None
+
+"" customize search results colors
+highlight Search ctermbg=DarkBlue ctermfg=Yellow guibg=DarkBlue guifg=Yellow
+
+"" GUI only options
+if has('gui_running')
+	set guioptions=egmrti
+	set gfn= FiraCoda\ Nerd\ Font\ Mono
+	set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20
+else
+	set t_Co=256
+endif
 
 if !exists('g:not_finish_vimplug')
 	"colorscheme molokai
 	" colorscheme OceanicNext
-	colorscheme solarized
-endif
-
-
-if has("gui_running")
-	let g:indentLine_color_gui = '#343d46'
-	if has("gui_mac") || has("gui_macvim")
-		set guifont=Menlo:h12
-		set transparency=7
+	if has('gui_running')
+		colorscheme solarized
+	else
+		autocmd VimEnter * GuiColorScheme solarized
 	endif
-	let g:indentLine_char="⎸"
-else
-	let g:CSApprox_loaded = 1
+	set background=dark
 
-	" IndentLine
-	let g:indentLine_enabled = 1
-	let g:indentLine_concealcursor = 0
-	let g:indentLine_char = '┆'
-	let g:indentLine_faster = 1
+	if has("gui_running")
+		let g:indentLine_color_gui = '#343d46'
+		if has("gui_mac") || has("gui_macvim")
+			set guifont=FiraCoda\ Nerd\ Font\ Mono
+			set transparency=7
+		endif
+		let g:indentLine_char="⎸"
+	else
+		let g:CSApprox_loaded = 1
+
+		" IndentLine
+		let g:indentLine_enabled = 1
+		let g:indentLine_concealcursor = 0
+		let g:indentLine_char = '┆'
+		let g:indentLine_faster = 1
+	endif
+
+
+	"" Themes, Commands, etc  ----------------------------------------------------{{{
+	let g:oceanic_next_terminal_bold = 1
+	let g:oceanic_next_terminal_italic = 1
+	let g:oceanic_next_highlight_current_line =0
+	colorscheme OceanicNext
+	" colorscheme one
+	" set background=dark
+	"----------------------------------------------------------------------------}}}
 endif
-
-
-"" Themes, Commands, etc  ----------------------------------------------------{{{
-let g:oceanic_next_terminal_bold = 1
-let g:oceanic_next_terminal_italic = 1
-let g:oceanic_next_highlight_current_line =1
-colorscheme OceanicNext
-" colorscheme one
-" set background=dark
-"----------------------------------------------------------------------------}}}
 
 "" Vim-Devicons -------------------------------------------------------------{{{
 let g:NERDTreeGitStatusNodeColorization = 1
