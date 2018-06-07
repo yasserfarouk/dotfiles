@@ -113,7 +113,6 @@ inoremap <silent> <End>  <C-o>g<End>
 inoremap <C-a> <C-o>:call <SID>home()<CR>
 inoremap <C-e> <End>
 inoremap <C-y> <Esc>lDa
-inoremap <C-v> <Esc>Pa
 inoremap <C-s> <Esc>:w<CR>a
 inoremap <C-M-s> <Esc>:wa<CR>a
 inoremap <M-Left> <Esc>ba
@@ -134,6 +133,7 @@ inoremap <C-=> <esc><C-w>=
 inoremap <C-q> <esc><C-w>c
 if has('macunix')
 	inoremap <D-c> <Esc>yy
+	inoremap <D-v> <Esc>Pa
 endif
 
 " ALlow shift-arrows to be used for selection
@@ -151,22 +151,26 @@ nnoremap ; :
 nnoremap Y y$
 
 if has('nvim')
-	nnoremap <leader><leader>v :e ~/.local.vimrc ~/.config/nvim/init.vim<CR>
+	nnoremap <leader><leader>v :e ~/.local.vim<CR>:vsplit ~/.config/nvim/init.vim<CR>
 else
-	nnoremap <leader><leader>v :e ~/.local.vimrc ~/.vimrc<CR>
+	nnoremap <leader><leader>v :e ~/.local.vim<CR>:vsplit ~/.vimrc<CR>
+endif
+if has('nvim')
+	nnoremap <leader><leader>p :e ~/.vim/common_plugins<CR>:vsplit ~/.vim/nvim_plugins<CR>
+else
+	nnoremap <leader><leader>p :e ~/.vim/common_plugins<CR>:vsplit ~/.vim/vim_plugins<CR>
 endif
 " function keys
-nnoremap <silent> <F2> :NERDTreeFind<CR>
+nnoremap <silent> <S-F3> :NERDTreeFind<CR>
 nnoremap <silent> <F3> :NERDTreeToggle<CR>
 nnoremap <silent> <F4> :TagbarToggle<CR>
-let g:UltiSnipsExpandTrigger="<F1>"
-let g:UltiSnipsJumpForwardTrigger="<F1>"
-let g:UltiSnipsJumpBackwardTrigger="<C-F1>"
+let g:UltiSnipsExpandTrigger="<C-p>"
+let g:UltiSnipsJumpForwardTrigger="<C-p>"
+let g:UltiSnipsJumpBackwardTrigger="<C-n>"
 set pastetoggle=<F6>
 
 "" No need for ex mode or s/S to move to insert mode.
 nnoremap Q <nop>
-nnoremap s :s
 nnoremap S <nop>
 
 "" Navigate between display lines
@@ -190,7 +194,7 @@ nnoremap <silent> <esc> :noh<cr>
 nnoremap <leader>d "_d
 
 "" Align blocks of text and keep them selected
-nnoremap <leader>a :call <SID>SynStack()<CR>
+"nnoremap <leader>a :call <SID>SynStack()<CR>
 
 "" Search mappings: These will make it so that going to the next one in a
 "" search will center on the line it's found in.
@@ -230,12 +234,13 @@ noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
 "" FZF shortcuts
 nnoremap <silent> <leader>b :Buffers<CR>uun
 nnoremap <silent> <leader>e :FZF -m<CR>
+nnoremap <silent> <leader>F :FZF -m<CR>
 
 "" terminal emulation
 nnoremap <silent> <leader>sh :terminal<CR>
 
 "" Clean search (highlight)
-nnoremap <silent> <leader><space> :noh<cr>
+nnoremap <silent> <leader><leader> :noh<cr>
 
 " Buffer management
 noremap <leader>c :bd<CR>
@@ -260,14 +265,10 @@ nnoremap <leader>H              :wincmd H<cr>
 nnoremap <leader>K              :wincmd K<cr>
 nnoremap <leader>L              :wincmd L<cr>
 nnoremap <leader>J              :wincmd J<cr>
-nnoremap <M-Left> <Esc><C-w>
-nnoremap <M-Right> <Esc><C-w>l
-nnoremap <M-Up> <Esc><C-w>k
-nnoremap <M-Down> <Esc><C-w>j
-nnoremap <M-S-left>  :3wincmd <<cr>
-nnoremap <M-S-right> :3wincmd ><cr>
-nnoremap <M-S-up>    :3wincmd +<cr>
-nnoremap <M-S-down>  :3wincmd -<cr>
+nnoremap <C-h>  :3wincmd <<cr>
+nnoremap <C-l>> :3wincmd ><cr>
+nnoremap <C-k>    :3wincmd +<cr>
+nnoremap <C-j>  :3wincmd -<cr>
 
 "open new blank file
 nnoremap o<C-h> :lefta vsp new<cr>
@@ -287,7 +288,7 @@ nnoremap <S-Right> vl
 " insert from mac keyboard in normal mode
 if has('macunix')
 	" pbcopy for OSX copy/paste
-	nmap <C-v> :r !pbpaste<cr>
+	nmap <D-v> :r !pbpaste<cr>
 endif
 "" --------------------
 "" Visual mode mappings
@@ -360,14 +361,13 @@ cmap w!! w !sudo tee % >/dev/null
 
 "" auto-mappings
 "" automatic sourcing of this file after writing
-autocmd! bufwritepost .local.vim source %
-autocmd! bufwritepost .local.vim source %
-autocmd! bufwritepost init.vim source %
-autocmd! bufwritepost .vimrc source %
+autocmd! bufwritepost ~/.local.vim source %
+autocmd! bufwritepost ~/.config/nvim/init.vim source %
+autocmd! bufwritepost ~/.vimrc source %
 if has('nvim')
-	autocmd! bufwritepost .local.vimrc source ~/.config/nvim/init.vim
+	autocmd! bufwritepost ~/.local.vim source ~/.config/nvim/init.vim
 else
-	autocmd! bufwritepost .local.vimrc source ~/.vimrc
+	autocmd! bufwritepost ~/.local.vim source ~/.vimrc
 endif
 
 
@@ -384,8 +384,8 @@ autocmd BufReadPost *
 autocmd BufRead * normal zz
 
 "" set updatetime=500
-autocmd InsertEnter * let save_cwd = getcwd() | set autochdir
-autocmd InsertLeave * set noautochdir | execute 'cd' fnameescape(save_cwd)
+" autocmd InsertEnter * let save_cwd = getcwd() | set autochdir
+" autocmd InsertLeave * set noautochdir | execute 'cd' fnameescape(save_cwd)
 
 
 "" The PC is fast enough, do syntax highlight syncing from start unless 200 lines
@@ -522,9 +522,6 @@ autocmd FileType java setlocal omnifunc=javacomplete#Complete
 let g:python_host_prog = '<<nvimpy2>>'
 let g:python3_host_prog = '<<nvimpy3>>'
 " let $NVIM_PYTHON_LOG_FILE='nvim-python.log'
-let g:jedi#auto_vim_configuration = 1
-let g:jedi#documentation_command = "<leader>k"
-let g:jedi#completions_enabled = 1
 
 " vim-python
 augroup vimrc-python
@@ -535,14 +532,16 @@ augroup vimrc-python
 augroup END
 
 " jedi-vim
+let g:jedi#auto_vim_configuration = 1
+let g:jedi#completions_enabled = 0
 let g:jedi#popup_on_dot = 0
-let g:jedi#goto_assignments_command = "<leader>g"
-let g:jedi#goto_definitions_command = "<leader>d"
-let g:jedi#documentation_command = "K"
+let g:jedi#goto_assignments_command = "<leader>a"
+let g:jedi#goto_definitions_command = "<leader>g"
+let g:jedi#documentation_command = "<F1>"
 let g:jedi#usages_command = "<leader>n"
-let g:jedi#rename_command = "<leader>r"
+let g:jedi#rename_command = "<F2>"
 let g:jedi#show_call_signatures = "1"
-let g:jedi#completions_command = "<tab>"
+let g:jedi#completions_command = "<C-p>"
 let g:jedi#smart_auto_mappings = 0
 
 " Syntax highlight
@@ -558,7 +557,7 @@ let no_buffers_menu=1
 
 "" underline current line
 set cursorline
-highlight CursorLine gui=underline cterm=underline ctermfg=None guifg=None
+highlight CursorLine gui=underline cterm=underline
 
 "" customize search results colors
 highlight Search ctermbg=DarkBlue ctermfg=Yellow guibg=DarkBlue guifg=Yellow
@@ -568,47 +567,44 @@ if has('gui_running')
 	set guioptions=egmrti
 	set gfn= FiraCoda\ Nerd\ Font\ Mono
 	set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20
-else
-	set t_Co=256
+" else
+" 	set t_Co=256
 endif
 
-if !exists('g:not_finish_vimplug')
+" if !exists('g:not_finish_vimplug')
 	"colorscheme molokai
 	" colorscheme OceanicNext
-	if has('gui_running')
-		colorscheme solarized
-	else
-		autocmd VimEnter * GuiColorScheme solarized
-	endif
-	set background=dark
+colorscheme solarized
+set background=light
 
-	if has("gui_running")
-		let g:indentLine_color_gui = '#343d46'
-		if has("gui_mac") || has("gui_macvim")
-			set guifont=FiraCoda\ Nerd\ Font\ Mono
-			set transparency=7
-		endif
-		let g:indentLine_char="⎸"
-	else
-		let g:CSApprox_loaded = 1
-
-		" IndentLine
-		let g:indentLine_enabled = 1
-		let g:indentLine_concealcursor = 0
-		let g:indentLine_char = '┆'
-		let g:indentLine_faster = 1
+if has("gui_running")
+	let g:indentLine_color_gui = '#343d46'
+	if has("gui_mac") || has("gui_macvim")
+		set guifont=FiraCoda\ Nerd\ Font\ Mono
+		set transparency=7
 	endif
+	let g:indentLine_char="|"
+	" let g:indentLine_char="⎸"
+else
+	let g:CSApprox_loaded = 1
+
+	" IndentLine
+	let g:indentLine_enabled = 1
+	let g:indentLine_concealcursor = 0
+	let g:indentLine_char = '┆'
+	let g:indentLine_faster = 1
+endif
 
 
 	"" Themes, Commands, etc  ----------------------------------------------------{{{
-	let g:oceanic_next_terminal_bold = 1
-	let g:oceanic_next_terminal_italic = 1
-	let g:oceanic_next_highlight_current_line =0
-	colorscheme OceanicNext
+	" let g:oceanic_next_terminal_bold = 1
+	" let g:oceanic_next_terminal_italic = 1
+	" let g:oceanic_next_highlight_current_line =0
+	" colorscheme OceanicNext
 	" colorscheme one
 	" set background=dark
 	"----------------------------------------------------------------------------}}}
-endif
+" endif
 
 "" Vim-Devicons -------------------------------------------------------------{{{
 let g:NERDTreeGitStatusNodeColorization = 1
@@ -816,6 +812,7 @@ let g:CommandTCursorRightMap = ['<Right>', '<C-f>']
 let g:CommandTBackspaceMap   = ['<BS>',    '<C-h>']
 let g:CommandTDeleteMap      = ['<Del>',   '<C-d>']
 "----------------------------------------------------------------------------}}}
+
 
 ""*****************************************************************************
 "" Functions

@@ -8,7 +8,6 @@ set editing-mode emacs
 "\e[5D": backward-word
 "\e[C": forward-word
 "\e[D": backward-word
-SPACE: magic-space
 
 set colored-stats On
 set completion-ignore-case On

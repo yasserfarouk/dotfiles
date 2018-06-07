@@ -12,7 +12,6 @@ set editing-mode emacs
 "\e[6~": history-search-forward
 "\e[A": history-search-backward
 "\e[B": history-search-forward
-SPACE: magic-space
 
 set colored-stats On
 set completion-ignore-case On

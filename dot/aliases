@@ -31,7 +31,6 @@ alias fh='open -a Finder .'
 alias textedit='open -a TextEdit'
 alias hex='open -a "Hex Fiend"'
 alias skype='open -a Skype'
-alias slack="open -a '/Applications/Slack.app'"
 
 # Usefull stuff for presentation and seeing dotfiles
 alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
@@ -45,7 +44,7 @@ alias dsclean='find . -type f -name .DS_Store -print0 | xargs -0 rm'
 # Flush your dns cache
 alias flush='dscacheutil -flushcache'
 
-# Because Typing python -m SimpleHTTPServer is too Damn Long
+# Because Typing python -m http.server is too Damn Long
 # Start an HTTP server from a directory, optionally specifying the port
 function server() {
     local port="${1:-8000}"
@@ -53,7 +52,7 @@ function server() {
   open -a google\ chrome\ canary "http://localhost:${port}/" --args --disable-web-security
   # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
   # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
-  python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
+  python -c $'import http.server;\nmap = http.server.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
 }
 
 function download(){
@@ -95,11 +94,6 @@ function ghPages(){
 alias c='clear'
 alias k='clear'
 alias cls='clear'
-
-# presentation crap
-  # alias whoamireally='echo "Mike Hartington
-  # Dev Advocate for Ionic
-  # Beer lover and Cat lover" '
 
 # archive file or folder
 function compress()
@@ -253,9 +247,9 @@ function compress()
 
 case "$(uname -s)" in
    Darwin)
-    alias gvim=vim
-    alias vi=mvim
-    alias v=mvim
+    alias gvim=mvim
+    alias vi=vim
+    alias v=nvim
 
     ;;
 

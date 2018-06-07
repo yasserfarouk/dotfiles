@@ -224,7 +224,18 @@ echo "--------------------------"
 mkdir ~/antigen 2>&1 >/dev/null
 curl -L git.io/antigen > ~/antigen/antigen.zsh
 
+echo "Installing pure theme"
+echo "--------------------------"
+npm install --global pure-prompt
+
 echo "----------------------"
 echo "Installed prerequisits"
 echo "----------------------"
 ./quick-install.sh
+
+
+echo "-----------------------------"
+echo "           Manual Installs   "
+echo "-----------------------------"
+echo "Install Hex Fied from https://ridiculousfish.com/hexfiend/"
+echo "Install Skype, Slack"

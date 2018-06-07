@@ -66,7 +66,7 @@ echo "Sourcing all files"
 echo "------------------"
 mkdir $HOME/.vim/doc 2>&1 >/dev/null
 #vim --cmd "helptags $HOME/.vim/doc" --cmd "q"
-source ~/.bashrc
+source ~/.bash_profile
 source ~/.zshrc
 echo "Installing Plug"
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \

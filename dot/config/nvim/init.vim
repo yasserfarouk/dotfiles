@@ -46,16 +46,15 @@ set inccommand=split
 " let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
 " Normal mapping
-nnoremap <silent> <c-p> :Denite file_rec<CR>
-nnoremap <silent> <leader>h :Denite  help<CR>
-nnoremap <silent> <leader>c :Denite colorscheme<CR>
-nnoremap <silent> <leader>b :Denite buffer<CR>
-nnoremap <silent> <leader>a :Denite grep:::!<CR>
-nnoremap <silent> <leader>u :call dein#update()<CR>
-map <silent> <leader>gd :TSDoc <cr>
-map <silent> <leader>gt :TSType <cr>
-map <silent> <leader>@ :Denite -buffer-name=TSDocumentSymbol TSDocumentSymbol <cr>
-map <silent> <leader># :Denite -buffer-name=TSWorkspaceSymbol TSWorkspaceSymbol <cr>
+
+" nnoremap <silent> <leader>c :Denite colorscheme<CR>
+" nnoremap <silent> <leader>b :Denite buffer<CR>
+" nnoremap <silent> <leader>a :Denite grep:::!<CR>
+" nnoremap <silent> <leader>u :call dein#update()<CR>
+" map <silent> <leader>gd :TSDoc <cr>
+" map <silent> <leader>gt :TSType <cr>
+" map <silent> <leader>@ :Denite -buffer-name=TSDocumentSymbol TSDocumentSymbol <cr>
+" map <silent> <leader># :Denite -buffer-name=TSWorkspaceSymbol TSWorkspaceSymbol <cr>
 
 
 " Terminal mapping
@@ -68,7 +67,8 @@ tmap <leader>. <C-\><C-n>:bprevious<CR>
 " terminal emulation
 nnoremap <silent> <leader>sh :terminal<CR>
 
-" Tmux navigation
+
+" Tmux navigation` -----------------------------------------------------------{{{
 tmap <C-j> <C-\><C-n>:TmuxNavigateDown<cr>
 tmap <C-k> <C-\><C-n>:TmuxNavigateUp<cr>
 tmap <C-l> <C-\><C-n>:TmuxNavigateRight<cr>
@@ -84,9 +84,10 @@ tmap <leader>6  <C-\><C-n><Plug>AirlineSelectTab6
 tmap <leader>7  <C-\><C-n><Plug>AirlineSelectTab7
 tmap <leader>8  <C-\><C-n><Plug>AirlineSelectTab8
 tmap <leader>9  <C-\><C-n><Plug>AirlineSelectTab9
-
+"----------------------------------------------------------------------------}}}
 
 " Plugin key-mappings.
+
 " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
 imap <F1>     <Plug>(neosnippet_expand_or_jump)
 smap <F1>     <Plug>(neosnippet_expand_or_jump)
@@ -106,7 +107,7 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 " Code formatting -----------------------------------------------------------{{{
 
 " ,f to format code, requires formatters: read the docs
-noremap <silent> <leader>f :Neoformat<CR>
+noremap <silent> <leader><leader>f :Neoformat<CR>
 let g:standard_prettier_settings = {
 			\ 'exe': 'prettier',
 			\ 'args': ['--stdin', '--stdin-filepath', '%:p', '--single-quote'],
@@ -116,11 +117,10 @@ let g:standard_prettier_settings = {
 
 " NERDTree ------------------------------------------------------------------{{{
 let g:vimfiler_ignore_pattern = ""
-" map <silent> - :VimFiler<CR>
-map <silent> - :NERDTreeToggle<CR>
+map <silent> - :VimFiler<CR>
 let g:vimfiler_tree_leaf_icon = ''
-" let g:vimfiler_tree_opened_icon = ''
-" let g:vimfiler_tree_closed_icon = ''
+let g:vimfiler_tree_opened_icon = ''
+let g:vimfiler_tree_closed_icon = ''
 let g:vimfiler_file_icon = ''
 let g:vimfiler_marked_file_icon = '*'
 let g:vimfiler_expand_jump_to_first_child = 0
@@ -177,16 +177,6 @@ function! s:nerdtreeinit() abort
 	nunmap <buffer> K
 	nunmap <buffer> J
 endf
-let NERDTreeShowHidden=1
-let g:NERDTreeWinSize=45
-let NERDTreeMinimalUI=1
-let NERDTreeHijackNetrw=1
-let NERDTreeCascadeSingleChildDir=0
-let NERDTreeCascadeOpenSingleChildDir=0
-let g:NERDTreeAutoDeleteBuffer=1
-let g:NERDTreeShowIgnoredStatus = 0
-let g:NERDTreeDirArrowExpandable = ''
-let g:NERDTreeDirArrowCollapsible = ''
 
 " Nvim terminal -------------------------------------------------------------{{{
 
@@ -374,56 +364,55 @@ let g:jsdoc_input_description = 1
 let g:jsdoc_return=0
 let g:jsdoc_return_type=0
 let g:vim_json_syntax_conceal = 0
-let g:tern#command = ['tern']
-let g:tern#arguments = ['--persistent']
-let g:tern_map_keys=1
+" let g:tern#command = ['tern']
+" let g:tern#arguments = ['--persistent']
+" let g:tern_map_keys=1
 " autocmd FileType typescript setl omnifunc=TSComplete
 " let g:nvim_typescript#signature_complete=1
-let g:nvim_typescript#max_completion_detail=100
-let g:nvim_typescript#completion_mark=''
+" let g:nvim_typescript#max_completion_detail=100
+" let g:nvim_typescript#completion_mark=''
 " let g:nvim_typescript#default_mappings=1
 " let g:nvim_typescript#type_info_on_hold=1
-let g:nvim_typescript#javascript_support=1
-let g:nvim_typescript#vue_support=1
+" let g:nvim_typescript#javascript_support=1
+" let g:nvim_typescript#vue_support=1
 " let g:ale_linters = {
 " \   'typescript': ['tsserver', 'tslint'],
 " \}
 
 
 " let g:neomake_typescript_enabled_makers = ['tsc', 'tslint']
-let g:neoformat_typescript_prettier = g:standard_prettier_settings
-let g:neoformat_enabled_typescript = ['prettier']
+" let g:neoformat_typescript_prettier = g:standard_prettier_settings
+" let g:neoformat_enabled_typescript = ['prettier']
 
 " let g:neomake_typescript_enabled_makers = ['nvim_ts']
-let g:nvim_typescript#kind_symbols = {
-			\ 'keyword': 'keyword',
-			\ 'class': '',
-			\ 'interface': '',
-			\ 'script': 'script',
-			\ 'module': '',
-			\ 'local class': 'local class',
-			\ 'type': '',
-			\ 'enum': '',
-			\ 'enum member': '',
-			\ 'alias': '',
-			\ 'type parameter': 'type param',
-			\ 'primitive type': 'primitive type',
-			\ 'var': '',
-			\ 'local var': '',
-			\ 'property': '',
-			\ 'let': '',
-			\ 'const': '',
-			\ 'label': 'label',
-			\ 'parameter': 'param',
-			\ 'index': 'index',
-			\ 'function': '',
-			\ 'local function': 'local function',
-			\ 'method': '',
-			\ 'getter': '',
-			\ 'setter': '',
-			\ 'call': 'call',
-			\ 'constructor': '',
-			\}
+
+" 			\ 'class': '',
+" 			\ 'interface': '',
+" 			\ 'script': 'script',
+" 			\ 'module': '',
+" 			\ 'local class': 'local class',
+" 			\ 'type': '',
+" 			\ 'enum': '',
+" 			\ 'enum member': '',
+" 			\ 'alias': '',
+" 			\ 'type parameter': 'type param',
+" 			\ 'primitive type': 'primitive type',
+" 			\ 'var': '',
+" 			\ 'local var': '',
+" 			\ 'property': '',
+" 			\ 'let': '',
+" 			\ 'const': '',
+" 			\ 'label': 'label',
+" 			\ 'parameter': 'param',
+" 			\ 'index': 'index',
+" 			\ 'function': '',
+" 			\ 'local function': 'local function',
+" 			\ 'method': '',
+" 			\ 'getter': '',
+" 			\ 'setter': '',
+" 			\ 'call': 'call',
+" 			\ 'constructor': '',
+" 			\}
 " }}}
 
 " HTML ----------------------------------------------------------------------{{{
@@ -436,9 +425,9 @@ let g:neoformat_enabled_html = ['htmlbeautify']
 
 " CSS -----------------------------------------------------------------------{{{
 
-let g:neoformat_scss_prettier = g:standard_prettier_settings
-let g:neoformat_enabled_scss = ['prettier']
-let g:neomake_scss_enabled_makers = ['scsslint']
+" let g:neoformat_scss_prettier = g:standard_prettier_settings
+" let g:neoformat_enabled_scss = ['prettier']
+" let g:neomake_scss_enabled_makers = ['scsslint']
 
 "}}}
 

@@ -1,7 +1,7 @@
-#! /usr/bin/env zsh
+#!/usr/bin/env zsh
 # Source any other dot files
 # Just .aliases right now git-completion.bash
-for file in ~/.{aliases,prompt}; do
+for file in ~/.{aliases}; do
   [ -r "$file" ] && source "$file"
 done
 
@@ -29,20 +29,16 @@ compinit -d ~/.zcompdump_capture
 
 source ~/antigen/antigen.zsh
 antigen use oh-my-zsh
+antigen bundle git
+antigen bundle pip
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
 #antigen bundle marzocchi/zsh-notify
 antigen bundle mafredri/zsh-async
-antigen bundle git
-antigen bundle heroku
-antigen bundle pip
-antigen bundle lein
-antigen bundle command-not-found
-#antigen theme robbyrussell
-
+antigen bundle sindresorhus/pure
 antigen apply
 
-source ~/.z/z.sh
+#source ~/.z/z.sh
 
 zstyle ':notify:*' command-complete-timeout 5
 zstyle ':notify:*' error-icon "https://media3.giphy.com/media/10ECejNtM1GyRy/200_s.gif"
@@ -57,8 +53,8 @@ zstyle ':notify:*' success-title "Success"
 
 #export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+#eval "$(pyenv init -)"
+#eval "$(pyenv virtualenv-init -)"
 
 [[ -e "$HOME/anaconda/bin/activate" ]] && source "$HOME/anaconda/bin/activate"
 [[ -e "$HOME/anaconda3/bin/activate" ]] && source "$HOME/anaconda3/bin/activate"
@@ -132,6 +128,5 @@ function vi_mode_prompt_info() {
 # define right prompt, regardless of whether the theme defined it
 RPS1='$(vi_mode_prompt_info)'
 RPS2=$RPS1
-
 
 source ~/.aliases
