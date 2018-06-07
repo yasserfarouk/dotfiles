@@ -2,16 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d2f1bd3e-0365-4779-8629-824616208234" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dot/aliases" beforeDir="false" afterPath="$PROJECT_DIR$/dot/aliases" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dot/config/nvim/init.vim" beforeDir="false" afterPath="$PROJECT_DIR$/dot/config/nvim/init.vim" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dot/inputrc" beforeDir="false" afterPath="$PROJECT_DIR$/dot/inputrc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dot/inputrc_bash" beforeDir="false" afterPath="$PROJECT_DIR$/dot/inputrc_bash" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dot/inputrc_zsh" beforeDir="false" afterPath="$PROJECT_DIR$/dot/inputrc_zsh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dot/local.vim" beforeDir="false" afterPath="$PROJECT_DIR$/dot/local.vim" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dot/zshenv" beforeDir="false" afterPath="$PROJECT_DIR$/dot/zshenv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dot/vimrc" beforeDir="false" afterPath="$PROJECT_DIR$/dot/vimrc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dot/zshrc" beforeDir="false" afterPath="$PROJECT_DIR$/dot/zshrc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/install.sh" beforeDir="false" afterPath="$PROJECT_DIR$/install.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/quick-install.sh" beforeDir="false" afterPath="$PROJECT_DIR$/quick-install.sh" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -21,56 +17,65 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="local.vim" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dot/local.vim">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3089" />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tmux.conf" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dot/tmux.conf">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3356" />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tmux.conf.local" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dot/tmux.conf.local">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-717" />
+            <state relative-caret-position="55">
+              <caret line="575" column="5" selection-start-line="575" selection-start-column="5" selection-end-line="575" selection-end-column="5" />
+            </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="vimrc" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dot/vimrc">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="471">
+              <caret line="98" lean-forward="true" selection-start-line="98" selection-end-line="98" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="common_plugins" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dot/vim/common_plugins">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1194" />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="nvim_plugins" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dot/vim/nvim_plugins">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file leaf-file-name="zshenv" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dot/zshenv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
-            </state>
-          </provider>
+      <file leaf-file-name="vim_plugins" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dot/vim/vim_plugins">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file leaf-file-name="aliases" pinned="false" current-in-tab="false">
+      <file leaf-file-name="aliases" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dot/aliases">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-65">
-              <caret lean-forward="true" />
+            <state relative-caret-position="182">
+              <caret line="249" column="55" selection-start-line="249" selection-start-column="55" selection-end-line="249" selection-end-column="55" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="zshrc" pinned="false" current-in-tab="true">
+      <file leaf-file-name="init.vim" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dot/config/nvim/init.vim">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2927">
+              <caret line="268" column="60" selection-start-line="268" selection-start-column="56" selection-end-line="268" selection-end-column="60" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="zshrc" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dot/zshrc">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="66">
-              <caret line="3" column="23" selection-start-line="3" selection-start-column="23" selection-end-line="3" selection-end-column="23" />
+            <state relative-caret-position="-1597">
+              <caret line="38" column="13" lean-forward="true" selection-start-line="38" selection-start-column="13" selection-end-line="38" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -80,20 +85,11 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file leaf-file-name="quick-install.sh" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/quick-install.sh">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-436">
-              <caret line="6" column="7" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="install.sh" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/install.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-849">
-              <caret line="181" column="2" lean-forward="true" selection-start-line="181" selection-start-column="2" selection-end-line="181" selection-end-column="2" />
+            <state relative-caret-position="531">
+              <caret line="112" lean-forward="true" selection-start-line="112" selection-end-line="112" />
             </state>
           </provider>
         </entry>
@@ -103,6 +99,9 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>6.6</find>
+      <find>font</find>
+      <find>FiraCoda</find>
+      <find>Font</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -111,14 +110,16 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/dot/aliases" />
         <option value="$PROJECT_DIR$/dot/inputrc" />
         <option value="$PROJECT_DIR$/dot/inputrc_bash" />
         <option value="$PROJECT_DIR$/dot/inputrc_zsh" />
         <option value="$PROJECT_DIR$/quick-install.sh" />
         <option value="$PROJECT_DIR$/dot/zshenv" />
-        <option value="$PROJECT_DIR$/install.sh" />
+        <option value="$PROJECT_DIR$/dot/vimrc" />
         <option value="$PROJECT_DIR$/dot/zshrc" />
+        <option value="$PROJECT_DIR$/install.sh" />
+        <option value="$PROJECT_DIR$/dot/local.vim" />
+        <option value="$PROJECT_DIR$/dot/aliases" />
       </list>
     </option>
   </component>
@@ -151,6 +152,25 @@
               <item name="dotfiles" type="b2602c69:ProjectViewProjectNode" />
               <item name="dotfiles" type="462c0819:PsiDirectoryNode" />
               <item name="dot" type="462c0819:PsiDirectoryNode" />
+              <item name="config" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dotfiles" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dotfiles" type="462c0819:PsiDirectoryNode" />
+              <item name="dot" type="462c0819:PsiDirectoryNode" />
+              <item name="config" type="462c0819:PsiDirectoryNode" />
+              <item name="nvim" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dotfiles" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dotfiles" type="462c0819:PsiDirectoryNode" />
+              <item name="dot" type="462c0819:PsiDirectoryNode" />
+              <item name="vim" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dotfiles" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dotfiles" type="462c0819:PsiDirectoryNode" />
+              <item name="dot" type="462c0819:PsiDirectoryNode" />
               <item name="z" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -162,7 +182,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -193,15 +213,16 @@
     <frame x="0" y="23" width="1920" height="1057" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12374934" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12374934" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3290735" />
       <window_info anchor="bottom" id="Docker" order="11" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.48083067" weight="0.32837406" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.46964857" weight="0.32837406" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.3290735" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.24973376" />
-      <window_info anchor="bottom" x="676" y="609" width="1054" height="309" id="Terminal" order="10" sideWeight="0.53035146" side_tool="true" visible="true" weight="0.32800853" />
+      <window_info active="true" anchor="bottom" x="676" y="609" width="1054" height="309" id="Terminal" order="10" sideWeight="0.53035146" side_tool="true" visible="true" weight="0.32800853" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4914803" weight="0.3985122" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -211,13 +232,62 @@
       <window_info anchor="right" id="Data View" order="3" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.48083067" weight="0.32837406" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/dot/local.vim">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dot/tmux.conf">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dot/tmux.conf.local">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dot/vimrc">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dot/zshenv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dot/aliases">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret lean-forward="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dot/zshrc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="3" column="23" selection-start-line="3" selection-start-column="23" selection-end-line="3" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/quick-install.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="7" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/install.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3982">
+          <caret line="181" column="2" lean-forward="true" selection-start-line="181" selection-start-column="2" selection-end-line="181" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/update.sh">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/dot/z/z.sh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2137" />
@@ -255,59 +325,79 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dot/local.vim">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3089" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dot/tmux.conf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3356" />
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/dot/tmux.conf.local">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-717" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dot/vimrc">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/update.sh">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dot/aliases">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-65">
-          <caret lean-forward="true" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dot/zshenv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="352">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/install.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-849">
-          <caret line="181" column="2" lean-forward="true" selection-start-line="181" selection-start-column="2" selection-end-line="181" selection-end-column="2" />
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/quick-install.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-436">
+        <state relative-caret-position="132">
           <caret line="6" column="7" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/update.sh">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dot/vim/common_plugins">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1194" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dot/vim/nvim_plugins">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dot/vim/vim_plugins">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dot/config/nvim/init.vim">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2927">
+          <caret line="268" column="60" selection-start-line="268" selection-start-column="56" selection-end-line="268" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/install.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="531">
+          <caret line="112" lean-forward="true" selection-start-line="112" selection-end-line="112" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dot/local.vim">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="55">
+          <caret line="575" column="5" selection-start-line="575" selection-start-column="5" selection-end-line="575" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dot/vimrc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="98" lean-forward="true" selection-start-line="98" selection-end-line="98" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dot/zshrc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="23" selection-start-line="3" selection-start-column="23" selection-end-line="3" selection-end-column="23" />
+        <state relative-caret-position="-1597">
+          <caret line="38" column="13" lean-forward="true" selection-start-line="38" selection-start-column="13" selection-end-line="38" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dot/aliases">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="249" column="55" selection-start-line="249" selection-start-column="55" selection-end-line="249" selection-end-column="55" />
         </state>
       </provider>
     </entry>

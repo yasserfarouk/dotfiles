@@ -28,9 +28,9 @@ compinit -d ~/.zcompdump_capture
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 source ~/antigen/antigen.zsh
-antigen use oh-my-zsh
-antigen bundle git
-antigen bundle pip
+#antigen use oh-my-zsh
+#antigen bundle git
+#antigen bundle pip
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
 #antigen bundle marzocchi/zsh-notify

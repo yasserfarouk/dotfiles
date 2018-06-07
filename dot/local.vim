@@ -565,7 +565,7 @@ highlight Search ctermbg=DarkBlue ctermfg=Yellow guibg=DarkBlue guifg=Yellow
 "" GUI only options
 if has('gui_running')
 	set guioptions=egmrti
-	set gfn= FiraCoda\ Nerd\ Font\ Mono
+	set gfn=SourceCodePro\ Nerd\ Font
 	set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20
 " else
 " 	set t_Co=256
@@ -579,9 +579,9 @@ set background=light
 
 if has("gui_running")
 	let g:indentLine_color_gui = '#343d46'
+	set guifont=SourceCodePro\ Nerd\ Font:h14
 	if has("gui_mac") || has("gui_macvim")
-		set guifont=FiraCoda\ Nerd\ Font\ Mono
-		set transparency=7
+		set transparency=0
 	endif
 	let g:indentLine_char="|"
 	" let g:indentLine_char="⎸"

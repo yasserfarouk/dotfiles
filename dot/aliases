@@ -247,6 +247,8 @@ function compress()
 
 case "$(uname -s)" in
    Darwin)
+    alias mvim=/Applications/MacVim.app/Contents/MacOS/Vim -g
+    alias macvim=/Applications/MacVim.app/Contents/MacOS/MacVim -g
     alias gvim=mvim
     alias vi=vim
     alias v=nvim
