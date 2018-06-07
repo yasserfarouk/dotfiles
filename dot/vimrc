@@ -95,4 +95,4 @@ if filereadable(expand("~/.vim/local_init.vim"))
 	source ~/.vim/local_init.vim
 endif
 
-set guifont=Fira\ Code:h12
+set guifont=SourceCodePro\ Nerd\ Font:h14
