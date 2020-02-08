@@ -6,7 +6,6 @@ packages=(
 "zsh"
 "fzf"
 "fd"
-"ranger"
 "vifm"
 "pyenv-virtualenv"
 )

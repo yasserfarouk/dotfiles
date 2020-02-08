@@ -167,6 +167,10 @@ if !exists('g:vscode')
 	nnoremap <silent> <leader>nt :NERDTreeToggle<CR>
 	nnoremap <silent> <leader>g :TagbarToggle<CR>
 
+	nnoremap <silent> <S-F3> :NERDTreeFind<CR>
+	nnoremap <silent> <F3> :NERDTreeToggle<CR>
+	nnoremap <silent> <F4> :TagbarToggle<CR>
+
 	let g:UltiSnipsExpandTrigger="<C-p>"
 	let g:UltiSnipsJumpForwardTrigger="<C-p>"
 	let g:UltiSnipsJumpBackwardTrigger="<C-n>"
@@ -635,7 +639,6 @@ if !exists('g:vscode')
 	let g:airline_powerline_fonts = 1
 	let g:airline_symbols.branch = ''
 	let g:airline_theme='oceanicnext'
-	cnoreabbrev <silent> <expr> x getcmdtype() == ":" && getcmdline() == 'x' ? 'Sayonara' : 'x'
 	nmap <leader>1 <Plug>AirlineSelectTab1
 	nmap <leader>2 <Plug>AirlineSelectTab2
 	nmap <leader>3 <Plug>AirlineSelectTab3
