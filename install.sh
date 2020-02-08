@@ -7,10 +7,8 @@ packages=(
 "fzf"
 "fd"
 "ranger"
-"tags"
+"vifm"
 "pyenv-virtualenv"
-"python-virtualenv"
-"python3-virtualenv"
 )
 pip_packages=(
 )
