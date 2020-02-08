@@ -7,6 +7,7 @@ packages=(
 "fzf"
 "fd"
 "vifm"
+"tree"
 "pyenv-virtualenv"
 )
 pip_packages=(
