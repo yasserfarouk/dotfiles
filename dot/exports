@@ -34,7 +34,6 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export PATH="~/.pyenv/bin:$PATH"
 export PATH="$PATH:."
-
-
-
-
+export PATH="/usr/local/sbin:$PATH"
+export PATH="$PATH:/usr/local/mysql/bin"
+export PATH="$PATH:$HOME/.composer/bin"

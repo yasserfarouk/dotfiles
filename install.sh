@@ -7,6 +7,10 @@ packages=(
 "fzf"
 "fd"
 "ranger"
+"tags"
+"pyenv-virtualenv"
+"python-virtualenv"
+"python3-virtualenv"
 )
 pip_packages=(
 )
@@ -41,7 +45,7 @@ case "$(uname -s)" in
     ;;
 
    Linux)
-    # [[ -e "$HOME/bin" ]] || mkdir "$HOME/bin"
+    [[ -e "$HOME/bin" ]] || mkdir "$HOME/bin"
 
     # curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage ~/bin
     # chmod u+x ~/bin/nvim.appimage
@@ -143,14 +147,13 @@ else
   brew upgrad git
 fi
 # Okay so everything should be good
-# Fingers cross at least
 # Now lets clone my dotfiles repo into .dotfiles/
 
 echo "Installing pip packages assuming that pip is available"
 echo "------------------------------------------------------"
 for i in "${pip_packages[@]}"
 do
-    pip install --upgrade $i
+    pip3 install --upgrade $i
   echo "---------------------------------------------------------"
 done
 
@@ -161,15 +164,18 @@ export PATH="~/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
-pyenv install 2.7
-pyenv install 3.6.4
+pyenv install 2.7.17
+pyenv install 3.7.6
+pyenv install 3.8.1
 
-pyenv virtualenv 2.7 neovim2 2>&1 >/dev/null
-pyenv virtualenv 3.6.4 neovim3 2>&1 >/dev/null
+pyenv virtualenv 2.7.17 neovim2 2>&1 >/dev/null
+pyenv virtualenv 3.7.6 neovim3 2>&1 >/dev/null
+pyenv virtualenv 3.8.1 neovim38 2>&1 >/dev/null
 
-echo "Installing neovim for python, ruby, and node"
+echo "Installing neovim for python, and node"
 echo "--------------------------------------------"
 pyenv activate neovim2
+pip install --upgrade pip
 for i in "${python_packages[@]}"
 do
   pip install $i
@@ -178,14 +184,28 @@ done
 neovim2_py=`pyenv which python`  # Note the path
 
 pyenv activate neovim3
+pip install --upgrade pip
+pip install neovim-remote
 for i in "${python_packages[@]}"
 do
-  pip install $i 2>&1 >/dev/null
+  pip install $i
 done
 neovim3_py=`pyenv which python`  # Note the path
 
+pyenv activate neovim38
+pip install --upgrade pip
+pip install neovim-remote
+for i in "${python_packages[@]}"
+do
+  pip install $i
+done
+neovim38_py=`pyenv which python`  # Note the path
+
 gem install neovim
 npm install -g neovim
+echo "Installing CTAGS"
+echo "----------------"
+brew install --HEAD universal-ctags/universal-ctags/universal-ctags
 
 echo "Installing diff-so-fancy"
 echo "------------------------"
@@ -219,6 +239,10 @@ case "$(uname -s)" in
 esac
 cd $current_dir
 
+echo "Installing Plug for NVIM"
+echo "-------------------------"
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
 echo "Installing antigen for zsh"
 echo "--------------------------"
 mkdir ~/antigen 2>&1 >/dev/null
@@ -237,6 +261,4 @@ echo "----------------------"
 echo "-----------------------------"
 echo "           Manual Installs   "
 echo "-----------------------------"
-echo "- Install Hex Fied from https://ridiculousfish.com/hexfiend/"
-echo "- Install Skype, Slack"
 echo "- Install MacVim latest release from https://github.com/macvim-dev/macvim/releases/tag/snapshot-147"

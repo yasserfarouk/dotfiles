@@ -1,7 +1,3 @@
-"*****************************************************************************
-"" Vim-PLug core
-"*****************************************************************************
-
 let g:make = 'gmake'
 if exists('make')
     let g:make = 'make'
@@ -23,10 +19,8 @@ if !filereadable(vimplug_exists)
 endif
 
 " Required:
+set rtp +=~/.config/nvim
 call plug#begin(expand('~/.vim/plugged'))
-"*****************************************************************************
-"" Plug install packages
-"*****************************************************************************
 if filereadable(expand("~/.vim/common_plugins"))
     source ~/.vim/common_plugins
 endif
@@ -43,295 +37,179 @@ call plug#end()
 
 set inccommand=split
 
-" let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-
-" Normal mapping
-
-" nnoremap <silent> <leader>c :Denite colorscheme<CR>
-" nnoremap <silent> <leader>b :Denite buffer<CR>
-" nnoremap <silent> <leader>a :Denite grep:::!<CR>
-" nnoremap <silent> <leader>u :call dein#update()<CR>
-" map <silent> <leader>gd :TSDoc <cr>
-" map <silent> <leader>gt :TSType <cr>
-" map <silent> <leader>@ :Denite -buffer-name=TSDocumentSymbol TSDocumentSymbol <cr>
-" map <silent> <leader># :Denite -buffer-name=TSWorkspaceSymbol TSWorkspaceSymbol <cr>
-
-
-" Terminal mapping
-tmap <esc> <c-\><c-n><esc><cr>
-
-" buffer management inside the terminal
-tmap <leader>, <C-\><C-n>:bnext<cr>
-tmap <leader>. <C-\><C-n>:bprevious<CR>
-
-" terminal emulation
-nnoremap <silent> <leader>sh :terminal<CR>
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+j
+if !exists('g:vscode')
+	" Normal mapping
+	" nnoremap <silent> <leader>c :Denite colorscheme<CR>
+	" nnoremap <silent> <leader>b :Denite buffer<CR>
+	" nnoremap <silent> <leader>a :Denite grep:::!<CR>
+	" nnoremap <silent> <leader>u :call dein#update()<CR>
+	" map <silent> <leader>gd :TSDoc <cr>
+	" map <silent> <leader>gt :TSType <cr>
+	" map <silent> <leader>@ :Denite -buffer-name=TSDocumentSymbol TSDocumentSymbol <cr>
+	" map <silent> <leader># :Denite -buffer-name=TSWorkspaceSymbol TSWorkspaceSymbol <cr>
 
 
-" Tmux navigation` -----------------------------------------------------------{{{
-tmap <C-j> <C-\><C-n>:TmuxNavigateDown<cr>
-tmap <C-k> <C-\><C-n>:TmuxNavigateUp<cr>
-tmap <C-l> <C-\><C-n>:TmuxNavigateRight<cr>
-tmap <C-h> <C-\><C-n>:TmuxNavigateLeft<CR>
-tmap <C-;> <C-\><C-n>:TmuxNavigatePrevious<cr>
-tmap <leader>x <c-\><c-n>:bp! <BAR> bd! #<CR>
-tmap <leader>1  <C-\><C-n><Plug>AirlineSelectTab1
-tmap <leader>2  <C-\><C-n><Plug>AirlineSelectTab2
-tmap <leader>3  <C-\><C-n><Plug>AirlineSelectTab3
-tmap <leader>4  <C-\><C-n><Plug>AirlineSelectTab4
-tmap <leader>5  <C-\><C-n><Plug>AirlineSelectTab5
-tmap <leader>6  <C-\><C-n><Plug>AirlineSelectTab6
-tmap <leader>7  <C-\><C-n><Plug>AirlineSelectTab7
-tmap <leader>8  <C-\><C-n><Plug>AirlineSelectTab8
-tmap <leader>9  <C-\><C-n><Plug>AirlineSelectTab9
-"----------------------------------------------------------------------------}}}
+	" Terminal mapping
+	tmap <esc> <c-\><c-n><esc><cr>
 
-" Plugin key-mappings.
+	" buffer management inside the terminal
+	tmap <leader>, <C-\><C-n>:bnext<cr>
+	tmap <leader>. <C-\><C-n>:bprevious<CR>
 
-" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-imap <F1>     <Plug>(neosnippet_expand_or_jump)
-smap <F1>     <Plug>(neosnippet_expand_or_jump)
-xmap <F1>     <Plug>(neosnippet_expand_target)
-
-" SuperTab like snippets behavior.
-" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-imap <expr><TAB>
-			\ pumvisible() ? "\<C-n>" :
-			\ neosnippet#expandable_or_jumpable() ?
-			\    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-			\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-
-
-" Code formatting -----------------------------------------------------------{{{
-
-" ,f to format code, requires formatters: read the docs
-noremap <silent> <leader><leader>f :Neoformat<CR>
-let g:standard_prettier_settings = {
-			\ 'exe': 'prettier',
-			\ 'args': ['--stdin', '--stdin-filepath', '%:p', '--single-quote'],
-			\ 'stdin': 1,
-			\ }
-" }}}
-
-" NERDTree ------------------------------------------------------------------{{{
-let g:vimfiler_ignore_pattern = ""
-map <silent> - :VimFiler<CR>
-let g:vimfiler_tree_leaf_icon = ''
-let g:vimfiler_tree_opened_icon = ''
-let g:vimfiler_tree_closed_icon = ''
-let g:vimfiler_file_icon = ''
-let g:vimfiler_marked_file_icon = '*'
-let g:vimfiler_expand_jump_to_first_child = 0
-" let g:vimfiler_as_default_explorer = 1
-call unite#custom#profile('default', 'context', {
-			\'direction': 'botright',
-			\ })
-call vimfiler#custom#profile('default', 'context', {
-			\ 'explorer' : 1,
-			\ 'winwidth' : 45,
-			\ 'winminwidth' : 45,
-			\ 'toggle' : 1,
-			\ 'auto_expand': 0,
-			\ 'parent': 1,
-			\ 'explorer_columns': 'devicons:git',
-			\ 'status' : 0,
-			\ 'safe' : 0,
-			\ 'split' : 1,
-			\ 'hidden': 1,
-			\ 'no_quit' : 1,
-			\ 'force_hide' : 0,
-			\ })
-augroup vfinit
-	autocmd FileType vimfiler call s:vimfilerinit()
-	autocmd FileType unite call s:uniteinit()
-augroup END
-function! s:uniteinit()
-	nmap <buffer> <Esc> <Plug>(unite_exit)
-endfunction
-function! s:vimfilerinit()
-	set nonumber
-	set norelativenumber
-	nmap <silent><buffer><expr> <CR> vimfiler#smart_cursor_map(
-				\ "\<Plug>(vimfiler_expand_tree)",
-				\ "\<Plug>(vimfiler_edit_file)"
-				\)
-	nnoremap <silent><buffer><expr> s vimfiler#do_switch_action('vsplit')
-	nmap <silent> m :call NerdUnite()<cr>
-	" nmap <silent> p <Plug>(vimfiler_jump_first_child)
-	nmap <silent> r <Plug>(vimfiler_redraw_screen)
-endf
-" let g:vimfiler_ignore_pattern = '^\%(\.git\|\.DS_Store\)$'
-let g:webdevicons_enable_vimfiler = 0
-let g:vimfiler_no_default_key_mappings=1
-function! NerdUnite() abort "{{{
-	let marked_files =  vimfiler#get_file(b:vimfiler)
-	call unite#start(['nerd'], {'file': marked_files})
-endfunction "}}}
-
-augroup ntinit
-	autocmd FileType nerdtree call s:nerdtreeinit()
-augroup END
-function! s:nerdtreeinit() abort
-	nunmap <buffer> K
-	nunmap <buffer> J
-endf
-
-" Nvim terminal -------------------------------------------------------------{{{
-
-au BufEnter * if &buftype == 'terminal' | :startinsert | endif
-autocmd BufEnter term://* startinsert
-autocmd TermOpen * set bufhidden=hide
-
-" }}}
-
-" Deoplete ------------------------------------------------------------------{{{
-
-" enable deoplete
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_delay = 0
-let g:echodoc_enable_at_startup=1
-autocmd CompleteDone * pclose
-
-function! Multiple_cursors_before()
-	let b:deoplete_disable_auto_complete=2
-endfunction
-function! Multiple_cursors_after()
-	let b:deoplete_disable_auto_complete=0
-endfunction
-let g:deoplete#file#enable_buffer_path=1
-call deoplete#custom#source('buffer', 'mark', 'ℬ')
-call deoplete#custom#source('tern', 'mark', '')
-call deoplete#custom#source('omni', 'mark', '⌾')
-call deoplete#custom#source('file', 'mark', '')
-call deoplete#custom#source('jedi', 'mark', '')
-call deoplete#custom#source('neosnippet', 'mark', '')
-call deoplete#custom#source('typescript',  'rank', 630)
-let g:deoplete#omni_patterns = {}
-let g:deoplete#omni_patterns.html = ''
-let g:deoplete#omni_patterns.css = ''
-function! Preview_func()
-	if &pvw
-		setlocal nonumber norelativenumber
+	" terminal emulation
+	nnoremap <silent> <leader>sh :terminal<CR>
+	" change cursor in normal mode
+	if exists('$TMUX')
+	let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+	let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+	else
+	let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+	let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 	endif
-endfunction
-autocmd WinEnter * call Preview_func()
-let g:deoplete#ignore_sources = {}
-let g:deoplete#ignore_sources._ = ['around']
+	:autocmd InsertEnter * set cul
+	:autocmd InsertLeave * set nocul
 
-" let g:deoplete#enable_debug = 1
-" let g:deoplete#enable_profile = 1
-" let g:deoplete#enable_logging = {'level': 'DEBUG','logfile': 'deoplete.log'}
-" call deoplete#enable_logging('DEBUG', 'deoplete.log')
-" call deoplete#custom#source('typescript', 'debug_enabled', 1)
-"}}}
+	" Tex ------------------------{{{
+	let g:vimtex_compiler_progname='nvr'
+	" }}}
 
-" Denite --------------------------------------------------------------------{{{
+	" Tmux navigation` -----------------------------------------------------------{{{
+	tmap <C-j> <C-\><C-n>:TmuxNavigateDown<cr>
+	tmap <C-k> <C-\><C-n>:TmuxNavigateUp<cr>
+	tmap <C-l> <C-\><C-n>:TmuxNavigateRight<cr>
+	tmap <C-h> <C-\><C-n>:TmuxNavigateLeft<CR>
+	tmap <C-;> <C-\><C-n>:TmuxNavigatePrevious<cr>
+	tmap <leader>x <c-\><c-n>:bp! <BAR> bd! #<CR>
+	tmap <leader>1  <C-\><C-n><Plug>AirlineSelectTab1
+	tmap <leader>2  <C-\><C-n><Plug>AirlineSelectTab2
+	tmap <leader>3  <C-\><C-n><Plug>AirlineSelectTab3
+	tmap <leader>4  <C-\><C-n><Plug>AirlineSelectTab4
+	tmap <leader>5  <C-\><C-n><Plug>AirlineSelectTab5
+	tmap <leader>6  <C-\><C-n><Plug>AirlineSelectTab6
+	tmap <leader>7  <C-\><C-n><Plug>AirlineSelectTab7
+	tmap <leader>8  <C-\><C-n><Plug>AirlineSelectTab8
+	tmap <leader>9  <C-\><C-n><Plug>AirlineSelectTab9
+	"----------------------------------------------------------------------------}}}
 
-let s:menus = {}
-call denite#custom#option('_', {
-			\ 'prompt': '❯',
-			\ 'winheight': 10,
-			\ 'updatetime': 1,
-			\ 'auto_resize': 0,
-			\ 'highlight_matched_char': 'Underlined',
-			\ 'highlight_mode_normal': 'CursorLine',
-			\ 'reversed': 1,
-			\})
-call denite#custom#option('TSDocumentSymbol', {
-			\ 'prompt': ' @' ,
-			\ 'reversed': 0,
-			\})
-call denite#custom#option('TSWorkspaceSymbol', {
-			\ 'reversed': 0,
-			\ 'prompt': ' #' ,
-			\})
-call denite#custom#source('file_rec', 'vars', {
-			\ 'command': [
-			\ 'ag', '--follow','--nogroup','--hidden', '--column', '-g', '', '--ignore', '.git', '--ignore', '*.png', '--ignore', 'node_modules'
-			\] })
-call denite#custom#source('file_rec', 'sorters', ['sorter_sublime'])
-call denite#custom#source('file_rec', 'matchers', ['matcher_cpsm'])
+	" Plugin key-mappings.
 
-call denite#custom#var('grep', 'command', ['ag'])
-call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep'])
-call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'pattern_opt', [])
-call denite#custom#var('grep', 'separator', ['--'])
-call denite#custom#var('grep', 'final_opts', [])
+	" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+	imap <F1>     <Plug>(neosnippet_expand_or_jump)
+	smap <F1>     <Plug>(neosnippet_expand_or_jump)
+	xmap <F1>     <Plug>(neosnippet_expand_target)
+
+	" SuperTab like snippets behavior.
+	" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+	imap <expr><TAB>
+				\ pumvisible() ? "\<C-n>" :
+				\ neosnippet#expandable_or_jumpable() ?
+				\    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+	smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+				\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
 
-call denite#custom#map('insert','<C-n>','<denite:move_to_next_line>','noremap')
-call denite#custom#map('insert','<C-p>','<denite:move_to_previous_line>','noremap')
-call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
-			\ [ '.git/', '.ropeproject/', '__pycache__/',
-			\   'venv/', 'images/', '*.min.*', 'img/', 'fonts/'])
-call denite#custom#var('menu', 'menus', s:menus)
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-"}}}
 
-" Git from denite...ERMERGERD -----------------------------------------------{{{
-let s:menus.git = {
-			\ 'description' : 'Fugitive interface',
-			\}
-let s:menus.git.command_candidates = [
-			\[' git status', 'Gstatus'],
-			\[' git diff', 'Gvdiff'],
-			\[' git commit', 'Gcommit'],
-			\[' git stage/add', 'Gwrite'],
-			\[' git checkout', 'Gread'],
-			\[' git rm', 'Gremove'],
-			\[' git cd', 'Gcd'],
-			\[' git push', 'exe "Git! push " input("remote/branch: ")'],
-			\[' git pull', 'exe "Git! pull " input("remote/branch: ")'],
-			\[' git pull rebase', 'exe "Git! pull --rebase " input("branch: ")'],
-			\[' git checkout branch', 'exe "Git! checkout " input("branch: ")'],
-			\[' git fetch', 'Gfetch'],
-			\[' git merge', 'Gmerge'],
-			\[' git browse', 'Gbrowse'],
-			\[' git head', 'Gedit HEAD^'],
-			\[' git parent', 'edit %:h'],
-			\[' git log commit buffers', 'Glog --'],
-			\[' git log current file', 'Glog -- %'],
-			\[' git log last n commits', 'exe "Glog -" input("num: ")'],
-			\[' git log first n commits', 'exe "Glog --reverse -" input("num: ")'],
-			\[' git log until date', 'exe "Glog --until=" input("day: ")'],
-			\[' git log grep commits',  'exe "Glog --grep= " input("string: ")'],
-			\[' git log pickaxe',  'exe "Glog -S" input("string: ")'],
-			\[' git index', 'exe "Gedit " input("branchname\:filename: ")'],
-			\[' git mv', 'exe "Gmove " input("destination: ")'],
-			\[' git grep',  'exe "Ggrep " input("string: ")'],
-			\[' git prompt', 'exe "Git! " input("command: ")'],
-			\] " Append ' --' after log to get commit info commit buffers
-"}}}
+	" Code formatting -----------------------------------------------------------{{{
 
-" Linting -------------------------------------------------------------------{{{
+	" ,f to format code, requires formatters: read the docs
+	noremap <silent> <leader><leader>f :Neoformat<CR>
+	let g:standard_prettier_settings = {
+				\ 'exe': 'prettier',
+				\ 'args': ['--stdin', '--stdin-filepath', '%:p', '--single-quote'],
+				\ 'stdin': 1,
+				\ }
+	" }}}
 
-call neomake#configure#automake({
-			\ 'BufWritePost': {'delay': 0},
-			\ }, 1000)
+	" NERDTree ------------------------------------------------------------------{{{
+	let g:vimfiler_ignore_pattern = ""
+	map <silent> - :VimFiler<CR>
+	let g:vimfiler_tree_leaf_icon = ''
+	let g:vimfiler_tree_opened_icon = ''
+	let g:vimfiler_tree_closed_icon = ''
+	let g:vimfiler_file_icon = ''
+	let g:vimfiler_marked_file_icon = '*'
+	let g:vimfiler_expand_jump_to_first_child = 0
+	" let g:vimfiler_as_default_explorer = 1
+	call unite#custom#profile('default', 'context', {
+				\'direction': 'botright',
+				\ })
+	call vimfiler#custom#profile('default', 'context', {
+				\ 'explorer' : 1,
+				\ 'winwidth' : 45,
+				\ 'winminwidth' : 45,
+				\ 'toggle' : 1,
+				\ 'auto_expand': 0,
+				\ 'parent': 1,
+				\ 'explorer_columns': 'devicons:git',
+				\ 'status' : 0,
+				\ 'safe' : 0,
+				\ 'split' : 1,
+				\ 'hidden': 1,
+				\ 'no_quit' : 1,
+				\ 'force_hide' : 0,
+				\ })
+	augroup vfinit
+		autocmd FileType vimfiler call s:vimfilerinit()
+		autocmd FileType unite call s:uniteinit()
+	augroup END
+	function! s:uniteinit()
+		nmap <buffer> <Esc> <Plug>(unite_exit)
+	endfunction
+	function! s:vimfilerinit()
+		set nonumber
+		set norelativenumber
+		nmap <silent><buffer><expr> <CR> vimfiler#smart_cursor_map(
+					\ "\<Plug>(vimfiler_expand_tree)",
+					\ "\<Plug>(vimfiler_edit_file)"
+					\)
+		nnoremap <silent><buffer><expr> s vimfiler#do_switch_action('vsplit')
+		nmap <silent> m :call NerdUnite()<cr>
+		" nmap <silent> p <Plug>(vimfiler_jump_first_child)
+		nmap <silent> r <Plug>(vimfiler_redraw_screen)
+	endf
+	" let g:vimfiler_ignore_pattern = '^\%(\.git\|\.DS_Store\)$'
+	let g:webdevicons_enable_vimfiler = 0
+	let g:vimfiler_no_default_key_mappings=1
+	function! NerdUnite() abort "{{{
+		let marked_files =  vimfiler#get_file(b:vimfiler)
+		call unite#start(['nerd'], {'file': marked_files})
+	endfunction "}}}
 
-" \ 'BufWinEnter': {},
-" \ 'TextChanged': {},
-" \ 'InsertLeave': { },
-let g:ale_sign_error = '•'
-let g:ale_sign_warning = '•'
-let g:airline#extensions#ale#error_symbol='• '
-let g:airline#extensions#ale#warning_symbol='•  '
+	augroup ntinit
+		autocmd FileType nerdtree call s:nerdtreeinit()
+	augroup END
+	function! s:nerdtreeinit() abort
+		nunmap <buffer> K
+		nunmap <buffer> J
+	endf
 
-let g:neomake_warning_sign = {'text': '•'}
-let g:neomake_error_sign = {'text': '•'}
-let g:airline#extensions#neomake#error_symbol='• '
-let g:airline#extensions#neomake#warning_symbol='•  '
+	" Nvim terminal -------------------------------------------------------------{{{
 
-"hi link ALEError SpellBad
-"hi link ALEWarning SpellBad
-" Write this in your vimrc file
-" let g:ale_lint_on_text_changed = 'never'
-" let g:ale_lint_on_enter = 0
-" let g:neomake_verbose = 3
-"}}}
+	au BufEnter * if &buftype == 'terminal' | :startinsert | endif
+	autocmd BufEnter term://* startinsert
+	autocmd TermOpen * set bufhidden=hide
+
+	" }}}
+
+	let g:ale_sign_warning = '•'
+	let g:airline#extensions#ale#error_symbol='• '
+	let g:airline#extensions#ale#warning_symbol='•  '
+
+	let g:neomake_warning_sign = {'text': '•'}
+	let g:neomake_error_sign = {'text': '•'}
+	let g:airline#extensions#neomake#error_symbol='• '
+	let g:airline#extensions#neomake#warning_symbol='•  '
+
+	"hi link ALEError SpellBad
+	"hi link ALEWarning SpellBad
+	" Write this in your vimrc file
+	" let g:ale_lint_on_text_changed = 'never'
+	" let g:ale_lint_on_enter = 0
+	" let g:neomake_verbose = 3
+	"}}}
+endif 
 
 " MarkDown ------------------------------------------------------------------{{{
 

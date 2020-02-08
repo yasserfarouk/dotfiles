@@ -2,7 +2,7 @@
 
 # load the correct .inputrc file
 ln -s -f $HOME/.dotfiles/inputrc_bash ~/.inputrc
-bind -f  ~/.inputrc
+# source -f  ~/.inputrc
 source ~/.exports
 source ~/.z/z.sh
 
@@ -98,11 +98,11 @@ export PROMPT_COMMAND='export PS1="${_PS1} $(_git_prompt)\n$ "'
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-[[ -e "$HOME/anaconda/bin/activate" ]] && source "$HOME/anaconda/bin/activate"
-[[ -e "$HOME/anaconda3/bin/activate" ]] && source "$HOME/anaconda3/bin/activate"
+# [[ -e "$HOME/anaconda/bin/activate" ]] && source "$HOME/anaconda/bin/activate"
+# [[ -e "$HOME/anaconda3/bin/activate" ]] && source "$HOME/anaconda3/bin/activate"
 
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
 source ~/.aliases

@@ -1,72 +1,48 @@
-Plug 'airblade/vim-gitgutter'
-Plug 'avelino/vim-bootstrap-updater'
-Plug 'bronson/vim-trailing-whitespace'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'chemzqm/vim-easygit'
-Plug 'davidhalter/jedi-vim', {'for': 'python'}
-Plug 'drzel/vim-line-no-indicator'
-Plug 'dhruvasagar/vim-table-mode'
-Plug 'elzr/vim-json'
-Plug 'itmammoth/doorboy.vim'
-Plug 'honza/vim-snippets'
-Plug 'jistr/vim-nerdtree-tabs'
-Plug 'jreybert/vimagit', {'on': ['Magit', 'MagitOnly']}
-Plug 'eugen0329/vim-esearch'
-Plug 'flazz/vim-colorschemes'
-Plug 'junegunn/fzf'
-Plug 'junegunn/gv.vim'
-Plug 'junegunn/limelight.vim'
-Plug 'junegunn/vim-easy-align'
-Plug 'Konfekt/FastFold'
-Plug 'lervag/vimtex'
-Plug 'ludovicchabant/vim-gutentags'
-Plug 'majutsushi/tagbar'
-Plug 'MartinLafreniere/vim-PairTools'
-Plug 'mattn/gist-vim'
-Plug 'altercation/vim-colors-solarized'
-Plug 'mhartington/oceanic-next'
-Plug 'mhinz/vim-sayonara'
-Plug 'nelstrom/vim-markdown-folding', {'for': 'markdown'}
-Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
-Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
-Plug 'Raimondi/delimitMate'
-Plug 'rhysd/committia.vim'
-Plug 'ryanoasis/vim-devicons'
-Plug 'scrooloose/nerdtree'
-Plug 'sjl/vitality.vim'
-Plug 'sjl/gundo.vim'
-Plug 'sgeb/vim-diff-fold'
-Plug 'sheerun/vim-polyglot'
-Plug 'tmhedberg/SimpylFold', {'for': 'python'}
-Plug 'tmux-plugins/vim-tmux'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'tomasr/molokai'
-Plug 'tomtom/tcomment_vim'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-markdown', {'for': 'markdown'}
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-rhubarb'
+Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'vim-scripts/CSApprox'
-Plug 'vim-scripts/grep.vim'
-Plug 'xolox/vim-misc'
-Plug 'xolox/vim-session'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'Yggdroot/indentLine'
-Plug 'Shougo/vimfiler.vim'
-Plug 'vim-scripts/vim-auto-save'
-Plug 'vim-scripts/guicolorscheme.vim'
-
-if isdirectory('/usr/local/opt/fzf')
-    Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
-else
-    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
-    Plug 'junegunn/fzf.vim'
-endif
+Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-repeat'
+Plug 'junegunn/vim-easy-align'
+if !exists('g:vscode')
+    Plug 'ludovicchabant/vim-gutentags'
+    Plug 'SirVer/ultisnips'
+    Plug 'MartinLafreniere/vim-PairTools'
+    " Plug 'Raimondi/delimitMate'
+    Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
+    Plug 'lervag/vimtex'
+    Plug 'majutsushi/tagbar'
+    Plug 'altercation/vim-colors-solarized'
+    Plug 'mhartington/oceanic-next'
+    Plug 'airblade/vim-gitgutter'
+    Plug 'tpope/vim-fugitive'
+    Plug 'davidhalter/jedi-vim', {'for': 'python'}
+    Plug 'dhruvasagar/vim-table-mode'
+    Plug 'elzr/vim-json'
+    Plug 'flazz/vim-colorschemes'    
+    Plug 'ryanoasis/vim-devicons'
+    Plug 'scrooloose/nerdtree'
+    Plug 'jistr/vim-nerdtree-tabs'
+    Plug 'Xuyuanp/nerdtree-git-plugin'
+    Plug 'sgeb/vim-diff-fold'
+    Plug 'sheerun/vim-polyglot'
+    Plug 'tmhedberg/SimpylFold', {'for': 'python'}
+    Plug 'tpope/vim-markdown', {'for': 'markdown'}
+    Plug 'nelstrom/vim-markdown-folding', {'for': 'markdown'}
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+    Plug 'vim-scripts/grep.vim'
+    Plug 'Yggdroot/indentLine'
+    Plug 'vim-scripts/vim-auto-save'
+    Plug 'vim-scripts/guicolorscheme.vim'
+    if isdirectory('/usr/local/opt/fzf')
+        Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
+    else        
+        Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+        Plug 'junegunn/fzf.vim'
+    endif
+    Plug 'christoomey/vim-tmux-navigator'
+endif 
 
 "" Include user's extra bundle
 "" I keep local bundles that are common to both nvim and vim at local_bundles_common
