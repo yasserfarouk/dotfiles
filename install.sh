@@ -51,7 +51,11 @@ case "$(uname -s)" in
     # echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation"
     # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     sudo apt install make
-    sudo apt install lib64readline7 lib64readline7dev sqlite sqlite3 zlib1g-dev zlib bzip2
+    sudo apt install lib64readline7 lib64readline7-dev 
+    sudo apt install sqlite sqlite3 
+    sudo apt install zlib1g-dev 
+    sudo apt install zlibig 
+    sudo apt install bzip2
     command -v brew 2>&1 >/dev/null # improvement by tripleee
     BREW_IS_AVAILABLE=$?
     if [ $BREW_IS_AVAILABLE ]
