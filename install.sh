@@ -50,6 +50,8 @@ case "$(uname -s)" in
     # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     # echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation"
     # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+    sudo apt install make
+    sudo apt install lib64readline7 lib64readline7dev sqlite sqlite3 zlib1g-dev zlib bzip2
     command -v brew 2>&1 >/dev/null # improvement by tripleee
     BREW_IS_AVAILABLE=$?
     if [ $BREW_IS_AVAILABLE ]
@@ -163,11 +165,11 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 pyenv install 2.7.17
-pyenv install 3.7.6
+# pyenv install 3.7.6
 pyenv install 3.8.1
 
 pyenv virtualenv 2.7.17 neovim2 2>&1 >/dev/null
-pyenv virtualenv 3.7.6 neovim3 2>&1 >/dev/null
+# pyenv virtualenv 3.7.6 neovim3 2>&1 >/dev/null
 pyenv virtualenv 3.8.1 neovim38 2>&1 >/dev/null
 
 echo "Installing neovim for python, and node"
@@ -181,14 +183,14 @@ done
 
 neovim2_py=`pyenv which python`  # Note the path
 
-pyenv activate neovim3
-pip install --upgrade pip
-pip install neovim-remote
-for i in "${python_packages[@]}"
-do
-  pip install $i
-done
-neovim3_py=`pyenv which python`  # Note the path
+# pyenv activate neovim3
+# pip install --upgrade pip
+# pip install neovim-remote
+# for i in "${python_packages[@]}"
+# do
+  # pip install $i
+# done
+# neovim3_py=`pyenv which python`  # Note the path
 
 pyenv activate neovim38
 pip install --upgrade pip

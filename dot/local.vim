@@ -26,7 +26,6 @@ set hidden
 set clipboard+=unnamedplus
 set nopaste
 set noshowmode
-set noswapfile
 set tabstop=4 shiftwidth=4 expandtab
 set conceallevel=0
 set virtualedit=
@@ -59,6 +58,19 @@ set nobackup
 set noswapfile
 set fileformats=unix,mac,dos
 set autoread
+set lazyredraw
+
+" folding
+set foldable
+set foldlevelstart=99
+set foldnextmax=12
+nnoremap <space> za
+set foldmethod=indent
+
+augroup vimrc
+  au BufReadPre * setlocal foldmethod=indent
+  au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=manual | endif
+augroup END
 
 if exists('$SHELL')
 	set shell=$SHELL
@@ -69,7 +81,7 @@ set undofile
 set undodir="$HOME/.VIM_UNDO_FILES"
 syntax on
 set ruler
-set nowrap
+" set nowrap
 
 "" Disable the blinking cursor.
 set gcr=a:blinkon0
@@ -108,31 +120,26 @@ inoremap <C-d> <Esc>yyPji
 inoremap <silent> <Home> <C-o>g<Home>
 inoremap <silent> <End>  <C-o>g<End>
 
-"" Basic cursor movement and deletion keybindings from emacs, for vim.
 "" insert mode
 inoremap <C-a> <C-o>:call <SID>home()<CR>
 inoremap <C-e> <End>
-inoremap <C-y> <Esc>lDa
-inoremap <C-s> <Esc>:w<CR>a
-inoremap <C-M-s> <Esc>:wa<CR>a
 inoremap <M-Left> <Esc>ba
 inoremap <M-Right> <Esc>wa
 
 " Split management
-if !exists('g:vscode')
-	inoremap <C-h> <ESC><C-w>h
-	inoremap <C-j> <ESC><C-w>j
-	inoremap <C-k> <ESC><C-w>k
-	inoremap <C-l> <ESC><C-w>l
-	inoremap <C-Left> <ESC><C-w>h
-	inoremap <C-Down> <ESC><C-w>j
-	inoremap <C-Up> <ESC><C-w>k
-	inoremap <C-Right> <ESC><C-w>l
-	inoremap <C--> <esc>:only<cr>a
-	inoremap <C-\> <esc><C-w>_
-	inoremap <C-=> <esc><C-w>=
-	inoremap <C-q> <esc><C-w>c	
-endif 
+inoremap <C-h> <ESC><C-w>h
+inoremap <C-j> <ESC><C-w>j
+inoremap <C-k> <ESC><C-w>k
+inoremap <C-l> <ESC><C-w>l
+inoremap <C-Left> <ESC><C-w>h
+inoremap <C-Down> <ESC><C-w>j
+inoremap <C-Up> <ESC><C-w>k
+inoremap <C-Right> <ESC><C-w>l
+inoremap <C--> <esc>:only<cr>a
+inoremap <C-\> <esc><C-w>_
+inoremap <C-=> <esc><C-w>=
+inoremap <C-q> <esc><C-w>c	
+
 if has('macunix')
 	inoremap <D-c> <Esc>yy
 	inoremap <D-v> <Esc>Pa
@@ -148,6 +155,8 @@ inoremap <S-Right> <Esc>lvl
 "" Normal mode mappings
 "" --------------------
 " copy to end using Y because we cut to end with D
+
+nnoremap <M-O> <S-O><Esc>j
 nnoremap Y y$
 
 if has('nvim')
@@ -384,6 +393,48 @@ autocmd BufRead * normal zz
 " autocmd InsertEnter * let save_cwd = getcwd() | set autochdir
 " autocmd InsertLeave * set noautochdir | execute 'cd' fnameescape(save_cwd)
 
+let no_buffers_menu=1
+
+"" underline current line
+set cursorline
+highlight CursorLine gui=underline cterm=underline
+
+"" customize search results colors
+highlight Search ctermbg=DarkBlue ctermfg=Yellow guibg=DarkBlue guifg=Yellow
+
+"" GUI only options
+if has('gui_running')
+	set guioptions=egmrti
+	set gfn=SourceCodePro\ Nerd\ Font
+	set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20
+" else
+" 	set t_Co=256
+endif
+
+" if !exists('g:not_finish_vimplug')
+	"colorscheme molokai
+	" colorscheme OceanicNext
+colorscheme solarized
+set background=dark
+
+if has("gui_running")
+	let g:indentLine_color_gui = '#343d46'
+	set guifont=SourceCodePro\ Nerd\ Font:h14
+	if has("gui_mac") || has("gui_macvim")
+		set transparency=0
+	endif
+	let g:indentLine_char="|"
+	" let g:indentLine_char="⎸"
+else
+	let g:CSApprox_loaded = 1
+
+	" IndentLine
+	let g:indentLine_enabled = 1
+	let g:indentLine_concealcursor = 0
+	let g:indentLine_char = '┆'
+	let g:indentLine_faster = 1
+endif
+
 if !exists('g:vscode')
 	"" The PC is fast enough, do syntax highlight syncing from start unless 200 lines
 	augroup vimrc-sync-fromstart
@@ -549,48 +600,6 @@ if !exists('g:vscode')
 
 	"" Visual Settings
 	""*****************************************************************************
-	let no_buffers_menu=1
-
-	"" underline current line
-	set cursorline
-	highlight CursorLine gui=underline cterm=underline
-
-	"" customize search results colors
-	highlight Search ctermbg=DarkBlue ctermfg=Yellow guibg=DarkBlue guifg=Yellow
-
-	"" GUI only options
-	if has('gui_running')
-		set guioptions=egmrti
-		set gfn=SourceCodePro\ Nerd\ Font
-		set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20
-	" else
-	" 	set t_Co=256
-	endif
-
-	" if !exists('g:not_finish_vimplug')
-		"colorscheme molokai
-		" colorscheme OceanicNext
-	colorscheme solarized
-	set background=dark
-
-	if has("gui_running")
-		let g:indentLine_color_gui = '#343d46'
-		set guifont=SourceCodePro\ Nerd\ Font:h14
-		if has("gui_mac") || has("gui_macvim")
-			set transparency=0
-		endif
-		let g:indentLine_char="|"
-		" let g:indentLine_char="⎸"
-	else
-		let g:CSApprox_loaded = 1
-
-		" IndentLine
-		let g:indentLine_enabled = 1
-		let g:indentLine_concealcursor = 0
-		let g:indentLine_char = '┆'
-		let g:indentLine_faster = 1
-	endif
-
 
 		"" Themes, Commands, etc  ----------------------------------------------------{{{
 		" let g:oceanic_next_terminal_bold = 1
