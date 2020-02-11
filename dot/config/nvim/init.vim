@@ -38,89 +38,27 @@ call plug#end()
 set inccommand=split
 
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-j
+
+:autocmd InsertEnter * set cul
+:autocmd InsertLeave * set nocul
 if !exists('g:vscode')
 	" Normal mapping
-	" nnoremap <silent> <leader>c :Denite colorscheme<CR>
-	" nnoremap <silent> <leader>b :Denite buffer<CR>
-	" nnoremap <silent> <leader>a :Denite grep:::!<CR>
-	" nnoremap <silent> <leader>u :call dein#update()<CR>
-	" map <silent> <leader>gd :TSDoc <cr>
-	" map <silent> <leader>gt :TSType <cr>
-	" map <silent> <leader>@ :Denite -buffer-name=TSDocumentSymbol TSDocumentSymbol <cr>
-	" map <silent> <leader># :Denite -buffer-name=TSWorkspaceSymbol TSWorkspaceSymbol <cr>
-
-
-	" Terminal mapping
-	tmap <esc> <c-\><c-n><esc><cr>
-
-	" buffer management inside the terminal
-	tmap <leader>, <C-\><C-n>:bnext<cr>
-	tmap <leader>. <C-\><C-n>:bprevious<CR>
 
 	" terminal emulation
 	nnoremap <silent> <leader>sh :terminal<CR>
 	" change cursor in normal mode
 	if exists('$TMUX')
-	let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-	let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+ 	    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+	    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
 	else
-	let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-	let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+	    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+	    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 	endif
-	:autocmd InsertEnter * set cul
-	:autocmd InsertLeave * set nocul
 
 	" Tex ------------------------{{{
 	let g:vimtex_compiler_progname='nvr'
 	" }}}
 
-	" Tmux navigation` -----------------------------------------------------------{{{
-	tmap <C-j> <C-\><C-n>:TmuxNavigateDown<cr>
-	tmap <C-k> <C-\><C-n>:TmuxNavigateUp<cr>
-	tmap <C-l> <C-\><C-n>:TmuxNavigateRight<cr>
-	tmap <C-h> <C-\><C-n>:TmuxNavigateLeft<CR>
-	tmap <C-;> <C-\><C-n>:TmuxNavigatePrevious<cr>
-	tmap <leader>x <c-\><c-n>:bp! <BAR> bd! #<CR>
-	tmap <leader>1  <C-\><C-n><Plug>AirlineSelectTab1
-	tmap <leader>2  <C-\><C-n><Plug>AirlineSelectTab2
-	tmap <leader>3  <C-\><C-n><Plug>AirlineSelectTab3
-	tmap <leader>4  <C-\><C-n><Plug>AirlineSelectTab4
-	tmap <leader>5  <C-\><C-n><Plug>AirlineSelectTab5
-	tmap <leader>6  <C-\><C-n><Plug>AirlineSelectTab6
-	tmap <leader>7  <C-\><C-n><Plug>AirlineSelectTab7
-	tmap <leader>8  <C-\><C-n><Plug>AirlineSelectTab8
-	tmap <leader>9  <C-\><C-n><Plug>AirlineSelectTab9
-	"----------------------------------------------------------------------------}}}
-
-	" Plugin key-mappings.
-
-	" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-	imap <F1>     <Plug>(neosnippet_expand_or_jump)
-	smap <F1>     <Plug>(neosnippet_expand_or_jump)
-	xmap <F1>     <Plug>(neosnippet_expand_target)
-
-	" SuperTab like snippets behavior.
-	" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-	imap <expr><TAB>
-				\ pumvisible() ? "\<C-n>" :
-				\ neosnippet#expandable_or_jumpable() ?
-				\    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-	smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-				\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-
-
-	" Code formatting -----------------------------------------------------------{{{
-
-	" ,f to format code, requires formatters: read the docs
-	noremap <silent> <leader><leader>f :Neoformat<CR>
-	let g:standard_prettier_settings = {
-				\ 'exe': 'prettier',
-				\ 'args': ['--stdin', '--stdin-filepath', '%:p', '--single-quote'],
-				\ 'stdin': 1,
-				\ }
-	" }}}
 
 	" NERDTree ------------------------------------------------------------------{{{
 	let g:vimfiler_ignore_pattern = ""
@@ -202,8 +140,6 @@ if !exists('g:vscode')
 	let g:airline#extensions#neomake#error_symbol='• '
 	let g:airline#extensions#neomake#warning_symbol='•  '
 
-	"hi link ALEError SpellBad
-	"hi link ALEWarning SpellBad
 	" Write this in your vimrc file
 	" let g:ale_lint_on_text_changed = 'never'
 	" let g:ale_lint_on_enter = 0
@@ -223,75 +159,8 @@ let g:neomake_markdown_proselint_maker = {
 let g:neomake_markdown_enabled_makers = ['alex', 'proselint']
 let g:markdown_syntax_conceal = 0
 
-let g:neoformat_markdown_prettier = g:standard_prettier_settings
-let g:neoformat_enabled_markdown = ['prettier']
-
-"}}}
-
-" Javascript ----------------------------------------------------------------{{{
-
-" let g:tigris#enabled = 1
-" let $NVIM_NODE_LOG_FILE='nvim-node.log'
-" let $NVIM_NODE_HOST_DEBUG=1
-let g:neoformat_javascript_prettier = g:standard_prettier_settings
-let g:neoformat_enabled_javascript = ['prettier']
-let g:neomake_javascript_enabled_makers = ['eslint']
-let g:jsx_ext_required = 1
-let g:jsdoc_allow_input_prompt = 1
-let g:jsdoc_input_description = 1
-let g:jsdoc_return=0
-let g:jsdoc_return_type=0
-let g:vim_json_syntax_conceal = 0
-" let g:tern#command = ['tern']
-" let g:tern#arguments = ['--persistent']
-" let g:tern_map_keys=1
-" autocmd FileType typescript setl omnifunc=TSComplete
-" let g:nvim_typescript#signature_complete=1
-" let g:nvim_typescript#max_completion_detail=100
-" let g:nvim_typescript#completion_mark=''
-" let g:nvim_typescript#default_mappings=1
-" let g:nvim_typescript#type_info_on_hold=1
-" let g:nvim_typescript#javascript_support=1
-" let g:nvim_typescript#vue_support=1
-" let g:ale_linters = {
-" \   'typescript': ['tsserver', 'tslint'],
-" \}
-
-
-" let g:neomake_typescript_enabled_makers = ['tsc', 'tslint']
-" let g:neoformat_typescript_prettier = g:standard_prettier_settings
-" let g:neoformat_enabled_typescript = ['prettier']
-
-" let g:neomake_typescript_enabled_makers = ['nvim_ts']
-
-" 			\ 'class': '',
-" 			\ 'interface': '',
-" 			\ 'script': 'script',
-" 			\ 'module': '',
-" 			\ 'local class': 'local class',
-" 			\ 'type': '',
-" 			\ 'enum': '',
-" 			\ 'enum member': '',
-" 			\ 'alias': '',
-" 			\ 'type parameter': 'type param',
-" 			\ 'primitive type': 'primitive type',
-" 			\ 'var': '',
-" 			\ 'local var': '',
-" 			\ 'property': '',
-" 			\ 'let': '',
-" 			\ 'const': '',
-" 			\ 'label': 'label',
-" 			\ 'parameter': 'param',
-" 			\ 'index': 'index',
-" 			\ 'function': '',
-" 			\ 'local function': 'local function',
-" 			\ 'method': '',
-" 			\ 'getter': '',
-" 			\ 'setter': '',
-" 			\ 'call': 'call',
-" 			\ 'constructor': '',
-" 			\}
-" }}}
+" let g:neoformat_markdown_prettier = g:standard_prettier_settings
+" let g:neoformat_enabled_markdown = ['prettier']
 
 " HTML ----------------------------------------------------------------------{{{
 
@@ -299,17 +168,6 @@ let g:neomake_html_enabled_makers = []
 let g:neoformat_enabled_html = ['htmlbeautify']
 
 " }}}
-
-
-" CSS -----------------------------------------------------------------------{{{
-
-" let g:neoformat_scss_prettier = g:standard_prettier_settings
-" let g:neoformat_enabled_scss = ['prettier']
-" let g:neomake_scss_enabled_makers = ['scsslint']
-
-"}}}
-
-
 
 
 " For conceal markers.

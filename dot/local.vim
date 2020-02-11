@@ -61,9 +61,9 @@ set autoread
 set lazyredraw
 
 " folding
-set foldable
+set foldenable
 set foldlevelstart=99
-set foldnextmax=12
+set foldnestmax=12
 nnoremap <space> za
 set foldmethod=indent
 
@@ -81,10 +81,10 @@ set undofile
 set undodir="$HOME/.VIM_UNDO_FILES"
 syntax on
 set ruler
-" set nowrap
+set nowrap
 
 "" Disable the blinking cursor.
-set gcr=a:blinkon0
+" set gcr=a:blinkon0
 set scrolloff=3
 
 "" Status bar
@@ -114,6 +114,8 @@ noremap  <silent> <End>  g<End>
 
 "" duplicate a line
 inoremap <C-d> <Esc>yyPji
+inoremap jk <Esc>
+inoremap jj <Esc>
 
 "" Navigate between display lines
 "" why <C-o> instead of <Esc>
@@ -208,22 +210,10 @@ nnoremap <silent> <esc> :noh<cr>
 nnoremap <leader>d "_d
 
 "" Align blocks of text and keep them selected
-"nnoremap <leader>a :call <SID>SynStack()<CR>
+nnoremap <leader>a :call <SID>SynStack()<CR>
 
 "" Space to toggle folds.
 nnoremap <Space> za
-
-"" Git
-"" noremap <Leader>ga :Gwrite<CR>
-"" noremap <Leader>gc :Gcommit<CR>
-"" noremap <Leader>gsh :Gpush<CR>
-"" noremap <Leader>gpu :Gpull<CR>
-"" noremap <Leader>gs :Gstatus<CR>
-"" noremap <Leader>gb :Gblame<CR>
-"" noremap <Leader>gd :Gvdiff<CR>
-"" noremap <Leader>gr :Gremove<CR>
-"" nnoremap <leader>gm :Magit<CR>
-"" nnoremap <Leader>go :.Gbrowse<CR>
 
 if !exists('g:vscode')
 	"" Opens an edit command with the path of the currently edited file filled in
@@ -231,12 +221,12 @@ if !exists('g:vscode')
 
 	"" Opens a tab edit command with the path of the currently edited file filled
 	noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
+	"" FZF shortcuts
+	nnoremap <silent> <leader>b :Buffers<CR>uun
+	nnoremap <silent> <leader>e :FZF -m<CR>
+	nnoremap <silent> <leader>F :FZF -m<CR>
 endif
 
-"" FZF shortcuts
-nnoremap <silent> <leader>b :Buffers<CR>uun
-nnoremap <silent> <leader>e :FZF -m<CR>
-nnoremap <silent> <leader>F :FZF -m<CR>
 
 "" terminal emulation
 nnoremap <silent> <leader>sh :terminal<CR>
@@ -249,35 +239,9 @@ noremap <leader>c :bd<CR>
 nmap <leader>, :bnext<CR>
 nmap <leader>. :bprevious<CR>
 
-" WINDOW MANAGEMENT SETTINGS
-if !exists('g:vscode')
-	" noremap <Leader>- :<C-u>split<CR>
-	" noremap <Leader>| :<C-u>vsplit<CR>
-	nnoremap <leader>o :only<cr>
-	nnoremap <leader>w= <C-w>=
-	nnoremap <leader>q :wincmd q<cr>
-	nnoremap <leader>h     :call WinMove('h')<cr>
-	nnoremap <leader>k     :call WinMove('k')<cr>
-	nnoremap <leader>l     :call WinMove('l')<cr>
-	nnoremap <leader>j     :call WinMove('j')<cr>
-	nnoremap <leader><Left> :call WinMove('h')<cr>
-	nnoremap <leader><Down> :call WinMove('j')<cr>
-	nnoremap <leader><Up> :call WinMove('k')<cr>
-	nnoremap <leader><Right> :call WinMove('l')<cr>
-	nnoremap <leader>H              :wincmd H<cr>
-	nnoremap <leader>K              :wincmd K<cr>
-	nnoremap <leader>L              :wincmd L<cr>
-	nnoremap <leader>J              :wincmd J<cr>
-
-	"" "open new blank file
-	nnoremap o<C-h> :lefta vsp new<cr>
-	nnoremap o<C-j> :bel sp new<cr>
-	nnoremap o<C-k> :abo sp new<cr>
-	nnoremap o<C-l> :rightb vsp new<cr>
-endif 
-
 " comment
 if has('macunix')
+	nnoremap <C-/> :TComment<cr>
 	nnoremap <D-/> :TComment<cr>
 else
 	nnoremap <C-/> :TComment<cr>
@@ -879,15 +843,15 @@ if !exists('g:vscode')
 	endfunction
 
 	function! WinMove(key)
-	let t:curwin = winnr()
-	exec "wincmd ".a:key
-	if (t:curwin == winnr()) "we havent moved
-		if (match(a:key,'[jk]')) "were we going up/down
-		wincmd v
-		else
-		wincmd s
-		endif
+		let t:curwin = winnr()
 		exec "wincmd ".a:key
-	endif
+		if (t:curwin == winnr()) "we havent moved
+			if (match(a:key,'[jk]')) "were we going up/down
+			wincmd v
+			else
+			wincmd s
+			endif
+			exec "wincmd ".a:key
+		endif
 	endfunction
 endif
