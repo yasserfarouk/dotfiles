@@ -31,7 +31,7 @@ set conceallevel=0
 set virtualedit=
 set wildmenu
 set laststatus=2
-set wrap linebreak nolist
+set linebreak nolist
 set wildmode=full
 set autoread
 set updatetime=500
@@ -114,19 +114,20 @@ noremap  <silent> <End>  g<End>
 
 "" duplicate a line
 inoremap <C-d> <Esc>yyPji
+
+"" Get out of insert mode using jk or jj
 inoremap jk <Esc>
 inoremap jj <Esc>
 
 "" Navigate between display lines
-"" why <C-o> instead of <Esc>
 inoremap <silent> <Home> <C-o>g<Home>
 inoremap <silent> <End>  <C-o>g<End>
 
 "" insert mode
 inoremap <C-a> <C-o>:call <SID>home()<CR>
 inoremap <C-e> <End>
-inoremap <M-Left> <Esc>ba
-inoremap <M-Right> <Esc>wa
+inoremap <M-Left> <C-o>ba
+inoremap <M-Right> <C-o>wa
 
 " Split management
 inoremap <C-h> <ESC><C-w>h
