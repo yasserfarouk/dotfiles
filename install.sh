@@ -174,7 +174,7 @@ pyenv install 3.8.1
 
 pyenv virtualenv 2.7.17 neovim2 2>&1 >/dev/null
 # pyenv virtualenv 3.7.6 neovim3 2>&1 >/dev/null
-pyenv virtualenv 3.8.1 neovim38 2>&1 >/dev/null
+pyenv virtualenv 3.8.1 neovim3 2>&1 >/dev/null
 
 echo "Installing neovim for python, and node"
 echo "--------------------------------------------"

@@ -10,7 +10,7 @@ if !exists('g:vscode')
     Plug 'Shougo/neomru.vim'
     Plug 'Shougo/unite.vim'
     Plug 'Shougo/vimfiler.vim'
-    Plug 'neomake/neomake'
+"    Plug 'neomake/neomake'
     Plug 'sbdchd/neoformat'
     Plug 'zchee/deoplete-jedi'
     Plug 'vim-scripts/SyntaxRange'

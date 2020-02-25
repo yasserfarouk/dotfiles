@@ -6,6 +6,7 @@ ln -s -f $HOME/.dotfiles/inputrc_bash ~/.inputrc
 source ~/.exports
 source ~/.z/z.sh
 
+
 RED="\[\033[0;31m\]"
 YELLOW="\[\033[0;33m\]"
 GREEN="\[\033[0;32m\]"
@@ -104,5 +105,5 @@ export PROMPT_COMMAND='export PS1="${_PS1} $(_git_prompt)\n$ "'
 # eval "$(pyenv init -)"
 # eval "$(pyenv virtualenv-init -)"
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
-
+bindkey -e
 source ~/.aliases

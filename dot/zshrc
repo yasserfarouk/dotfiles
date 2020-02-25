@@ -1,23 +1,17 @@
 #!/usr/bin/env zsh
-# Source any other dot files
-# Just .aliases right now git-completion.bash
-for file in ~/.{aliases}; do
-  [ -r "$file" ] && source "$file"
-done
-
 # load the correct .inputrc file
 ln -s -f $HOME/.dotfiles/inputrc_zsh ~/.inputrc
 source ~/.exports
 source ~/.zshenv
+source ~/.z/z.sh
 
 autoload -U promptinit; promptinit
 unset file
-#bindkey -v
 # Disable zsh autocorrect
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 setopt completeinword
-zstyle ':completion:*:*:git:*' script $HOME/.ysupport/git-completion.bash
+# zstyle ':completion:*:*:git:*' script $HOME/.ysupport/git-completion.bash
 
 fpath=($HOME/.ysupport/zsh-completions $fpath)
 autoload -U compinit && compinit
@@ -29,8 +23,8 @@ compinit -d ~/.zcompdump_capture
 
 source ~/antigen/antigen.zsh
 #antigen use oh-my-zsh
-#antigen bundle git
-#antigen bundle pip
+antigen bundle git
+antigen bundle pip
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
 #antigen bundle marzocchi/zsh-notify
@@ -38,7 +32,6 @@ antigen bundle mafredri/zsh-async
 antigen bundle sindresorhus/pure
 antigen apply
 
-source ~/.z/z.sh
 
 # zstyle ':notify:*' command-complete-timeout 5
 # zstyle ':notify:*' error-icon "https://media3.giphy.com/media/10ECejNtM1GyRy/200_s.gif"
@@ -53,9 +46,6 @@ export NVM_DIR="$HOME/.nvm"
 
 #export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 
-# eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
-if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
 # [[ -e "$HOME/anaconda/bin/activate" ]] && source "$HOME/anaconda/bin/activate"
 # [[ -e "$HOME/anaconda3/bin/activate" ]] && source "$HOME/anaconda3/bin/activate"
@@ -110,6 +100,8 @@ bindkey -M vicmd '/' history-incremental-search-forward
 # Beginning search with arrow keys
 bindkey "^[OA" up-line-or-beginning-search
 bindkey "^[OB" down-line-or-beginning-search
+bindkey -M vicmd "^[OA" up-line-or-beginning-search
+bindkey -M vicmd "^[OB" down-line-or-beginning-search
 bindkey -M vicmd "k" up-line-or-beginning-search
 bindkey -M vicmd "j" down-line-or-beginning-search
 bindkey -M vicmd "^V" edit-command-line
@@ -130,10 +122,14 @@ function vi_mode_prompt_info() {
 RPS1='$(vi_mode_prompt_info)'
 RPS2=$RPS1
 
-source ~/.aliases
+for file in ~/.{aliases}; do
+  [ -r "$file" ] && source "$file"
+done
 
 
 # pyenv 
+if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+# eval "$(pyenv virtualenv-init -)"
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 # Vi mode
 bindkey -e

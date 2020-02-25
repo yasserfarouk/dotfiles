@@ -15,6 +15,7 @@ neovim3_py=`pyenv which python`  # Note the path
 replace_tag_in_file '<<nvimpy2>>' $neovim2_py "$HOME/.dotfiles/local.vim"
 replace_tag_in_file '<<nvimpy3>>' $neovim3_py "$HOME/.dotfiles/local.vim"
 
+$(brew --prefix)/opt/fzf/install
 source ~/.bashrc
 source ~/.zshrc
 

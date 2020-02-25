@@ -21,10 +21,8 @@ alias l1='ls -1'
 alias s="sudo"
 alias n="open -a /Applications/Neovim.app"
 # Desktop Programs
-alias xcode="open -a '/Applications/XCode.app'"
 alias safari="open -a safari"
 alias chrome="open -a google\ chrome"
-alias chromium="open -a chromium"
 alias f='open -a Finder '
 alias fh='open -a Finder .'
 alias textedit='open -a TextEdit'
@@ -108,8 +106,8 @@ function compress()
         zip -r $baseName.zip $baseName
         ;;
       *)
-        echo "Method not passed compressing using tar.bz2"
-        tar cjf $baseName.tar.bz2 $baseName
+        echo "Method not passed compressing using zip"
+        zip -r $baseName.zip $baseName
         ;;
     esac
     echo "Back to Directory $dirPriorToExe"
@@ -135,8 +133,8 @@ function compress()
         zip -r $baseName.zip $baseName
         ;;
         *)
-        echo "Method not passed compressing using tar.bz2"
-        tar cjf $baseName.tar.bz2 $baseName
+        echo "Method not passed compressing using zip"
+        zip -r $baseName.zip $baseName
         ;;
       esac
       echo "Back to Directory $dirPriorToExe"

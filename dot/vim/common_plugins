@@ -10,7 +10,6 @@ if !exists('g:vscode')
     Plug 'ludovicchabant/vim-gutentags'
     Plug 'SirVer/ultisnips'
     Plug 'MartinLafreniere/vim-PairTools'
-    " Plug 'Raimondi/delimitMate'
     Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
     Plug 'lervag/vimtex'
     Plug 'majutsushi/tagbar'
