@@ -69,23 +69,12 @@ mkdir $HOME/.vim/doc 2>&1 >/dev/null
 source ~/.bash_profile
 source ~/.zshrc
 echo "Installing Plug"
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-echo "Installing Neobundle"
-echo "--------------------"
-mkdir ~/.tmp 2>&1 >/dev/null
-curl -fLo > ~/.tmp/install_neobundle.sh --create-dirs \
-    https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh
-sh ~/.tmp/install_neobundle.sh
-rm ~/.tmp/install_neobundle.sh
-rmdir ~/.tmp 2>&1 >/dev/null
-
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 echo "Installing vim plugins"
 echo "----------------------"
 vim +PlugInstall +UpdateRemotePlugins +qa
-nvim +UpdateRemotePlugins +CheckHealth +qa
+nvim +PlugInstall +UpdateRemotePlugins +CheckHealth +qa
 
 echo "Changing to zsh"
 chsh -s $(which zsh)
@@ -120,28 +109,6 @@ compaudit | xargs chmod g-w
 # cp -R ~/nondot/vimacs-0.93/doc $HOME/.vim/doc/
 # cp -R ~/nondot/vimacs-0.93/plugin $HOME/.vim/plugin/
 
-
-
-echo "Installing sublime-text-3 preferences"
-echo "-------------------------------------"
-case "$(uname -s)" in
-   Darwin)
-     sublime_config_path="$HOME/Library/Application Support/Sublime Text 3/Packages/"
-
-     ;;
-
-   Linux)
-     sublime_config_path="$HOME/~/.config/sublime-text-3/Packages/"
-
-     ;;
-
-esac
-unlink $sublime_config_path/User 2>&1 >/dev/null
-rm -rf $sublime_config_path/User 2>&1 >/dev/null
-ln -s -f "$HOME/.ysupport/sublime/User" "$sublime_config_path"
-
-touch ~/.local.vim
-#brew edit neovim
 
 echo "------------------------------------------------------------"
 echo "                             All done!                      "

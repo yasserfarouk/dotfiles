@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
-cp -r dot/* ~/.dotfiles
-
+cp -R dot/* ~/.dotfiles
+cp dot/config/nvim/init.vim ~/.config/nvim/init.vim
+cp dot/gitignore_global ~/.gitignore_global 
 function replace_tag_in_file(){
   python -c "s=open('$3', 'r').read().replace('$1','$2'); open('$3', 'w').write(s)" 2>&1 >/dev/null
 }
@@ -12,8 +13,15 @@ neovim2_py=`pyenv which python`  # Note the path
 pyenv activate neovim3
 neovim3_py=`pyenv which python`  # Note the path
 
-replace_tag_in_file '<<nvimpy2>>' $neovim2_py "$HOME/.dotfiles/local.vim"
-replace_tag_in_file '<<nvimpy3>>' $neovim3_py "$HOME/.dotfiles/local.vim"
+replace_tag_in_file '<<nvimpy2>>' $neovim2_py "$HOME/.config/nvim/init.vim"
+replace_tag_in_file '<<nvimpy3>>' $neovim3_py "$HOME/.config/nvim/init.vim"
+
+# share configs between vim and neovim
+mkdir -p ~/.local/share/nvim/site
+ln -s ~/.local/share/nvim/site ~/.vim 
+rm ~/.vimrc
+ln -s ~/.config/nvim/init.vim ~/.vimrc
+
 
 $(brew --prefix)/opt/fzf/install
 source ~/.bashrc

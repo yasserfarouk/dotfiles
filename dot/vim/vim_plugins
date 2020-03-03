@@ -1,3 +1,0 @@
-Plug 'Shougo/vimproc.vim', {'do': g:make}
-Plug 'Shougo/vimshell.vim'
-Plug 'scrooloose/syntastic'

@@ -9,8 +9,11 @@ packages=(
 "vifm"
 "tree"
 "pyenv-virtualenv"
+"ag"
+"ripgrep"
 )
 pip_packages=(
+"msgpack"
 )
 linux_packages=(
 "terminal-notifier"
@@ -196,14 +199,15 @@ neovim2_py=`pyenv which python`  # Note the path
 # done
 # neovim3_py=`pyenv which python`  # Note the path
 
-pyenv activate neovim38
+pyenv activate neovim3
 pip install --upgrade pip
 pip install neovim-remote
+
 for i in "${python_packages[@]}"
 do
-  pip install $i
+  pip install -U $i
 done
-neovim38_py=`pyenv which python`  # Note the path
+neovim3_py=`pyenv which python`  # Note the path
 
 gem install neovim
 npm install -g neovim
