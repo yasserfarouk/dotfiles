@@ -40,19 +40,16 @@ function replace_tag_in_all(){
 }
 
 replace_tag_in_file '<<nvimpy2>>' $neovim2_py "$HOME/.vimrc"
-replace_tag_in_file '<<nvimpy3>>' $neovim3_py "$HOME/.vimrc
+replace_tag_in_file '<<nvimpy3>>' $neovim3_py "$HOME/.vimrc"
 
 
 cd $HOME
 echo "running RCM rcup command"
-echo "This is symlink the rc files in .dofiles"
-echo "with the rc files in $HOME"
-echo "---------------------------------------------------------"
+echo "This is symlink the rc files"
 
 case "$(uname -s)" in
    Darwin)
     rcup
-
     ;;
    Linux)
     rcup
