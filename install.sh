@@ -53,6 +53,7 @@ case "$(uname -s)" in
     # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     # echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation"
     # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+    echo "You wil be prompted for your sudo password. If you do not have root access, just ignore it"
     sudo apt install make
     sudo apt install lib64readline7 lib64readline7-dev 
     sudo apt install sqlite sqlite3 
@@ -123,7 +124,7 @@ esac
 
 
 # installing fzf shortcuts
-$(brew --prefix)/opt/fzf/install
+yes | $(brew --prefix)/opt/fzf/install --all
 
 # installing programs that require special care (e.g. tmux from HEAD and devicons usin npm)
 brew install tmux --HEAD
@@ -259,6 +260,10 @@ curl -L git.io/antigen > ~/antigen/antigen.zsh
 echo "Installing pure theme"
 echo "--------------------------"
 npm install --global pure-prompt
+
+echo "Updating npm"
+echo "------------"
+npm install -g npm
 
 echo "----------------------"
 echo "Installed prerequisits"

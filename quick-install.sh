@@ -39,8 +39,8 @@ function replace_tag_in_all(){
   done
 }
 
-replace_tag_in_file '<<nvimpy2>>' $neovim2_py "$HOME/.dotfiles/local.vim"
-replace_tag_in_file '<<nvimpy3>>' $neovim3_py "$HOME/.dotfiles/local.vim"
+replace_tag_in_file '<<nvimpy2>>' $neovim2_py "$HOME/.vimrc"
+replace_tag_in_file '<<nvimpy3>>' $neovim3_py "$HOME/.vimrc"
 
 
 cd $HOME
