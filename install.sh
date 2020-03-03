@@ -1,4 +1,14 @@
 #!/usr/bin/env bash
+
+while true; do
+    read -p "Do you have root access to this machine? [yn] " has_root
+    case $has_root in
+        [Yy]* ) echo "May be prompted for your password later"; break;;
+        [Nn]* ) echo "Will not be prompted for a sudo password"; break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
 packages=(
 "git"
 "node"
@@ -53,13 +63,11 @@ case "$(uname -s)" in
     # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     # echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation"
     # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-    echo "You wil be prompted for your sudo password. If you do not have root access, just ignore it"
-    sudo apt install make
-    sudo apt install lib64readline7 lib64readline7-dev 
-    sudo apt install sqlite sqlite3 
-    sudo apt install zlib1g-dev 
-    sudo apt install zlibig 
-    sudo apt install bzip2
+    case $has_root in
+        [Yy]* ) sudo apt install make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2; break;;
+        [Nn]* ) echo "You should have make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2 installed. Proceeding assuming you do"; break;;
+        * ) echo "Should not be here";;
+    esac    
     command -v brew 2>&1 >/dev/null # improvement by tripleee
     BREW_IS_AVAILABLE=$?
     if [ $BREW_IS_AVAILABLE ]
@@ -129,7 +137,7 @@ yes | $(brew --prefix)/opt/fzf/install --all
 # installing programs that require special care (e.g. tmux from HEAD and devicons usin npm)
 brew install tmux --HEAD
 brew link tmux
-brew tap caskroom/fonts
+brew tap homebrew/cask-fonts
 brew cask install font-hack-nerd-font
 brew cask link font-hack-nerd-font
 current_dir=`pwd`
@@ -162,7 +170,6 @@ echo "------------------------------------------------------"
 for i in "${pip_packages[@]}"
 do
     pip3 install --upgrade $i
-  echo "---------------------------------------------------------"
 done
 
 echo "Installing neovim2/3 python envs"

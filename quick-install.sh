@@ -40,7 +40,7 @@ function replace_tag_in_all(){
 }
 
 replace_tag_in_file '<<nvimpy2>>' $neovim2_py "$HOME/.vimrc"
-replace_tag_in_file '<<nvimpy3>>' $neovim3_py "$HOME/.vimrc"
+replace_tag_in_file '<<nvimpy3>>' $neovim3_py "$HOME/.vimrc
 
 
 cd $HOME
@@ -101,18 +101,10 @@ echo "Correcting group permissions"
 echo "----------------------------"
 compaudit | xargs chmod g-w
 
-# echo "Installing vimemacs"
-# echo "-------------------"
-
-# mkdir -p $HOME/.vim/doc 2>&1 >/dev/null
-# mkdir -p $HOME/.vim/plugin 2>&1 >/dev/null
-# cp -R ~/nondot/vimacs-0.93/doc $HOME/.vim/doc/
-# cp -R ~/nondot/vimacs-0.93/plugin $HOME/.vim/plugin/
-
-
 echo "------------------------------------------------------------"
 echo "                             All done!                      "
 echo "Change your terminal font to <Source Code Pro for Powerline>"
 echo "------------------------------------------------------------"
-
+source ~/.bashrc
+source ~/.zshrc
 exit 0

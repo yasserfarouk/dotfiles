@@ -1,3 +1,11 @@
+# How to use it 
+
+- In a new machine run install.sh once
+- to update packages run update.sh
+- quick-install.sh assumes that everything is installed and just installs configs
+- qupdate should be used if you changed some config files (e.g. init.vim) and want to update
+  only the configs installing nothing.
+
 # Obligatory Dotfile Repo
 
 This repository contains my dotfiles (mostly vim/tmux) which is adjusted to work for both OSX and linux machines. It is base on [Mark Hartington](https://github.com/mhartington/dotfiles).

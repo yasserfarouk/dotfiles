@@ -23,7 +23,7 @@ rm ~/.vimrc
 ln -s ~/.config/nvim/init.vim ~/.vimrc
 
 
-$(brew --prefix)/opt/fzf/install
+yes | $(brew --prefix)/opt/fzf/install --all
 source ~/.bashrc
 source ~/.zshrc
 
