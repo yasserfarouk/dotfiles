@@ -21,6 +21,7 @@ packages=(
 "pyenv-virtualenv"
 "ag"
 "ripgrep"
+"nnn"
 )
 pip_packages=(
 "msgpack"

@@ -21,7 +21,8 @@ export LC_TELEPHONE="en_US.UTF-8"
 export LC_MEASUREMENT="en_US.UTF-8"
 export LC_IDENTIFICATIO="en_US.UTFUTF"
 export LC_ALL="en_US.UTF-8"
-
+export EDITOR="nvim"
+export VISUA="nvim"
 export HISTSIZE=1000000
 export HISTFILESIZE=1000000000
 export SAVEHIST=10000
