@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+cp ~/.vimrc ./dot/config/nvim/init.vim
+echo "Replace pyenv paths with <<nvimpy2>> and <nvimpy3>>"

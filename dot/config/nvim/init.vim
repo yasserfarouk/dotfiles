@@ -159,6 +159,7 @@ call plug#begin(expand('~/.vim/plugged'))
 		else
 			Plug 'Shougo/deoplete.nvim'
 		endif
+		Plug 'dense-analysis/ale'
 		Plug 'Shougo/echodoc.vim'
 		Plug 'Shougo/neco-vim'
 		Plug 'Shougo/neoinclude.vim'
@@ -573,6 +574,7 @@ if !exists('g:vscode')
 		autocmd!
 		autocmd BufRead,BufNewFile *.txt call s:setupWrapping()
 	augroup END
+endif
 
 " "  make/cmake
 "  augroup vimrc-make-cmake
@@ -590,24 +592,25 @@ if !exists('g:vscode')
 " *************************************************************
 
 "  session management ----------------------------------------------------{{{
-	if has('nvim')
-		let g:session_directory = "~/.config/nvim/session"
-	else
-		let g:session_directory = "~/.vim/session"
-	endif
+if has('nvim')
+	let g:session_directory = "~/.config/nvim/session"
+else
+	let g:session_directory = "~/.vim/session"
+endif
 
-	let g:session_autoload = "no"
-	let g:session_autosave = "no"
-	let g:session_command_aliases = 0
+let g:session_autoload = "no"
+let g:session_autosave = "no"
+let g:session_command_aliases = 0
 " }}}
 
 "  session management ----------------------------------------------------{{{
-	let g:auto_save = 0" enable AutoSave on Vim startup
-	let g:auto_save_no_updatetime = 1" do not change the 'updatetime' option
-	let g:auto_save_silent = 0" do not display the auto-save notification
-	let g:auto_save_postsave_hook = 'TagsGenerate'" this will run :TagsGenerate after each save
+let g:auto_save = 0" enable AutoSave on Vim startup
+let g:auto_save_no_updatetime = 1" do not change the 'updatetime' option
+let g:auto_save_silent = 0" do not display the auto-save notification
+let g:auto_save_postsave_hook = 'TagsGenerate'" this will run :TagsGenerate after each save
 " }}}
 
+if !exists('g:vscode')
 " Git ------------------------------------------------------------------------{{{
 	set signcolumn=yes
 	let g:conflict_marker_enable_mappings = 0
@@ -667,7 +670,7 @@ if !exists('g:vscode')
 " }}}
 
 " Tex ------------------------{{{
-		let g:vimtex_compiler_progname='nvr'
+	let g:vimtex_compiler_progname='nvr'
 " }}}
 
 " terminal emulation --------------------------------------------------------{{{
@@ -684,7 +687,6 @@ if !exists('g:vscode')
 	    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 	endif
 
-" NERDTree ------------------------------------------------------------------{{{
 " Nvim terminal -------------------------------------------------------------{{{
 
 	au BufEnter * if &buftype == 'terminal' | :startinsert | endif
@@ -718,17 +720,17 @@ if !exists('g:vscode')
 					\ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 	augroup END
 
-" jedi-vim
+" jedi-vim --------------------------------------------------------------------------{{{
 	let g:jedi#auto_vim_configuration = 1
-	let g:jedi#completions_enabled = 1
+	let g:jedi#completions_enabled = 0
 	let g:jedi#popup_on_dot = 0
 	let g:jedi#goto_assignments_command = "ga"
 	let g:jedi#goto_definitions_command = "gd"
-	let g:jedi#documentation_command = "<F1>"
-	let g:jedi#usages_command = "<S-F12>"
+	let g:jedi#documentation_command = "S-k"
+	let g:jedi#usages_command = "gr"
 	let g:jedi#rename_command = "<F2>"
 	let g:jedi#show_call_signatures = "1"
-	let g:jedi#completions_command = "<C-p>"
+	let g:jedi#completions_command = "<C-Space>"
 	let g:jedi#smart_auto_mappings = 0
 
 " Syntax highlight
@@ -736,6 +738,22 @@ if !exists('g:vscode')
 	let g:polyglot_disabled = ['python']
 	let python_highlight_all = 1
 
+" }}}
+
+" ALE ------------------------------------------------------------------------{{{
+	let g:ale_fixers = {
+	\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+	\   'javascript': ['eslint'],
+	\   'python': ['black'],
+	\}
+
+	" Set this variable to 1 to fix files when you save them.
+	let g:ale_fix_on_save = 1
+	let g:ale_completion_enabled = 0
+
+	" this can prevent ALE from running continuously
+	" let g:ale_lint_on_enter = 0
+	" let g:ale_lint_on_text_changed = 'never'
 " }}}
 
 "  Visual Settings
