@@ -44,7 +44,7 @@ replace_tag_in_file '<<nvimpy3>>' $neovim3_py "$HOME/.vimrc
 
 
 cd $HOME
-echo "running RCM's rcup command"
+echo "running RCM rcup command"
 echo "This is symlink the rc files in .dofiles"
 echo "with the rc files in $HOME"
 echo "---------------------------------------------------------"
@@ -101,10 +101,10 @@ echo "Correcting group permissions"
 echo "----------------------------"
 compaudit | xargs chmod g-w
 
+./qupdate
+
 echo "------------------------------------------------------------"
 echo "                             All done!                      "
 echo "Change your terminal font to <Source Code Pro for Powerline>"
 echo "------------------------------------------------------------"
-source ~/.bashrc
-source ~/.zshrc
 exit 0

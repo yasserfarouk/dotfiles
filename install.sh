@@ -64,8 +64,8 @@ case "$(uname -s)" in
     # echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation"
     # echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     case $has_root in
-        [Yy]* ) sudo apt install make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2; break;;
-        [Nn]* ) echo "You should have make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2 installed. Proceeding assuming you do"; break;;
+        [Yy]* ) sudo apt install make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2;;
+        [Nn]* ) echo "You should have make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2 installed. Proceeding assuming you do";;
         * ) echo "Should not be here";;
     esac    
     command -v brew 2>&1 >/dev/null # improvement by tripleee

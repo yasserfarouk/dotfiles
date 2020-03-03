@@ -231,8 +231,8 @@ function fixSSH(){
 
 case "$(uname -s)" in
    Darwin)
-    alias mvim=/Applications/MacVim.app/Contents/MacOS/Vim -g
-    alias macvim=/Applications/MacVim.app/Contents/MacOS/MacVim -g
+    alias mvim="/Applications/MacVim.app/Contents/MacOS/Vim -g"
+    alias macvim="/Applications/MacVim.app/Contents/MacOS/MacVim -g"
     alias gvim=mvim
     alias vi=vim
     alias v=nvim
@@ -241,7 +241,7 @@ case "$(uname -s)" in
 
    Linux)
     alias gvim=vim
-    alias vi=nvim
+    alias vi=vim
     alias v=nvim
     ;;
 
