@@ -133,9 +133,16 @@ endif
 " Add Plug to the runtime path:
 set rtp +=~/.config/nvim
 
+function! Cond(cond, ...)
+  let opts = get(a:000, 0, {})
+  return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
+endfunction
+
 " define all plugins
 call plug#begin(expand('~/.vim/plugged'))
-	Plug 'easymotion/vim-easymotion'
+	" if !exists('g:vscode')
+	Plug 'asvetliakov/vim-easymotion', Cond(exists('g:vscode'))
+	Plug 'easymotion/vim-easymotion', Cond(!exists('g:vscode'))
 	Plug 'tpope/vim-surround'
 	Plug 'tpope/vim-unimpaired'
 	Plug 'tomtom/tcomment_vim'
@@ -144,16 +151,11 @@ call plug#begin(expand('~/.vim/plugged'))
 	Plug 'jiangmiao/auto-pairs'
 	Plug 'ervandew/supertab'
 	if !exists('g:vscode')
-		Plug 'Shougo/dein.vim'
+		Plug 'Shougo/dein.vim', Cond(!exists('g:vscode'))
 		Plug 'Shougo/denite.nvim'
 		Plug 'Shougo/deol.nvim'
-		if !has('nvim')
-			Plug 'roxma/nvim-yarp'
-			Plug 'roxma/vim-hug-neovim-rpc'
-			" Plug 'Shougo/vimproc.vim', {'do': g:make}
-			" Plug 'Shougo/vimshell.vim'
-			" Plug 'scrooloose/syntastic'
-		endif
+		Plug 'roxma/nvim-yarp', Cond(!has('nvim'))
+		Plug 'roxma/vim-hug-neovim-rpc', Cond(!has('nvim'))
 		if has('nvim')
 			Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 		else

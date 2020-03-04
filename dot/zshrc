@@ -38,7 +38,7 @@ antigen apply
 # zstyle ':notify:*' error-title "Fail"
 # zstyle ':notify:*' success-icon "https://s-media-cache-ak0.pinimg.com/564x/b5/5a/18/b55a1805f5650495a74202279036ecd2.jpg"
 # zstyle ':notify:*' success-title "Success"
-# 
+#
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -122,10 +122,12 @@ function vi_mode_prompt_info() {
 RPS1='$(vi_mode_prompt_info)'
 RPS2=$RPS1
 
-[ -r "~/.aliases" ] && source "~/.aliases"
+if [ -f ~/.aliases ]; then
+   source ~/.aliases
+fi
 
 
-# pyenv 
+# pyenv
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # eval "$(pyenv virtualenv-init -)"
 if which pyenv > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
