@@ -22,6 +22,7 @@ packages=(
 "ag"
 "ripgrep"
 "nnn"
+"languagetool"
 )
 pip_packages=(
 "msgpack"
@@ -68,7 +69,7 @@ case "$(uname -s)" in
         [Yy]* ) sudo apt install make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2;;
         [Nn]* ) echo "You should have make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2 installed. Proceeding assuming you do";;
         * ) echo "Should not be here";;
-    esac    
+    esac
     command -v brew 2>&1 >/dev/null # improvement by tripleee
     BREW_IS_AVAILABLE=$?
     if [ $BREW_IS_AVAILABLE ]
@@ -144,6 +145,7 @@ brew cask link font-hack-nerd-font
 current_dir=`pwd`
 cd $HOME
 npm install -g devicons
+npm install -g write-good
 cd $current_dir
 
 echo "installing RCM, for dotfiles management and terminal-notifier"

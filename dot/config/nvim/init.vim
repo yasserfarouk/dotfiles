@@ -55,6 +55,7 @@ set formatoptions+=t
 set shortmess=atIc
 set isfname-==
 " set nospell
+set spell
 set splitbelow
 set completeopt+=noselect,menuone
 set completeopt-=preview
@@ -64,6 +65,8 @@ set noswapfile
 set fileformats=unix,mac,dos
 set autoread
 set lazyredraw
+set dictionary+=/usr/share/dict/words
+set thesaurus+=$HOME/.ysupport/thesaurii.txt
 
 " folding
 set foldenable
@@ -157,12 +160,18 @@ endfunction
 " define all plugins
 call plug#begin(expand('~/.vim/plugged'))
 	" if !exists('g:vscode')
+	Plug 'inkarkat/vim-ReplaceWithRegister'
+	Plug 'rhysd/vim-grammarous'
+	Plug 'tmhedberg/matchit'
+	Plug 'lervag/vimtex'
+	Plug 'honza/vim-snippets'
 	Plug 'asvetliakov/vim-easymotion', Cond(exists('g:vscode'))
 	Plug 'easymotion/vim-easymotion', Cond(!exists('g:vscode'))
 	Plug 'tpope/vim-surround'
 	Plug 'tpope/vim-unimpaired'
 	Plug 'tomtom/tcomment_vim'
 	Plug 'tpope/vim-repeat'
+	Plug 'romgrk/replace.vim'
 	Plug 'junegunn/vim-easy-align'
 	Plug 'jiangmiao/auto-pairs'
 	Plug 'ervandew/supertab'
@@ -173,9 +182,12 @@ call plug#begin(expand('~/.vim/plugged'))
 	" Plug 'roxma/nvim-completion-manager'  "|
 	Plug 'noahfrederick/vim-composer'     "|
 	Plug 'noahfrederick/vim-laravel'
+	Plug 'mattn/emmet-vim'
+	Plug 'luochen1990/rainbow'
 	"
 	if !exists('g:vscode')
-		Plug 'Shougo/dein.vim', Cond(!exists('g:vscode'))
+		Plug 'janko/vim-test'
+		Plug 'Shougo/dein.vim'
 		Plug 'Shougo/denite.nvim'
 		Plug 'Shougo/deol.nvim'
 		Plug 'roxma/nvim-yarp', Cond(!has('nvim'))
@@ -303,6 +315,22 @@ let g:deoplete#enable_at_startup = 1
 
 
 " Normal mapping ----------------------------------------------------------{{{
+
+" replac.vim mappings
+" nmap R <Plug>ReplaceOperator
+" vmap R <Plug>ReplaceOperator
+nmap s <Plug>ReplaceOperator
+vmap s <Plug>ReplaceOperator
+nmap X <Plug>ExchangeOperator
+
+" vim-test mappings
+nmap <silent> t<C-n> :TestNearest<CR>
+nmap <silent> t<C-f> :TestFile<CR>
+nmap <silent> t<C-s> :TestSuite<CR>
+nmap <silent> t<C-l> :TestLast<CR>
+nmap <silent> t<C-g> :TestVisit<CR>
+
+
 nnoremap <space> za
 
 noremap  <silent> <Home> g<Home>
@@ -811,6 +839,26 @@ if !exists('g:vscode')
 	" 	nunmap <buffer> K
 	" 	nunmap <buffer> J
 	" endf
+	" }}}
+
+	" vim-grammarous-------------------------------------------------------------{{{
+	 let g:grammarous#hooks = {}
+	 function! g:grammarous#hooks.on_check(errs) abort
+		 nmap <buffer><C-n> <Plug>(grammarous-move-to-next-error)
+		 nmap <buffer><C-p> <Plug>(grammarous-move-to-previous-error)
+	 endfunction
+
+	 function! g:grammarous#hooks.on_reset(errs) abort
+		 nunmap <buffer><C-n>
+		 nunmap <buffer><C-p>
+	 endfunction
+	let g:grammarous#languagetool_cmd = 'languagetool'
+	" }}}
+	" vim-test -------------------------------------------------------------------{{{
+	let test#strategy = "dispatch"
+	" }}}
+	" rainbow -------------------------------------------------------------------{{{
+	let g:rainbow_active = 1
 	" }}}
 
 	" grep.vim -------------------------------------------------------------------{{{
