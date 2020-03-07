@@ -160,7 +160,12 @@ endfunction
 " define all plugins
 call plug#begin(expand('~/.vim/plugged'))
 	" if !exists('g:vscode')
-	Plug 'inkarkat/vim-ReplaceWithRegister'
+	Plug 'terryma/vim-multiple-cursors'
+	Plug 'dhruvasagar/vim-zoom'
+	Plug 'ntpeters/vim-better-whitespace'
+	Plug 'vim-python/python-syntax'
+	Plug 'dyng/ctrlsf.vim'
+    Plug 'inkarkat/vim-ReplaceWithRegister'
 	Plug 'rhysd/vim-grammarous'
 	Plug 'tmhedberg/matchit'
 	Plug 'lervag/vimtex'
@@ -177,6 +182,8 @@ call plug#begin(expand('~/.vim/plugged'))
 	Plug 'ervandew/supertab'
 	Plug 'vim-vdebug/vdebug'
 	Plug 'tpope/vim-projectionist'        "|
+	Plug 'camspiers/animate.vim'
+	Plug 'camspiers/lens.vim'
 	" support for php
 	Plug 'tpope/vim-dispatch'             "| Optional
 	" Plug 'roxma/nvim-completion-manager'  "|
@@ -184,6 +191,8 @@ call plug#begin(expand('~/.vim/plugged'))
 	Plug 'noahfrederick/vim-laravel'
 	Plug 'mattn/emmet-vim'
 	Plug 'luochen1990/rainbow'
+	Plug 'junegunn/limelight.vim'
+	Plug 'junegunn/goyo.vim'
 	"
 	if !exists('g:vscode')
 		Plug 'janko/vim-test'
@@ -207,7 +216,6 @@ call plug#begin(expand('~/.vim/plugged'))
 		Plug 'ludovicchabant/vim-gutentags'
 		Plug 'SirVer/ultisnips'
 		Plug 'MartinLafreniere/vim-PairTools'
-		Plug 'lervag/vimtex'
 		Plug 'majutsushi/tagbar'
 		Plug 'altercation/vim-colors-solarized'
 		Plug 'mhartington/oceanic-next'
@@ -221,9 +229,11 @@ call plug#begin(expand('~/.vim/plugged'))
 		Plug 'jistr/vim-nerdtree-tabs'
 		Plug 'Xuyuanp/nerdtree-git-plugin'
 		Plug 'sgeb/vim-diff-fold'
-		Plug 'sheerun/vim-polyglot'
+		" Plug 'sheerun/vim-polyglot'
 		Plug 'tmhedberg/SimpylFold', {'for': 'python'}
 		Plug 'tpope/vim-markdown', {'for': 'markdown'}
+		Plug 'godlygeek/tabular'
+		Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
 		Plug 'nelstrom/vim-markdown-folding', {'for': 'markdown'}
 		Plug 'vim-airline/vim-airline'
 		Plug 'vim-airline/vim-airline-themes'
@@ -280,9 +290,8 @@ let g:markdown_syntax_conceal = 0
 
 " let g:neoformat_markdown_prettier = g:standard_prettier_settings
 " let g:neoformat_enabled_markdown = ['prettier']
-
+" }}}
 " HTML ----------------------------------------------------------------------{{{
-
 let g:neomake_html_enabled_makers = []
 let g:neoformat_enabled_html = ['htmlbeautify']
 
@@ -309,19 +318,26 @@ let g:deoplete#enable_at_startup = 1
 " }}}
 
 
-" *************************************************************
-"  Mappings
-" *************************************************************
-
-
 " Normal mapping ----------------------------------------------------------{{{
 
 " replac.vim mappings
 " nmap R <Plug>ReplaceOperator
 " vmap R <Plug>ReplaceOperator
 nmap s <Plug>ReplaceOperator
-vmap s <Plug>ReplaceOperator
 nmap X <Plug>ExchangeOperator
+
+" multi-cursoer mappings
+let g:multi_cursor_use_default_mapping=0
+
+" Default mapping
+let g:multi_cursor_start_word_key      = '<C-n>'
+let g:multi_cursor_select_all_word_key = '<A-n>'
+let g:multi_cursor_start_key           = 'g<C-n>'
+let g:multi_cursor_select_all_key      = 'g<A-n>'
+let g:multi_cursor_next_key            = '<C-n>'
+let g:multi_cursor_prev_key            = '<C-p>'
+let g:multi_cursor_skip_key            = '<C-x>'
+let g:multi_cursor_quit_key            = '<Esc>'
 
 " vim-test mappings
 nmap <silent> t<C-n> :TestNearest<CR>
@@ -337,8 +353,7 @@ noremap  <silent> <Home> g<Home>
 noremap  <silent> <End>  g<End>
 
 " copy to end using Y because we cut to end with D
-
-nnoremap <M-O> <S-O><Esc>j
+" nnoremap <M-O> <S-O><Esc>j
 nnoremap Y y$
 
 if has('nvim')
@@ -371,7 +386,7 @@ nnoremap <silent><expr><Up>   v:count == 0 ? 'gk' : 'k'
 nnoremap <silent><expr><Down> v:count == 0 ? 'gj' : 'j'
 
 "  copy current file path to clipboard
-nnoremap cp :let @+= expand("%") <cr>
+nnoremap <leader>cp :let @+= expand("%") <cr>
 
 "  Search mappings: These will make it so that going to the next one in a
 "  search will center on the line it is found in.
@@ -383,9 +398,10 @@ nnoremap <silent> <esc> :noh<cr>
 
 "  a map to delete to the blackhole _ register (no cutting)
 nnoremap <leader>d "_d
+nnoremap <leader>D "_D
 
 "  Align blocks of text and keep them selected
-nnoremap <leader>a :call <SID>SynStack()<CR>
+" nnoremap <leader>a :call <SID>SynStack()<CR>
 
 "  Space to toggle folds.
 nnoremap <Space> za
@@ -398,13 +414,12 @@ if !exists('g:vscode')
 	noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
 "  FZF shortcuts
 	nnoremap <silent> <leader>b :Buffers<CR>uun
-	nnoremap <silent> <leader>F :FZF -m<CR>
-	nnoremap <silent> <S><S> :FZF -m<CR>
+	nnoremap <silent> <leader>f :FZF -m<CR>
 endif
 
 
 "  terminal emulation
-nnoremap <silent> <leader>sh :terminal<CR>
+nnoremap <silent> <leader>t :terminal<CR>
 
 "  Clean search (highlight)
 nnoremap <silent> <leader><leader> :noh<cr>
@@ -433,7 +448,32 @@ if has('macunix')
 " pbcopy for OSX copy/paste
 	nmap <D-v> :r !pbpaste<cr>
 endif
+
+nmap     <leader>r <Plug>CtrlSFPrompt
+vmap     <leader>r <Plug>CtrlSFVwordPath
+vmap     <leader>R <Plug>CtrlSFVwordExec
+nmap     <C-F>n <Plug>CtrlSFCwordPath
+nmap     <C-F>p <Plug>CtrlSFPwordPath
+nnoremap <C-F>o :CtrlSFOpen<CR>
+nnoremap <C-F>t :CtrlSFToggle<CR>
+inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
+
 " }}}
+
+" Terminal mappings -------------------------------------------------------{{{
+if has('nvim')
+  tnoremap <Esc> <C-\><C-n>
+  tnoremap <M-[> <Esc>
+  tnoremap <C-v><Esc> <Esc>
+endif
+if has('nvim')
+  " Terminal mode:
+  tnoremap <C-h> <c-\><c-n><c-w>h
+  tnoremap <C-j> <c-\><c-n><c-w>j
+  tnoremap <C-k> <c-\><c-n><c-w>k
+  tnoremap <C-l> <c-\><c-n><c-w>l
+endif
+"  }}}
 
 " Insert mapping ----------------------------------------------------------{{{
 "  duplicate a line
@@ -441,14 +481,14 @@ inoremap <C-d> <Esc>yyPji
 
 "  Get out of insert mode using jk or jj
 inoremap jk <Esc>
-inoremap jj <Esc>
+" inoremap jj <Esc>
 
 "  Navigate between display lines
 inoremap <silent> <Home> <C-o>g<Home>
 inoremap <silent> <End>  <C-o>g<End>
 
 "  insert mode
-inoremap <C-a> <C-o>:call <SID>home()<CR>
+" inoremap <C-a> <C-o>:call <SID>home()<CR>
 inoremap <C-e> <End>
 inoremap <M-Left> <C-o>ba
 inoremap <M-Right> <C-o>wa
@@ -481,6 +521,8 @@ inoremap <S-Right> <Esc>lvl
 " }}}
 
 " Visual mapping ----------------------------------------------------------{{{
+
+vmap s <Plug>ReplaceOperator
 vnoremap <S-Down> j
 vnoremap <S-Up> k
 vnoremap <S-Left> h
@@ -757,14 +799,10 @@ if !exists('g:vscode')
 	endif
 	" }}}
 endif
-
-" Plugin settings ------------------------------------------------------------{{{
-"  General plugin settings
-
+" }}}
 
 if !exists('g:vscode')
-	"  VDegug
-	"  -----------------------------------------------------------------{{{
+	"  VDegug  -----------------------------------------------------------------{{{
 	let g:vdebug_keymap = {
     \    "run" : "<F5>",
     \    "run_to_cursor" : "<S-F5>",
@@ -854,6 +892,65 @@ if !exists('g:vscode')
 	 endfunction
 	let g:grammarous#languagetool_cmd = 'languagetool'
 	" }}}
+
+	" Goyo -------------------------------------------------------------------{{{
+	function! s:goyo_enter()
+		if executable('tmux') && strlen($TMUX)
+			silent !tmux set status off
+			silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+		endif
+		set noshowmode
+		set noshowcmd
+		set scrolloff=999
+		Limelight
+		" ...
+	endfunction
+
+	function! s:goyo_leave()
+		if executable('tmux') && strlen($TMUX)
+			silent !tmux set status on
+			silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+		endif
+		set showmode
+		set showcmd
+		set scrolloff=5
+		Limelight!
+		" ...
+	endfunction
+
+	autocmd! User GoyoEnter nested call <SID>goyo_enter()
+	autocmd! User GoyoLeave nested call <SID>goyo_leave()
+	" }}}
+
+	" limelight -------------------------------------------------------------------{{{
+
+	" Color name (:help cterm-colors) or ANSI code
+	let g:limelight_conceal_ctermfg = 'gray'
+	let g:limelight_conceal_ctermfg = 240
+	" Color name (:help gui-colors) or RGB color
+	let g:limelight_conceal_guifg = 'DarkGray'
+	let g:limelight_conceal_guifg = '#777777'
+	" Default: 0.5
+	let g:limelight_default_coefficient = 0.7
+	" Number of preceding/following paragraphs to include (default: 0)
+	" let g:limelight_paragraph_span = 1
+
+	" Beginning/end of paragraph
+	"   When there's no empty line between the paragraphs
+	"   and each paragraph starts with indentation
+	" let g:limelight_bop = '^\s'
+	" let g:limelight_eop = '\ze\n^\s'
+
+	" Highlighting priority (default: 10)
+	"   Set it to -1 not to overrule hlsearch
+	let g:limelight_priority = -1
+
+	" }}}
+	" vim-test -------------------------------------------------------------------{{{
+ 	" let g:lens#disabled = 1
+	" let g:lens#disabled_filetypes = ['nerdtree', 'fzf']
+	" let g:lens#animate = 0
+	" }}}
 	" vim-test -------------------------------------------------------------------{{{
 	let test#strategy = "dispatch"
 	" }}}
@@ -862,10 +959,10 @@ if !exists('g:vscode')
 	" }}}
 
 	" grep.vim -------------------------------------------------------------------{{{
-	nnoremap <silent> <leader>f :Rgrep<CR>
+	nnoremap <silent> <leader>F :Rgrep<CR>
 	let Grep_Default_Options = '-IR'
-	let Grep_Skip_Files = '*.log *.db'
-	let Grep_Skip_Dirs = '.git node_modules'
+	let Grep_Skip_Files = 'ctags* *.tmp tmp* *.log *.db'
+	let Grep_Skip_Dirs = '.git node_modules tmp .history'
 	" }}}
 
 	"  Navigate between vim buffers and tmux panels ------------------------------{{{
@@ -874,6 +971,7 @@ if !exists('g:vscode')
 
 	" Tex ------------------------{{{
 	let g:vimtex_compiler_progname='nvr'
+	let g:polyglot_disabled = ['latex']
 	" }}}
 
 	" terminal emulation --------------------------------------------------------{{{
@@ -892,19 +990,18 @@ if !exists('g:vscode')
 	endif
 
 
-	" Language Setings --------------------------------------------------------{{{
 
-		" Java ----------------------------------------------------------------------{{{
-			autocmd FileType java setlocal omnifunc=javacomplete#Complete
-			" let g:deoplete#sources#clang#clang_header="/usr/bin/clang"
-			" let g:deoplete#sources#clang#libclang_path="/usr/local/Cellar/llvm/HEAD-74479e8/lib/libclang.dylib"
-		" }}}
+	" Java ----------------------------------------------------------------------{{{
+		autocmd FileType java setlocal omnifunc=javacomplete#Complete
+		" let g:deoplete#sources#clang#clang_header="/usr/bin/clang"
+		" let g:deoplete#sources#clang#libclang_path="/usr/local/Cellar/llvm/HEAD-74479e8/lib/libclang.dylib"
+	" }}}
 
-		" Python --------------------------------------------------------------------{{{
-			let g:python_host_prog = '<<nvimpy2>>'
-			let g:python3_host_prog = '<<nvimpy3>>'
-			" let $NVIM_PYTHON_LOG_FILE='nvim-python.log'
-	   " }}}
+	" Python --------------------------------------------------------------------{{{
+		let g:python_host_prog = '<<nvimpy2>>'
+		let g:python3_host_prog = '<<nvimpy3>>'
+		" let $NVIM_PYTHON_LOG_FILE='nvim-python.log'
+   " }}}
 
 
 	" jedi-vim --------------------------------------------------------------------------{{{

@@ -21,8 +21,12 @@ packages=(
 "pyenv-virtualenv"
 "ag"
 "ripgrep"
-"nnn"
 "languagetool"
+"antiword"
+"docx2txt"
+"poppler"
+"mutt"
+"yarn"
 )
 pip_packages=(
 "msgpack"
