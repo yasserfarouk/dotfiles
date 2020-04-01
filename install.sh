@@ -27,6 +27,41 @@ packages=(
 "poppler"
 "mutt"
 "yarn"
+"ack"
+"bat"
+"cloc"
+"diff-so-fancy"
+"entr"
+"exa"
+"gh"
+"git"
+"gnupg"
+"grep"
+"highlight"
+"htop"
+"hub"
+"jq"
+"lazydocker"
+"lazygit"
+"markdown"
+"mas"
+"neofetch"
+"nmap"
+"noti"
+"reattach-to-user-namespace"
+"schniz/tap/fnm"
+"shellcheck"
+"tig"
+"tldr"
+"tmux"
+"trash"
+"tree"
+"vim"
+"wdiff"
+"wget"
+"youtube-dl"
+"z"
+"zsh"
 )
 pip_packages=(
 "msgpack"
@@ -95,6 +130,13 @@ case "$(uname -s)" in
     ;;
 
 esac
+
+
+brew tap "homebrew/bundle"
+brew tap "homebrew/cask"
+brew tap "homebrew/core"
+brew tap "homebrew/cask-fonts"
+brew tap "schniz/tap"
 
 for i in "${packages[@]}"
 do
