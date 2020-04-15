@@ -62,6 +62,11 @@ packages=(
 "youtube-dl"
 "z"
 "zsh"
+"neofetch"
+"zathura"
+"zathura-pdf-poppler"
+"alacritty"
+"kitty"
 )
 pip_packages=(
 "msgpack"
@@ -303,6 +308,10 @@ case "$(uname -s)" in
     ;;
 esac
 cd $current_dir
+
+echo "Linking Zathura PDF"
+mkdir -p $(brew --prefix zathura)/lib/zathura
+ln -s $(brew --prefix zathura-pdf-poppler)/libpdf-poppler.dylib $(brew --prefix zathura)/lib/zathura/libpdf-poppler.dylib
 
 echo "Installing Plug for NVIM"
 echo "-------------------------"

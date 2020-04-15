@@ -1,0 +1,46 @@
+{
+  "diagnostics": {
+    "%2FUsers%2Fyasser%2Fcode%2Fprojects%2Fscml": [
+      "imp"
+    ]
+  },
+  "symbols": {
+    "%2FUsers%2Fyasser%2Fcode%2Fprojects%2Fscml": [
+      "run2020",
+      "TournamentRes"
+    ],
+    "%2FUsers%2Fyasser%2Fcode%2Fprojects%2Fatpsample": [
+      "ATPCon",
+      "Singleagre",
+      "SingleAgreement",
+      "Single"
+    ],
+    "%2FUsers%2Fyasser%2Fcode%2Fprojects%2Fnegmas": [
+      "PassThr",
+      "NamedObject",
+      "AgentWorldIn",
+      "Agent"
+    ]
+  },
+  "lists": {
+    "%2FUsers%2Fyasser%2Fcode%2Fprojects%2Fnegmas": [
+      "sources"
+    ],
+    "%2FUsers%2Fyasser%2Fcode%2Fprojects%2Fscml": [
+      "outline"
+    ],
+    "%2FUsers%2Fyasser%2Fstorage%2Fgdrive%2FResearch%2FPapers%2FMypapers%2FCurrent%2F2020AAMASJElicitation": [
+      "dia"
+    ]
+  },
+  "outline": {
+    "%2FUsers%2Fyasser%2Fcode%2Fprojects%2Fscml": [
+      "competitors"
+    ]
+  },
+  "commands": {
+    "%2FUsers%2Fyasser%2Fcode%2Fprojects%2Fnegmas": [
+      "python.star"
+    ]
+  }
+}

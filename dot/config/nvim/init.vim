@@ -1,5 +1,3 @@
-
-
 " Basic settings -----------------------------------------------------------{{{
 set nocompatible
 filetype plugin indent on
@@ -93,7 +91,7 @@ set cursorline
 highlight CursorLine gui=underline cterm=underline
 
 "  customize search results colors
-highlight Search ctermbg=DarkBlue ctermfg=Yellow guibg=DarkBlue guifg=Yellow
+highlight Search ctermbg=DarkBlue ctermfg=LightBlue guibg=DarkBlue guifg=Yellow
 
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
 
@@ -196,6 +194,7 @@ call plug#begin(expand('~/.vim/plugged'))
 	Plug 'mattn/emmet-vim'
 	"
 	if !exists('g:vscode')
+		Plug 'heavenshell/vim-pydocstring', Cond(!has('nvim'))
 		Plug 'Rykka/riv.vim'
 		Plug 'Rykka/InstantRst'
 		Plug 'morhetz/gruvbox'
@@ -226,7 +225,7 @@ call plug#begin(expand('~/.vim/plugged'))
 		Plug 'terryma/vim-multiple-cursors'
 		Plug 'janko/vim-test'
 		Plug 'alfredodeza/pytest.vim'
-		Plug 'dense-analysis/ale'
+		" Plug 'dense-analysis/ale'
 		Plug 'Shougo/denite.nvim'
 		Plug 'Shougo/neco-vim'
 		Plug 'neoclide/coc-neco'
@@ -284,6 +283,11 @@ call plug#begin(expand('~/.vim/plugged'))
 		Plug 'vim-scripts/guicolorscheme.vim'
 		Plug 'christoomey/vim-tmux-navigator'
 		Plug 'tpope/vim-vinegar'
+		if has('nvim')
+			Plug 'Shougo/neosnippet.vim'
+			Plug 'Shougo/neosnippet-snippets'
+			Plug 'himkt/docstring.nvim', { 'do': ':UpdateRemotePlugins' }
+		endif
 	endif
 	if isdirectory('/usr/local/opt/fzf')
 		Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -359,100 +363,15 @@ set synmaxcol=200
 " set nocursorline
 " }}}
 
-" Diffs{{{
-
-" Open diffs in vertical splits
-" Use 'xdiff' library options: patience algorithm with indent-heuristics (same to Git options)
-" NOTE: vim uses the external diff utility which doesn't do word diffs nor can it find moved-and-modified lines.
-" See: https://stackoverflow.com/questions/36519864/the-way-to-improve-vimdiff-similarity-searching-mechanism
-set diffopt=internal,filler,vertical,context:3,foldcolumn:1,indent-heuristic,algorithm:patience
-
-" Detect if vim is started as a diff tool (vim -d, vimdiff)
-" NOTE: Does not work when you start Vim as usual and enter diff mode using :diffthis
-if &diff
-  let g:is_started_as_vim_diff = 1
-endif
-
-augroup aug_diffs
-  au!
-
-  " Inspect whether some windows are in diff mode, and apply changes for such windows
-  " Run asynchronously, to ensure '&diff' option is properly set by Vim
-  au WinEnter,BufEnter * call timer_start(50, 'CheckDiffMode')
-
-  " Highlight VCS conflict markers
-  au VimEnter,WinEnter * if !exists('w:_vsc_conflict_marker_match') |
-        \   let w:_vsc_conflict_marker_match = matchadd('ErrorMsg', '^\(<\|=\||\|>\)\{7\}\([^=].\+\)\?$') |
-        \ endif
-augroup END
-
-" Get list of all windows running in diff mode
-function s:GetDiffWindows()
-  return filter(range(1, winnr('$')), { idx, val -> getwinvar(val, '&diff') })
-endfunction
-
-" In diff mode:
-" - Disable syntax highlighting
-" - Disable spell checking
-function CheckDiffMode(timer)
-  let curwin = winnr()
-
-  " Check each window
-  for _win in range(1, winnr('$'))
-    exe "noautocmd " . _win . "wincmd w"
-
-    call s:change_option_in_diffmode('b:', 'syntax', 'off')
-    call s:change_option_in_diffmode('w:', 'spell', 0, 1)
-  endfor
-
-  " Get back to original window
-  exe "noautocmd " . curwin . "wincmd w"
-endfunction
-
-" Detect window or buffer local option is in sync with diff mode
-function s:change_option_in_diffmode(scope, option, value, ...)
-  let isBoolean = get(a:, "1", 0)
-  let backupVarname = a:scope . "_old_" . a:option
-
-  " Entering diff mode
-  if &diff && !exists(backupVarname)
-    exe "let " . backupVarname . "=&" . a:option
-    call s:set_option(a:option, a:value, 1, isBoolean)
-  endif
-
-  " Exiting diff mode
-  if !&diff && exists(backupVarname)
-    let oldValue = eval(backupVarname)
-    call s:set_option(a:option, oldValue, 1, isBoolean)
-    exe "unlet " . backupVarname
-  endif
-endfunction
-
-" Diff exchange and movement actions. Mappings come from 'samoshkin/vim-mergetool'
-nmap <expr> <C-Left> &diff? '<Plug>(MergetoolDiffExchangeLeft)' : '<C-Left>'
-nmap <expr> <C-Right> &diff? '<Plug>(MergetoolDiffExchangeRight)' : '<C-Right>'
-nmap <expr> <C-Down> &diff? '<Plug>(MergetoolDiffExchangeDown)' : '<C-Down>'
-nmap <expr> <C-Up> &diff? '<Plug>(MergetoolDiffExchangeUp)' : '<C-Up>'
-
-" Move through diffs. [c and ]c are native Vim mappings
-nnoremap <expr> <Up> &diff ? '[czz' : ''
-nnoremap <expr> <Down> &diff ? ']czz' : ''
-nnoremap <expr> <Left> &diff? '<C-w>h' : ''
-nnoremap <expr> <Right> &diff? '<C-w>l' : ''
-
-" Change :diffsplit command to open diff in new tab
-cnoreabbrev <expr> diffsplit getcmdtype() == ":" && getcmdline() == 'diffsplit' ? 'tab split \| diffsplit' : 'diffsplit'
-" }}}
 " Normal mapping ----------------------------------------------------------{{{
 nnoremap <leader><leader>b :call SetBackground()<CR>
 nnoremap ; :
 noremap <F12> <Esc>:syntax sync fromstart<CR>
-nnoremap <CR> i<CR>
 inoremap <F12> <C-o>:syntax sync fromstart<CR>
 " replac.vim mappings
 " nmap R <Plug>ReplaceOperator
 " vmap R <Plug>ReplaceOperator
-nmap s <Plug>ReplaceOperator
+nmap S <Plug>ReplaceOperator
 nmap X <Plug>ExchangeOperator
 
 " multi-cursoer mappings
@@ -476,7 +395,7 @@ nmap <silent> t<C-l> :TestLast<CR>
 nmap <silent> t<C-g> :TestVisit<CR>
 
 
-nnoremap <space> za
+nnoremap \ za
 
 noremap  <silent> <Home> g<Home>
 noremap  <silent> <End>  g<End>
@@ -529,7 +448,7 @@ nnoremap <leader>D "_D
 " nnoremap <leader>a :call <SID>SynStack()<CR>
 
 "  Space to toggle folds.
-nnoremap <Space> za
+nnoremap \ za
 
 if !exists('g:vscode')
 "  Opens an edit command with the path of the currently edited file filled in
@@ -552,15 +471,13 @@ nnoremap <silent> <leader><leader> :noh<cr>
 
 " Buffer management
 nnoremap <leader>bd :bd<CR>
-nmap <leader>, :bnext<CR>
-nmap <leader>. :bprevious<CR>
+nmap <leader>. :bnext<CR>
+nmap <leader>, :bprevious<CR>
 
 " comment
+nnoremap <C-/> :TComment<cr>
 if has('macunix')
-	nnoremap <C-/> :TComment<cr>
 	nnoremap <D-/> :TComment<cr>
-else
-	nnoremap <C-/> :TComment<cr>
 endif
 
 " allow shift arrows to copy
@@ -590,11 +507,16 @@ noremap <silent> <Down>  :wincmd j<CR>
 noremap <silent> <Left>  :wincmd h<CR>
 noremap <silent> <Right> :wincmd l<CR>
 
-noremap <C--> :wincmd s<CR>
-noremap <C-\> :wincmd v<CR>
+noremap <silent> <Up>    :wincmd k<CR>
+noremap <silent> <Down>  :wincmd j<CR>
+noremap <silent> <Left>  :wincmd h<CR>
+noremap <silent> <Right> :wincmd l<CR>
+
+noremap <silent> <C-s> :wincmd s<CR>
+noremap <silent> <C-\> :wincmd v<CR>
 " Use 'H' and 'L' keys to move to start/end of the line
-noremap H g^
-noremap L g$
+noremap H ^
+noremap L $
 
 " Recenter when jump back
 nnoremap <C-o> <C-o>zz
@@ -692,7 +614,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> <F7> <Plug>(coc-references)
-nmap <silent> gfu <Plug>(coc-references)
+nmap <silent> gu <Plug>(coc-references)
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
@@ -852,15 +774,15 @@ function s:new_scratch_buffer(content, ...)
 endfunction
 
 " Smart quit window function
-command! QuitWindow call s:QuitWindow()
-nnoremap <silent> <leader>q :QuitWindow<CR>
+" QuitWindow call s:QuitWindow()
+" nnoremap <silent> <leader>q :QuitWindow<CR>
 
 " Close all readonly buffers with just a "q" keystroke, otherwise "q" is used to record macros in a normal mode
 nnoremap  <expr> q &readonly ? ":quit\<CR>" : "q"
 
 " Save and quit
 nnoremap <silent> <leader>w :wall<CR>
-nnoremap ZZ :update! \| QuitWindow<CR>
+" nnoremap ZZ :update! \| QuitWindow<CR>
 
 " Save and quit for multiple buffers
 nnoremap <silent> <leader>W :wall<CR>
@@ -878,46 +800,46 @@ function s:CloseEachWindow(windows)
 endfunction
 
 " Context-aware quit window logic
-function s:QuitWindow()
-
-  " If we're in merge mode, exit it
-  if get(g:, 'mergetool_in_merge_mode', 0)
-    call mergetool#stop()
-    return
-  endif
-
-  " TODO: maybe use buffers instead of windows
-  let l:diff_windows = s:GetDiffWindows()
-
-  " When running as 'vimdiff' or 'vim -d', close both files and exit Vim
-  if get(g:, 'is_started_as_vim_diff', 0)
-    windo quit
-    return
-  endif
-
-  " If current window is in diff mode, and we have two or more diff windows
-  if &diff && len(l:diff_windows) >= 2
-    let l:fug_diff_windows = filter(l:diff_windows[:], { idx, val -> s:IsFugitiveDiffWindow(val) })
-
-    if s:GetFugitiveStatusWindow() != -1
-      call s:CloseEachWindow(l:diff_windows)
-    elseif !empty(l:fug_diff_windows)
-      call s:CloseEachWindow(l:fug_diff_windows)
-    else
-      quit
-    endif
-
-    diffoff!
-    diffoff!
-
-    exe "norm zvzz"
-
-    return
-  endif
-
-  windo quit
-endfunction
-
+" function s:QuitWindow()
+"
+"   " If we're in merge mode, exit it
+"   if get(g:, 'mergetool_in_merge_mode', 0)
+"     call mergetool#stop()
+"     return
+"   endif
+"
+"   " TODO: maybe use buffers instead of windows
+"   let l:diff_windows = s:GetDiffWindows()
+"
+"   " When running as 'vimdiff' or 'vim -d', close both files and exit Vim
+"   if get(g:, 'is_started_as_vim_diff', 0)
+"     windo quit
+"     return
+"   endif
+"
+"   " If current window is in diff mode, and we have two or more diff windows
+"   if &diff && len(l:diff_windows) >= 2
+"     let l:fug_diff_windows = filter(l:diff_windows[:], { idx, val -> s:IsFugitiveDiffWindow(val) })
+"
+"     if s:GetFugitiveStatusWindow() != -1
+"       call s:CloseEachWindow(l:diff_windows)
+"     elseif !empty(l:fug_diff_windows)
+"       call s:CloseEachWindow(l:fug_diff_windows)
+"     else
+"       quit
+"     endif
+"
+"     diffoff!
+"     diffoff!
+"
+"     exe "norm zvzz"
+"
+"     return
+"   endif
+"
+"   windo quit
+" endfunction
+"
 "  }}}
 
 
@@ -1007,7 +929,7 @@ vnoremap Y myY`y
 vnoremap // y/<C-R>"<CR>
 
 "  Space to toggle folds.
-vnoremap <Space> za
+vnoremap \ za
 
 if has('macunix')
 " pbcopy for OSX copy/paste
@@ -1107,8 +1029,8 @@ endif
 " vim-python
 augroup vimrc-python
 	autocmd!
-	autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
-				\ formatoptions+=croq softtabstop=4
+	autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=4 colorcolumn=79
+				\ formatoptions+=croq softtabstop=4 expandtab
 				\ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
 " }}}
@@ -1121,7 +1043,7 @@ if !exists('g:vscode')
 	set background=dark
 	if has("gui_running")
 		let g:indentLine_color_gui = '#343d46'
-		set guifont=Hack\ Nerd\ Font
+		set guifont=Jetbrains\ Mono
 		if has("gui_mac") || has("gui_macvim")
 			set transparency=0
 		endif
@@ -1436,12 +1358,78 @@ if !exists('g:vscode')
 	" }}}
 
 	"  Navigate between vim buffers and tmux panels ------------------------------{{{
-	let g:tmux_navigator_no_mappings = 0
+	let g:tmux_navigator_no_mappings = 1
 	" }}}
 
 	" Tex ------------------------{{{
-	let g:vimtex_compiler_progname='nvr'
+	if has('unix')
+		if has('mac')
+			let g:vimtex_view_method = "skim"
+			let g:vimtex_view_general_viewer
+					\ = '/Applications/Skim.app/Contents/SharedSupport/displayline'
+			let g:vimtex_view_general_options = '-r @line @pdf @tex'
+			" This adds a callback hook that updates Skim after compilation
+			let g:vimtex_compiler_callback_hooks = ['UpdateSkim']
+			let g:vimtex_view_general_options_latexmk = '--unique'
+			function! UpdateSkim(status)
+				if !a:status | return | endif
+
+				let l:out = b:vimtex.out()
+				let l:tex = expand('%:p')
+				let l:cmd = [g:vimtex_view_general_viewer, '-r']
+				if !empty(system('pgrep Skim'))
+				call extend(l:cmd, ['-g'])
+				endif
+				if has('nvim')
+				call jobstart(l:cmd + [line('.'), l:out, l:tex])
+				elseif has('job')
+				call job_start(l:cmd + [line('.'), l:out, l:tex])
+				else
+				call system(join(l:cmd + [line('.'), shellescape(l:out), shellescape(l:tex)], ' '))
+				endif
+			endfunction
+		else
+			let g:latex_view_general_viewer = "zathura"
+			let g:vimtex_view_method = "zathura"
+		endif
+	elseif has('win32')
+	endif
+	let g:tex_flavor = "latex"
+	let g:vimtex_quickfix_open_on_warning = 0
+	autocmd FileType tex nnoremap <silent> <2-LeftMouse> :VimtexView<CR>
+	let g:vimtex_quickfix_mode = 2
+	if has('nvim')
+		let g:vimtex_compiler_progname = 'nvr'
+	endif
+
+	" One of the neosnippet plugins will conceal symbols in LaTeX which is
+	" confusing
+	let g:tex_conceal = ""
+
+	" Can hide specifc warning messages from the quickfix window
+	" Quickfix with Neovim is broken or something
+	" https://github.com/lervag/vimtex/issues/773
+	let g:vimtex_quickfix_latexlog = {
+				\ 'default' : 1,
+				\ 'fix_paths' : 0,
+				\ 'general' : 1,
+				\ 'references' : 1,
+				\ 'overfull' : 1,
+				\ 'underfull' : 1,
+				\ 'font' : 1,
+				\ 'packages' : {
+				\   'default' : 1,
+				\   'natbib' : 1,
+				\   'biblatex' : 1,
+				\   'babel' : 1,
+				\   'hyperref' : 1,
+				\   'scrreprt' : 1,
+				\   'fixltx2e' : 1,
+				\   'titlesec' : 1,
+				\ },
+				\}
 	let g:polyglot_disabled = ['latex']
+
 	" }}}
 
 	" terminal emulation --------------------------------------------------------{{{
@@ -1511,8 +1499,8 @@ if !exists('g:vscode')
 
 		" let g:neomake_verbose = 3
 		let g:ale_sign_warning = '•'
-		let g:ale_lint_on_text_changed = 'always'
-		let g:ale_lint_on_enter = 1
+		" let g:ale_lint_on_text_changed = 'always'
+		" let g:ale_lint_on_enter = 1
 	" }}}
 
 
@@ -1701,3 +1689,5 @@ com! DiffSaved call s:DiffWithSaved()
  endif
 hi Quote ctermbg=109 guifg=#83a598
  " }}}
+ "
+" to close a hanging float use <c-w>o

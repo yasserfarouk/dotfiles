@@ -1,25 +1,12 @@
 #!/usr/bin/env zsh
 # load the correct .inputrc file
-ln -s -f $HOME/.dotfiles/inputrc_zsh ~/.inputrc
 source ~/.exports
 source ~/.zshenv
 source ~/.z/z.sh
 
 autoload -U promptinit; promptinit
 unset file
-# Disable zsh autocorrect
-zstyle ':completion:*' menu select
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-setopt completeinword
 # zstyle ':completion:*:*:git:*' script $HOME/.ysupport/git-completion.bash
-
-fpath=($HOME/.ysupport/zsh-completions $fpath)
-autoload -U compinit && compinit
-zmodload -i zsh/complist
-compinit -d ~/.zcompdump_capture
-
-# . <(npm completion)
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 source ~/antigen/antigen.zsh
 #antigen use oh-my-zsh
@@ -50,69 +37,23 @@ export NVM_DIR="$HOME/.nvm"
 # [[ -e "$HOME/anaconda/bin/activate" ]] && source "$HOME/anaconda/bin/activate"
 # [[ -e "$HOME/anaconda3/bin/activate" ]] && source "$HOME/anaconda3/bin/activate"
 
-# Tell zsh where it can find the history file.
-# This is the default as suggested by the zsh wizard.
-export HISTFILE=~/.z_history
-# The maximum number of history entries to keep.
-export SAVEHIST=10000
-# The maximum number of history entries to keep alive in one session,
-# typically the same as SAVEHIST.
-export HISTSIZE=10000
-# Write new entries to the history incrementally instead of on
-# shell exit.
-setopt INC_APPEND_HISTORY
-# Let multiple instances of ZSH share the same active history. This doesn't
-# include bang expansions (!!, !$, etc...) which will still use the
-# local history.
-setopt SHARE_HISTORY
-# Stores start and elapsed time for each command in the history file.
-# Disable this for compatibility with other shells.
-setopt EXTENDED_HISTORY
-# Don't save duplicate history entries.
-setopt HIST_SAVE_NO_DUPS
-# Ignore unecessary whitespace (this is handled properly even with
-# quoting).
-setopt HIST_REDUCE_BLANKS
-# Don't save function definitions to the history file.
-setopt HIST_NO_FUNCTIONS
-# Don't store calls to `history` or `fc`.
-setopt HIST_NO_STORE
-# Disable that awful, annoying beep when you hit the edges of the history
-# file.
-setopt NO_HIST_BEEP
-
-# Normally the default, but bugs out in some versions of zsh + tmux and
-# needs to be set explicitly. Allows you to search your history using
-# ctrl-r.
-bindkey '^R' history-incremental-search-backward
-
-autoload -U up-line-or-beginning-search
-autoload -U down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-bindkey "^[[A" up-line-or-beginning-search # Up
-bindkey "^[[B" down-line-or-beginning-search # Down
-
 # Better searching in command mode
 bindkey -M vicmd '?' history-incremental-search-backward
 bindkey -M vicmd '/' history-incremental-search-forward
 
-# Beginning search with arrow keys
-bindkey "^[OA" up-line-or-beginning-search
-bindkey "^[OB" down-line-or-beginning-search
-bindkey -M vicmd "^[OA" up-line-or-beginning-search
-bindkey -M vicmd "^[OB" down-line-or-beginning-search
-bindkey -M vicmd "k" up-line-or-beginning-search
-bindkey -M vicmd "j" down-line-or-beginning-search
-bindkey -M vicmd "^V" edit-command-line
-
+# bindkey -m vicmd "^[oa" up-line-or-beginning-search
+# bindkey -m vicmd "^[ob" down-line-or-beginning-search
+# bindkey -m vicmd "^[0a" up-line-or-beginning-search
+# bindkey -m vicmd "^[0b" down-line-or-beginning-search
+# bindkey -m vicmd "k" up-line-or-beginning-search
+# bindkey -m vicmd "j" down-line-or-beginning-search
+# bindkey -m vicmd "^v" edit-command-line
 # Updates editor information when the keymap changes.
 function zle-keymap-select() {
   zle reset-prompt
   zle -R
 }
 
-zle -N zle-keymap-select
 
 function vi_mode_prompt_info() {
   echo "${${KEYMAP/vicmd/[% NORMAL]%}/(main|viins)/[% INSERT]%}"
@@ -122,14 +63,10 @@ function vi_mode_prompt_info() {
 RPS1='$(vi_mode_prompt_info)'
 RPS2=$RPS1
 
-if [ -f ~/.aliases ]; then
-   source ~/.aliases
-fi
-
+source ~/.aliases
+eval "$(direnv hook zsh)"
 
 # pyenv
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # eval "$(pyenv virtualenv-init -)"
 if which pyenv > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
-# Vi mode
-bindkey -e
