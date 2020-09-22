@@ -1,4 +1,0 @@
-source ~/.vimrc
-let mapleader=" "
-set easymotion
-set ideajoin

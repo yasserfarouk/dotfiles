@@ -1,0 +1,62 @@
+" source ~/.vimrc
+let mapleader=" "
+set easymotion
+set ideajoin
+set surround
+set commentary
+
+set mps+=<:>
+" switch between current and last buffer
+"nmap <leader>. <C-^>
+nnoremap <leader>. :action VimFilePrevious<cr>
+nmap <leader>ff :action ReformatCode<CR>
+nmap <leader>q :action CloseContent<CR>
+nmap csw' :action Macro.surround_with_single_quote<CR>
+nmap csw" :action Macro.surround_with_double_quote<CR>
+nmap ds' :action Macro.surround_undo_single_quote<CR>
+nmap ds" :action Macro.surround_undo_double_quote<CR>
+nmap cs"' :action Macro.surround_double_to_single_quote<CR>
+" remove extra whiteleader
+nmap <leader><leader> :%s/\s\+$<CR>
+
+nnoremap <leader>l :action EditorToggleShowWhiteleaders<cr>
+
+" code navigation
+nnoremap <leader>] :action VimGotoDeclaration<cr>
+nmap gd :action GotoDeclaration<cr>zz
+nnoremap <leader>[ :action GotoSuperMethod<cr>
+nnoremap gfu :action FindUsages<cr>
+nnoremap <F7> :action FindUsages<cr>
+nnoremap <leader>gt :action GotoTest<cr>
+nnoremap <leader>k :action HighlightUsagesInFile<cr>
+nnoremap ,r :action RunClass<cr>
+nnoremap ,R :action Run<cr>
+nnoremap ,d :action DebugClass<cr>
+nnoremap ,D :action Debug<cr>
+nnoremap ,c :action CheckStyleCurrentFileAction<cr>
+nnoremap <space> za
+
+" code refactoring
+nnoremap <leader>rr :action RenameElement<cr>
+nnoremap <F2> :action RenameElement<cr>
+
+" unimpaired mappings
+nnoremap [<leader> O<esc>j
+nnoremap ]<leader> o<esc>k
+nnoremap [q :action PreviousOccurence<cr>
+nnoremap ]q :action NextOccurence<cr>
+nnoremap [m :action MethodUp<cr>
+nnoremap ]m :action MethodDown<cr>
+nnoremap [c :action VcsShowPrevChangeMarker<cr>
+nnoremap ]c :action VcsShowNextChangeMarker<cr>
+
+
+" built-in navigation to navigated items works better
+nnoremap <c-o> :action Back<cr>
+nnoremap <c-i> :action Forward<cr>
+" but preserve ideavim defaults
+nnoremap g<c-o> <c-o>
+nnoremap g<c-i> <c-i>
+
+" built in search looks better
+nnoremap g/ :action Find<cr>

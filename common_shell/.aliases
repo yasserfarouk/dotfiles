@@ -1,0 +1,291 @@
+#!/usr/bin/env zsh
+# locations
+export projects="$HOME/code/projects"
+export personal="$HOME/code/personal"
+export code="$HOME/code"
+export nec="$HOME/storage/gdrive/Business/NEC"
+export aist="$HOME/storage/gdrive/Business/AIST"
+export mypapers="$HOME/storage/gdrive/Research/Papers/Mypapers"
+export papers="$HOME/storage/gdrive/Knowledge/Papers"
+export negotiation="$HOME/storage/gdrive/Knowledge/Papers/AutomatedNegotiation"
+export pdone="$HOME/storage/gdrive/Research/Papers/Mypapers/Done"
+export pcurrent="$HOME/storage/gdrive/Research/Papers/Mypapers/Current"
+export psubmitted="$HOME/storage/gdrive/Research/Papers/Mypapers/Submitted"
+# spyder
+alias spyder="spyder3 -p \".\"&"
+# tmuxinator aliases
+alias mux="tmuxinator"
+alias c="mux code"
+alias personal="mux personal"
+alias p="mux paper"
+alias paper="mux paper"
+alias s="mux scratch"
+alias scratch="mux scratch"
+alias site="mux site"
+alias d="mux daiba"
+alias daiba="mux daiba"
+alias e="mux external"
+alias external="mux external"
+alias pr="mux presentation"
+alias present="mux presentation"
+# alias to dotfiles
+alias dotfiles="git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME"
+alias dotfiles="git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME"
+# vim aliases
+alias ovim=vim
+alias vi=nvim
+alias v=nvim
+alias vf=vifm
+alias vim=nvim
+
+# weather
+alias weather="curl http://wttr.in/"
+
+# youtube dl
+alias youtube="youtube-dl"
+
+# tmux aliases
+alias ts='tmux list-sessions'
+alias ta='tmux a -t '
+
+# Some aliases for Homebrew
+alias bup='brew update && brew upgrade'
+alias bout='brew outdated'
+alias bin='brew install'
+alias brm='brew uninstall'
+alias bls='brew list'
+alias bsr='brew search'
+alias binf='brew info'
+alias bdr='brew doctor'
+
+# Some directory listing with colors
+alias sl=ls
+# alias ls='ls -G'        # Compact view, show colors
+alias ls='exa --icons --group-directories-first'        # Compact view, show colors
+alias la='ls -aF'       # Compact view, show hidden
+alias ll='ls -al'
+alias l='ls -a'
+alias l1='ls -1'
+
+# Desktop Programs
+alias safari="open -a safari"
+alias chrome="open -a google\ chrome"
+alias f='open -a Finder '
+alias fh='open -a Finder .'
+alias textedit='open -a TextEdit'
+
+# Usefull stuff for presentation and seeing dotfiles
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+alias showall='defaults write com.apple.finder AppleShowAllFiles YES && killall Finder'
+alias hideall='defaults write com.apple.finder AppleShowAllFiles NO && killall Finder'
+
+# Get rid of those pesky .DS_Store files recursively
+alias dsclean='find . -type f -name .DS_Store -print0 | xargs -0 rm'
+
+# Flush your dns cache
+alias flush='dscacheutil -flushcache'
+
+function download(){
+  curl -O "$2"
+}
+
+function highlight(){
+  highlight -O rtf $2 --font-size 25 --style solarized-dark -W -J 50 -j 3 --src-lang $2 | pbcopy
+}
+
+alias dl=download
+
+function ghUpdate() {
+  if git remote | grep upstream > /dev/null;
+    then
+    echo "upstream is set"
+  else
+    read "?Whats the URl of the original repo? | " answer
+    # Add the remote, call it "upstream":
+    echo $answer
+    git remote add upstream $answer
+  fi
+  git fetch upstream
+  git checkout master
+  git rebase upstream/master
+}
+
+function ghPages(){
+  if [ -z "$2" ]
+    then
+    echo "Which folder do you want to deploy to GitHub Pages?"
+    exit 1
+  fi
+  git subtree push --prefix $2 origin gh-pages
+
+}
+
+# incase i forget how to clear
+alias k='clear'
+alias cls='clear'
+
+# archive file or folder
+function compress()
+{
+  dirPriorToExe=`pwd`
+  dirName=`dirname $2`
+  baseName=`basename $2`
+
+  if [ -f $2 ] ; then
+    echo "It was a file change directory to $dirName"
+    cd $dirName
+    case $2 in
+      tar.bz2)
+        tar cjf $baseName.tar.bz2 $baseName
+        ;;
+      tar.gz)
+        tar czf $baseName.tar.gz $baseName
+        ;;
+      gz)
+        gzip $baseName
+        ;;
+      tar)
+        tar -cvvf $baseName.tar $baseName
+        ;;
+      zip)
+        zip -r $baseName.zip $baseName
+        ;;
+      *)
+        echo "Method not passed compressing using zip"
+        zip -r $baseName.zip $baseName
+        ;;
+    esac
+    echo "Back to Directory $dirPriorToExe"
+    cd $dirPriorToExe
+  else
+    if [ -d $2 ] ; then
+      echo "It was a Directory change directory to $dirName"
+      cd $dirName
+      case $2 in
+        tar.bz2)
+        tar cjf $baseName.tar.bz2 $baseName
+        ;;
+        tar.gz)
+        tar czf $baseName.tar.gz $baseName
+        ;;
+        gz)
+        gzip -r $baseName
+        ;;
+        tar)
+        tar -cvvf $baseName.tar $baseName
+        ;;
+        zip)
+        zip -r $baseName.zip $baseName
+        ;;
+        *)
+        echo "Method not passed compressing using zip"
+        zip -r $baseName.zip $baseName
+        ;;
+      esac
+      echo "Back to Directory $dirPriorToExe"
+      cd $dirPriorToExe
+    else
+      echo "'$2' is not a valid file/folder"
+    fi
+  fi
+  echo "Done"
+  echo "###########################################"
+}
+
+# Extract archives - use: extract <file>
+# Based on http://dotfiles.org/~pseup/.bashrc
+function extract() {
+  local remove_archive
+  local success
+  local file_name
+  local extract_dir
+
+  if (( $# == 0 )); then
+    echo "Usage: extract [-option] [file ...]"
+    echo
+    echo Options:
+    echo "    -r, --remove    Remove archive."
+  fi
+
+  remove_archive=1
+  if [[ "$2" == "-r" ]] || [[ "$2" == "--remove" ]]; then
+    remove_archive=0
+    shift
+  fi
+
+  while (( $# > 0 )); do
+    if [[ ! -f "$2" ]]; then
+      echo "extract: '$2' is not a valid file" 1>&2
+      shift
+      continue
+    fi
+
+  success=0
+  file_name="$( basename "$2" )"
+  extract_dir="$( echo "$file_name" | sed "s/\.${1##*.}//g" )"
+  case "$2" in
+    (*.tar.gz|*.tgz) [ -z $commands[pigz] ] && tar zxvf "$2" || pigz -dc "$2" | tar xv ;;
+    (*.tar.bz2|*.tbz|*.tbz2) tar xvjf "$2" ;;
+    (*.tar.xz|*.txz) tar --xz --help &> /dev/null \
+      && tar --xz -xvf "$2" \
+      || xzcat "$2" | tar xvf - ;;
+      (*.tar.zma|*.tlz) tar --lzma --help &> /dev/null \
+      && tar --lzma -xvf "$2" \
+      || lzcat "$2" | tar xvf - ;;
+      (*.tar) tar xvf "$2" ;;
+      (*.gz) [ -z $commands[pigz] ] && gunzip "$2" || pigz -d "$2" ;;
+      (*.bz2) bunzip2 "$2" ;;
+      (*.xz) unxz "$2" ;;
+      (*.lzma) unlzma "$2" ;;
+      (*.Z) uncompress "$2" ;;
+      (*.zip|*.war|*.jar|*.sublime-package) unzip "$2" -d $extract_dir ;;
+      (*.rar) unrar x -ad "$2" ;;
+      (*.7z) 7za x "$2" ;;
+      (*.deb)
+      mkdir -p "$extract_dir/control"
+      mkdir -p "$extract_dir/data"
+      cd "$extract_dir"; ar vx "../${1}" > /dev/null
+      cd control; tar xzvf ../control.tar.gz
+      cd ../data; tar xzvf ../data.tar.gz
+      cd ..; rm *.tar.gz debian-binary
+      cd ..
+      ;;
+      (*)
+      echo "extract: '$2' cannot be extracted" 1>&2
+      success=1
+      ;;
+    esac
+
+    (( success = $success > 0 ? $success : $? ))
+    (( $success == 0 )) && (( $remove_archive == 0 )) && rm "$2"
+    shift
+  done
+}
+alias x=extract
+
+
+
+function gif(){
+ ffmpeg -i $2 -vf scale=$2:-1:flags=lanczos -f gif - | gifsicle --optimize=3 --delay=3 > $3
+}
+
+function fixSSH(){
+ eval $(ssh-agent);
+ ssh-add ~/.ssh/id_rsa
+}
+
+case "$(uname -s)" in
+   Darwin)
+    alias mvim="open -a MacVim"
+    alias macvim="open -a MacVim"
+    alias gvim="open -a MacVim"
+
+    ;;
+
+   Linux)
+    alias vi=vim
+    alias v=nvim
+    ;;
+
+esac

@@ -1,0 +1,47 @@
+{
+	"languageserver": {
+        "ccls": {
+            "command": "ccls",
+            "filetypes": [
+                "c",
+                "cpp",
+                "objc",
+                "objcpp"
+            ],
+            "rootPatterns": [
+                ".ccls",
+                "compile_commands.json",
+                ".vim/",
+                ".git/",
+                ".hg/"
+            ],
+            "initializationOptions": {
+                "cache": {
+                    "directory": "/tmp/ccls"
+                }
+            }
+        }
+    },
+  "python.jediEnabled": false,
+	"python.upgradePythonLanguageServer": true,
+	"suggest.noselect": false,
+	"coc.preferences.currentFunctionSymbolAutoUpdate": true,
+	"coc.preferences.formatOnSaveFiletypes": ["python", "php", "json"],
+	"coc.source.vimtex.enable": true,
+	"coc.preferences.formatOnInsertLeave": false,
+	"coc.preferences.snippets.enable": false,
+	"diagnostic.enable": true,
+	"diagnostic.refreshOnInsertMode": false,
+	"diagnostic.refreshAfterSave": false,
+	"diagnostic.virtualText": true,
+	"diagnostic.checkCurrentLine": true,
+	"diagnostic.enableMessage": "always",
+	"diagnostic.errorSign": "•",
+	"diagnostic.infoSign": "i",
+	"diagnostic.messageTarget": "float",
+	"python.formatting.provider": "black",
+	"python.analysis.diagnosticEnabled": true,
+	"python.linting.flake8Enabled": true,
+	"python.linting.mypyEnabled": true,
+	"python.sortImports.path": "isort"
+}
