@@ -70,3 +70,4 @@ source /Users/yasser/Library/Preferences/org.dystroy.broot/launcher/bash/br
 #===============================================================================
 # END  icl - interactive command library END
 #===============================================================================
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
