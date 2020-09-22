@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+echo "Replace pyenv paths with <<nvimpy2>> and <nvimpy3>>"

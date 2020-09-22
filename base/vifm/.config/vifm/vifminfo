@@ -34,7 +34,7 @@
 
 # TUI:
 al
-q1
+q0
 v2
 ov
 m-1
@@ -42,288 +42,18 @@ l2
 r2
 
 # Left window history (oldest to newest):
-d/Users/yasser/code/projects/goptneg/scripts/data/policy/10
-	AspirationNegotiator
+d/Users/yasser/code/personal/bootstrap
+	..
+0
+d/Users/yasser/code/personal
+	bootstrap
 1
-d/Users/yasser/code/projects/goptneg/scripts/data/policy
-	10
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/policy/10
-	NaiveTitForTatNegotiator
-2
-d/Users/yasser/code/projects/goptneg/scripts/data/policy/10/NaiveTitForTatNegotiator
-	000010other_fuzzyagent
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/policy/10/NaiveTitForTatNegotiator/000010other_fuzzyagent
-	0
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/policy/10/NaiveTitForTatNegotiator/000010other_fuzzyagent/0
-	qgcaplus_ulimit.txt
-6
-d/Users/yasser/code/projects/goptneg/scripts/data/policy/10/NaiveTitForTatNegotiator/000010other_fuzzyagent
-	1
-2
-d/Users/yasser/code/projects/goptneg/scripts/data/policy/10/NaiveTitForTatNegotiator/000010other_fuzzyagent/1
-	qgcaplus_ulimit.txt
-6
-d/Users/yasser/code/projects/goptneg/scripts/data/policy/10/NaiveTitForTatNegotiator/000010other_fuzzyagent
-	1
-2
-d/Users/yasser/code/projects/goptneg/scripts/data/policy/10/NaiveTitForTatNegotiator
-	000010other_fuzzyagent
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/policy/10
-	NaiveTitForTatNegotiator
-2
-d/Users/yasser/code/projects/goptneg/scripts/data/policy
-	10
-1
-d/Users/yasser/code/projects/goptneg/scripts/data
-	policy
-4
-d/Users/yasser/code/projects/goptneg/scripts
-	data
-1
-d/Users/yasser/code/projects/goptneg
-	scripts
+d/Users/yasser/code
+	personal
 13
-d/Users/yasser/code/projects/goptneg/scripts
-	data
-1
-d/Users/yasser/code/projects/goptneg/scripts/data
-	am
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am
-	10
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10
-	AspirationNegotiator
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/AspirationNegotiator
-	000010other_fuzzyagent
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/AspirationNegotiator/000010other_fuzzyagent
-	1
-2
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/AspirationNegotiator
-	000010other_fuzzyagent
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10
-	AspirationNegotiator
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am
-	10
-1
-d/Users/yasser/code/projects/goptneg/scripts/data
-	am
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am
-	100
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/100
-	ParsAgent
-7
-d/Users/yasser/code/projects/goptneg/scripts/data/am/100/ParsAgent
-	..
-0
-d/Users/yasser/code/projects/goptneg/scripts/data/am/100
-	ParsAgent
-7
-d/Users/yasser/code/projects/goptneg/scripts/data/am
-	100
-1
-d/Users/yasser/code/projects/goptneg/scripts/data
-	am
-1
-d/Users/yasser/code/projects/goptneg/scripts
-	data
-1
-d/Users/yasser/code/projects/goptneg/scripts/data
-	am
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am
-	100
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/100
-	
-1
-d/Users/yasser/code/projects/goptneg/scripts
-	data
-1
-d/Users/yasser/code/projects/goptneg/scripts/data
-	am
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am
-	50
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/50
-	AgentX
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/50/AgentX
-	000010other_fuzzyagent
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/50/AgentX/000010other_fuzzyagent
-	..
-0
-d/Users/yasser/code/projects/goptneg/scripts/data/am/50/AgentX
-	000010other_fuzzyagent
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/50
-	RandomNegotiator
-11
-d/Users/yasser/code/projects/goptneg/scripts/data/am/50/RandomNegotiator
-	..
-0
-d/Users/yasser/code/projects/goptneg/scripts/data/am/50
-	RandomDance
-10
-d/Users/yasser/code/projects/goptneg/scripts/data/am/50/RandomDance
-	000010other_fuzzyagent
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/50/RandomDance/000010other_fuzzyagent
-	0
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/50/RandomDance/000010other_fuzzyagent/0
-	amt.txt
-9
-d/Users/yasser/code/projects/goptneg
-	scripts
-11
-d/Users/yasser/code/projects/goptneg/scripts
-	data
-1
-d/Users/yasser/code/projects/goptneg/scripts/data
-	am
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am
-	10
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10
-	Caduceus
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus
-	..
-0
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10
-	Caduceus
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am
-	10
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10
-	Caduceus
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus
-	000010other_fuzzyagent
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus/000010other_fuzzyagent
-	1
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus/000010other_fuzzyagent/1
-	..
-0
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus/000010other_fuzzyagent
-	1
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus
-	000010other_fuzzyagent
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10
-	Caduceus
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am
-	10
-1
-d/Users/yasser/code/projects/goptneg/scripts/data
-	am
-1
-d/Users/yasser/code/projects/goptneg/scripts
-	data
-1
-d/Users/yasser/code/projects/goptneg
-	scripts
-11
-d/Users/yasser/code/projects/goptneg/scripts
-	scenarios
-2
-d/Users/yasser/code/projects/goptneg/scripts/scenarios
-	000003anac_y2011_NiceOrDie
-1
-d/Users/yasser/code/projects/goptneg/scripts/scenarios/000003anac_y2011_NiceOrDie
-	..
-0
-d/Users/yasser/code/projects/goptneg/scripts/scenarios
-	000003anac_y2011_NiceOrDie
-1
-d/Users/yasser/code/projects/goptneg/scripts/scenarios/000003anac_y2011_NiceOrDie
-	NiceOrDie.xml
-1
-d/Users/yasser/code/projects/goptneg/scripts/scenarios
-	000010other_fuzzyagent
-8
-d/Users/yasser/code/projects/goptneg/scripts/scenarios/000010other_fuzzyagent
-	single_issue_domain.xml
-3
-d/Users/yasser/code/projects/goptneg/scripts/scenarios
-	000010other_fuzzyagent
-8
-d/Users/yasser/.config/nvim
-	settings
-2
-d/Users/yasser/.config/nvim/settings
-	java.vim
-25
-d/Users/yasser/.config/nvim
-	init.vim
-6
-d/Users/yasser/.config
-	texstudio
-16
-d/Users/yasser/.config/texstudio
-	texstudio.ini
-6
-d/Users/yasser/.config
-	tmux
-17
-d/Users/yasser/.config/tmux
-	tmux-status.conf
-1
-d/Users/yasser/.config
-	zathura
-21
-d/Users/yasser/.config/zathura
-	..
-0
-d/Users/yasser/.config
-	icl
-8
-d/Users/yasser/.config/icl
-	commands.txt
-1
-d/Users/yasser/.config
-	htop
-7
-d/Users/yasser/.config/htop
-	htoprc
-1
-d/Users/yasser/.config
-	coc
-3
-d/Users/yasser/.config/coc
-	snippets-mru
-8
-d/Users/yasser/.config
-	coc
-3
 d/Users/yasser
 	.config
 9
-d/Users/yasser/.config
-	asciinema
-2
-d/Users/yasser/.config/asciinema
-	install-id
-1
 d/Users/yasser/.config
 	alacritty
 1
@@ -331,8 +61,8 @@ d/Users/yasser/.config/alacritty
 	..
 0
 d/Users/yasser/.config
-	..
-0
+	alacritty
+1
 d/Users/yasser
 	.config
 9
@@ -340,251 +70,33 @@ d/Users
 	yasser
 2
 d/Users/yasser
-	Applications
-44
+	.zcompdump_capture
+15
 d
 
 # Right window history (oldest to newest):
-D/Users/yasser/code/projects/negmas
-	negmas
-7
-D/Users/yasser/code/projects/negmas/negmas
-	tests
-8
-D/Users/yasser/code/projects/negmas/negmas/tests
-	data
-3
-D/Users/yasser/code/projects/negmas/negmas/tests/data
-	..
-0
-D/Users/yasser/code/projects/negmas/negmas/tests
-	data
-3
-D/Users/yasser/code/projects/negmas/negmas/tests/data
-	..
-0
-D/Users/yasser/tmp
-	..
-0
-D/Users/yasser
-	..
-0
-D/Users/yasser/code/projects
-	..
-0
-D/Users/yasser/code
-	..
-0
-D/Users/yasser
-	storage
-31
-D/Users/yasser/storage
-	gdrive
-1
-D/Users/yasser/storage/gdrive
-	Research
-23
-D/Users/yasser/storage/gdrive/Research
-	Papers
-2
-D/Users/yasser/storage/gdrive/Research/Papers
-	Mypapers
-2
-D/Users/yasser/storage/gdrive/Research/Papers/Mypapers
-	Done
-3
-D/Users/yasser/storage/gdrive/Research/Papers/Mypapers/Done
-	2019ACAN
-44
-D/Users/yasser/storage/gdrive/Research/Papers/Mypapers/Done/2019ACAN
-	yasser_acan2019.bib.bak
-23
-D/Users/yasser/storage/gdrive/Research/Papers/Mypapers/Done
-	..
-0
-D/Users/yasser/storage/gdrive/Research/Papers/Mypapers
-	Coauthored
-1
-D/Users/yasser/storage/gdrive/Research/Papers
-	Mypapers
-2
-D/Users/yasser/storage/gdrive/Research/Papers/Mypapers
-	Coauthored
-1
-D/Users/yasser/storage/gdrive/Research/Papers/Mypapers/Coauthored
-	..
-0
-D/Users/yasser/storage/gdrive/Research/Papers/Mypapers
-	Coauthored
-1
-D/Users/yasser/storage/gdrive/Research/Papers/Mypapers/Coauthored
-	2020JournalAIJapanSCML.pdf
-18
-D/Users/yasser/storage/gdrive/Research/Papers/Mypapers
-	Coauthored
-1
-D/Users/yasser/storage/gdrive/Research/Papers
-	Mypapers
-2
-D/Users/yasser/storage/gdrive/Research
-	Papers
-2
-D/Users/yasser/storage/gdrive
-	Research
-23
-D/Users/yasser/storage
-	gdrive
-1
-D/Users/yasser
-	storage
-31
-D/Users/yasser/storage
-	gdrive
-1
-D/Users/yasser/storage/gdrive
-	Research
-23
-D/Users/yasser/storage
-	gdrive
-1
-D/Users/yasser
-	storage
-31
-D/Users
-	yasser
-2
-D/
-	Volumes
-4
-D/Volumes
-	..
-0
-D/
-	Volumes
-4
-D/Volumes
-	..
-0
-D/
-	Users
-3
-D/Users
-	yasser
-2
-D/Users/yasser
-	storage
-31
-D/Users/yasser/storage
+D/Users/yasser/code/personal/bootstrap
 	..
 0
 D
 
 # Command line history (oldest to newest):
-:mkdir data
-:mkdir .tmux.plugins
-:"qa
-:mkdir contrib
-:mkdir tests
-:mkdir scml_agents
-:touch agents.py
-:touch __main__.py
-:touch __init__.py
-:touch test_scml_agents.py
-:find -name "time"
-:!find -name "time"
-:!find . -name "time"
-:dotfiles=True
-:set vifm-dotfiles=True
-:! zip -r scml2020.zip scml2020
-:! zip -r scml2020changed.zip scml2020
-:hideui
-:x
-:nmap
-:!nvim ~/bin/vifmimg
-:colorscheme solarized-dark
-:colorscheme solarized
-:colorscheme molokai
-:!pwd
-:echo $TERM
-:view
-:cd ~/Downloads/
-:cd ~/datasets/emotions4data/
-:~
-:!open scores.csv
-:!open world_stats.csv
-:find negloader
-:copy
-:!mkdir figs
-:mv
-:move
-:mkdir scripts
-:!touch __init__.py
-:sort
 :wq
-:find -n time
-:find time
-:w
-:mkdir settings
-:q
-:help
-:qa
 
 # Search history (oldest to newest):
-/bug
-/negma
-/scml
-/R
-/know
-/auto
-/tmp
-/utils
-/**/utils
-/pptx
-/xls
-/docx
-/png
-/py
-/ivect
-/emotiw
-/note
-/wo
-/567
-/        contracts.seller_type = contracts.seller_type.apply(
-/world
-/Re
-/2019AC
-/Down
-/storage
-/code
-/optne
-/nemga
-/negmas
-/nego
 
 # Prompt history (oldest to newest):
-pscml-agents
-pp_agent.py
-pcrescent_agent.py
-pagents_submitted
-pfirst2.png
-pthird2.pdf
-psampleagent
-pivectorlda_train.csv
-pivector_train.csv
-pivectorlda_val.csv
-pivector_val.csv
-pprima2020optimal.bib
-p2020JournalAIJapanSCML.pdf
-p/Users/yasser/code/projects/goptneg/
 
 # Local filter history (oldest to newest):
 
 # Registers:
-""/Users/yasser/.local/share/vifm/Trash/012_.DS_Store
+""/Users/yasser/.local/share/vifm/Trash/025_.config
 
 # Directory stack (oldest to newest):
 
 # Trash content:
+t/Users/yasser/.local/share/vifm/Trash/024_.config
+	/Users/yasser/.config
 t/Users/yasser/.local/share/vifm/Trash/000_.venv
 	/Users/yasser/tmp/scml2020/.venv
 t/Users/yasser/.local/share/vifm/Trash/000_.vscode
@@ -1379,6 +891,62 @@ t/Users/yasser/.local/share/vifm/Trash/000_100
 	/Users/yasser/code/projects/goptneg/scripts/data/am/100
 t/Users/yasser/.local/share/vifm/Trash/012_.DS_Store
 	/Users/yasser/.config/.DS_Store
+t/Users/yasser/.local/share/vifm/Trash/000_zsh-completions
+	/Users/yasser/zsh-completions
+t/Users/yasser/.local/share/vifm/Trash/000_thesaurii.txt
+	/Users/yasser/thesaurii.txt
+t/Users/yasser/.local/share/vifm/Trash/000_git-completion.zsh
+	/Users/yasser/git-completion.zsh
+t/Users/yasser/.local/share/vifm/Trash/000_git-completion.bash
+	/Users/yasser/git-completion.bash
+t/Users/yasser/.local/share/vifm/Trash/000_bin
+	/Users/yasser/bin
+t/Users/yasser/.local/share/vifm/Trash/001_.zshrc
+	/Users/yasser/.zshrc
+t/Users/yasser/.local/share/vifm/Trash/001_.zshenv
+	/Users/yasser/.zshenv
+t/Users/yasser/.local/share/vifm/Trash/001_.zprofile
+	/Users/yasser/.zprofile
+t/Users/yasser/.local/share/vifm/Trash/000_.vimrc
+	/Users/yasser/.vimrc
+t/Users/yasser/.local/share/vifm/Trash/001_.tmux.conf
+	/Users/yasser/.tmux.conf
+t/Users/yasser/.local/share/vifm/Trash/001_.pylintrc
+	/Users/yasser/.pylintrc
+t/Users/yasser/.local/share/vifm/Trash/001_.prompt
+	/Users/yasser/.prompt
+t/Users/yasser/.local/share/vifm/Trash/001_.profile
+	/Users/yasser/.profile
+t/Users/yasser/.local/share/vifm/Trash/001_.muttrc
+	/Users/yasser/.muttrc
+t/Users/yasser/.local/share/vifm/Trash/001_.latexmkrc
+	/Users/yasser/.latexmkrc
+t/Users/yasser/.local/share/vifm/Trash/001_.isort.cfg
+	/Users/yasser/.isort.cfg
+t/Users/yasser/.local/share/vifm/Trash/001_.aliases
+	/Users/yasser/.aliases
+t/Users/yasser/.local/share/vifm/Trash/001_.bash_profile
+	/Users/yasser/.bash_profile
+t/Users/yasser/.local/share/vifm/Trash/001_.bashrc
+	/Users/yasser/.bashrc
+t/Users/yasser/.local/share/vifm/Trash/001_.exports
+	/Users/yasser/.exports
+t/Users/yasser/.local/share/vifm/Trash/001_.fzf.bash
+	/Users/yasser/.fzf.bash
+t/Users/yasser/.local/share/vifm/Trash/001_.fzf.zsh
+	/Users/yasser/.fzf.zsh
+t/Users/yasser/.local/share/vifm/Trash/001_.gitconfig
+	/Users/yasser/.gitconfig
+t/Users/yasser/.local/share/vifm/Trash/001_.gitignore_global
+	/Users/yasser/.gitignore_global
+t/Users/yasser/.local/share/vifm/Trash/001_.ideavimrc
+	/Users/yasser/.ideavimrc
+t/Users/yasser/.local/share/vifm/Trash/001_.inputrc
+	/Users/yasser/.inputrc
+t/Users/yasser/.local/share/vifm/Trash/001_.inputrc_bash
+	/Users/yasser/.inputrc_bash
+t/Users/yasser/.local/share/vifm/Trash/001_.inputrc_zsh
+	/Users/yasser/.inputrc_zsh
 
 # State:
 f
