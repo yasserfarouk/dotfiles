@@ -1,0 +1,5 @@
+#!/bin/sh
+
+for d in */ ; do
+  stow -v -R -t ~ $d
+done;

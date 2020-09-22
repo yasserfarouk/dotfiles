@@ -1,6 +1,0 @@
-[submodule "dot/z"]
-	path = dot/z
-	url = https://github.com/rupa/z
-[submodule "nondot/zsh-completions"]
-	path = nondot/zsh-completions
-	url = https://github.com/zsh-users/zsh-completions.git
