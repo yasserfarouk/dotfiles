@@ -26,9 +26,6 @@ autoload -U compinit && compinit
 zmodload -i zsh/complist
 compinit -d ~/.zcompdump_capture
 
-# . <(npm completion)
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 # Disable zsh autocorrect
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'

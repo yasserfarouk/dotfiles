@@ -331,7 +331,17 @@ echo "----------------------"
 ./quick-install.sh
 
 
-echo "-----------------------------"
-echo "           Manual Installs   "
-echo "-----------------------------"
-echo "- Install MacVim latest release from https://github.com/macvim-dev/macvim/releases/tag/snapshot-147"
+case "$(uname -s)" in
+	Darwin)
+		echo "-----------------------------"
+		echo "           Manual Installs   "
+		echo "-----------------------------"
+		echo "- Install MacVim latest release"
+		;;
+
+	Linux)
+		echo "=============="
+		echo "   ALL DONE   "
+		echo "=============="
+		;;
+esac

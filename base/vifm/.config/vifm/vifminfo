@@ -33,7 +33,7 @@
 # Bookmarks:
 
 # TUI:
-al
+ar
 q0
 v2
 ov
@@ -42,18 +42,126 @@ l2
 r2
 
 # Left window history (oldest to newest):
-d/Users/yasser/code/personal/bootstrap
+d/Users/yasser/code/projects/goptneg/scripts/data/am/10
+	Caduceus
+1
+d/Users/yasser/code/projects/goptneg/scripts/data/am
+	10
+1
+d/Users/yasser/code/projects/goptneg/scripts/data/am/10
+	Caduceus
+1
+d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus
+	000010other_fuzzyagent
+1
+d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus/000010other_fuzzyagent
+	1
+1
+d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus/000010other_fuzzyagent/1
 	..
 0
-d/Users/yasser/code/personal
-	bootstrap
+d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus/000010other_fuzzyagent
+	1
 1
-d/Users/yasser/code
-	personal
-13
+d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus
+	000010other_fuzzyagent
+1
+d/Users/yasser/code/projects/goptneg/scripts/data/am/10
+	Caduceus
+1
+d/Users/yasser/code/projects/goptneg/scripts/data/am
+	10
+1
+d/Users/yasser/code/projects/goptneg/scripts/data
+	am
+1
+d/Users/yasser/code/projects/goptneg/scripts
+	data
+1
+d/Users/yasser/code/projects/goptneg
+	scripts
+11
+d/Users/yasser/code/projects/goptneg/scripts
+	scenarios
+2
+d/Users/yasser/code/projects/goptneg/scripts/scenarios
+	000003anac_y2011_NiceOrDie
+1
+d/Users/yasser/code/projects/goptneg/scripts/scenarios/000003anac_y2011_NiceOrDie
+	..
+0
+d/Users/yasser/code/projects/goptneg/scripts/scenarios
+	000003anac_y2011_NiceOrDie
+1
+d/Users/yasser/code/projects/goptneg/scripts/scenarios/000003anac_y2011_NiceOrDie
+	NiceOrDie.xml
+1
+d/Users/yasser/code/projects/goptneg/scripts/scenarios
+	000010other_fuzzyagent
+8
+d/Users/yasser/code/projects/goptneg/scripts/scenarios/000010other_fuzzyagent
+	single_issue_domain.xml
+3
+d/Users/yasser/code/projects/goptneg/scripts/scenarios
+	000010other_fuzzyagent
+8
+d/Users/yasser/.config/nvim
+	settings
+2
+d/Users/yasser/.config/nvim/settings
+	java.vim
+25
+d/Users/yasser/.config/nvim
+	init.vim
+6
+d/Users/yasser/.config
+	texstudio
+16
+d/Users/yasser/.config/texstudio
+	texstudio.ini
+6
+d/Users/yasser/.config
+	tmux
+17
+d/Users/yasser/.config/tmux
+	tmux-status.conf
+1
+d/Users/yasser/.config
+	zathura
+21
+d/Users/yasser/.config/zathura
+	..
+0
+d/Users/yasser/.config
+	icl
+8
+d/Users/yasser/.config/icl
+	commands.txt
+1
+d/Users/yasser/.config
+	htop
+7
+d/Users/yasser/.config/htop
+	htoprc
+1
+d/Users/yasser/.config
+	coc
+3
+d/Users/yasser/.config/coc
+	snippets-mru
+8
+d/Users/yasser/.config
+	coc
+3
 d/Users/yasser
 	.config
 9
+d/Users/yasser/.config
+	asciinema
+2
+d/Users/yasser/.config/asciinema
+	install-id
+1
 d/Users/yasser/.config
 	alacritty
 1
@@ -61,8 +169,8 @@ d/Users/yasser/.config/alacritty
 	..
 0
 d/Users/yasser/.config
-	alacritty
-1
+	..
+0
 d/Users/yasser
 	.config
 9
@@ -70,33 +178,584 @@ d/Users
 	yasser
 2
 d/Users/yasser
-	.zcompdump_capture
-15
+	.vim
+4
+d/Users/yasser/.vim
+	..
+0
+d/Users/yasser
+	.tmux
+4
+d/Users/yasser/.tmux
+	..
+0
+d/Users/yasser
+	.slimzsh
+4
+d/Users/yasser/.slimzsh
+	..
+0
+d/Users/yasser
+	.poetry
+4
+d/Users/yasser/.poetry
+	..
+0
+d/Users/yasser
+	.local
+4
+d/Users/yasser/.local
+	..
+0
+d/Users/yasser
+	.iterm2
+4
+d/Users/yasser/.iterm2
+	..
+0
+d/Users/yasser
+	.iterm2
+4
+d/Users/yasser/.iterm2
+	..
+0
+d/Users/yasser
+	.ipython
+5
+d/Users/yasser/.ipython
+	extensions
+1
+d/Users/yasser/.ipython/extensions
+	..
+0
+d/Users/yasser/.ipython
+	extensions
+1
+d/Users/yasser
+	.dotfiles
+5
+d/Users/yasser/.dotfiles
+	config
+1
+d/Users/yasser/.dotfiles/config
+	..
+0
+d/Users/yasser/.dotfiles
+	config
+1
+d/Users/yasser
+	code
+27
+d/Users/yasser/code
+	ar
+1
+d/Users/yasser/code/ar
+	..
+0
+d/Users/yasser/code
+	personal
+13
+d/Users/yasser/code/personal
+	dotfiles
+4
+d/Users/yasser/code/personal/dotfiles
+	alacritty
+2
+d/Users/yasser/code/personal/dotfiles/alacritty
+	.config
+1
+d/Users/yasser/code/personal/dotfiles/alacritty/.config
+	..
+0
+d/Users/yasser/code/personal/dotfiles/alacritty
+	.config
+1
+d/Users/yasser/code/personal/dotfiles
+	flake8
+9
+d/Users/yasser/code/personal/dotfiles/flake8
+	..
+0
+d/Users/yasser/code/personal/dotfiles
+	fonts
+10
+d/Users/yasser/code/personal/dotfiles/fonts
+	.config
+1
+d/Users/yasser/code/personal/dotfiles/fonts/.config
+	..
+0
+d/Users/yasser/code/personal/dotfiles/fonts
+	.config
+1
+d/Users/yasser/code/personal/dotfiles
+	flake8
+9
+d/Users/yasser/code/personal/dotfiles/flake8
+	.config
+1
+d/Users/yasser/code/personal/dotfiles/flake8/.config
+	..
+0
+d/Users/yasser/code/personal/dotfiles/flake8
+	.config
+1
+d/Users/yasser/code/personal/dotfiles
+	htop
+13
+d/Users/yasser/code/personal/dotfiles/htop
+	.config
+1
+d/Users/yasser/code/personal/dotfiles/htop/.config
+	..
+0
+d/Users/yasser/code/personal/dotfiles/htop
+	.config
+1
+d/Users/yasser/code/personal/dotfiles
+	git
+12
+d/Users/yasser/code/personal
+	dotfiles
+4
+d/Users/yasser/code
+	personal
+13
+d/Users/yasser
+	config
+27
+d/Users/yasser/config
+	alacritty
+1
+d/Users/yasser/config/alacritty
+	..
+0
+d/Users/yasser/config
+	alacritty
+1
+d/Users/yasser
+	.config
+9
+d/Users/yasser/.config
+	..
+0
+d/Users/yasser
+	.cookiecutter_replay
+10
 d
 
 # Right window history (oldest to newest):
-D/Users/yasser/code/personal/bootstrap
+D/Users/yasser/code/personal/dotfiles/dask
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/dask/.config
+	dask
+1
+D/Users/yasser/code/personal/dotfiles/dask/.config/dask
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/dask/.config/dask/.config
 	..
 0
+D/Users/yasser/code/personal/dotfiles/dask/.config/dask
+	dask.yaml
+1
+D/Users/yasser/code/personal/dotfiles/dask/.config
+	dask
+1
+D/Users/yasser/code/personal/dotfiles/dask
+	.config
+1
+D/Users/yasser/code/personal/dotfiles
+	configstore
+4
+D/Users/yasser/code/personal/dotfiles/configstore
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/configstore/.config
+	configstore
+1
+D/Users/yasser/code/personal/dotfiles/configstore/.config/configstore
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/configstore/.config/configstore/.config
+	..
+0
+D/Users/yasser/code/personal/dotfiles/configstore/.config/configstore
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/configstore/.config
+	configstore
+1
+D/Users/yasser/code/personal/dotfiles/configstore
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/configstore/.config
+	configstore
+1
+D/Users/yasser/code/personal/dotfiles/configstore/.config/configstore
+	update-notifier-npm.json
+1
+D/Users/yasser/code/personal/dotfiles/configstore/.config
+	configstore
+1
+D/Users/yasser/code/personal/dotfiles/configstore
+	.config
+1
+D/Users/yasser/code/personal/dotfiles
+	common_shell
+4
+D/Users/yasser/code/personal/dotfiles/common_shell
+	..
+0
+D/Users/yasser/code/personal/dotfiles
+	coc
+4
+D/Users/yasser/code/personal/dotfiles/coc
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/coc/.config
+	coc
+1
+D/Users/yasser/code/personal/dotfiles/coc/.config/coc
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/coc/.config/coc/.config
+	..
+0
+D/Users/yasser/code/personal/dotfiles/coc/.config/coc
+	extensions
+1
+D/Users/yasser/code/personal/dotfiles/coc/.config/coc/extensions
+	coc-python-data
+1
+D/Users/yasser/code/personal/dotfiles/coc/.config/coc/extensions/coc-python-data
+	languageServer.0.5.31
+1
+D/Users/yasser/code/personal/dotfiles/coc/.config/coc/extensions/coc-python-data/languageServer.0.5.31
+	..
+0
+D/Users/yasser/code/personal/dotfiles/coc/.config/coc/extensions/coc-python-data
+	languageServer.0.5.31
+1
+D/Users/yasser/code/personal/dotfiles/coc/.config/coc/extensions
+	coc-python-data
+1
+D/Users/yasser/code/personal/dotfiles/coc/.config/coc
+	ultisnips
+1
+D/Users/yasser/code/personal/dotfiles/coc/.config
+	coc
+1
+D/Users/yasser/code/personal/dotfiles/coc
+	.config
+1
+D/Users/yasser/code/personal/dotfiles
+	coc
+4
+D/Users/yasser/code/personal/dotfiles/coc
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/coc/.config
+	coc
+1
+D/Users/yasser/code/personal/dotfiles/coc/.config/coc
+	ultisnips
+1
+D/Users/yasser/code/personal/dotfiles/coc/.config
+	coc
+1
+D/Users/yasser/code/personal/dotfiles/coc
+	.config
+1
+D/Users/yasser/code/personal/dotfiles
+	bash
+3
+D/Users/yasser/code/personal/dotfiles/bash
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/bash/.config
+	bash
+1
+D/Users/yasser/code/personal/dotfiles/bash/.config/bash
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/bash/.config/bash/.config
+	..
+0
+D/Users/yasser/code/personal/dotfiles/bash/.config/bash
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/bash/.config
+	bash
+1
+D/Users/yasser/code/personal/dotfiles/bash
+	.bash_profile
+1
+D/Users/yasser/code/personal/dotfiles
+	alacritty
+2
+D/Users/yasser/code/personal/dotfiles/alacritty
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/alacritty/.config
+	alacritty
+1
+D/Users/yasser/code/personal/dotfiles/alacritty/.config/alacritty
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/alacritty/.config/alacritty/.config
+	..
+0
+D/Users/yasser/code/personal/dotfiles/alacritty/.config/alacritty
+	alacritty.yml
+1
+D/Users/yasser/code/personal/dotfiles/alacritty/.config
+	alacritty
+1
+D/Users/yasser/code/personal/dotfiles/alacritty
+	.config
+1
+D/Users/yasser/code/personal/dotfiles
+	.git
+1
+D/Users/yasser/code/personal/dotfiles/.git
+	..
+0
+D/Users/yasser/code/personal/dotfiles
+	vifm
+22
+D/Users/yasser/code/personal/dotfiles/vifm
+	.config
+1
+D/Users/yasser/code/personal/dotfiles/vifm/.config
+	vifm
+1
+D/Users/yasser/code/personal/dotfiles/vifm/.config/vifm
+	colors
+1
+D/Users/yasser/code/personal/dotfiles/vifm/.config/vifm/colors
+	zenburn_1.vifm
+23
+D/Users/yasser/code/personal/dotfiles/vifm/.config/vifm
+	colors
+1
+D/Users/yasser/code/personal/dotfiles/vifm/.config
+	vifm
+1
+D/Users/yasser/code/personal/dotfiles/vifm
+	.config
+1
+D/Users/yasser/code/personal/dotfiles
+	base
+3
+D/Users/yasser/code/personal/dotfiles/base
+	bash
+1
+D/Users/yasser/code/personal/dotfiles
+	mac
+5
+D/Users/yasser/code/personal/dotfiles/mac
+	alacritty
+1
+D/Users/yasser/code/personal/dotfiles
+	base
+2
+D/Users/yasser/code/personal/dotfiles/base
+	configstore
+4
+D/Users/yasser/code/personal/dotfiles
+	mac
+5
+D/Users/yasser/code/personal/dotfiles/mac
+	zathura
+9
+D/Users/yasser/code/personal/dotfiles
+	mac
+5
+D/Users/yasser/code/personal/dotfiles/mac
+	..
+0
+D/Users/yasser/code/personal/dotfiles
+	base
+2
+D/Users/yasser/code/personal/dotfiles/base
+	stowall
+22
+D/Users/yasser/code/personal/dotfiles
+	linux
+4
+D/Users/yasser/code/personal/dotfiles/linux
+	stowall
+1
+D/Users/yasser/code/personal/dotfiles
+	latex
+3
+D/Users/yasser/code/personal/dotfiles/latex
+	..
+0
+D/Users/yasser/code/personal/dotfiles
+	mac
+4
+D/Users/yasser/code/personal/dotfiles/mac
+	latex
+6
+D/Users/yasser/code/personal/dotfiles
+	mac
+4
+D/Users/yasser/code/personal
+	dotfiles
+4
+D/Users/yasser/code/personal/dotfiles
+	mac
+4
+D/Users/yasser/code/personal/dotfiles/mac
+	latex
+6
+D/Users/yasser/code/personal/dotfiles
+	mac
+4
+D/Users/yasser/code/personal/dotfiles/mac
+	iterm
+3
+D/Users/yasser/code/personal/dotfiles/mac/iterm
+	.iterm2
+1
+D/Users/yasser/code/personal/dotfiles/mac/iterm/.iterm2
+	..
+0
+D/Users/yasser/code/personal/dotfiles/mac/iterm
+	.iterm2
+1
+D/Users/yasser/code/personal/dotfiles/mac
+	..
+0
+D/Users/yasser/code/personal/dotfiles
+	mac
+4
+D/Users/yasser/code/personal/dotfiles/mac
+	iterm
+3
+D/Users/yasser/code/personal/dotfiles/mac/iterm
+	.iterm2_shell_integration.zsh
+1
+D/Users/yasser/code/personal/dotfiles/mac
+	iterm
+3
+D/Users/yasser/code/personal/dotfiles
+	.vimrc
+7
 D
 
 # Command line history (oldest to newest):
+:mkdir data
+:mkdir .tmux.plugins
+:"qa
+:mkdir contrib
+:mkdir tests
+:mkdir scml_agents
+:touch agents.py
+:touch __main__.py
+:touch __init__.py
+:touch test_scml_agents.py
+:find -name "time"
+:!find -name "time"
+:!find . -name "time"
+:dotfiles=True
+:set vifm-dotfiles=True
+:! zip -r scml2020.zip scml2020
+:! zip -r scml2020changed.zip scml2020
+:hideui
+:x
+:nmap
+:!nvim ~/bin/vifmimg
+:colorscheme solarized-dark
+:colorscheme solarized
+:colorscheme molokai
+:!pwd
+:echo $TERM
+:view
+:cd ~/Downloads/
+:cd ~/datasets/emotions4data/
+:~
+:!open scores.csv
+:!open world_stats.csv
+:find negloader
+:copy
+:!mkdir figs
+:mv
+:move
+:mkdir scripts
+:!touch __init__.py
 :wq
+:find -n time
+:find time
+:w
+:mkdir settings
+:help
+:qa
+:sort
+:mkdir mac
+:mkdir linux
+:q
 
 # Search history (oldest to newest):
+/bug
+/negma
+/scml
+/R
+/know
+/auto
+/tmp
+/utils
+/**/utils
+/pptx
+/xls
+/docx
+/png
+/py
+/ivect
+/emotiw
+/note
+/wo
+/567
+/        contracts.seller_type = contracts.seller_type.apply(
+/world
+/Re
+/2019AC
+/Down
+/storage
+/optne
+/nemga
+/negmas
+/nego
+/code
 
 # Prompt history (oldest to newest):
+pscml-agents
+pp_agent.py
+pcrescent_agent.py
+pagents_submitted
+pfirst2.png
+pthird2.pdf
+psampleagent
+pivectorlda_train.csv
+pivector_train.csv
+pivectorlda_val.csv
+pivector_val.csv
+pprima2020optimal.bib
+p2020JournalAIJapanSCML.pdf
+p/Users/yasser/code/projects/goptneg/
+p.config
 
 # Local filter history (oldest to newest):
 
 # Registers:
-""/Users/yasser/.local/share/vifm/Trash/025_.config
+""/Users/yasser/.local/share/vifm/Trash/002_.gitmodules
 
 # Directory stack (oldest to newest):
 
 # Trash content:
-t/Users/yasser/.local/share/vifm/Trash/024_.config
-	/Users/yasser/.config
 t/Users/yasser/.local/share/vifm/Trash/000_.venv
 	/Users/yasser/tmp/scml2020/.venv
 t/Users/yasser/.local/share/vifm/Trash/000_.vscode
@@ -891,6 +1550,126 @@ t/Users/yasser/.local/share/vifm/Trash/000_100
 	/Users/yasser/code/projects/goptneg/scripts/data/am/100
 t/Users/yasser/.local/share/vifm/Trash/012_.DS_Store
 	/Users/yasser/.config/.DS_Store
+t/Users/yasser/.local/share/vifm/Trash/000_.zshenv
+	/Users/yasser/.zshenv
+t/Users/yasser/.local/share/vifm/Trash/000_.zshrc
+	/Users/yasser/.zshrc
+t/Users/yasser/.local/share/vifm/Trash/000_.rcrc
+	/Users/yasser/.rcrc
+t/Users/yasser/.local/share/vifm/Trash/000_.prompt
+	/Users/yasser/.prompt
+t/Users/yasser/.local/share/vifm/Trash/000_.aliases
+	/Users/yasser/.aliases
+t/Users/yasser/.local/share/vifm/Trash/000_.bash_profile
+	/Users/yasser/.bash_profile
+t/Users/yasser/.local/share/vifm/Trash/000_.bashrc
+	/Users/yasser/.bashrc
+t/Users/yasser/.local/share/vifm/Trash/000_.exports
+	/Users/yasser/.exports
+t/Users/yasser/.local/share/vifm/Trash/000_.fzf.bash
+	/Users/yasser/.fzf.bash
+t/Users/yasser/.local/share/vifm/Trash/000_.fzf.zsh
+	/Users/yasser/.fzf.zsh
+t/Users/yasser/.local/share/vifm/Trash/000_.gitconfig
+	/Users/yasser/.gitconfig
+t/Users/yasser/.local/share/vifm/Trash/000_.gitignore_global
+	/Users/yasser/.gitignore_global
+t/Users/yasser/.local/share/vifm/Trash/000_.ideavimrc
+	/Users/yasser/.ideavimrc
+t/Users/yasser/.local/share/vifm/Trash/000_.inputrc
+	/Users/yasser/.inputrc
+t/Users/yasser/.local/share/vifm/Trash/000_.inputrc_bash
+	/Users/yasser/.inputrc_bash
+t/Users/yasser/.local/share/vifm/Trash/000_.inputrc_zsh
+	/Users/yasser/.inputrc_zsh
+t/Users/yasser/.local/share/vifm/Trash/000_.isort.cfg
+	/Users/yasser/.isort.cfg
+t/Users/yasser/.local/share/vifm/Trash/000_.iterm2_shell_integration.zsh
+	/Users/yasser/.iterm2_shell_integration.zsh
+t/Users/yasser/.local/share/vifm/Trash/000_.latexmkrc
+	/Users/yasser/.latexmkrc
+t/Users/yasser/.local/share/vifm/Trash/000_.local.vim
+	/Users/yasser/.local.vim
+t/Users/yasser/.local/share/vifm/Trash/000_.mackup.cfg
+	/Users/yasser/.mackup.cfg
+t/Users/yasser/.local/share/vifm/Trash/000_.muttrc
+	/Users/yasser/.muttrc
+t/Users/yasser/.local/share/vifm/Trash/000_.profile
+	/Users/yasser/.profile
+t/Users/yasser/.local/share/vifm/Trash/000_.pylintrc
+	/Users/yasser/.pylintrc
+t/Users/yasser/.local/share/vifm/Trash/000_.tmux.conf
+	/Users/yasser/.tmux.conf
+t/Users/yasser/.local/share/vifm/Trash/000_.tmux.conf.local
+	/Users/yasser/.tmux.conf.local
+t/Users/yasser/.local/share/vifm/Trash/000_.zprofile
+	/Users/yasser/.zprofile
+t/Users/yasser/.local/share/vifm/Trash/001_.config
+	/Users/yasser/code/personal/dotfiles/nvim/.config/nvim/.config
+t/Users/yasser/.local/share/vifm/Trash/002_.config
+	/Users/yasser/code/personal/dotfiles/zsh/.config/zsh/.config
+t/Users/yasser/.local/share/vifm/Trash/003_.config
+	/Users/yasser/code/personal/dotfiles/zathura/.config/zathura/.config
+t/Users/yasser/.local/share/vifm/Trash/004_.config
+	/Users/yasser/code/personal/dotfiles/vifm/.config/vifm/.config
+t/Users/yasser/.local/share/vifm/Trash/005_.config
+	/Users/yasser/code/personal/dotfiles/valet/.config/valet/.config
+t/Users/yasser/.local/share/vifm/Trash/006_.config
+	/Users/yasser/code/personal/dotfiles/tmuxinator/.config/tmuxinator/.config
+t/Users/yasser/.local/share/vifm/Trash/007_.config
+	/Users/yasser/code/personal/dotfiles/tmux/.config/tmux/.config
+t/Users/yasser/.local/share/vifm/Trash/008_.config
+	/Users/yasser/code/personal/dotfiles/texstudio/.config/texstudio/.config
+t/Users/yasser/.local/share/vifm/Trash/009_.config
+	/Users/yasser/code/personal/dotfiles/pudb/.config/pudb/.config
+t/Users/yasser/.local/share/vifm/Trash/010_.config
+	/Users/yasser/code/personal/dotfiles/nnn/.config/nnn/.config
+t/Users/yasser/.local/share/vifm/Trash/011_.config
+	/Users/yasser/code/personal/dotfiles/neofetch/.config/neofetch/.config
+t/Users/yasser/.local/share/vifm/Trash/012_.config
+	/Users/yasser/code/personal/dotfiles/kitty/.config/kitty/.config
+t/Users/yasser/.local/share/vifm/Trash/013_.config
+	/Users/yasser/code/personal/dotfiles/karabiner/.config/karabiner/.config
+t/Users/yasser/.local/share/vifm/Trash/014_.config
+	/Users/yasser/code/personal/dotfiles/icl/.config/icl/.config
+t/Users/yasser/.local/share/vifm/Trash/015_.config
+	/Users/yasser/code/personal/dotfiles/htop/.config/htop/.config
+t/Users/yasser/.local/share/vifm/Trash/016_.config
+	/Users/yasser/code/personal/dotfiles/git/.config/git/.config
+t/Users/yasser/.local/share/vifm/Trash/017_.config
+	/Users/yasser/code/personal/dotfiles/fonts/.config/fonts/.config
+t/Users/yasser/.local/share/vifm/Trash/018_.config
+	/Users/yasser/code/personal/dotfiles/flake8/.config/flake8/.config
+t/Users/yasser/.local/share/vifm/Trash/000_dot
+	/Users/yasser/code/personal/dotfiles/dot
+t/Users/yasser/.local/share/vifm/Trash/019_.config
+	/Users/yasser/code/personal/dotfiles/dask/.config/dask/.config
+t/Users/yasser/.local/share/vifm/Trash/020_.config
+	/Users/yasser/code/personal/dotfiles/configstore/.config/configstore/.config
+t/Users/yasser/.local/share/vifm/Trash/000_dask
+	/Users/yasser/code/personal/dotfiles/dask
+t/Users/yasser/.local/share/vifm/Trash/021_.config
+	/Users/yasser/code/personal/dotfiles/coc/.config/coc/.config
+t/Users/yasser/.local/share/vifm/Trash/000_extensions
+	/Users/yasser/code/personal/dotfiles/coc/.config/coc/extensions
+t/Users/yasser/.local/share/vifm/Trash/022_.config
+	/Users/yasser/code/personal/dotfiles/bash/.config
+t/Users/yasser/.local/share/vifm/Trash/023_.config
+	/Users/yasser/code/personal/dotfiles/alacritty/.config/alacritty/.config
+t/Users/yasser/.local/share/vifm/Trash/003_.git
+	/Users/yasser/code/personal/dotfiles/vifm/.config/vifm/colors/.git
+t/Users/yasser/.local/share/vifm/Trash/000_COPYING
+	/Users/yasser/code/personal/dotfiles/vifm/.config/vifm/colors/COPYING
+t/Users/yasser/.local/share/vifm/Trash/000_ChangeLog
+	/Users/yasser/code/personal/dotfiles/vifm/.config/vifm/colors/ChangeLog
+t/Users/yasser/.local/share/vifm/Trash/000_yasser.itermkeymap
+	/Users/yasser/code/personal/dotfiles/yasser.itermkeymap
+t/Users/yasser/.local/share/vifm/Trash/000_.iterm2
+	/Users/yasser/code/personal/dotfiles/mac/iterm/.iterm2
+t/Users/yasser/.local/share/vifm/Trash/002_.gitmodules
+	/Users/yasser/code/personal/dotfiles/.gitmodules
+t/Users/yasser/.local/share/vifm/Trash/024_.config
+	/Users/yasser/.config
 t/Users/yasser/.local/share/vifm/Trash/000_zsh-completions
 	/Users/yasser/zsh-completions
 t/Users/yasser/.local/share/vifm/Trash/000_thesaurii.txt
@@ -901,52 +1680,8 @@ t/Users/yasser/.local/share/vifm/Trash/000_git-completion.bash
 	/Users/yasser/git-completion.bash
 t/Users/yasser/.local/share/vifm/Trash/000_bin
 	/Users/yasser/bin
-t/Users/yasser/.local/share/vifm/Trash/001_.zshrc
-	/Users/yasser/.zshrc
-t/Users/yasser/.local/share/vifm/Trash/001_.zshenv
-	/Users/yasser/.zshenv
-t/Users/yasser/.local/share/vifm/Trash/001_.zprofile
-	/Users/yasser/.zprofile
 t/Users/yasser/.local/share/vifm/Trash/000_.vimrc
 	/Users/yasser/.vimrc
-t/Users/yasser/.local/share/vifm/Trash/001_.tmux.conf
-	/Users/yasser/.tmux.conf
-t/Users/yasser/.local/share/vifm/Trash/001_.pylintrc
-	/Users/yasser/.pylintrc
-t/Users/yasser/.local/share/vifm/Trash/001_.prompt
-	/Users/yasser/.prompt
-t/Users/yasser/.local/share/vifm/Trash/001_.profile
-	/Users/yasser/.profile
-t/Users/yasser/.local/share/vifm/Trash/001_.muttrc
-	/Users/yasser/.muttrc
-t/Users/yasser/.local/share/vifm/Trash/001_.latexmkrc
-	/Users/yasser/.latexmkrc
-t/Users/yasser/.local/share/vifm/Trash/001_.isort.cfg
-	/Users/yasser/.isort.cfg
-t/Users/yasser/.local/share/vifm/Trash/001_.aliases
-	/Users/yasser/.aliases
-t/Users/yasser/.local/share/vifm/Trash/001_.bash_profile
-	/Users/yasser/.bash_profile
-t/Users/yasser/.local/share/vifm/Trash/001_.bashrc
-	/Users/yasser/.bashrc
-t/Users/yasser/.local/share/vifm/Trash/001_.exports
-	/Users/yasser/.exports
-t/Users/yasser/.local/share/vifm/Trash/001_.fzf.bash
-	/Users/yasser/.fzf.bash
-t/Users/yasser/.local/share/vifm/Trash/001_.fzf.zsh
-	/Users/yasser/.fzf.zsh
-t/Users/yasser/.local/share/vifm/Trash/001_.gitconfig
-	/Users/yasser/.gitconfig
-t/Users/yasser/.local/share/vifm/Trash/001_.gitignore_global
-	/Users/yasser/.gitignore_global
-t/Users/yasser/.local/share/vifm/Trash/001_.ideavimrc
-	/Users/yasser/.ideavimrc
-t/Users/yasser/.local/share/vifm/Trash/001_.inputrc
-	/Users/yasser/.inputrc
-t/Users/yasser/.local/share/vifm/Trash/001_.inputrc_bash
-	/Users/yasser/.inputrc_bash
-t/Users/yasser/.local/share/vifm/Trash/001_.inputrc_zsh
-	/Users/yasser/.inputrc_zsh
 
 # State:
 f
@@ -955,6 +1690,6 @@ i1
 [F
 F
 I1
-].1
+].0
 ]F
 s0

@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 
 # load the correct .inputrc file
-# ln -s -f $HOME/.dotfiles/inputrc_bash ~/.inputrc
 # source  ~/.inputrc
-if [ -f ~/.exports ]; then
-   source ~/.exports
-fi
-source ~/.z/z.sh
-
+[ -f ~/.prebashrc ] && source ~/.prebashrc
+[ -f ~/.exports ] && source ~/.exports
+[ -f ~/.aliases ] && source ~/.aliases
+[ -f ~/.z/z.sh ] && source ~/.z/z.sh
 
 RED="\[\033[0;31m\]"
 YELLOW="\[\033[0;33m\]"
@@ -99,14 +97,16 @@ export _PS1="$YELLOW\u$NO_COLOUR:\w$(_git_prompt)"
 export PROMPT_COMMAND='export PS1="${_PS1} $(_git_prompt)\n$ "'
 
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -f $HOME/fzf.bash ] && source $HOME/.fzf.bash
 
 # pyenv
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # eval "$(pyenv virtualenv-init -)"
 if which pyenv > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
-source ~/.aliases
+
 eval "$(direnv hook bash)"
 
-source /Users/yasser/Library/Preferences/org.dystroy.broot/launcher/bash/br
+[ -f ~/.postbashrc ] && source ~/.postbashrc
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

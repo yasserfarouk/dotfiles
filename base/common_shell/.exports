@@ -1,2 +1,11 @@
 #!/usr/bin/env sh
+if [ -f $HOME/.cargo/bin ] ; then
+	export PATH="$HOME/.cargo/bin:$PATH"
+fi
+if [ -f $HOME/.linuxbrew/bin/brew ] ; then
+	export PATH="$HOME/.linuxbrew/bin:$PATH"
+fi
 
+if [ -f $HOME/usr/local/bin ] ; then
+	export PATH="$HOME/usr/local/bin:$PATH"
+fi

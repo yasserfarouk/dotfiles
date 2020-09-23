@@ -130,7 +130,7 @@ set redrawtime=500
 set lazyredraw
 
 " Don't try to highlight lines longer than N characters.
-set synmaxcol=100
+set synmaxcol=300
 " set inccommand=split
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 " Add Plug to the runtime path:

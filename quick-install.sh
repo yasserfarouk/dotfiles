@@ -46,12 +46,7 @@ function replace_tag_in_file(){
 # esac
 # echo "---------------------------------------------------------"
 
-echo "Sourcing all files"
-echo "------------------"
-mkdir $HOME/.vim/doc 2>&1 >/dev/null
-#vim --cmd "helptags $HOME/.vim/doc" --cmd "q"
-source ~/.bash_profile
-source ~/.zshrc
+
 echo "Installing Plug"
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 

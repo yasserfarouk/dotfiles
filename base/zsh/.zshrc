@@ -1,8 +1,10 @@
 #!/usr/bin/env zsh
 
 # [[ $ZSHENVCALLED = "" ]] && source ~/.zshenv
-source ~/.zshenv
-source ~/.z/z.sh
+[ -f ~/.prezshrc ] && source ~/.prezshrc
+[ -f  ~/.aliases ] && source ~/.aliases
+[ -f  ~/.zshenv ] && source ~/.zshenv
+[ -f  ~/.z/z.sh ] && source ~/.z/z.sh
 
 autoload -U promptinit; promptinit
 unset file
@@ -10,7 +12,7 @@ unset file
 
 zle -N edit-command-line
 
-source ~/antigen/antigen.zsh
+[ -f  ~/antigen/antigen.zsh ] && source ~/antigen/antigen.zsh
 antigen bundle git
 antigen bundle pip
 antigen bundle zsh-users/zsh-syntax-highlighting
@@ -42,16 +44,12 @@ export NVM_DIR="$HOME/.nvm"
 
 
 
-source ~/.aliases
 eval "$(direnv hook zsh)"
 
 # pyenv
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # eval "$(pyenv virtualenv-init -)"
 if which pyenv > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
-
-# added by broot
-source /Users/yasser/Library/Preferences/org.dystroy.broot/launcher/bash/br
 
 
 #===============================================================================
@@ -71,3 +69,4 @@ source /Users/yasser/Library/Preferences/org.dystroy.broot/launcher/bash/br
 # END  icl - interactive command library END
 #===============================================================================
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f ~/.postzshrc ] && source ~/.poszshrc
