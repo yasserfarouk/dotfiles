@@ -14,9 +14,9 @@
 	..
 1581141929
 'h
-	/Users/yasser/
+	/export/home/yasser/
 	..
-1581141929
+1600838578
 'j
 	/Users/yasser
 	code
@@ -33,8 +33,8 @@
 # Bookmarks:
 
 # TUI:
-ar
-q0
+al
+q1
 v2
 ov
 m-1
@@ -42,132 +42,6 @@ l2
 r2
 
 # Left window history (oldest to newest):
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10
-	Caduceus
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am
-	10
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10
-	Caduceus
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus
-	000010other_fuzzyagent
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus/000010other_fuzzyagent
-	1
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus/000010other_fuzzyagent/1
-	..
-0
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus/000010other_fuzzyagent
-	1
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10/Caduceus
-	000010other_fuzzyagent
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am/10
-	Caduceus
-1
-d/Users/yasser/code/projects/goptneg/scripts/data/am
-	10
-1
-d/Users/yasser/code/projects/goptneg/scripts/data
-	am
-1
-d/Users/yasser/code/projects/goptneg/scripts
-	data
-1
-d/Users/yasser/code/projects/goptneg
-	scripts
-11
-d/Users/yasser/code/projects/goptneg/scripts
-	scenarios
-2
-d/Users/yasser/code/projects/goptneg/scripts/scenarios
-	000003anac_y2011_NiceOrDie
-1
-d/Users/yasser/code/projects/goptneg/scripts/scenarios/000003anac_y2011_NiceOrDie
-	..
-0
-d/Users/yasser/code/projects/goptneg/scripts/scenarios
-	000003anac_y2011_NiceOrDie
-1
-d/Users/yasser/code/projects/goptneg/scripts/scenarios/000003anac_y2011_NiceOrDie
-	NiceOrDie.xml
-1
-d/Users/yasser/code/projects/goptneg/scripts/scenarios
-	000010other_fuzzyagent
-8
-d/Users/yasser/code/projects/goptneg/scripts/scenarios/000010other_fuzzyagent
-	single_issue_domain.xml
-3
-d/Users/yasser/code/projects/goptneg/scripts/scenarios
-	000010other_fuzzyagent
-8
-d/Users/yasser/.config/nvim
-	settings
-2
-d/Users/yasser/.config/nvim/settings
-	java.vim
-25
-d/Users/yasser/.config/nvim
-	init.vim
-6
-d/Users/yasser/.config
-	texstudio
-16
-d/Users/yasser/.config/texstudio
-	texstudio.ini
-6
-d/Users/yasser/.config
-	tmux
-17
-d/Users/yasser/.config/tmux
-	tmux-status.conf
-1
-d/Users/yasser/.config
-	zathura
-21
-d/Users/yasser/.config/zathura
-	..
-0
-d/Users/yasser/.config
-	icl
-8
-d/Users/yasser/.config/icl
-	commands.txt
-1
-d/Users/yasser/.config
-	htop
-7
-d/Users/yasser/.config/htop
-	htoprc
-1
-d/Users/yasser/.config
-	coc
-3
-d/Users/yasser/.config/coc
-	snippets-mru
-8
-d/Users/yasser/.config
-	coc
-3
-d/Users/yasser
-	.config
-9
-d/Users/yasser/.config
-	asciinema
-2
-d/Users/yasser/.config/asciinema
-	install-id
-1
-d/Users/yasser/.config
-	alacritty
-1
-d/Users/yasser/.config/alacritty
-	..
-0
 d/Users/yasser/.config
 	..
 0
@@ -342,12 +216,135 @@ d/Users/yasser/.config
 d/Users/yasser
 	.cookiecutter_replay
 10
+d/export/home/yasser/tmp/ozan
+	results_GreedyFactoryManager.txt
+4
+d/export/home/yasser/code/projects/goptneg
+	scripts
+5
+d/export/home/yasser/code/projects/goptneg/scripts
+	..
+0
+d/export/home/yasser/code/projects/goptneg
+	scripts
+5
+d/export/home/yasser/code/projects
+	goptneg
+3
+d/export/home/yasser/code/projects/goptneg
+	scripts
+5
+d/export/home/yasser/code/projects
+	goptneg
+3
+d/export/home/yasser/code/projects/goptneg
+	scripts
+5
+d/export/home/yasser/code/projects/goptneg/scripts
+	data
+1
+d/export/home/yasser/code/projects/goptneg/scripts/data
+	prob_results
+4
+d/export/home/yasser/code/projects/goptneg/scripts/data/prob_results
+	..
+0
+d/export/home/yasser/code/projects/goptneg/scripts/data
+	prob_results_realistic
+5
+d/export/home/yasser/code/projects/goptneg/scripts/data/prob_results_realistic
+	Aspiration_Caduceus_0.0_0.0_10_0.20200921H153755445207daiba128uUeGwBp.json
+2
+d/export/home/yasser/code/projects/goptneg/scripts/data
+	prob_results_realistic
+5
+d/export/home/yasser/code/projects/goptneg/scripts
+	..
+0
+d/export/home/yasser/code/projects/goptneg
+	scripts
+5
+d/export/home/yasser/code/projects/goptneg/scripts
+	data
+1
+d/export/home/yasser/code/projects/goptneg/scripts/data
+	prob_results_realistic
+5
+d/export/home/yasser/code/personal/dotfiles
+	base
+2
+d/export/home/yasser/code/personal/dotfiles/base
+	coc
+2
+d/export/home/yasser/code/personal/dotfiles/base/coc
+	.config
+1
+d/export/home/yasser/code/personal/dotfiles/base/coc/.config
+	..
+0
+d/export/home/yasser/code/personal/dotfiles/base/coc
+	.config
+1
+d/export/home/yasser/code/personal/dotfiles/base
+	configstore
+3
+d/export/home/yasser/code/personal/dotfiles/base/configstore
+	.config
+1
+d/export/home/yasser/code/personal/dotfiles/base/configstore/.config
+	configstore
+1
+d/export/home/yasser/code/personal/dotfiles/base/configstore/.config/configstore
+	update-notifier-npm.json
+1
+d/export/home/yasser/code/personal/dotfiles/base/configstore/.config
+	configstore
+1
+d/export/home/yasser/code/personal/dotfiles/base/configstore
+	.config
+1
+d/export/home/yasser/code/personal/dotfiles/base
+	fzf
+3
+d/export/home/yasser/code/personal/dotfiles/base/fzf
+	.fzf.bash
+1
+d/export/home/yasser/code/personal/dotfiles/base
+	git
+3
+d/export/home/yasser/code/personal/dotfiles/base/git
+	.gitconfig
+1
+d/export/home/yasser/code/personal/dotfiles/base
+	icl
+5
+d/export/home/yasser/code/personal/dotfiles
+	base
+2
+d/export/home/yasser/code/personal/dotfiles/base
+	zsh
+17
+d/export/home/yasser/code/personal/dotfiles/base/zsh
+	.zshrc
+5
+d/export/home/yasser/code/personal/dotfiles/base
+	zsh
+17
+d/export/home/yasser/code/personal/dotfiles
+	base
+2
+d/export/home/yasser/code/personal
+	dotfiles
+1
+d/export/home/yasser/code
+	personal
+8
+d/export/home/yasser
+	code
+20
 d
 
 # Right window history (oldest to newest):
-D/Users/yasser/code/personal/dotfiles/dask
-	.config
-1
 D/Users/yasser/code/personal/dotfiles/dask/.config
 	dask
 1
@@ -645,6 +642,9 @@ D/Users/yasser/code/personal/dotfiles/mac
 D/Users/yasser/code/personal/dotfiles
 	.vimrc
 7
+D/
+	bin
+0
 D
 
 # Command line history (oldest to newest):
@@ -687,17 +687,17 @@ D
 :move
 :mkdir scripts
 :!touch __init__.py
-:wq
 :find -n time
 :find time
 :w
 :mkdir settings
 :help
-:qa
 :sort
 :mkdir mac
 :mkdir linux
+:qa
 :q
+:wq
 
 # Search history (oldest to newest):
 /bug
@@ -751,7 +751,7 @@ p.config
 # Local filter history (oldest to newest):
 
 # Registers:
-""/Users/yasser/.local/share/vifm/Trash/002_.gitmodules
+""/export/home/yasser/.local/share/vifm/Trash/000_fzf
 
 # Directory stack (oldest to newest):
 
@@ -1682,6 +1682,12 @@ t/Users/yasser/.local/share/vifm/Trash/000_bin
 	/Users/yasser/bin
 t/Users/yasser/.local/share/vifm/Trash/000_.vimrc
 	/Users/yasser/.vimrc
+t/export/home/yasser/.local/share/vifm/Trash/001_coc
+	/export/home/yasser/code/personal/dotfiles/base/coc
+t/export/home/yasser/.local/share/vifm/Trash/001_configstore
+	/export/home/yasser/code/personal/dotfiles/base/configstore
+t/export/home/yasser/.local/share/vifm/Trash/000_fzf
+	/export/home/yasser/code/personal/dotfiles/base/fzf
 
 # State:
 f
