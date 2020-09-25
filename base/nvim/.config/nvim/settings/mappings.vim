@@ -1,4 +1,39 @@
 
+function! GoHighlight()
+	syntax on
+	syntax sync fromstart
+endfunction!
+
+function! s:run_black()
+  execute ':!black '.expand('%')
+  execute ':e %'
+endfunction
+
+function! s:run_isort()
+  execute ':!isort '.expand('%')
+  execute ':e %'
+endfunction
+
+function! s:run_black_dir()
+  execute ':!black .' 
+  execute ':e %'
+endfunction
+
+if !exists('*s:setupWrapping')
+	function s:setupWrapping()
+		set wrap
+		set wm=2
+		set textwidth=79
+	endfunction
+endif
+
+function! SetBackground()
+	if &background == 'dark'
+		execute "set background=light"
+	else
+		execute "set background=dark"
+	endif
+endfunction
 " Normal mapping ----------------------------------------------------------{{{
 " nnoremap ; :
 nnoremap <silent>== ggVG=

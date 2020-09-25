@@ -2,11 +2,11 @@ set nocompatible
 filetype plugin indent on
 
 source $HOME/.config/nvim/settings/basic.vim  
+source $HOME/.config/nvim/settings/functions.vim
 source $HOME/.config/nvim/settings/mappings.vim
 if !exists('g:vscode')
 	source $HOME/.config/nvim/settings/gui.vim
 	source $HOME/.config/nvim/settings/plugins.vim
-	source $HOME/.config/nvim/settings/functions.vim
 	" navigation
 	source $HOME/.config/nvim/settings/quickscope.vim
 	" file drawer
