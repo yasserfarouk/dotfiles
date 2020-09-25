@@ -1,3 +1,4 @@
+export ZPROFILE_EXPORTED=1
 export PYENV_ROOT=$HOME/.pyenv
 
 case `uname` in

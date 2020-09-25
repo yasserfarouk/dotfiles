@@ -42,18 +42,6 @@ l2
 r2
 
 # Left window history (oldest to newest):
-d/Users/yasser/.config
-	..
-0
-d/Users/yasser
-	.config
-9
-d/Users
-	yasser
-2
-d/Users/yasser
-	.vim
-4
 d/Users/yasser/.vim
 	..
 0
@@ -342,6 +330,18 @@ d/export/home/yasser/code
 d/export/home/yasser
 	code
 20
+d/export/home/yasser/code/projects/goptneg
+	scripts
+6
+d/export/home/yasser/code/projects/goptneg/scripts
+	data
+1
+d/export/home/yasser/code/projects/goptneg/scripts/data
+	results_daiba12.csv
+6
+d/export/home/yasser/code/projects/goptneg/scripts
+	plot3.py
+11
 d
 
 # Right window history (oldest to newest):
@@ -695,9 +695,9 @@ D
 :sort
 :mkdir mac
 :mkdir linux
-:qa
 :q
 :wq
+:qa
 
 # Search history (oldest to newest):
 /bug
@@ -747,11 +747,12 @@ pprima2020optimal.bib
 p2020JournalAIJapanSCML.pdf
 p/Users/yasser/code/projects/goptneg/
 p.config
+pplot3.py
 
 # Local filter history (oldest to newest):
 
 # Registers:
-""/export/home/yasser/.local/share/vifm/Trash/000_fzf
+""/export/home/yasser/code/projects/goptneg/scripts/plot2.py
 
 # Directory stack (oldest to newest):
 

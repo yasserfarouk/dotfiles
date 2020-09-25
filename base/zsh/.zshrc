@@ -6,6 +6,10 @@
 [ -f  ~/.zshenv ] && source ~/.zshenv
 [ -f  ~/.z/z.sh ] && source ~/.z/z.sh
 
+if ! $ZPROFILE_EXPORTED; then
+	[ -f  ~/.zprofile ] && source ~/.zprofile
+fi
+
 autoload -U promptinit; promptinit
 unset file
 # zstyle ':completion:*:*:git:*' script $HOME/.ysupport/git-completion.bash

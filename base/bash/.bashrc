@@ -7,6 +7,8 @@
 [ -f ~/.aliases ] && source ~/.aliases
 [ -f ~/.z/z.sh ] && source ~/.z/z.sh
 
+export _Z_DATA="$HOME/.z-data"
+
 RED="\[\033[0;31m\]"
 YELLOW="\[\033[0;33m\]"
 GREEN="\[\033[0;32m\]"
