@@ -4,7 +4,7 @@
 [ -f ~/.prezshrc ] && source ~/.prezshrc
 [ -f  ~/.aliases ] && source ~/.aliases
 [ -f  ~/.zshenv ] && source ~/.zshenv
-[ -f  ~/.z/z.sh ] && source ~/.z/z.sh
+[ -f ~/.zfolder/z.sh ] && source ~/.zfolder/z.sh
 
 if ! $ZPROFILE_EXPORTED; then
 	[ -f  ~/.zprofile ] && source ~/.zprofile

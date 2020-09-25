@@ -5,7 +5,7 @@
 [ -f ~/.prebashrc ] && source ~/.prebashrc
 [ -f ~/.exports ] && source ~/.exports
 [ -f ~/.aliases ] && source ~/.aliases
-[ -f ~/.z/z.sh ] && source ~/.z/z.sh
+[ -f ~/.zfolder/z.sh ] && source ~/.zfolder/z.sh
 
 export _Z_DATA="$HOME/.z-data"
 

@@ -42,27 +42,6 @@ l2
 r2
 
 # Left window history (oldest to newest):
-d/Users/yasser/.vim
-	..
-0
-d/Users/yasser
-	.tmux
-4
-d/Users/yasser/.tmux
-	..
-0
-d/Users/yasser
-	.slimzsh
-4
-d/Users/yasser/.slimzsh
-	..
-0
-d/Users/yasser
-	.poetry
-4
-d/Users/yasser/.poetry
-	..
-0
 d/Users/yasser
 	.local
 4
@@ -342,6 +321,27 @@ d/export/home/yasser/code/projects/goptneg/scripts/data
 d/export/home/yasser/code/projects/goptneg/scripts
 	plot3.py
 11
+d/export/home/yasser/code/personal/dotfiles
+	base
+3
+d/export/home/yasser/code/personal/dotfiles/base
+	z
+17
+d/export/home/yasser/code/personal/dotfiles/base/z
+	.zfolder
+1
+d/export/home/yasser/code/personal/dotfiles/base
+	bash
+1
+d/export/home/yasser/code/personal/dotfiles/base/bash
+	.bashrc
+2
+d/export/home/yasser/code/personal/dotfiles/base
+	zsh
+18
+d/export/home/yasser/code/personal/dotfiles/base/zsh
+	.zshrc
+5
 d
 
 # Right window history (oldest to newest):
@@ -748,6 +748,7 @@ p2020JournalAIJapanSCML.pdf
 p/Users/yasser/code/projects/goptneg/
 p.config
 pplot3.py
+p.zfolder
 
 # Local filter history (oldest to newest):
 
