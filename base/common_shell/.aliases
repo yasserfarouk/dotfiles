@@ -61,31 +61,15 @@ alias bdr='brew doctor'
 # Some directory listing with colors
 alias sl=ls
 # alias ls='ls -G'        # Compact view, show colors
-
-alias ls='exa --icons --group-directories-first'        # Compact view, show colors
+if command -v exa &> /dev/null
+then
+	alias ls='exa --icons --group-directories-first'        # Compact view, show colors
+fi
 alias la='ls -aF'       # Compact view, show hidden
 alias ll='ls -al'
 alias l='ls -a'
 alias l1='ls -1'
 
-# Desktop Programs
-alias safari="open -a safari"
-alias chrome="open -a google\ chrome"
-alias f='open -a Finder '
-alias fh='open -a Finder .'
-alias textedit='open -a TextEdit'
-
-# Usefull stuff for presentation and seeing dotfiles
-alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
-alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
-alias showall='defaults write com.apple.finder AppleShowAllFiles YES && killall Finder'
-alias hideall='defaults write com.apple.finder AppleShowAllFiles NO && killall Finder'
-
-# Get rid of those pesky .DS_Store files recursively
-alias dsclean='find . -type f -name .DS_Store -print0 | xargs -0 rm'
-
-# Flush your dns cache
-alias flush='dscacheutil -flushcache'
 
 function download(){
   curl -O "$2"
@@ -95,7 +79,6 @@ function highlight(){
   highlight -O rtf $2 --font-size 25 --style solarized-dark -W -J 50 -j 3 --src-lang $2 | pbcopy
 }
 
-alias dl=download
 
 function ghUpdate() {
   if git remote | grep upstream > /dev/null;
@@ -122,9 +105,6 @@ function ghPages(){
 
 }
 
-# incase i forget how to clear
-alias k='clear'
-alias cls='clear'
 
 # archive file or folder
 function compress()
@@ -263,7 +243,6 @@ function extract() {
     shift
   done
 }
-alias x=extract
 
 
 
@@ -276,17 +255,10 @@ function fixSSH(){
  ssh-add ~/.ssh/id_rsa
 }
 
-case "$(uname -s)" in
-   Darwin)
-    alias mvim="open -a MacVim"
-    alias macvim="open -a MacVim"
-    alias gvim="open -a MacVim"
 
-    ;;
+# convenient aliases
+alias x=extract
+alias dl=download
+alias k='clear'
+alias cls='clear'
 
-   Linux)
-    alias vi=vim
-    alias v=nvim
-    ;;
-
-esac

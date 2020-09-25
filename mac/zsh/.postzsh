@@ -1,0 +1,22 @@
+alias mvim="open -a MacVim"
+alias macvim="open -a MacVim"
+alias gvim="open -a MacVim"
+
+# Desktop Programs
+alias safari="open -a safari"
+alias textedit='open -a TextEdit'
+alias chrome="open -a google\ chrome"
+alias f='open -a Finder '
+alias fh='open -a Finder .'
+
+# Usefull stuff for presentation and seeing dotfiles
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+alias showall='defaults write com.apple.finder AppleShowAllFiles YES && killall Finder'
+alias hideall='defaults write com.apple.finder AppleShowAllFiles NO && killall Finder'
+
+# Get rid of those pesky .DS_Store files recursively
+alias dsclean='find . -type f -name .DS_Store -print0 | xargs -0 rm'
+
+# Flush your dns cache
+alias flush='dscacheutil -flushcache'

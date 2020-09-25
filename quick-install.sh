@@ -38,7 +38,7 @@ function replace_tag_in_file(){
 #    Darwin)
 #     rcup
 #     ;;
-#    Linux)
+    Linux)
 #     rcup
 #     export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
 #     echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
