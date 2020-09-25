@@ -29,7 +29,8 @@ endfunction
 
 " define all plugins
 call plug#begin(expand('~/.vim/plugged'))
-
+Plug 'metakirby5/codi.vim'
+Plug 'wsdjeg/vim-fetch'
 Plug 'machakann/vim-highlightedyank'
 Plug 'will133/vim-dirdiff'
 Plug 'lambdalisue/fern.vim'

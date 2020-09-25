@@ -190,3 +190,82 @@ if !exists('g:vscode')
 		autocmd BufEnter * :syntax sync maxlines=200
 	augroup END
 endif
+" stolen frm vim-cursorline-current 
+augroup cursorline_current
+  autocmd!
+
+  " If g:cursorline_current_line is true at plugin load time (defaults to on
+  " if unset), set 'cursorline' to the user-configured window-global value on
+  " entering a window, and unset it on leaving.
+  "
+  if get(g:, 'cursorline_current_line', 1)
+    autocmd WinEnter *
+          \ setlocal cursorline<
+    autocmd WinLeave *
+          \ setlocal nocursorline
+  endif
+
+  " Do the same for 'cursorcolumn' if g:cursorline_current_column is true at
+  " load time, which again defaults to being on if unset.
+  "
+  if get(g:, 'cursorline_current_column', 1)
+    autocmd WinEnter *
+          \ setlocal cursorcolumn<
+    autocmd WinLeave *
+          \ setlocal nocursorcolumn
+  endif
+
+  " If g:cursorline_current_insert is set at plugin load time (defaults to on
+  " if unset), also blank 'cursorline' even in the current window while in
+  " insert mode.  Note that CTRL-C's default behaviour breaks this.
+  "
+  if get(g:, 'cursorline_current_insert', 1)
+    autocmd InsertEnter *
+          \ doautocmd cursorline_current WinLeave
+    autocmd InsertLeave *
+          \ doautocmd cursorline_current WinEnter
+  endif
+
+  " If g:cursorline_current_focus is set at plugin load time (defaults to on
+  " if unset), also blank 'cursorline' even in the current window if Vim loses
+  " focus.  This probably only works in the GUI.
+  "
+  if get(g:, 'cursorline_current_focus', 1)
+    autocmd FocusGained *
+          \ doautocmd cursorline_current WinEnter
+    autocmd FocusLost *
+          \ doautocmd cursorline_current WinLeave
+  endif
+
+  " Stack up BufEnter and BufLeave events to trigger the corresponding window
+  " events, too; although this often means we set or unset the same option
+  " twice, it correctly handles entering a new window for a buffer that had
+  " already loaded.
+  "
+  autocmd BufEnter *
+        \ doautocmd cursorline_current WinEnter
+  autocmd BufLeave *
+        \ doautocmd cursorline_current WinLeave
+
+  " When Vim starts up, go through all of the windows in all of the tabs and
+  " trigger the leave hooks to set 'cursorline' and/or 'cursorcolumn' locally
+  " off, and then return to the first window of the first tab, and trigger the
+  " enter hook to restore it to its user-configured window-global value again.
+  " This is intended to correctly handle -o and -O options from the command
+  " line, or vimrc files or plugins that open their own windows on Vim
+  " startup.
+  "
+  autocmd VimEnter *
+        \ tabdo windo doautocmd cursorline_current WinLeave
+  autocmd VimEnter *
+        \ tabfirst | 1 wincmd w | doautocmd WinEnter
+
+  " If we just loaded a session, however, prevent those VimEnter hooks from
+  " running by deleting them.  The session should have recorded values for
+  " both options in each of the windows it saved, so we don't need to (and
+  " shouldn't) mess with them.
+  "
+  autocmd SessionLoadPost *
+        \ autocmd! cursorline_current VimEnter
+
+augroup END
