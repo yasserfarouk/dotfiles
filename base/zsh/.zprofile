@@ -1,18 +1,18 @@
 export ZPROFILE_EXPORTED=1
 export PYENV_ROOT=$HOME/.pyenv
 
-case `uname` in
-  Darwin)
-	PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
-	PATH="/Library/Frameworks/Python.framework/Versions/3.8/bin:${PATH}"
-  ;;
-  Linux)
-    # commands for Linux go here
-  ;;
-  FreeBSD)
-    # commands for FreeBSD go here
-  ;;
-esac
+# case `uname` in
+#   Darwin)
+# 	PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
+# 	PATH="/Library/Frameworks/Python.framework/Versions/3.8/bin:${PATH}"
+#   ;;
+#   Linux)
+#     # commands for Linux go here
+#   ;;
+#   FreeBSD)
+#     # commands for FreeBSD go here
+#   ;;
+# esac
 PATH="$PATH:$HOME/.local/bin"
 PATH="$HOME/.poetry/bin:$PATH"
 PATH="$HOME/.pyenv/bin:$PATH"

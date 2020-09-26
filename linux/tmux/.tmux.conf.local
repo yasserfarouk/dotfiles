@@ -1,0 +1,3 @@
+
+bind | split-window -h # Split panes horizontal
+bind-key | split-window -h
