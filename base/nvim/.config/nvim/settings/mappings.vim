@@ -4,21 +4,6 @@ function! GoHighlight()
 	syntax sync fromstart
 endfunction!
 
-function! s:run_black()
-  execute ':!black '.expand('%')
-  execute ':e %'
-endfunction
-
-function! s:run_isort()
-  execute ':!isort '.expand('%')
-  execute ':e %'
-endfunction
-
-function! s:run_black_dir()
-  execute ':!black .' 
-  execute ':e %'
-endfunction
-
 if !exists('*s:setupWrapping')
 	function s:setupWrapping()
 		set wrap
@@ -39,67 +24,15 @@ endfunction
 nnoremap <silent>== ggVG=
 nnoremap <silent> <leader>rws :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s<CR><Esc><C-o>
 nmap <leader>mt <plug>(MergetoolToggle)
-nnoremap <leader>TM :TableModeToggle<CR>
 
 nnoremap <leader>q :wq<CR>
-" Float Term
-nnoremap <leader>xh :FloatermNew<CR>
-nnoremap <leader>xx :FloatermToggle<CR>
-nnoremap <leader>xf :FloatermNew vifm<CR>
-nnoremap <leader>xt :FloatermNew ytop<CR>
-nnoremap <leader>xG :FloatermNew lazygit<CR>
-nnoremap <leader>xP :FloatermNew ipython<CR>
-nnoremap <leader>xb :call <SID>run_black()<CR>
-nnoremap <leader>xi :call <SID>run_isort()<CR>
-nnoremap <leader>xB :call <SID>run_black_dir()<CR>
-nnorema <leader>xg :FloatermNew googler
-nnoremap <leader>xn :FloatermNext<CR>
-nnoremap <leader>xp :FloatermPrev<CR>
 
-"  terminal emulation
 nnoremap <silent> <leader>term :terminal<CR>
-nnoremap <silent> <leader>shr :FloatermNew --wintype=normal --position=right<CR>
-nnoremap <silent> <leader>shb :FloatermNew --wintype=normal --height=0.3 --position=bottom<CR>
-nnoremap <silent> <leader>shl :FloatermNew --wintype=normal --position=left<CR>
-nnoremap <silent> <leader>sht :FloatermNew --wintype=normal --position=top<CR>
-nnoremap <silent> <leader>run :FloatermSend<CR>
-
-" toggle workspace
-nnoremap <silent> <leader>se :ToggleWorkspace<CR>
-nnoremap <silent> <leader>ch :CloseHiddenBuffers<CR>
 
 " Basic file system commands
-nnoremap <M-n> :!touch<Space>
-nnoremap <M-d> :!mkdir<Space>
-nnoremap <M-m> :!mv<Space>%<Space>
 nnoremap <leader><leader>b :call SetBackground()<CR>
-noremap <F12> :call GoHighlight()<CR>
+noremap <leader>rs :call GoHighlight()<CR>
 inoremap <F12> <C-o>:syntax sync fromstart<CR>
-
-" replace.vim mappings
-" nmap R <Plug>ReplaceOperator
-" vmap R <Plug>ReplaceOperator
-" nmap S <Plug>ReplaceOperator
-" nmap X <Plug>ExchangeOperator
-
-" multi-cursoer mappings
-let g:multi_cursor_use_default_mapping=0
-let g:multi_cursor_start_word_key      = '<C-n>'
-let g:multi_cursor_select_all_word_key = '<A-n>'
-let g:multi_cursor_start_key           = 'g<C-n>'
-let g:multi_cursor_select_all_key      = 'g<A-n>'
-let g:multi_cursor_next_key            = '<C-n>'
-let g:multi_cursor_prev_key            = '<C-p>'
-let g:multi_cursor_skip_key            = '<C-x>'
-let g:multi_cursor_quit_key            = '<Esc>'
-
-" vim-test mappings
-nmap <silent> <localleader>tn :TestNearest<CR>
-nmap <silent> <localleader>tf :TestFile<CR>
-nmap <silent> <localleader>ts :TestSuite<CR>
-nmap <silent> <localleader>tl :TestLast<CR>
-nmap <silent> <localleader>tv :TestVisit<CR>
-
 
 nnoremap \ za
 
@@ -114,12 +47,6 @@ nnoremap <leader><leader>vim :vs $MYVIMRC<CR>
 
 if !exists('g:vscode')
 "  function keys
-	nnoremap <leader>tt :TagbarToggle<CR>
-
-	let g:UltiSnipsExpandTrigger="<C-p>"
-	let g:UltiSnipsJumpForwardTrigger="<C-p>"
-	let g:UltiSnipsJumpBackwardTrigger="<C-n>"
-
 	set pastetoggle=<F6>
 endif
 
@@ -147,17 +74,10 @@ nnoremap <leader>D "_D
 "  Align blocks of text and keep them selected
 " nnoremap <leader>a :call <SID>SynStack()<CR>
 
-"  Space to toggle folds.
-nnoremap \ za
 
 if !exists('g:vscode')
 "  Opens an edit command with the path of the currently edited file filled in
 	noremap <Leader>E :e <C-R>=expand("%:p:h") . "/" <CR>
-
-"  FZF shortcuts
-	nnoremap <silent> <leader>b :Buffers<CR>
-	nnoremap <silent> <leader>c :Commands<CR>
-	nnoremap <silent> <leader>f :Files<CR>
 endif
 
 " setting working directory
@@ -165,14 +85,8 @@ nnoremap <leader>cd :cd %:p:h<cr>
 
 " Buffer management
 nnoremap <leader>bd :bd<CR>
-nmap <leader>. :bnext<CR>
-nmap <leader>, :bprevious<CR>
 
 " comment
-nnoremap <C-/> :TComment<cr>
-if has('macunix')
-	nnoremap <D-/> :TComment<cr>
-endif
 
 " allow shift arrows to copy
 nnoremap <S-Down> vj
@@ -186,24 +100,14 @@ if has('macunix')
 	nmap <D-v> :r !pbpaste<cr>
 endif
 
-nmap     <leader>r <Plug>CtrlSFPrompt
-vmap     <leader>r <Plug>CtrlSFVwordPath
-vmap     <leader>R <Plug>CtrlSFVwordExec
-nmap     <C-F>n <Plug>CtrlSFCwordPath
-nmap     <C-F>p <Plug>CtrlSFPwordPath
-nnoremap <C-F>o :CtrlSFOpen<CR>
-nnoremap <C-F>t :CtrlSFToggle<CR>
-inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
-
-
 noremap <silent> <Up>    :wincmd k<CR>
 noremap <silent> <Down>  :wincmd j<CR>
 noremap <silent> <Left>  :wincmd h<CR>
 noremap <silent> <Right> :wincmd l<CR>
-noremap <silent> <c-k>    :wincmd k<CR>
-noremap <silent> <c-j>  :wincmd j<CR>
-noremap <silent> <c-h>  :wincmd h<CR>
-noremap <silent> <c-l> :wincmd l<CR>
+" noremap <silent> <c-k>    :wincmd k<CR>
+" noremap <silent> <c-j>  :wincmd j<CR>
+" noremap <silent> <c-h>  :wincmd h<CR>
+" noremap <silent> <c-l> :wincmd l<CR>
 
 noremap <silent> <C-s> :wincmd s<CR>
 noremap <silent> <C-\> :wincmd v<CR>
@@ -213,7 +117,7 @@ noremap <silent> <C-\> :wincmd v<CR>
 
 " Recenter when jump back and forward
 nnoremap <C-o> <C-o>zz
-nnoremap <C-l> <C-i>zz
+nnoremap <C-i> <C-i>zz
 
 " z+, moves next line below the window
 " z-, moves next line above the window
@@ -256,10 +160,6 @@ function! GoogleSearch()
 endfunction
 vnoremap <leader>g "gy<Esc>:call GoogleSearch()<CR>
 
-let g:LanguageClient_serverCommands = {
-    \ 'python': ['pyls'],
-    \ }
- 
 " Close all readonly buffers with just a "q" keystroke, otherwise "q" is used to record macros in a normal mode
 nnoremap  <expr> q &readonly ? ":quit\<CR>" : "q"
 
@@ -271,7 +171,7 @@ nnoremap <silent> <leader>w :wall<CR>
 nnoremap <silent> <leader>W :wall<CR>
 nnoremap <silent> <leader>Q :confirm qall<CR>
 nnoremap <silent> ZX :confirm xall<CR>
-" Terminal mappings 
+" Terminal mappings
 if has('nvim')
   tnoremap <Esc> <C-\><C-n>
   tnoremap <A-[> <Esc>
@@ -304,11 +204,11 @@ inoremap <C-e> <End>
 inoremap <M-Left> <C-o>ba
 inoremap <M-Right> <C-o>wa
 
-" Split management
-inoremap <C-h> <ESC><C-w>h
-inoremap <C-j> <ESC><C-w>j
-inoremap <C-k> <ESC><C-w>k
-inoremap <C-l> <ESC><C-w>l
+" " Split management
+" inoremap <C-h> <ESC><C-w>h
+" inoremap <C-j> <ESC><C-w>j
+" inoremap <C-k> <ESC><C-w>k
+" inoremap <C-l> <ESC><C-w>l
 
 if has('macunix')
 	inoremap <D-c> <Esc>yy
@@ -334,19 +234,14 @@ vnoremap <S-Right> l
 vmap < <gv
 vmap > >gv
 vnoremap <leader>d "_d
-if has('macunix')
-	vnoremap <D-/> :TComment<cr>
-else
-	vnoremap <C-/> :TComment<cr>
-endif
-vnoremap <leader>ga <Plug>(EasyAlign)
+" vnoremap <leader>ga <Plug>(EasyAlign)
 vnoremap <C-c> "*y<CR>
 vnoremap y "*y<CR>
 vnoremap y myy`y
 vnoremap Y myY`y
 vnoremap // y/<C-R>"<CR>
 
-"  Space to toggle folds.
+"  Backslash to toggle folds.
 vnoremap \ za
 
 if has('macunix')
@@ -371,7 +266,7 @@ cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-d> <Del>
 cnoremap <C-h> <BS>
-cnoremap <A-j> :call split_line_text_at_cursor()<CR>
+" cnoremap <A-j> :call split_line_text_at_cursor()<CR>
 
 "  no one is really happy until you have this shortcuts
 cnoreabbrev W! w!

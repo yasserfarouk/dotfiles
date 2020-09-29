@@ -29,6 +29,15 @@ endfunction
 
 " define all plugins
 call plug#begin(expand('~/.vim/plugged'))
+Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'mbbill/undotree'
+Plug 'kana/vim-textobj-user'
+Plug 'rhysd/vim-textobj-anyblock'
+Plug 'kana/vim-textobj-line'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'vim-scripts/argtextobj.vim'
+Plug 'bkad/CamelCaseMotion'
 Plug 'metakirby5/codi.vim'
 Plug 'wsdjeg/vim-fetch'
 Plug 'machakann/vim-highlightedyank'

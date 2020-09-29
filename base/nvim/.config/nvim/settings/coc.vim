@@ -72,26 +72,26 @@ function SetCocShortcuts()
 	nmap <silent> gd <Plug>(coc-definition)
 	nmap <silent> gy <Plug>(coc-type-definition)
 	nmap <silent> gi <Plug>(coc-implementation)
-	nmap <silent> <S-F7> <Plug>(coc-references)
+	" nmap <silent> <S-F7> <Plug>(coc-references)
 	nmap <silent> gu <Plug>(coc-references)
 	nnoremap <silent> K :call <SID>show_documentation()<CR>
 	" Symbol renaming.
 	nmap <F2> <Plug>(coc-rename)
-	nnoremap <leader>rr <Plug>(coc-rename)
+	nnoremap <leader>cr <Plug>(coc-rename)
 
 	" Formatting selected code.
-	xmap <leader>ff  <Plug>(coc-format-selected)
-	nmap <leader>ff  <Plug>(coc-format-selected)
+	xmap <localleader>cf  <Plug>(coc-format-selected)
+	nmap <localleader>cf  <Plug>(coc-format-selected)
 
 	" Applying codeAction to the selected region.
 	" Example: `<leader>aap` for current paragraph
-	xmap <leader>a  <Plug>(coc-codeaction-selected)
-	nmap <leader>a  <Plug>(coc-codeaction-selected)
+	xmap <localleader>a  <Plug>(coc-codeaction-selected)
+	nmap <localleader>a  <Plug>(coc-codeaction-selected)
 
 	" Remap keys for applying codeAction to the current line.
-	nmap <leader>ac  <Plug>(coc-codeaction)
+	nmap <localleader>ac  <Plug>(coc-codeaction)
 	" Apply AutoFix to problem on the current line.
-	nmap <leader>qf  <Plug>(coc-fix-current)
+	nmap <localleader>qf  <Plug>(coc-fix-current)
 
 	" Introduce function text object
 	" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
@@ -101,21 +101,21 @@ function SetCocShortcuts()
 	omap af <Plug>(coc-funcobj-a)
 	" Mappings using CoCList:
 	" Show all diagnostics.
-	nnoremap <silent> <localleader>a  :<C-u>CocList diagnostics<cr>
+	nnoremap <silent> <localleader>ca  :<C-u>CocList diagnostics<cr>
 	" Manage extensions.
-	nnoremap <silent> <localleader>e  :<C-u>CocList extensions<cr>
+	nnoremap <silent> <localleader>ce  :<C-u>CocList extensions<cr>
 	" Show commands.
-	nnoremap <silent> <localleader>c  :<C-u>CocList commands<cr>
+	nnoremap <silent> <localleader>cc  :<C-u>CocList commands<cr>
 	" Find symbol of current document.
-	nnoremap <silent> <localleader>o  :<C-u>CocList outline<cr>
+	nnoremap <silent> <localleader>co  :<C-u>CocList outline<cr>
 	" Search workspace symbols.
-	nnoremap <silent> <localleader>s  :<C-u>CocList -I symbols<cr>
+	nnoremap <silent> <localleader>cs  :<C-u>CocList -I symbols<cr>
 	" Do default action for next item.
 	nnoremap <silent> <localleader>j  :<C-u>CocNext<CR>
 	" Do default action for previous item.
 	nnoremap <silent> <localleader>k  :<C-u>CocPrev<CR>
 	" Resume latest coc list.
-	nnoremap <silent> <localleader>p  :<C-u>CocListResume<CR>"
+	nnoremap <silent> <localleader>cp  :<C-u>CocListResume<CR>"
 	" Use <TAB> for selections ranges.
 	" NOTE: Requires 'textDocument/selectionRange' support from the language server.
 	" coc-tsserver, coc-python are the examples of servers that support it.
