@@ -14,9 +14,9 @@
 	..
 1581141929
 'h
-	/export/home/yasser/
+	/Users/yasser/
 	..
-1600838578
+1601281618
 'j
 	/Users/yasser
 	code
@@ -42,27 +42,6 @@ l2
 r2
 
 # Left window history (oldest to newest):
-d/Users/yasser
-	.local
-4
-d/Users/yasser/.local
-	..
-0
-d/Users/yasser
-	.iterm2
-4
-d/Users/yasser/.iterm2
-	..
-0
-d/Users/yasser
-	.iterm2
-4
-d/Users/yasser/.iterm2
-	..
-0
-d/Users/yasser
-	.ipython
-5
 d/Users/yasser/.ipython
 	extensions
 1
@@ -342,6 +321,27 @@ d/export/home/yasser/code/personal/dotfiles/base
 d/export/home/yasser/code/personal/dotfiles/base/zsh
 	.zshrc
 5
+d/Users/yasser/code/personal/dotfiles
+	base
+2
+d/Users/yasser/code/personal/dotfiles/base
+	python
+13
+d/Users/yasser/code/personal/dotfiles/base/python
+	.config
+1
+d/Users/yasser/code/personal/dotfiles/base/python/.config
+	flake8
+1
+d/Users/yasser/code/personal/dotfiles/base/python
+	.config
+1
+d/Users/yasser/code/personal/dotfiles/base
+	python
+13
+d/Users/yasser/code/personal/dotfiles
+	base
+2
 d
 
 # Right window history (oldest to newest):
@@ -697,6 +697,8 @@ D
 :mkdir linux
 :q
 :wq
+:mkdir .config
+:touch flake8
 :qa
 
 # Search history (oldest to newest):
