@@ -1,2 +1,4 @@
 alias vi=vim
 alias v=nvim
+JAVA_HOME=$HOME/jdk
+PATH="$JAVA_HOME/bin:$PATH"

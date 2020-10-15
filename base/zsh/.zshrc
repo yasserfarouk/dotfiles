@@ -78,4 +78,4 @@ bindkey '^x^e' edit-command-line
 # END  icl - interactive command library END
 #===============================================================================
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[ -f ~/.postzshrc ] && source ~/.poszshrc
+[ -f ~/.postzsh ] && source ~/.postzsh
