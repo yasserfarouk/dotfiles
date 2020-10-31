@@ -5,4 +5,5 @@ tmux/plugins/tmux-*
 weechat/
 tags
 base/vifm/.config/vifm/vifminfo
+*/vifminfo
 
