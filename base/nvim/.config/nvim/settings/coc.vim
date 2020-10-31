@@ -1,4 +1,21 @@
 
+" mapping for hiding floats when they do not hide themselves
+let g:coc_global_extensions = [
+			\ 'coc-explorer',
+			\ 'coc-python',
+			\ 'coc-snippets',
+			\ 'coc-json',
+			\ 'coc-highlight',
+			\ 'coc-fzf-preview',
+			\ 'coc-floaterm',
+			\ 'coc-clangd',
+			\ 'coc-java',
+			\ 'coc-java-debug',
+			\ 'coc-texlab',
+			\ 'coc-actions',
+			\ 'coc-markdownlint',
+			\]
+			" \ 'coc-spell-checker'
 function! s:check_back_space() abort
 	let col = col('.') - 1
 	return !col || getline('.')[col - 1]  =~# '\s'
@@ -44,6 +61,7 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 function SetCocShortcuts()
+	nnoremap <leader>/ :CocSearch <C-R>=expand("<cword>")<CR><CR>
 	inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 	inoremap <silent><expr> <TAB>
 				\ pumvisible() ? coc#_select_confirm() :
@@ -77,11 +95,6 @@ function SetCocShortcuts()
 	nnoremap <silent> K :call <SID>show_documentation()<CR>
 	" Symbol renaming.
 	nmap <F2> <Plug>(coc-rename)
-	nnoremap <leader>cr <Plug>(coc-rename)
-
-	" Formatting selected code.
-	xmap <localleader>cf  <Plug>(coc-format-selected)
-	nmap <localleader>cf  <Plug>(coc-format-selected)
 
 	" Applying codeAction to the selected region.
 	" Example: `<leader>aap` for current paragraph
@@ -102,6 +115,7 @@ function SetCocShortcuts()
 	" Mappings using CoCList:
 	" Show all diagnostics.
 	nnoremap <silent> <localleader>ca  :<C-u>CocList diagnostics<cr>
+	nnoremap <silent> <localleader>cd  :<C-u>CocList diagnostics<cr>
 	" Manage extensions.
 	nnoremap <silent> <localleader>ce  :<C-u>CocList extensions<cr>
 	" Show commands.
@@ -127,3 +141,6 @@ augroup COC
 	autocmd!
 	autocmd FileType * call SetCocShortcuts()
 augroup END
+
+" coc-explorer settings
+" :nmap <leader>nf :CocCommand explorer<CR>

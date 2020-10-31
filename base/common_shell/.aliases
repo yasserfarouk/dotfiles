@@ -7,6 +7,7 @@ export nec="$HOME/storage/gdrive/Business/NEC"
 export aist="$HOME/storage/gdrive/Business/AIST"
 export mypapers="$HOME/storage/gdrive/Research/Papers/Mypapers"
 export papers="$HOME/storage/gdrive/Knowledge/Papers"
+export config="$HOME/.config"
 export negotiation="$HOME/storage/gdrive/Knowledge/Papers/AutomatedNegotiation"
 export pdone="$HOME/storage/gdrive/Research/Papers/Mypapers/Done"
 export pcurrent="$HOME/storage/gdrive/Research/Papers/Mypapers/Current"
@@ -17,6 +18,8 @@ alias spyder="spyder3 -p \".\"&"
 alias mux="tmuxinator"
 alias c="mux code"
 alias personal="mux personal"
+alias doc="mux document"
+alias per="mux personal"
 alias p="mux paper"
 alias paper="mux paper"
 alias s="mux scratch"
@@ -38,6 +41,12 @@ alias v=nvim
 alias vf=vifm
 alias vim=nvim
 
+# opening finder in mac
+alias f="open ."
+
+# fzf with preview
+alias fzf='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
+
 # weather
 alias weather="curl http://wttr.in/"
 
@@ -51,12 +60,20 @@ alias ta='tmux a -t '
 # Some aliases for Homebrew
 alias bup='brew update && brew upgrade'
 alias bout='brew outdated'
-alias bin='brew install'
-alias brm='brew uninstall'
+alias bi='brew install'
+alias bu='brew uninstall'
 alias bls='brew list'
 alias bsr='brew search'
 alias binf='brew info'
 alias bdr='brew doctor'
+
+# git aliases
+alias gs='git status'
+alias ga='git add .'
+alias gc='git commit'
+alias gpul='git pull'
+alias gpsh='git pull'
+alias gupdate='git add . && git commit -m"fast commit" && git pull && git push'
 
 # Some directory listing with colors
 alias sl=ls

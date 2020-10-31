@@ -29,7 +29,31 @@ endfunction
 
 " define all plugins
 call plug#begin(expand('~/.vim/plugged'))
-Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+" nvcode colorscheme
+if has('nvim')
+	Plug 'christianchiarulli/nvcode-color-schemes.vim'
+	Plug 'nvim-treesitter/nvim-treesitter'
+endif
+" search and replace
+Plug 'brooth/far.vim'
+Plug 'liuchengxu/vim-which-key'
+" Asynchronous running
+Plug 'skywind3000/asyncrun.vim'
+" testing plugins
+Plug '5long/pytest-vim-compiler'
+Plug 'reinh/vim-makegreen'
+" remove the need to use ; for f/t
+Plug 'rhysd/clever-f.vim'
+" search and replace multiple forms of a word and turn to snake_case,
+" camelCase, etc
+Plug 'tpope/vim-abolish'
+" A simple REPL for vim
+Plug 'urbainvaes/vim-ripple'
+" Run nvim in the browser
+if has('nvim')
+	Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+endif
+Plug 'nelstrom/vim-visual-star-search'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'mbbill/undotree'
 Plug 'kana/vim-textobj-user'
@@ -42,7 +66,8 @@ Plug 'metakirby5/codi.vim'
 Plug 'wsdjeg/vim-fetch'
 Plug 'machakann/vim-highlightedyank'
 Plug 'will133/vim-dirdiff'
-Plug 'lambdalisue/fern.vim'
+" Plug 'lambdalisue/fern.vim'
+Plug 'ryanoasis/vim-devicons'
 Plug 'PeterRincker/vim-searchlight'
 Plug 'tpope/vim-obsession'
 Plug 'dhruvasagar/vim-prosession'
@@ -64,14 +89,16 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'voldikss/vim-floaterm'
 Plug 'dhruvasagar/vim-zoom'
 Plug 'rhysd/vim-grammarous'
+" Plug 'vigoux/LanguageTool.nvim'
 Plug 'dyng/ctrlsf.vim'
 Plug 'alvan/vim-closetag'
 Plug 'lervag/vimtex'
 " Plug 'easymotion/vim-easymotion'
 Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'unblevable/quick-scope'
+" Plug 'unblevable/quick-scope'
 Plug 'heavenshell/vim-pydocstring', Cond(!has('nvim'))
 Plug 'morhetz/gruvbox'
+Plug 'christianchiarulli/nvcode.vim'
 if has('macunix')
 	Plug 'rizzatti/dash.vim'
 endif
@@ -91,7 +118,8 @@ Plug 'tpope/vim-eunuch'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'janko/vim-test'
 Plug 'alfredodeza/pytest.vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'mattboehm/vim-unstack'
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 Plug 'majutsushi/tagbar'
 Plug 'altercation/vim-colors-solarized'
 Plug 'mhartington/oceanic-next'
@@ -110,12 +138,8 @@ Plug 'Yggdroot/indentLine'
 Plug 'vim-scripts/guicolorscheme.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'Shougo/neosnippet-snippets'
-if isdirectory('/usr/local/opt/fzf')
-	Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
-else
-	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
-	Plug 'junegunn/fzf.vim'
-endif
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 call plug#end()
 " Plug 'z-huabao/vim-submode'
 " Plug 'z-huabao/vim-slime-ipython'
@@ -149,7 +173,6 @@ call plug#end()
 " Plug 'ludovicchabant/vim-gutentags'
 " Plug 'SirVer/ultisnips'
 " Plug 'MartinLafreniere/vim-PairTools'
-" Plug 'ryanoasis/vim-devicons'
 " Plug 'NLKNguyen/pipe.vim'
 " Plug 'NLKNguyen/pipe-mysql.vim'
 " Plug 'camspiers/animate.vim'

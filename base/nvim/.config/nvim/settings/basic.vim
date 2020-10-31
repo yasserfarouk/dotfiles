@@ -18,10 +18,7 @@ endif
 if has('unnamedplus')
 	set clipboard=unnamed,unnamedplus
 endif
-if has('nvim')
-	set termguicolors
-endif
-set t_Co=256
+set termguicolors
 
 "  mouse settings
 set mouse=a
@@ -80,8 +77,8 @@ set thesaurus+=$HOME/.ysupport/thesaurii.txt
 set foldenable
 set foldnestmax=12
 set foldmethod=indent
-set foldlevelstart=99
-set foldlevel=99
+set foldlevelstart=0
+set foldlevel=0
 
 " local vim
 set exrc

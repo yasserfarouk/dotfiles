@@ -1,4 +1,5 @@
-nmap     <leader>r <Plug>CtrlSFPrompt
+let g:ctrlsf_backend = "rg"
+" nmap     <leader>r <Plug>CtrlSFPrompt
 vmap     <leader>r <Plug>CtrlSFVwordPath
 vmap     <leader>R <Plug>CtrlSFVwordExec
 nmap     <C-F>n <Plug>CtrlSFCwordPath

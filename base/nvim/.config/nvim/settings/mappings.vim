@@ -4,6 +4,13 @@ function! GoHighlight()
 	syntax sync fromstart
 endfunction!
 
+function! PandocPDF()
+	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=12pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
+endfunction!
+function! PandocPDFLandscape()
+	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=12pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
+endfunction!
+
 if !exists('*s:setupWrapping')
 	function s:setupWrapping()
 		set wrap
@@ -20,21 +27,15 @@ function! SetBackground()
 	endif
 endfunction
 " Normal mapping ----------------------------------------------------------{{{
-" nnoremap ; :
-nnoremap <silent>== ggVG=
-nnoremap <silent> <leader>rws :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s<CR><Esc><C-o>
-nmap <leader>mt <plug>(MergetoolToggle)
-
-nnoremap <leader>q :wq<CR>
-
-nnoremap <silent> <leader>term :terminal<CR>
+nnoremap ; :
+nnoremap : ;
+nnoremap <silent>== ggVG=<c-o>
 
 " Basic file system commands
-nnoremap <leader><leader>b :call SetBackground()<CR>
-noremap <leader>rs :call GoHighlight()<CR>
 inoremap <F12> <C-o>:syntax sync fromstart<CR>
 
 nnoremap \ za
+nnoremap <s-\> zO
 
 noremap  <silent> <Home> g<Home>
 noremap  <silent> <End>  g<End>
@@ -42,8 +43,6 @@ noremap  <silent> <End>  g<End>
 " copy to end using Y because we cut to end with D
 " nnoremap <A-O> <S-O><Esc>j
 nnoremap Y y$
-
-nnoremap <leader><leader>vim :vs $MYVIMRC<CR>
 
 if !exists('g:vscode')
 "  function keys
@@ -56,9 +55,6 @@ nnoremap <silent><expr>j      v:count == 0 ? 'gj' : 'j'
 nnoremap <silent><expr><Up>   v:count == 0 ? 'gk' : 'k'
 nnoremap <silent><expr><Down> v:count == 0 ? 'gj' : 'j'
 
-"  copy current file path to clipboard
-nnoremap <leader>cp :let @+= expand("%") <cr>
-
 "  Search mappings: These will make it so that going to the next one in a
 "  search will center on the line it is found in.
 nnoremap n nzzzv
@@ -67,24 +63,16 @@ nnoremap N Nzzzv
 "  removing search highlighting using <esc>
 nnoremap <silent> <esc> :noh<cr>
 
-"  a map to delete to the blackhole _ register (no cutting)
-nnoremap <leader>d "_d
-nnoremap <leader>D "_D
+" if !exists('g:vscode')
+" "  Opens an edit command with the path of the currently edited file filled in
+" 	noremap <Leader>E :e <C-R>=expand("%:p:h") . "/" <CR>
+" endif
 
-"  Align blocks of text and keep them selected
-" nnoremap <leader>a :call <SID>SynStack()<CR>
+" " setting working directory
+" nnoremap <leader>cd :cd %:p:h<cr>
 
-
-if !exists('g:vscode')
-"  Opens an edit command with the path of the currently edited file filled in
-	noremap <Leader>E :e <C-R>=expand("%:p:h") . "/" <CR>
-endif
-
-" setting working directory
-nnoremap <leader>cd :cd %:p:h<cr>
-
-" Buffer management
-nnoremap <leader>bd :bd<CR>
+" " Buffer management
+" nnoremap <leader>bd :bd<CR>
 
 " comment
 
@@ -104,6 +92,7 @@ noremap <silent> <Up>    :wincmd k<CR>
 noremap <silent> <Down>  :wincmd j<CR>
 noremap <silent> <Left>  :wincmd h<CR>
 noremap <silent> <Right> :wincmd l<CR>
+" noremap <silent> <leader><leader>o :wincmd o<CR>
 " noremap <silent> <c-k>    :wincmd k<CR>
 " noremap <silent> <c-j>  :wincmd j<CR>
 " noremap <silent> <c-h>  :wincmd h<CR>
@@ -148,28 +137,17 @@ nnoremap <BS> i<BS>
 " Close all folds except the one under the cursor, and center the screen
 nnoremap <leader>z zMzvzz
 " Kill buffer
-nnoremap <silent> <leader>k :bd!<CR>
-if has('macunix')
-	" Open current directory in Finder
-	nnoremap <leader>o :silent exec "!open %:p:h" \| redraw!<CR>
-endif
 
-function! GoogleSearch()
-     let searchterm = getreg("g")
-     silent! exec "silent! !chrome \"http://google.com/search?q=" . searchterm . "\" &"
-endfunction
+
 vnoremap <leader>g "gy<Esc>:call GoogleSearch()<CR>
-
 " Close all readonly buffers with just a "q" keystroke, otherwise "q" is used to record macros in a normal mode
 nnoremap  <expr> q &readonly ? ":quit\<CR>" : "q"
 
 " Save and quit
-nnoremap <silent> <leader>w :wall<CR>
-" nnoremap ZZ :update! \| QuitWindow<CR>
 
 " Save and quit for multiple buffers
-nnoremap <silent> <leader>W :wall<CR>
-nnoremap <silent> <leader>Q :confirm qall<CR>
+" nnoremap <silent> <leader>W :wall<CR>
+" nnoremap <silent> <leader>Q :confirm qall<CR>
 nnoremap <silent> ZX :confirm xall<CR>
 " Terminal mappings
 if has('nvim')
@@ -285,4 +263,7 @@ cnoreabbrev Qall qall
 "  allow saving to protected file using sudo without leaving vim
 cmap w!! w !sudo tee % >/dev/null
 " }}}
-
+" nnoremap <leader>pdf :call PandocPDF()<cr>
+" Better nav for omnicomplete TODO figure out why this is being overridden
+inoremap <expr> <c-j> ("\<C-n>")
+inoremap <expr> <c-k> ("\<C-p>")

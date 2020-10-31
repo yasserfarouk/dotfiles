@@ -73,9 +73,9 @@ function vi_mode_prompt_info() {
   echo "${${KEYMAP/vicmd/[% NORMAL]%}/(main|viins)/[% INSERT]%}"
 }
 
-# define right prompt, regardless of whether the theme defined it
-RPS1='$(vi_mode_prompt_info)'
-RPS2=$RPS1
+# # define right prompt, regardless of whether the theme defined it
+# RPS1='$(vi_mode_prompt_info)'
+# RPS2=$RPS1
 
 # Vi mode
 bindkey -e

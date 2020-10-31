@@ -18,7 +18,7 @@ set show-all-if-unmodified On
 set visible-stats On
 set echo-control-characters off
 set expand-tilde on
-set convert-meta off
+set convert-meta on
 set input-meta on
 set output-meta on
 
