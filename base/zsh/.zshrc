@@ -55,7 +55,12 @@ if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # eval "$(pyenv virtualenv-init -)"
 if which pyenv > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
-
+# Enable Ctrl-x-e to edit command line
+autoload -U edit-command-line
+# Emacs style
+zle -N edit-command-line
+bindkey '^xe' edit-command-line
+bindkey '^x^e' edit-command-line
 #===============================================================================
 # icl - interactive command library
 #===============================================================================
@@ -73,4 +78,4 @@ if which pyenv > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 # END  icl - interactive command library END
 #===============================================================================
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[ -f ~/.postzshrc ] && source ~/.poszshrc
+[ -f ~/.postzsh ] && source ~/.postzsh

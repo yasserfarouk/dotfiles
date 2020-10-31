@@ -55,7 +55,7 @@ set norunexec
 " Selected color scheme
 " The following line will cause issues if using vifm.vim with regular vim.
 " Either use neovim or comment out the following line.
-colorscheme gruvbox
+" colorscheme gruvbox
 
 " Format for displaying time in file list. For example:
 " TIME_STAMP_FORMAT=%m/%d-%H:%M
@@ -390,8 +390,6 @@ nnoremap ,t :!xterm &<cr>
 
 " Open editor to edit vifmrc and apply settings after returning to vifm
 nnoremap ,c :write | edit $MYVIFMRC | restart<cr>
-" Open gvim to edit vifmrc
-nnoremap ,C :!gvim --remote-tab-silent $MYVIFMRC &<cr>
 
 " Toggle wrap setting on ,w key
 nnoremap ,w :set wrap!<cr>
