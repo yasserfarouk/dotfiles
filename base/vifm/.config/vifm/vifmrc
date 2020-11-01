@@ -56,6 +56,7 @@ set norunexec
 " The following line will cause issues if using vifm.vim with regular vim.
 " Either use neovim or comment out the following line.
 " colorscheme gruvbox
+colorscheme distrotube
 
 " Format for displaying time in file list. For example:
 " TIME_STAMP_FORMAT=%m/%d-%H:%M
@@ -354,9 +355,7 @@ set vifminfo=dhistory,savedirs,chistory,state,tui,shistory,
 " ------------------------------------------------------------------------------
 
 " Sample mappings
-
-"Open all images in current directory in sxiv thumbnail mode
-nnoremap sx :!sxiv -t %d & <cr>
+nnoremap ; :
 
 "Open selected images in gimp
 nnoremap gp :!gimp %f & <cr>
