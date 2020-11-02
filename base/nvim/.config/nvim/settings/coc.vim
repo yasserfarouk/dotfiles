@@ -5,7 +5,6 @@ let g:coc_global_extensions = [
 			\ 'coc-python',
 			\ 'coc-snippets',
 			\ 'coc-json',
-			\ 'coc-highlight',
 			\ 'coc-fzf-preview',
 			\ 'coc-floaterm',
 			\ 'coc-clangd',
@@ -16,6 +15,7 @@ let g:coc_global_extensions = [
 			\ 'coc-markdownlint',
 			\]
 			" \ 'coc-spell-checker'
+			" \ 'coc-highlight',
 function! s:check_back_space() abort
 	let col = col('.') - 1
 	return !col || getline('.')[col - 1]  =~# '\s'

@@ -29,6 +29,8 @@ endfunction
 " Normal mapping ----------------------------------------------------------{{{
 nnoremap ; :
 nnoremap : ;
+vnoremap ; :
+vnoremap : ;
 nnoremap <silent>== ggVG=<c-o>
 
 " Basic file system commands

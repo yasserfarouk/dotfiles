@@ -69,7 +69,6 @@ set nobackup
 set noswapfile
 set fileformats=unix,mac,dos
 set autoread
-set lazyredraw
 set dictionary+=/usr/share/dict/words
 set thesaurus+=$HOME/.ysupport/thesaurii.txt
 
@@ -77,8 +76,8 @@ set thesaurus+=$HOME/.ysupport/thesaurii.txt
 set foldenable
 set foldnestmax=12
 set foldmethod=indent
-set foldlevelstart=0
-set foldlevel=0
+set foldlevelstart=99
+set foldlevel=99
 
 " local vim
 set exrc

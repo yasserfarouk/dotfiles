@@ -1,4 +1,18 @@
 #!/usr/bin/env bash
+function install_or_upgrade {
+    if brew ls --versions "$1" >/dev/null; then
+        HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$1"
+    else
+        HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
+    fi
+}
+function install_if_not_installed {
+    if brew ls --versions "$1" >/dev/null; then
+		:
+    else
+        HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
+    fi
+}
 
 while true; do
 	read -p "Do you have root access to this machine? [yn] " has_root
@@ -21,9 +35,11 @@ packages=(
 	"fd"
 	"vifm"
 	"tree"
+	"pyenv"
 	"pyenv-virtualenv"
 	"ag"
 	"ripgrep"
+	"rg"
 	"languagetool"
 	"antiword"
 	"docx2txt"
@@ -83,7 +99,7 @@ mac_packages=(
 	"mackup"
 )
 
-python_packages=(
+neovim_python_packages=(
 	"neovim"
 	"flake8"
 )
@@ -130,10 +146,10 @@ case "$(uname -s)" in
 		export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
 		echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
 	fi
-	brew install gcc
-	brew upgrade gcc
-	brew unlink gcc && brew link gcc
-
+	install_or_upgrade gcc
+	# brew install gcc
+	# brew upgrade gcc
+	# brew unlink gcc && brew link gcc
 	;;
 
 esac
@@ -149,9 +165,10 @@ for i in "${packages[@]}"
 do
 	#brew unlink $i
 	#brew uninstall $i
-	brew install $i
-	brew upgrade $i
-	brew unlink $i && brew link $i
+	install_if_not_installed $i
+	# brew install $i
+	# brew upgrade $i
+	# brew unlink $i && brew link $i
 	echo "---------------------------------------------------------"
 done
 
@@ -161,9 +178,10 @@ case "$(uname -s)" in
 		do
 			#brew unlink $i
 			#brew uninstall $i
-			brew install $i
-			brew upgrade $i
-			brew unlink $i && brew link $i
+			install_if_not_installed $i
+			# brew install $i
+			# brew upgrade $i
+			# brew unlink $i && brew link $i
 			echo "---------------------------------------------------------"
 		done
 
@@ -174,9 +192,10 @@ case "$(uname -s)" in
 		do
 			#brew unlink $i
 			#brew uninstall $i
-			brew install $i
-			brew upgrade $i
-			brew unlink $i && brew link $i
+			install_if_not_installed $i
+			# brew install $i
+			# brew upgrade $i
+			# brew unlink $i && brew link $i
 			echo "---------------------------------------------------------"
 		done
 		brew install vim --HEAD --without-python --with-python3
@@ -208,8 +227,7 @@ if [ $GIT_IS_AVAILABLE ]
 then
 	echo "git is all good"
 else
-	brew install git
-	brew upgrad git
+	install_or_upgrade git
 fi
 # Okay so everything should be good
 # Now lets clone my dotfiles repo into .dotfiles/
@@ -223,44 +241,41 @@ done
 
 echo "Installing neovim2/3 python envs"
 echo "--------------------------------"
-curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
+# curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
 export PATH="~/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
-pyenv install 2.7.17
+# I am using python3 for both py and p3 in vim
+# pyenv install 2.7.17
 # pyenv install 3.7.6
-pyenv install 3.8.1
+# pyenv install 3.8.6
+pyenv install 3.9.0
 
-pyenv virtualenv 2.7.17 neovim2 2>&1 >/dev/null
-# pyenv virtualenv 3.7.6 neovim3 2>&1 >/dev/null
-pyenv virtualenv 3.8.1 neovim3 2>&1 >/dev/null
+# remove existing neovim envs
+unlink ~/.pyenv/versions/neovim2 2>&1 >/dev/null
+unlink ~/.pyenv/versions/neovim3 2>&1 >/dev/null
 
-echo "Installing neovim for python, and node"
-echo "--------------------------------------------"
-pyenv activate neovim2
-pip install --upgrade pip
-for i in "${python_packages[@]}"
-do
-	pip install $i
-done
+# pyenv virtualenv 2.7.17 neovim2 2>&1 >/dev/null
+pyenv virtualenv 3.9.0 neovim3 2>&1 >/dev/null
+pyenv virtualenv 3.9.0 neovim2 2>&1 >/dev/null
+
+# echo "Installing neovim for python, and node"
+# echo "--------------------------------------------"
+# pyenv activate neovim2
+# pip install --upgrade pip
+# for i in "${neovim_python_packages[@]}"
+# do
+# 	pip install $i
+# done
 
 neovim2_py=`pyenv which python`  # Note the path
-
-# pyenv activate neovim3
-# pip install --upgrade pip
-# pip install neovim-remote
-# for i in "${python_packages[@]}"
-# do
-# pip install $i
-# done
-# neovim3_py=`pyenv which python`  # Note the path
 
 pyenv activate neovim3
 pip install --upgrade pip
 pip install neovim-remote
 
-for i in "${python_packages[@]}"
+for i in "${neovim_python_packages[@]}"
 do
 	pip install -U $i
 done
@@ -268,6 +283,7 @@ neovim3_py=`pyenv which python`  # Note the path
 
 gem install neovim
 npm install -g neovim
+
 echo "Installing CTAGS"
 echo "----------------"
 brew install --HEAD universal-ctags/universal-ctags/universal-ctags

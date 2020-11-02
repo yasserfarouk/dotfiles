@@ -4,16 +4,16 @@ echo "-------------------------------------"
 export PATH="~/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
-pyenv activate neovim2
-neovim2_py=`pyenv which python`  # Note the path
-echo "neovim2 in $neovim2_py"
-pyenv activate neovim3
-neovim3_py=`pyenv which python`  # Note the path
-echo "neovim3 in $neovim3_py"
+# pyenv activate neovim2
+# neovim2_py=`pyenv which python`  # Note the path
+# echo "neovim2 in $neovim2_py"
+# pyenv activate neovim3
+# neovim3_py=`pyenv which python`  # Note the path
+# echo "neovim3 in $neovim3_py"
 
-function replace_tag_in_file(){
-  python -c "s=open('$3', 'r').read().replace('$1','$2'); open('$3', 'w').write(s)" 2>&1 >/dev/null
-}
+# function replace_tag_in_file(){
+#   python -c "s=open('$3', 'r').read().replace('$1','$2'); open('$3', 'w').write(s)" 2>&1 >/dev/null
+# }
 
 # function replace_tag_in_all(){
 #   for file_name in $(find ~/.dotfiles -type f -and ! -name '*.otf' -and ! -name '.*' -and ! -path '*tmux/plugins*' -and ! -name '*.png' -and ! -name 'Makefile' -and ! -path '*z*' );
@@ -38,7 +38,7 @@ function replace_tag_in_file(){
 #    Darwin)
 #     rcup
 #     ;;
-    Linux)
+#    Linux)
 #     rcup
 #     export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
 #     echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc

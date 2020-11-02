@@ -1,6 +1,0 @@
-bind \\ split-window -h # Split panes horizontal
-bind-key \\ split-window -h
-# change prefix to C-a
-set -g prefix C-a
-bind C-a send-prefix # Pass on ctrl-a for other apps
-unbind C-b
