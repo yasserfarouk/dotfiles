@@ -116,6 +116,7 @@ let g:which_key_map.a = {
 			\ 'v' : [':Codi'                   , 'virtual repl on'],
 			\ 'V' : [':Codi!'                  , 'virtual repl off'],
 			\ 'w' : [':StripWhitespace'        , 'strip whitespace'],
+			\ 's' : ['[s1z=`]a'        , 'correct spelling'],
 			\ }
 
 " d is for debug
@@ -168,6 +169,7 @@ let g:which_key_map.v = {
 			\ 'w' : [':StripWhitespace'        , 'strip whitespace'],
 			\ 'b' : [': call SetBackground()', 'background'],
 			\ 'h' : [': call GoHighlight()', 'highlight'],
+			\ 'o' : ['<c-w>o', 'only window'],
 			\}
 
 let g:which_key_map.o = {

@@ -111,4 +111,3 @@ eval "$(direnv hook bash)"
 
 [ -f ~/.postbashrc ] && source ~/.postbashrc
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash

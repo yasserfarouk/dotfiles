@@ -33,6 +33,8 @@ vnoremap ; :
 vnoremap : ;
 nnoremap <silent>== ggVG=<c-o>
 
+" correct last spelling error
+inoremap <c-s> <esc>[s1z=`]a
 " Basic file system commands
 inoremap <F12> <C-o>:syntax sync fromstart<CR>
 
