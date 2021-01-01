@@ -32,14 +32,17 @@ highlight = {
 EOF
 endif
 if has('nvim')
-	syntax on
 	" colorscheme nvcode " Or whatever colorscheme you make
 	colorscheme onedark " Or whatever colorscheme you make
-
-
-	" checks if your terminal has 24-bit color support
-	if (has("termguicolors"))
-		set termguicolors
-		hi LineNr ctermbg=NONE guibg=NONE
-	endif
+else
+	colorscheme gruvbox
 endif
+
+
+colorscheme aurora
+" checks if your terminal has 24-bit color support
+if (has("termguicolors"))
+	set termguicolors
+	hi LineNr ctermbg=NONE guibg=NONE
+endif
+hi Conceal guifg=yellow

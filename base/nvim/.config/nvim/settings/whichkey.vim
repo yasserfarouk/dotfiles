@@ -1,12 +1,15 @@
-
 function! GoHighlight()
 	syntax on
 	syntax sync fromstart
 endfunction!
 
+function! PresentWithPympress()
+	exec "!pympress " . expand("%:r") . ".pdf"
+endfunction!
+
 function! GoogleSearch()
 	let searchterm = getreg("g")
-	silent! exec "silent! !chrome \"http://google.com/search?q=" . searchterm . "\" &"
+	silent! exec "!chrome \"http://google.com/search?q=" . searchterm . "\" &"
 endfunction
 function! PandocPDF()
 	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=12pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
@@ -75,6 +78,7 @@ let g:which_key_map['q'] = 'which_key_ignore'
 let g:which_key_map['w'] = 'which_key_ignore'
 " mappings with existing keys
 let g:which_key_map['/'] = 'search word'
+let g:which_key_map['j'] = 'any-jump'
 " let g:which_key_map['*'] = 'visual star'
 "" Single mappings
 " let g:which_key_map['#'] = [ ':call Comment()'                    , 'comment' ]
@@ -96,6 +100,16 @@ let g:which_key_map['u'] = [ ':UndotreeToggle'                    , 'undo tree']
 " let g:which_key_map['m'] = [ ':call WindowSwap#EasyWindowSwap()'  , 'move window' ]
 " Group mappings
 
+" p for Push using sideway package
+let g:which_key_map.p = {
+			\ 'name' : '+sideway',
+			\ 'h' : [':SidewaysLeft' , 'swap right'],
+			\ 'l' : ['<Plug>SidewaysRight' , 'swap left'],
+			\ 'i' : ['<Plug>SidewaysArgumentInsertBefore', 'Befor'],
+			\ 'a' : ['<Plug>SidewaysArgumentAppendAfter', 'e'],
+			\ 'I' : ['<Plug>SidewaysArgumentInsertFirst', 'Firs'],
+			\ 'A' : ['<Plug>SidewaysArgumentAppendLast', 'AppendLas'],
+			\}
 " m for markdown
 let g:which_key_map.m = {
 			\ 'name' : '+markdown',
@@ -116,7 +130,7 @@ let g:which_key_map.a = {
 			\ 'v' : [':Codi'                   , 'virtual repl on'],
 			\ 'V' : [':Codi!'                  , 'virtual repl off'],
 			\ 'w' : [':StripWhitespace'        , 'strip whitespace'],
-			\ 's' : ['[s1z=`]a'        , 'correct spelling'],
+			\ 's' : ['[s1z=`]'        , 'correct spelling'],
 			\ }
 
 " d is for debug
@@ -170,6 +184,10 @@ let g:which_key_map.v = {
 			\ 'b' : [': call SetBackground()', 'background'],
 			\ 'h' : [': call GoHighlight()', 'highlight'],
 			\ 'o' : ['<c-w>o', 'only window'],
+			\ 'R' : [':call SetupWrapping()'        , 'wrap text'],
+			\ 'r' : [':set wrap!'        , 'toggle wrapping'],
+			\ 'c' : [':ContextToggle'        , 'show context'],
+			\ 't' : [':Vista!!'        , 'tag bar'],
 			\}
 
 let g:which_key_map.o = {
@@ -322,6 +340,14 @@ let g:which_key_map.t = {
 			\ 'v' : [':TestVisit', 'visit'],
 			\}
 
+let g:which_key_map.y = {
+			\ 'name' : '+RIPPLE' ,
+			\ 'o' : ['<Plug>(ripple-open-repl)', 'open REPL'],
+			\ 'y' : ['<Plug>(ripple-send-motion)', 'send motion'],
+			\ 'l' : ['<Plug>(ripple-send-line)', 'send motion'],
+			\ 'b' : ['<Plug>(ripple-send-buffer)', 'send motion'],
+			\ 'p' : ['<Plug>(ripple-send-previous)', 'send last'],
+			\}
 " nunmap <space>tm
 " nunmap <space>tt
 " " T table mode
@@ -392,6 +418,7 @@ let g:which_key_map.l = {
 			\ 'W': [ ':VimtexCountWords' , 'CountWords'],
 			\ 'l': [ ':VimtexLog' , 'Log'],
 			\ 'i': [ ':VimtexInfo' , 'Info'],
-			\ 'p': [ ':VimtexDocPackage' , 'DocPackage']
+			\ 'p': [ ':VimtexDocPackage' , 'DocPackage'],
+			\ 'P': [ ':call PresentWithPympress()' , 'Present']
 			\}
 call which_key#register('<Space>', "g:which_key_map")

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# finds the command used to run a process ID
+ps -Ao user,pid,command | grep -v grep | grep $1

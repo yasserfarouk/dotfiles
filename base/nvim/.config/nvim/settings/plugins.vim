@@ -31,9 +31,18 @@ endfunction
 call plug#begin(expand('~/.vim/plugged'))
 " nvcode colorscheme
 if has('nvim')
-	Plug 'christianchiarulli/nvcode-color-schemes.vim'
-	Plug 'nvim-treesitter/nvim-treesitter'
+	Plug 'ChristianChiarulli/nvcode-color-schemes.vim'
+	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+	Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 endif
+" jump to any definition or reference
+Plug 'pechorin/any-jump.vim'
+" sidebar 
+Plug 'liuchengxu/vista.vim'
+" allows for moving arguments or lists or some table columns sideways
+Plug 'AndrewRadev/sideways.vim'
+" shows surrounding context for code
+Plug 'wellle/context.vim'
 " search and replace
 Plug 'brooth/far.vim'
 Plug 'liuchengxu/vim-which-key'
@@ -98,7 +107,6 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 " Plug 'unblevable/quick-scope'
 Plug 'heavenshell/vim-pydocstring', Cond(!has('nvim'))
 Plug 'morhetz/gruvbox'
-Plug 'christianchiarulli/nvcode.vim'
 if has('macunix')
 	Plug 'rizzatti/dash.vim'
 endif

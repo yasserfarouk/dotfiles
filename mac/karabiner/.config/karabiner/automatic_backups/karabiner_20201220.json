@@ -293,44 +293,6 @@
                     "ignore": false,
                     "manipulate_caps_lock_led": true,
                     "simple_modifications": []
-                },
-                {
-                    "disable_built_in_keyboard_if_exists": false,
-                    "fn_function_keys": [],
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "is_pointing_device": false,
-                        "product_id": 19457,
-                        "vendor_id": 1578
-                    },
-                    "ignore": false,
-                    "manipulate_caps_lock_led": false,
-                    "simple_modifications": [
-                        {
-                            "from": {
-                                "key_code": "page_down"
-                            },
-                            "to": {
-                                "key_code": "up_arrow"
-                            }
-                        },
-                        {
-                            "from": {
-                                "key_code": "page_up"
-                            },
-                            "to": {
-                                "key_code": "return_or_enter"
-                            }
-                        },
-                        {
-                            "from": {
-                                "key_code": "right_command"
-                            },
-                            "to": {
-                                "key_code": "right_option"
-                            }
-                        }
-                    ]
                 }
             ],
             "fn_function_keys": [
