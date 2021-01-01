@@ -53,25 +53,26 @@ let g:tex_conceal = ""
 
 augroup texmappings
 	autocmd!
-	autocmd FileType tex nnoremap <buffer> <2-LeftMouse> :VimtexView<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tv :VimtexView<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tc :VimtexCompile<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tS :VimtexStop<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tX :VimtexStopAll<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tC :VimtexCompileSS<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tx :VimtexCompileSelected<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tn :VimtexClean<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tm :VimtexContextMenu<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>to :VimtexCompileOutput<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>ts :VimtexStatus<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tt :VimtexTocToggle<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tr :VimtexReload<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tR :VimtexReloadState<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tL :VimtexCountLetters<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tW :VimtexCountWords<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tl :VimtexLog<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>ti :VimtexInfo<CR>
-	autocmd FileType tex nnoremap <buffer> <localleader>tp :VimtexDocPackage<CR>
+	" autocmd FileType tex nnoremap <buffer> <2-LeftMouse> :VimtexView<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tv :VimtexView<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tc :VimtexCompile<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tS :VimtexStop<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tX :VimtexStopAll<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tC :VimtexCompileSS<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tx :VimtexCompileSelected<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tn :VimtexClean<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tm :VimtexContextMenu<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>to :VimtexCompileOutput<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>ts :VimtexStatus<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tt :VimtexTocToggle<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tr :VimtexReload<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tR :VimtexReloadState<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tL :VimtexCountLetters<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tW :VimtexCountWords<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tl :VimtexLog<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>ti :VimtexInfo<CR>
+	" autocmd FileType tex nnoremap <buffer> <localleader>tp :VimtexDocPackage<CR>
+	autocmd FileType tex set conceallevel=0
 augroup end
 " Can hide specifc warning messages from the quickfix window
 " Quickfix with Neovim is broken or something

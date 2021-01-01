@@ -1,14 +1,18 @@
 #!/usr/bin/env zsh
+# bug fixes
+alias fixfire="fd fire ~/.local/share/nvim/site/session | xargs rm -f"
 # locations
+export FIRENVIM_PATH="$HOME/.local/share/firenvim"
 export projects="$HOME/code/projects"
 export personal="$HOME/code/personal"
+export templates="$HOME/code/templates"
 export code="$HOME/code"
 export nec="$HOME/storage/gdrive/Business/NEC"
 export aist="$HOME/storage/gdrive/Business/AIST"
-export mypapers="$HOME/storage/gdrive/Research/Papers/Mypapers"
 export papers="$HOME/storage/gdrive/Knowledge/Papers"
+export negpapers="$HOME/storage/gdrive/Knowledge/Papers/AutomatedNegotiation"
 export config="$HOME/.config"
-export negotiation="$HOME/storage/gdrive/Knowledge/Papers/AutomatedNegotiation"
+export mypapers="$HOME/storage/gdrive/Research/Papers/Mypapers"
 export pdone="$HOME/storage/gdrive/Research/Papers/Mypapers/Done"
 export pcurrent="$HOME/storage/gdrive/Research/Papers/Mypapers/Current"
 export psubmitted="$HOME/storage/gdrive/Research/Papers/Mypapers/Submitted"

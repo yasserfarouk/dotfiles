@@ -29,7 +29,7 @@ packages=(
 	"gdb"
 	"git"
 	"node"
-	"neovim"
+	# "neovim"
 	"zsh"
 	"fzf"
 	"fd"
@@ -63,7 +63,7 @@ packages=(
 	"lazygit"
 	"markdown"
 	"mas"
-	"neofetch"
+	# "neofetch"
 	"nmap"
 	"noti"
 	"reattach-to-user-namespace"
@@ -150,6 +150,10 @@ case "$(uname -s)" in
 	# brew install gcc
 	# brew upgrade gcc
 	# brew unlink gcc && brew link gcc
+
+	# installing nvim nightly correctly with lua support
+	brew tap jason0x43/homebrew-neovim-nightly
+	brew cask install neovim-nightly
 	;;
 
 esac

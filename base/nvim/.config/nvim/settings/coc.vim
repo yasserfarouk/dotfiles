@@ -13,6 +13,7 @@ let g:coc_global_extensions = [
 			\ 'coc-texlab',
 			\ 'coc-actions',
 			\ 'coc-markdownlint',
+			\ 'coc-git',
 			\]
 			" \ 'coc-spell-checker'
 			" \ 'coc-highlight',

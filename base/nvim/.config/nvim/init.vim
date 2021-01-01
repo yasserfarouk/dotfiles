@@ -19,11 +19,6 @@ if !exists('g:vscode')
 	" navigation
 	" source $HOME/.config/nvim/settings/quickscope.vim
 	source $HOME/.config/nvim/settings/multicursor.vim
-	" file drawer (I use coc-explorer now)
-	" source $HOME/.config/nvim/settings/fern.vim
-	" source $HOME/.config/nvim/settings/nerdtree.vim
-	" session management
-	" source $HOME/.config/nvim/settings/workspace.vim
 	source $HOME/.config/nvim/settings/session.vim
 	" window management
 	source $HOME/.config/nvim/settings/lens.vim
@@ -39,6 +34,7 @@ if !exists('g:vscode')
 	source $HOME/.config/nvim/settings/rainbow.vim
 	source $HOME/.config/nvim/settings/closetag.vim
 	source $HOME/.config/nvim/settings/tcomment.vim
+	source $HOME/.config/nvim/settings/treesitter.vim
 	" git
 	source $HOME/.config/nvim/settings/git.vim
 	source $HOME/.config/nvim/settings/mergetool.vim
@@ -55,6 +51,7 @@ if !exists('g:vscode')
 	" searching
 	source $HOME/.config/nvim/settings/fzf.vim
 	source $HOME/.config/nvim/settings/ctrls.vim
+	source $HOME/.config/nvim/settings/anyjump.vim
 	" source $HOME/.config/nvim/settings/ag.vim
 	" source $HOME/.config/nvim/settings/easysearch.vim
 	" tmux
@@ -65,6 +62,13 @@ if !exists('g:vscode')
 	" terminals
 	source $HOME/.config/nvim/settings/floatterm.vim
 	source $HOME/.config/nvim/settings/tablemode.vim
+	" display
+	source $HOME/.config/nvim/settings/context.vim
+	" file drawer (I use coc-explorer now)
+	" source $HOME/.config/nvim/settings/fern.vim
+	" source $HOME/.config/nvim/settings/nerdtree.vim
+	" session management
+	" source $HOME/.config/nvim/settings/workspace.vim
 	" key help
 	" source $HOME/.config/nvim/settings/ultisnip.vim
 	" ripple

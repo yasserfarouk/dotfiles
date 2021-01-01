@@ -329,6 +329,14 @@
                             "to": {
                                 "key_code": "right_option"
                             }
+                        },
+                        {
+                            "from": {
+                                "key_code": "up_arrow"
+                            },
+                            "to": {
+                                "key_code": "right_shift"
+                            }
                         }
                     ]
                 }
