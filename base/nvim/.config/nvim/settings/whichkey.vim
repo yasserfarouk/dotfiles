@@ -146,6 +146,7 @@ let g:which_key_map.b = {
 			\ '>' : [':bn'        , 'move next'],
 			\ '<' : [':bp'    , 'move prev'],
 			\ 'b' : [':Buffers'            , 'pick buffer'],
+			\ '?' : ['Buffers'                , 'fzf-buffer'],
 			\ 'd' : [':bd'               , 'delete-buffer'],
 			\ 'D' : [':BufferOrderByDirectory', 'order by directory'],
 			\ 'f' : ['bfirst'                 , 'first-buffer'],
@@ -153,7 +154,7 @@ let g:which_key_map.b = {
 			\ 'L' : [':BufferOrderByLanguage' , 'order by language'],
 			\ 'n' : ['bnext'                  , 'next-buffer'],
 			\ 'p' : ['bprevious'              , 'previous-buffer'],
-			\ '?' : ['Buffers'                , 'fzf-buffer'],
+			\ 'o' : [':Bufonly'              , 'close others'],
 			\ }
 
 " f is for find and replace

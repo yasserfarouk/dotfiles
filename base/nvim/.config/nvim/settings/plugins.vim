@@ -53,6 +53,7 @@ Plug 'urbainvaes/vim-ripple'
 if has('nvim')
 	Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 endif
+Plug 'schickling/vim-bufonly'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'mbbill/undotree'
