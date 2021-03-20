@@ -2,6 +2,7 @@ let Grep_Default_Options = '-IR'
 let Grep_Skip_Files = 'ctags* *.tmp tmp* *.log *.db'
 let Grep_Skip_Dirs = '.git node_modules tmp .history'
 " let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
+" let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'
 "
 " An action can be a reference to a function that processes selected lines
 function! s:build_quickfix_list(lines)
@@ -15,7 +16,6 @@ endfunction
 " 			\ 'ctrl-t': 'tab split',
 " 			\ 'ctrl-x': 'split',
 " 			\ 'ctrl-v': 'vsplit' }
-
 " Default fzf layout
 " - Popup window
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }

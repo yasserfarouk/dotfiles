@@ -36,6 +36,7 @@ set nopaste
 set noshowmode
 set tabstop=4 shiftwidth=4 expandtab
 set conceallevel=0
+set colorcolumn=79
 set virtualedit=
 set wildmenu
 set laststatus=2
@@ -265,3 +266,6 @@ augroup cursorline_current
         \ autocmd! cursorline_current VimEnter
 
 augroup END
+
+" statusline
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}

@@ -30,13 +30,27 @@ endfunction
 " define all plugins
 call plug#begin(expand('~/.vim/plugged'))
 " nvcode colorscheme
+" make some nvim plugins work nicely with vim
+if !has('nvim')
+	Plug 'roxma/nvim-yarp'
+	Plug 'roxma/vim-hug-neovim-rpc'
+endif
+" replacement of :bd that does not close the window.
+Plug 'orlp/vim-bunlink'
 if has('nvim')
-	Plug 'ChristianChiarulli/nvcode-color-schemes.vim'
-	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
-	Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+	" tree-sitter stuff
+	" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+	" Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+	" Plug 'ChristianChiarulli/nvcode-color-schemes.vim'
+	" telescope fuzzy finding
+	Plug 'nvim-lua/popup.nvim'
+	Plug 'nvim-lua/plenary.nvim'
+	Plug 'nvim-telescope/telescope.nvim'
 endif
 " jump to any definition or reference
 Plug 'pechorin/any-jump.vim'
+" copy a visual block and move it anywhere using Block command
+Plug 'Rasukarusan/vim-block-paste'
 " sidebar 
 Plug 'liuchengxu/vista.vim'
 " allows for moving arguments or lists or some table columns sideways
@@ -79,7 +93,8 @@ Plug 'will133/vim-dirdiff'
 " Plug 'lambdalisue/fern.vim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'PeterRincker/vim-searchlight'
-Plug 'tpope/vim-obsession'
+" Plug 'tpope/vim-obsession'
+Plug 'mhinz/vim-startify'
 Plug 'dhruvasagar/vim-prosession'
 Plug 'tmhedberg/matchit'
 Plug 'tmhedberg/indent-motion'
@@ -96,6 +111,13 @@ Plug 'mattn/emmet-vim'
 Plug 'justinmk/vim-sneak'
 Plug 'samoshkin/vim-mergetool'
 Plug 'ntpeters/vim-better-whitespace'
+" Multiple terminals
+if exists(':terminal')
+    if has('nvim-0.4.0') || has('patch-8.2.191')
+        Plug 'chengzeyi/multiterm.vim'
+    endif
+endif
+" floating terminal
 Plug 'voldikss/vim-floaterm'
 Plug 'dhruvasagar/vim-zoom'
 Plug 'rhysd/vim-grammarous'
@@ -103,6 +125,8 @@ Plug 'rhysd/vim-grammarous'
 Plug 'dyng/ctrlsf.vim'
 Plug 'alvan/vim-closetag'
 Plug 'lervag/vimtex'
+" improves concealment vimtext
+Plug   'KeitaNakamura/tex-conceal.vim', {'for': 'tex'} " for VimPlug
 " Plug 'easymotion/vim-easymotion'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 " Plug 'unblevable/quick-scope'
@@ -125,16 +149,22 @@ Plug 'tpope/vim-projectionist'        "|
 Plug 'tpope/vim-dispatch'             "| Optional
 Plug 'tpope/vim-eunuch'
 Plug 'terryma/vim-multiple-cursors'
+
+" testing
 Plug 'janko/vim-test'
 Plug 'alfredodeza/pytest.vim'
-Plug 'mattboehm/vim-unstack'
+Plug 'rcarriga/vim-ultest', { 'do': ':UpdateRemotePlugins' }
+" used to unstack stack traces. just overides <space>s which I need.
+" Plug 'mattboehm/vim-unstack'
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 Plug 'majutsushi/tagbar'
 Plug 'altercation/vim-colors-solarized'
 Plug 'mhartington/oceanic-next'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'elzr/vim-json'
+Plug 'joshdick/onedark.vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'sgeb/vim-diff-fold'
 Plug 'tmhedberg/SimpylFold', {'for': 'python'}

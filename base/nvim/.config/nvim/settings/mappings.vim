@@ -1,3 +1,13 @@
+function! OpenURLUnderCursor()
+  let s:uri = expand('<cWORD>')
+  let s:uri = substitute(s:uri, '?', '\\?', '')
+  let s:uri = shellescape(s:uri, 1)
+  if s:uri != ''
+    silent exec "!open '".s:uri."'"
+    :redraw!
+  endif
+endfunction
+
 
 function! GoHighlight()
 	syntax on
@@ -207,7 +217,7 @@ inoremap <S-Right> <Esc>lvl
 
 " Visual mapping ----------------------------------------------------------{{{
 
-" vmap R <Plug>ReplaceOperator
+vmap gr <Plug>ReplaceOperator
 vnoremap <S-Down> j
 vnoremap <S-Up> k
 vnoremap <S-Left> h
@@ -271,3 +281,6 @@ cmap w!! w !sudo tee % >/dev/null
 " Better nav for omnicomplete TODO figure out why this is being overridden
 inoremap <expr> <c-j> ("\<C-n>")
 inoremap <expr> <c-k> ("\<C-p>")
+
+
+nnoremap gx :call OpenURLUnderCursor()<CR>

@@ -1,5 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =7
+let g:netrw_dirhistcnt =9
+let g:netrw_dirhist_9='/Users/yasser/negmas/tournaments/SCMLOneshot/20210306H174713475525X3KHqYw4-stage-0001'
+let g:netrw_dirhist_8='/Users/yasser/code/projects/deepneg'
 let g:netrw_dirhist_7='/export/home/yasser/.pyenv/versions/2.7/envs/neovim2'
 let g:netrw_dirhist_6='/export/home/yasser/.pyenv/versions/2.7/envs'
 let g:netrw_dirhist_5='/export/home/yasser/.pyenv/versions/2.7'
@@ -8,5 +10,3 @@ let g:netrw_dirhist_3='/export/home/yasser/code/projects/goptneg/linux'
 let g:netrw_dirhist_2='/private/var/folders/zr/p1v4wpjn6cq7yz5y1x6wjydh0000gn/T'
 let g:netrw_dirhist_1='/Users/yasser/code/sites/scml2020'
 let g:netrw_dirhist_0='/Users/yasser/code/presentations/scml2020qualfications'
-let g:netrw_dirhist_9='/Users/yasser/storage/gdrive/Research/Papers/Mypapers/Current/2020AAMASJElicitation'
-let g:netrw_dirhist_8='/Users/yasser/code/projects/negmas/negmas'

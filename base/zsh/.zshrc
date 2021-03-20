@@ -79,3 +79,8 @@ bindkey '^x^e' edit-command-line
 #===============================================================================
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.postzsh ] && source ~/.postzsh
+
+autoload -Uz compinit
+zstyle ':completion:*' menu select
+fpath+=~/.zfunc
+

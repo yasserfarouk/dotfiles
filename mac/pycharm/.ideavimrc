@@ -11,6 +11,8 @@ set exchange
 set textobj-entire
 set highlightedyank
 
+map ; :
+map <leader>w :wa
 set mps+=<:>
 " switch between current and last buffer
 "nmap <leader>. <C-^>
@@ -24,7 +26,7 @@ nmap <leader>q :action CloseContent<CR>
 " nmap ds" :action Macro.surround_undo_double_quote<CR>
 " nmap cs"' :action Macro.surround_double_to_single_quote<CR>
 " remove extra whiteleader
-nmap <leader>rws :%s/\s\+$<CR>
+nmap <leader>aw :%s/\s\+$<CR>
 
 nnoremap <leader>l :action EditorToggleShowWhiteleaders<cr>
 
@@ -34,12 +36,12 @@ nnoremap <leader>[ :action GotoSuperMethod<cr>
 nnoremap gu :action FindUsages<cr>
 nnoremap gt :action GotoTest<cr>
 nnoremap <leader>k :action HighlightUsagesInFile<cr>
-nnoremap ,rc :action RunClass<cr>
-nnoremap ,rn :action Run<cr>
-nnoremap ,tf :action DebugClass<cr>
-nnoremap ,tn :action Debug<cr>
-nnoremap ,c :action CheckStyleCurrentFileAction<cr>
-nnoremap <space> za
+nnoremap <leader>rc :action RunClass<cr>
+nnoremap <leader>rn :action Run<cr>
+nnoremap <leader>tf :action DebugClass<cr>
+nnoremap <leader>tn :action Debug<cr>
+nnoremap <leader>c :action CheckStyleCurrentFileAction<cr>
+nnoremap <backslash> za
 nnoremap K :action QuickDocumentation<cr>
 
 " code refactoring
@@ -74,7 +76,7 @@ nmap <leader>mt <plug>(MergetoolToggle)
 
 nnoremap <leader>q :wq<CR>
 
-nnoremap \ za
+nnoremap <backslash> za
 
 noremap  <silent> <Home> g<Home>
 noremap  <silent> <End>  g<End>
@@ -193,19 +195,6 @@ nnoremap <silent> <leader>W :wall<CR>
 nnoremap <silent> <leader>Q :confirm qall<CR>
 nnoremap <silent> ZX :confirm xall<CR>
 nnoremap <leader>bd :q
-" Terminal mappings
-if has('nvim')
-  tnoremap <Esc> <C-\><C-n>
-  tnoremap <A-[> <Esc>
-  tnoremap <C-v><Esc> <Esc>
-endif
-if has('nvim')
-  " Terminal mode:
-  tnoremap <C-h> <c-\><c-n><c-w>h
-  tnoremap <C-j> <c-\><c-n><c-w>j
-  tnoremap <C-k> <c-\><c-n><c-w>k
-  tnoremap <C-l> <c-\><c-n><c-w>l
-endif
 " Insert mapping ----------------------------------------------------------{{{
 "  duplicate a line
 " Shift-Enter to start editing new line without splitting the current one
@@ -231,11 +220,6 @@ inoremap <M-Right> <C-o>wa
 " inoremap <C-j> <ESC><C-w>j
 " inoremap <C-k> <ESC><C-w>k
 " inoremap <C-l> <ESC><C-w>l
-
-if has('macunix')
-	inoremap <D-c> <Esc>yy
-	inoremap <D-v> <Esc>Pa
-endif
 
 " ALlow shift-arrows to be used for selection
 inoremap <S-Down> <Esc>lvj

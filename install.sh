@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 function install_or_upgrade {
-    if brew ls --versions "$1" >/dev/null; then
-        HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$1"
-    else
-        HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
-    fi
+	if brew ls --versions "$1" >/dev/null; then
+		HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$1"
+	else
+		HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
+	fi
 }
 function install_if_not_installed {
-    if brew ls --versions "$1" >/dev/null; then
+	if brew ls --versions "$1" >/dev/null; then
 		:
-    else
-        HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
-    fi
+	else
+		HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
+	fi
 }
 
 while true; do
@@ -117,44 +117,47 @@ case "$(uname -s)" in
 
 		fi
 
+		# installing nvim nightly correctly with lua support
+		brew tap jason0x43/homebrew-neovim-nightly
+		brew install --cask neovim-nightly
 		;;
 
 	Linux)
 		[[ -e "$HOME/bin" ]] || mkdir "$HOME/bin"
 
-	# curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage ~/bin
-	# chmod u+x ~/bin/nvim.appimage
-	# echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-	# echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation"
-	# echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-	case $has_root in
-		[Yy]* ) sudo apt install make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2;;
-		[Nn]* ) echo "You should have make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2 installed. Proceeding assuming you do";;
-		* ) echo "Should not be here";;
-	esac
-	command -v brew 2>&1 >/dev/null # improvement by tripleee
-	BREW_IS_AVAILABLE=$?
-	if [ $BREW_IS_AVAILABLE ]
-	then
-		echo "Homebrew is installed, nothing to do here"
-	else
-		echo "Installing Linuxbrew"
-		echo "---------------------"
-		sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
-		test -d ~/.linuxbrew && PATH="$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH"
-		test -d /home/linuxbrew/.linuxbrew && PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
-		export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
-		echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
-	fi
-	install_or_upgrade gcc
-	# brew install gcc
-	# brew upgrade gcc
-	# brew unlink gcc && brew link gcc
+		# curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage ~/bin
+		# chmod u+x ~/bin/nvim.appimage
+		# echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+		# echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation"
+		# echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+		case $has_root in
+			[Yy]* ) sudo apt install make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2;;
+			[Nn]* ) echo "You should have make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2 installed. Proceeding assuming you do";;
+			* ) echo "Should not be here";;
+		esac
+		command -v brew 2>&1 >/dev/null # improvement by tripleee
+		BREW_IS_AVAILABLE=$?
+		if [ $BREW_IS_AVAILABLE ]
+		then
+			echo "Homebrew is installed, nothing to do here"
+		else
+			echo "Installing Linuxbrew"
+			echo "---------------------"
+			sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+			test -d ~/.linuxbrew && PATH="$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH"
+			test -d /home/linuxbrew/.linuxbrew && PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
+			export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
+			echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
+		fi
+		install_or_upgrade gcc
+		# brew install gcc
+		# brew upgrade gcc
+		# brew unlink gcc && brew link gcc
 
-	# installing nvim nightly correctly with lua support
-	brew tap jason0x43/homebrew-neovim-nightly
-	brew install --cask neovim-nightly
-	;;
+		# installing nvim nightly correctly with lua support
+		brew install --HEAD luajit
+		brew install --fetch-HEAD --HREAD neovim
+		;;
 
 esac
 

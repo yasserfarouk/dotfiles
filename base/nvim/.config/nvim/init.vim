@@ -7,6 +7,8 @@ source $HOME/.config/nvim/settings/functions.vim
 source $HOME/.config/nvim/settings/mappings.vim
 source $HOME/.config/nvim/settings/textobjects.vim
 if !exists('g:vscode')
+	let g:telescope_available = 0
+	" source $HOME/.config/nvim/settings/telescope.vim
 	source $HOME/.config/nvim/settings/statusline.vim
 	source $HOME/.config/nvim/settings/gui.vim
 	source $HOME/.config/nvim/settings/plugins.vim
@@ -30,11 +32,12 @@ if !exists('g:vscode')
 	" source $HOME/.config/nvim/settings/languageclient.vim
 	" testing
 	source $HOME/.config/nvim/settings/vimtest.vim
+	source $HOME/.config/nvim/settings/ultest.vim
 	" code editing
 	source $HOME/.config/nvim/settings/rainbow.vim
 	source $HOME/.config/nvim/settings/closetag.vim
 	source $HOME/.config/nvim/settings/tcomment.vim
-	source $HOME/.config/nvim/settings/treesitter.vim
+	" source $HOME/.config/nvim/settings/treesitter.vim
 	" git
 	source $HOME/.config/nvim/settings/git.vim
 	source $HOME/.config/nvim/settings/mergetool.vim
@@ -64,6 +67,9 @@ if !exists('g:vscode')
 	source $HOME/.config/nvim/settings/tablemode.vim
 	" display
 	source $HOME/.config/nvim/settings/context.vim
+	" close buffer without closing window
+	source $HOME/.config/nvim/settings/bunlink.vim
+	" source $HOME/.config/nvim/settings/unstack.vim
 	" file drawer (I use coc-explorer now)
 	" source $HOME/.config/nvim/settings/fern.vim
 	" source $HOME/.config/nvim/settings/nerdtree.vim

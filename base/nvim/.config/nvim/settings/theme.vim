@@ -21,28 +21,28 @@ let g:nvcode_hide_endofbuffer=1
 let g:nvcode_terminal_italics=1
 let g:nvcode_termcolors=256
 
+" if has('nvim')
+" lua<< EOF
+" 	require'nvim-treesitter.configs'.setup {
+" ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+" highlight = {
+" 	enable = true,              -- false will disable the whole extension
+" 	},
+" 	}
+" EOF
+" endif
 if has('nvim')
-lua<< EOF
-	require'nvim-treesitter.configs'.setup {
-ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-highlight = {
-	enable = true,              -- false will disable the whole extension
-	},
-	}
-EOF
-endif
-if has('nvim')
-	" colorscheme nvcode " Or whatever colorscheme you make
-	colorscheme onedark " Or whatever colorscheme you make
+	" colorscheme nvcode 
+	" colorscheme gruvbox
+	colorscheme onedark
 else
-	colorscheme gruvbox
+	colorscheme onedark
 endif
 
-
-colorscheme aurora
 " checks if your terminal has 24-bit color support
 if (has("termguicolors"))
 	set termguicolors
 	hi LineNr ctermbg=NONE guibg=NONE
 endif
-hi Conceal guifg=yellow
+
+" hi Conceal guifg=yellow, ctermfg=yellow

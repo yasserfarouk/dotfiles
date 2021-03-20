@@ -2,10 +2,9 @@
 " mapping for hiding floats when they do not hide themselves
 let g:coc_global_extensions = [
 			\ 'coc-explorer',
-			\ 'coc-python',
+			\ 'coc-pyright',
 			\ 'coc-snippets',
 			\ 'coc-json',
-			\ 'coc-fzf-preview',
 			\ 'coc-floaterm',
 			\ 'coc-clangd',
 			\ 'coc-java',
@@ -13,8 +12,9 @@ let g:coc_global_extensions = [
 			\ 'coc-texlab',
 			\ 'coc-actions',
 			\ 'coc-markdownlint',
-			\ 'coc-git',
 			\]
+			" \ 'coc-git',
+			" \ 'coc-fzf-preview',
 			" \ 'coc-spell-checker'
 			" \ 'coc-highlight',
 function! s:check_back_space() abort
