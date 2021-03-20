@@ -269,3 +269,4 @@ augroup END
 
 " statusline
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+set statusline+=%{zoom#statusline()}

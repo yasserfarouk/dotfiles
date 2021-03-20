@@ -102,6 +102,7 @@ let g:which_key_map['='] = [ '<C-W>='                             , 'balance win
 let g:which_key_map['e'] = [ ':CocCommand explorer'               , 'explorer' ]
 let g:which_key_map['-'] = [ '<C-W>s'                             , 'split below']
 let g:which_key_map['|'] = [ '<C-W>v'                             , 'split right']
+let g:which_key_map['z'] = [ '<C-W>m'                             , 'zoom window']
 if g:telescope_available
 	let g:which_key_map['f'] = [ ':Telescope find_files'          , 'search files' ]
 else
@@ -277,6 +278,7 @@ if g:telescope_available
 			\ 'x' : [':CocList floaterm'      , 'terminals'],
 			\ 'y' : [':Filetypes'             , 'file types'],
 			\ 'z' : [':FZF'                   , 'FZF'],
+			\ 'd' : [':Dash'                   , 'Dash'],
 			\ }
 else
 	let g:which_key_map.s = {
@@ -312,9 +314,9 @@ endif
 " \ 's' : [':Snippets'     , 'snippets'],
 
 let g:which_key_map.S = {
-			\ 'name' : '+Session' ,
-			\ 'd' : [':Obsession!'         , 'Delete Session'] ,
-			\ 'c' : [':Obsession'           , 'Create Session']     ,
+			\ 'name' : '+Session'  ,
+			\ 'd' : [':Obsession!' , 'Delete Session'] ,
+			\ 'c' : [':Obsession'  , 'Create Session'] ,
 			\ }
 
 " g is for git
@@ -337,6 +339,8 @@ let g:which_key_map.g = {
 			\ 'S' : [':!git status'                      , 'status'],
 			\ 'v' : [':GV'                               , 'view commits'],
 			\ 'V' : [':GV!'                              , 'view buffer commits'],
+			\ 'm' : [':MergetoolToggle'                  , 'mergetool'],
+			\ 'X' : [':!git checkout --conflict=diff3'   , 'reverse mergetool'],
 			\ }
 
 " c is for CoC

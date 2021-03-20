@@ -2,7 +2,7 @@ set nocompatible
 filetype plugin indent on
 
 
-source $HOME/.config/nvim/settings/basic.vim  
+source $HOME/.config/nvim/settings/basic.vim
 source $HOME/.config/nvim/settings/functions.vim
 source $HOME/.config/nvim/settings/mappings.vim
 source $HOME/.config/nvim/settings/textobjects.vim
@@ -20,10 +20,11 @@ if !exists('g:vscode')
 	" source $HOME/.config/nvim/settings/languagetool.vim
 	" navigation
 	" source $HOME/.config/nvim/settings/quickscope.vim
-	source $HOME/.config/nvim/settings/multicursor.vim
-	source $HOME/.config/nvim/settings/session.vim
+	" source $HOME/.config/nvim/settings/multicursor.vim
+	" source $HOME/.config/nvim/settings/session.vim
+	source $HOME/.config/nvim/settings/startify.vim
 	" window management
-	source $HOME/.config/nvim/settings/lens.vim
+	" source $HOME/.config/nvim/settings/lens.vim
 	" language client
 	source $HOME/.config/nvim/settings/coc.vim
 	" source $HOME/.config/nvim/settings/ale.vim
@@ -37,6 +38,7 @@ if !exists('g:vscode')
 	source $HOME/.config/nvim/settings/rainbow.vim
 	source $HOME/.config/nvim/settings/closetag.vim
 	source $HOME/.config/nvim/settings/tcomment.vim
+	source $HOME/.config/nvim/settings/unstack.vim
 	" source $HOME/.config/nvim/settings/treesitter.vim
 	" git
 	source $HOME/.config/nvim/settings/git.vim
@@ -48,6 +50,7 @@ if !exists('g:vscode')
 	source $HOME/.config/nvim/settings/html.vim
 	source $HOME/.config/nvim/settings/java.vim
 	source $HOME/.config/nvim/settings/python.vim
+	source $HOME/.config/nvim/settings/pydocstring.vim
 	source $HOME/.config/nvim/settings/tex.vim
 	" writing
 	source $HOME/.config/nvim/settings/grammarous.vim

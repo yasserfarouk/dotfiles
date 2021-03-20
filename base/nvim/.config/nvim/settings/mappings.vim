@@ -218,6 +218,7 @@ inoremap <S-Right> <Esc>lvl
 " Visual mapping ----------------------------------------------------------{{{
 
 vmap gr <Plug>ReplaceOperator
+vmap gx <Plug>ReplaceOperator
 vnoremap <S-Down> j
 vnoremap <S-Up> k
 vnoremap <S-Left> h

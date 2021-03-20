@@ -1,1 +1,1 @@
-let g:unstack_mapkey=<leader>vu
+let g:unstack_mapkey='<leader>vu'
