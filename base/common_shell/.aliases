@@ -276,6 +276,47 @@ function fixSSH(){
  ssh-add ~/.ssh/id_rsa
 }
 
+function searchFolder(){
+    if [ "$#" -lt 2 ]; then
+        f=`fd . --type d $1 | fzf-tmux`
+    else
+        f=`fd . --type d --max-depth $2 $1 | fzf-tmux`
+    fi
+    cd `dirname "$f"`
+}
+
+function openInVim(){
+    searchFolder $@
+    v
+}
+
+function tmuxInVim(){
+    searchFolder $@
+    mux general $f
+}
+# alacritty neovim
+function startAlacritty(){
+  nohup alacritty --config-file ~/.config/alacritty/anvim.yml -t $@ -e $SHELL -lc $@ >/dev/null &
+}
+function separateNvim(){
+  if [ -n "${1}" ]; then
+    local target=$(realpath $1)
+  fi
+  if [ -z ${target} ]; then
+	  nohup alacritty --config-file ~/.config/alacritty/anvim.yml -t "nvim - ${target}" -e $SHELL -lc "nvim ${target}" >/dev/null &
+  else
+	  local wd=`dirname ${target}`
+	  nohup alacritty --config-file ~/.config/alacritty/anvim.yml --working-directory "${wd}" -t "nvim - ${target}" -e $SHELL -lc "nvim ${target}" >/dev/null &
+  fi
+}
+# FzF aliases
+alias gp="searchFolder $mypapers"
+alias vp="openInVim $mypapers"
+alias tp="tmuxInVim $mypapers"
+alias tc="tmuxInVim $HOME/code 2"
+alias vc="openInVim $HOME/code 2"
+alias gf="searchFolder"
+alias vf="openInVim"
 
 # convenient aliases
 alias x=extract
@@ -283,3 +324,6 @@ alias dl=download
 alias k='clear'
 alias cls='clear'
 
+
+# kitty
+alias kitty='kitty --single-instance --start-as=maximized --listen-on=unix:/tmp/mykitty --single-instance '

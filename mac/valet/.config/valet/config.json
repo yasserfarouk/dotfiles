@@ -1,6 +1,8 @@
 {
     "tld": "test",
     "paths": [
-        "/Users/yasser/code/sites"
-    ]
+        "/Users/yasser/code/sites",
+        "/Users/yasser/code/sites/scml2020"
+    ],
+    "loopback": "127.0.0.1"
 }

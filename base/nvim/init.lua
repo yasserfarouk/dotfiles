@@ -1,0 +1,48 @@
+require('globals')
+require('plugins')
+require('settings')
+require('keymappings')
+require('autocommands')
+require('theme.treesitter')
+require('theme.colorscheme')
+
+-- vimscipt only plugins and helpers
+vim.cmd('source ~/.config/nvim/vimscript/functions.vim')
+vim.cmd('source ~/.config/nvim/vimscript/markdown.vim')
+vim.cmd('source ~/.config/nvim/vimscript/grammarous.vim')
+vim.cmd('source ~/.config/nvim/vimscript/tex.vim')
+if vim.g.started_by_firenvim then
+    vim.cmd('source ~/.config/nvim/vimscript/firenvim.vim')
+else
+    vim.cmd('source ~/.config/nvim/vimscript/context.vim')
+    vim.cmd('source ~/.config/nvim/vimscript/ctrls.vim')
+end
+vim.cmd('source ~/.config/nvim/vimscript/ultisnips.vim')
+
+-- LSP
+require('lsp')
+require('lsp.json-ls')
+require('lsp.php-ls')
+require('lsp.lua-ls')
+require('lsp.bash-ls')
+require('lsp.python-ls')
+require('lsp.yaml-ls')
+require('lsp.vim-ls')
+require('lsp.html-ls')
+require('lsp.css-ls')
+require('lsp.latex-ls')
+-- require('lsp.efm-general-ls')
+-- require('lsp.clangd')
+-- require('lsp.dart-ls')
+-- require('lsp.go-ls')
+-- require('lsp.js-ts-ls')
+-- require('lsp.rust-ls')
+-- require('lsp.terraform-ls')
+-- require('lsp.graphql-ls')
+-- require('lsp.docker-ls')
+-- require('lsp.emmet-ls')
+-- require('lsp.svelte-ls')
+-- require('lsp.tailwindcss-ls')
+-- require('lsp.ruby-ls')
+-- require('lsp.kotlin-ls')
+

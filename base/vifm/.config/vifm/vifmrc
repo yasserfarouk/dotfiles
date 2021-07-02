@@ -171,6 +171,8 @@ filetype *.pdf
        \ open -a Skim.app,
 fileviewer *.pdf pdftotext -nopgbrk %c -
 
+" csv latex 
+filetype *.csv,*.tex,*.bib,*.json,*.sql nvim
 " PostScript
 filetype *.ps,*.eps open -a Preview.app
 
@@ -225,8 +227,10 @@ fileviewer *.[1-8] man ./%c | col -b
 " Image
 filetype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,
        \ open -a Preview.app,
-" fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
-"          \ identify %f
+" "fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
+" "\ kitty +icat --place %pwx%ph@%pxx%py  --silent %c
+" "\ %pc
+" "\ kitty icat --clear --silent %pd
 
 " MD5
 filetype *.md5
@@ -309,6 +313,7 @@ filetype *.pptx,*.ppt "open -a "Microsoft Powerpoint".app
 " For *nix:
 " filetype * xdg-open
 " For OS X:
+fileviewer */ tree -C -L 1 --dirsfirst -h 
 " filetype * open
 " For Windows:
 " filetype * start, explorer
@@ -370,6 +375,15 @@ nnoremap S :sort<cr>
 nnoremap w :view<cr>
 vnoremap w :view<cr>gv
 
+" Toggle miller-view (like ranger)
+set milleroptions=lsize:1,csize:2
+nnoremap ,m :set millerview!<cr>
+vnoremap ,m :set millerview!<cr>gv
+
+" Toggle tree (like ranger)
+nnoremap ,T :tree!<cr>
+vnoremap ,T :tree!<cr>gv
+
 " Open file in the background using its default program
 nnoremap gb :file &<cr>l
 
@@ -385,7 +399,7 @@ nnoremap cc cw<c-u>
 nnoremap A cw
 
 " Open console in current directory
-nnoremap ,t :!xterm &<cr>
+nnoremap ,t :!kitty &<cr>
 
 " Open editor to edit vifmrc and apply settings after returning to vifm
 nnoremap ,c :write | edit $MYVIFMRC | restart<cr>

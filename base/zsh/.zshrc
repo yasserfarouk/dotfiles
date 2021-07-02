@@ -84,3 +84,7 @@ autoload -Uz compinit
 zstyle ':completion:*' menu select
 fpath+=~/.zfunc
 
+# make kitty change window or tab name to current directory
+precmd () {print -Pn "\e]0;%~\a"}
+alias luamake=/Users/yasser/code/external/lua-language-server/3rd/luamake/luamake
+export PATH="/usr/local/opt/openjdk@15/bin:$PATH"
