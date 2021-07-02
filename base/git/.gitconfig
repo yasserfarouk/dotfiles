@@ -2,8 +2,8 @@
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
 [user]
-  name = Yasser Mohammad
-  email = yasserfarouk@gmail.com
+	name = Yasser Mohammad
+	email = yasserfarouk@gmail.com
 
 [filter "hawser"]
 	clean = git hawser clean %f
@@ -19,22 +19,22 @@
   user = yasserfarouk
 
 [merge]
-    tool = vim_mergetool
+    tool = nvimdiff3
 	conflictStyle = diff3
 
 [core]
   pager = diff-so-fancy | less --tabs=4 -RFX
-  editor = vim
+  editor = nvim
   autocrlf = input
-  excludesfile = $HOME/.gitignore_global
+	excludesfile = /Users/yasser/.gitignore_global
 
 [difftool "sourcetree"]
-    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-    path = 
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
 
 [mergetool "sourcetree"]
-    cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-    trustExitCode = true
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
 
 [mergetool "vim_mergetool"]
 	cmd = vim -f -c "MergetoolStart" "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
@@ -50,3 +50,7 @@
 	rebase = false
 [credential]
 	helper = store
+[init]
+	defaultBranch = main
+[commit]
+	template = /Users/yasser/.stCommitMsg

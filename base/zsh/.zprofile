@@ -60,7 +60,8 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export KEYTIMEOUT=1
 export TERMINAL_DARK=1
-[[ $TMUX = "" ]] && export TERM="xterm-256color"
+# [[ $TMUX = "" ]] && export TERM="xterm-kitty"
+[[ $TMUX != "" ]] && export TERM="screen-256color"
 [[ $TMUX != "" ]] && export TERM="screen-256color"
 export CLICOLOR=1
 export EDITOR=nvim
@@ -79,8 +80,8 @@ export VSCODE_TSJS=1
 # This is the default as suggested by the zsh wizard.
 export HISTFILE=~/.z_history
 # The maximum number of history entries to keep.
-export SAVEHIST=10000
+export SAVEHIST=100000
 # The maximum number of history entries to keep alive in one session,
 # typically the same as SAVEHIST.
-export HISTSIZE=10000
+export HISTSIZE=100000
 

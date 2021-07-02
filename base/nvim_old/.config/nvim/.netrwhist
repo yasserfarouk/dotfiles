@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =3
+let g:netrw_dirhist_3='/Users/yasser/code/external/neovide/target/release'
+let g:netrw_dirhist_2='/Users/yasser/code/projects/scml'
+let g:netrw_dirhist_1='/Users/yasser/code/research/nec_aist/scml/tutorial2021'
+let g:netrw_dirhist_0='/Users/yasser/code/projects'
+let g:netrw_dirhist_9='/Users/yasser/negmas/tournaments/SCMLOneshot/20210306H174713475525X3KHqYw4-stage-0001'
+let g:netrw_dirhist_8='/Users/yasser/code/projects/deepneg'
+let g:netrw_dirhist_7='/export/home/yasser/.pyenv/versions/2.7/envs/neovim2'
+let g:netrw_dirhist_6='/export/home/yasser/.pyenv/versions/2.7/envs'
+let g:netrw_dirhist_5='/export/home/yasser/.pyenv/versions/2.7'
+let g:netrw_dirhist_4='/export/home/yasser/.pyenv/versions'

@@ -7,6 +7,9 @@
 [ -f ~/.aliases ] && source ~/.aliases
 [ -f ~/.zfolder/z.sh ] && source ~/.zfolder/z.sh
 
+export TERMINAL_DARK=1
+[[ $TMUX = "" ]] && export TERM="xterm-kitty"
+[[ $TMUX != "" ]] && export TERM="screen-256color"
 export _Z_DATA="$HOME/.z-data"
 
 RED="\[\033[0;31m\]"
