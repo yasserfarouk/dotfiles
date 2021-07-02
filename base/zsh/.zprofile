@@ -13,16 +13,16 @@ export PYENV_ROOT=$HOME/.pyenv
 #     # commands for FreeBSD go here
 #   ;;
 # esac
-PATH="$PATH:$HOME/.local/bin"
-PATH="$HOME/.poetry/bin:$PATH"
-PATH="$HOME/.pyenv/bin:$PATH"
-PATH="$PYENV_ROOT/bin:$PATH"
-PATH="/usr/local/sbin:$PATH"
-PATH="$PATH:/usr/local/mysql/bin"
-PATH="$PATH:$HOME/.composer/bin"
-PATH=$HOME/bin:$HOME/sbin:$HOME/bin-this:$PATH
-PATH="$PATH:."
-export PATH
+export PATH="$PATH:$HOME/.local/bin"
+export PATH="$HOME/.poetry/bin:$PATH"
+# export PATH="$HOME/.pyenv/bin:$PATH"
+# export PATH="$PYENV_ROOT/bin:$PATH"
+export PATH="/usr/local/sbin:$PATH"
+export PATH="$PATH:/usr/local/mysql/bin"
+export PATH="$PATH:$HOME/.composer/bin"
+export PATH=$HOME/bin:$HOME/sbin:$HOME/bin-this:$PATH
+export PATH="$PATH:."
+export PATH="$HOME/.cargo/bin:$PATH"
 
 export _Z_DATA="$HOME/.z-data"
 export LANGUAGE="en_US.UTF-8"
@@ -84,4 +84,3 @@ export SAVEHIST=10000
 # typically the same as SAVEHIST.
 export HISTSIZE=10000
 
-export PATH="$HOME/.cargo/bin:$PATH"
