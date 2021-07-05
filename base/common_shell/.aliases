@@ -43,7 +43,6 @@ alias ovim=vim
 alias vi=nvim
 alias v=nvim
 alias vf=vifm
-alias vim=nvim
 
 # opening finder in mac
 alias f="open ."
