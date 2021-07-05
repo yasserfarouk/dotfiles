@@ -1,11 +1,7 @@
 " Install Plugins -----------------------------------------------------------{{{
 
 " install Plug if needed
-if has('nvim')
-	let vimplug_exists=expand('~/.local/share/nvim/site/autoload/plug.vim')
-else
-	let vimplug_exists=expand('~/.vim/autoload/plug.vim')
-endif
+let vimplug_exists=expand('~/.vim/autoload/plug.vim')
 if !filereadable(vimplug_exists)
 	if !executable("curl")
 		echoerr "You have to install curl or first install vim-plug yourself!"
@@ -13,10 +9,9 @@ if !filereadable(vimplug_exists)
 	endif
 	echo "Installing Vim-Plug..."
 	if has('nvim')
-		silent !\curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	else
-		silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+		let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 	endif
+	silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	let g:not_finish_vimplug = "yes"
 	autocmd VimEnter * PlugInstall
 endif
@@ -29,26 +24,9 @@ endfunction
 
 " define all plugins
 call plug#begin(expand('~/.vim/plugged'))
-" nvcode colorscheme
 " Better way to see registers upon hitting ", @, <C-R> (insert)
-Plug 'junegunn/vim-peekaboo'
-" make some nvim plugins work nicely with vim
-if !has('nvim')
-	Plug 'roxma/nvim-yarp'
-	Plug 'roxma/vim-hug-neovim-rpc'
-endif
+" Plug 'junegunn/vim-peekaboo'
 " replacement of :bd that does not close the window.
-Plug 'orlp/vim-bunlink'
-if has('nvim')
-	" tree-sitter stuff
-	" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
-	" Plug 'nvim-treesitter/nvim-treesitter-textobjects'
-	" Plug 'ChristianChiarulli/nvcode-color-schemes.vim'
-	" telescope fuzzy finding
-	Plug 'nvim-lua/popup.nvim'
-	Plug 'nvim-lua/plenary.nvim'
-	Plug 'nvim-telescope/telescope.nvim'
-endif
 " jump to any definition or reference
 Plug 'pechorin/any-jump.vim'
 " copy a visual block and move it anywhere using Block command
@@ -69,17 +47,12 @@ Plug 'skywind3000/asyncrun.vim'
 Plug '5long/pytest-vim-compiler'
 " Plug 'reinh/vim-makegreen'
 " remove the need to use ; for f/t
-Plug 'rhysd/clever-f.vim'
+" Plug 'rhysd/clever-f.vim'
 " search and replace multiple forms of a word and turn to snake_case,
 " camelCase, etc
 Plug 'tpope/vim-abolish'
 " A simple REPL for vim
 Plug 'urbainvaes/vim-ripple'
-" Run nvim in the browser
-if has('nvim')
-	Plug 'subnut/nvim-ghost.nvim', {'do': ':call nvim_ghost#installer#install()'}
-	" Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
-endif
 Plug 'schickling/vim-bufonly'
 " allows for using * to search on a visual selection
 Plug 'nelstrom/vim-visual-star-search'
@@ -144,13 +117,6 @@ Plug 'justinmk/vim-sneak'
 Plug 'samoshkin/vim-mergetool'
 " colorizes whitespaces at the end of lines
 Plug 'ntpeters/vim-better-whitespace'
-" " Multiple terminals
-" if exists(':terminal')
-"     if has('nvim-0.4.0') || has('patch-8.2.191')
-"         Plug 'chengzeyi/multiterm.vim'
-"     endif
-" endif
-" floating terminal
 Plug 'voldikss/vim-floaterm'
 " zooms windows out and in using <c-w>m
 Plug 'dhruvasagar/vim-zoom'
@@ -169,9 +135,9 @@ Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
 " colorschemes 
 Plug 'morhetz/gruvbox'
 Plug 'flazz/vim-colorschemes'
-Plug 'joshdick/onedark.vim'
+" Plug 'joshdick/onedark.vim'
 " Plug 'altercation/vim-colors-solarized'
-" Plug 'mhartington/oceanic-next'
+Plug 'mhartington/oceanic-next'
 " dash search
 if has('macunix')
 	Plug 'rizzatti/dash.vim'
@@ -187,9 +153,9 @@ Plug 'luochen1990/rainbow'
 Plug 'puremourning/vimspector'
 " Plug 'vim-vdebug/vdebug'
 " used for alternate files etc. I do not use it
-" Plug 'tpope/vim-projectionist'        "|
+" Plug 'tpope/vim-projectionist'     
 " Dispatch command to run things asyncronously. I need it for vimtest
-Plug 'tpope/vim-dispatch'             "| Optional
+Plug 'tpope/vim-dispatch'             
 " Adds Move commands and the like
 Plug 'tpope/vim-eunuch'
 " " Multi-cursor support. Probably not needed
@@ -197,8 +163,6 @@ Plug 'tpope/vim-eunuch'
 
 " testing
 Plug 'janko/vim-test'
-" Plug 'alfredodeza/pytest.vim'
-Plug 'rcarriga/vim-ultest', { 'do': ':UpdateRemotePlugins' }
 " language servers
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 Plug 'majutsushi/tagbar'

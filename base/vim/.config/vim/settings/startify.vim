@@ -1,4 +1,4 @@
-let g:startify_session_dir = '~/.local/nvim/yasser/session'
+let g:startify_session_dir = '~/.local/vim/yasser/session'
 let g:startify_custom_header = ['']
 let g:startify_bookmarks = [
             \ { 'd': '~/code/personal/dotfiles' },

@@ -1,7 +1,6 @@
 set nocompatible
 filetype plugin indent on
 
-
 source $HOME/.config/vim/settings/basic.vim
 source $HOME/.config/vim/settings/functions.vim
 source $HOME/.config/vim/settings/mappings.vim
@@ -34,7 +33,6 @@ if !exists('g:vscode')
 	" source $HOME/.config/vim/settings/languageclient.vim
 	" testing
 	source $HOME/.config/vim/settings/vimtest.vim
-	source $HOME/.config/vim/settings/ultest.vim
 	" code editing
 	source $HOME/.config/vim/settings/rainbow.vim
 	source $HOME/.config/vim/settings/closetag.vim

@@ -1,13 +1,12 @@
-
+" set TERM="tmux-256color"
+"
 " Ask before unsafe actions
 set confirm
 " sane defaults
 let mapleader = ' '
 let maplocalleader = ','
 
-if !has('nvim')
-	set nocompatible
-endif
+set nocompatible
 set noerrorbells visualbell t_vb=
 " Disable visualbell
 if has('autocmd')
@@ -18,7 +17,16 @@ endif
 if has('unnamedplus')
 	set clipboard=unnamed,unnamedplus
 endif
-set termguicolors
+" colors
+set t_Co=256
+set t_AB=m
+set t_AF=m
+if $TERM =~# '256color' && ( $TERM =~# '^screen'  || $TERM =~# '^tmux' )
+    " let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    " let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
+endif
+syntax on
 
 "  mouse settings
 set mouse=a
@@ -129,28 +137,18 @@ set lazyredraw
 " Don't try to highlight lines longer than N characters.
 set synmaxcol=300
 " set inccommand=split
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 " Add Plug to the runtime path:
-set rtp +=~/.config/nvim
+set rtp +=~/.vim/plugged
+set rtp +=~/.config/vim
 " In some versions of vim it was reported that cursorline cause lags with scrolling
 " set nocursorline
-if has('nvim')
-	let g:esearch = {
-				\ 'adapter':    'rg',
-				\ 'backend':    'nvim',
-				\ 'out':        'win',
-				\ 'batch_size': 1000,
-				\ 'use':        ['visual', 'hlsearch', 'last'],
-				\}
-else
-	let g:esearch = {
-				\ 'adapter':    'rg',
-				\ 'backend':    'vim',
-				\ 'out':        'win',
-				\ 'batch_size': 1000,
-				\ 'use':        ['visual', 'hlsearch', 'last'],
-				\}
-endif
+let g:esearch = {
+			\ 'adapter':    'rg',
+			\ 'backend':    'vim',
+			\ 'out':        'win',
+			\ 'batch_size': 1000,
+			\ 'use':        ['visual', 'hlsearch', 'last'],
+			\}
 " change cursor in normal mode
 if exists('$TMUX')
 	let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"

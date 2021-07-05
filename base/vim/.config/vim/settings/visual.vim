@@ -1,4 +1,3 @@
-
 syntax on
 if has("gui_running")
 	let g:indentLine_color_gui = '#343d46'
@@ -11,16 +10,13 @@ if has("gui_running")
 else
 	let g:CSApprox_loaded = 1
 
-" Indent Line
+	" Indent Line
 	let g:indentLine_enabled = 1
 	let g:indentLine_concealcursor = 0
 	let g:indentLine_char = '┆'
 	let g:indentLine_faster = 1
 endif
 " true color things --- {{{
-if has('nvim')
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-endif
 hi Quote ctermbg=109 guifg=#83a598
 " }}}
 

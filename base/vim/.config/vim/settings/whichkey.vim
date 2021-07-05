@@ -105,11 +105,7 @@ let g:which_key_map['e'] = [ ':CocCommand explorer'               , 'explorer' ]
 let g:which_key_map['-'] = [ '<C-W>s'                             , 'split below']
 let g:which_key_map['|'] = [ '<C-W>v'                             , 'split right']
 let g:which_key_map['z'] = [ '<C-W>m'                             , 'zoom window']
-if g:telescope_available
-	let g:which_key_map['f'] = [ ':Telescope find_files'          , 'search files' ]
-else
-	let g:which_key_map['f'] = [ ':Files'                         , 'search files' ]
-endif
+let g:which_key_map['f'] = [ ':Files'                         , 'search files' ]
 let g:which_key_map['q'] = [ '<C-W>c'                                  , 'quit window' ]
 let g:which_key_map['u'] = [ ':UndotreeToggle'                    , 'undo tree']
 let g:which_key_map['h'] = [ ':call ToggleScrollingMode()'  , 'Lazy scroll']
@@ -179,7 +175,7 @@ let g:which_key_map.b = {
 let g:which_key_map.r = {
 			\ 'name' : '+find & replace' ,
 			\ 'b' : [':Farr --source=vimgrep'    , 'buffer'],
-			\ 'p' : [':Farr --source=rgnvim'     , 'project'],
+			\ 'p' : [':Farr --source=rgvim'     , 'project'],
 			\ }
 
 " \ 'w' : [':let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s<CR><Esc><C-o>', 'remove whitespace'],
@@ -232,68 +228,35 @@ let g:which_key_map.x = {
 " " \ 'l' : [':AsyncTaskList'               , 'list tasks'],
 
 " s is for search
-if g:telescope_available
-	let g:which_key_map.s = {
-			\ 'name' : '+search' ,
-			\ '/' : [':History'               , 'history'],
-			\ ';' : [':Commands'              , 'commands'],
-			\ 'r' : [':CtrlSF '               , 'CtrlSF'],
-			\ 'a' : [':Ag'                    , 'text Ag'],
-			\ 'b' : [':BLines'                , 'current buffer'],
-			\ 'B' : [':Telescope buffers'     , 'open buffers'],
-			\ 'c' : [':Commits'               , 'commits'],
-			\ 'C' : [':BCommits'              , 'buffer commits'],
-			\ 'f' : [':Files'                 , 'files'],
-			\ 'g' : [':GFiles'                , 'git files'],
-			\ 'G' : [':GFiles?'               , 'modified git files'],
-			\ 'h' : [':History'               , 'file history'],
-			\ 'H' : [':History:'              , 'command history'],
-			\ 'l' : [':Lines'                 , 'lines'] ,
-			\ 'm' : [':Marks'                 , 'marks'] ,
-			\ 'M' : [':Maps'                  , 'normal maps'] ,
-			\ 'p' : [':Helptags'              , 'help tags'] ,
-			\ 'P' : [':Tags'                  , 'project tags'],
-			\ 's' : [':CocList snippets'      , 'snippets'],
-			\ 'S' : [':Colors'                , 'color schemes'],
-			\ 't' : [':Telescope live_grep'   , 'text Rg'],
-			\ 'T' : [':BTags'                 , 'buffer tags'],
-			\ 'w' : [':Windows'               , 'search windows'],
-			\ 'x' : [':CocList floaterm'      , 'terminals'],
-			\ 'y' : [':Filetypes'             , 'file types'],
-			\ 'z' : [':FZF'                   , 'FZF'],
-			\ 'd' : [':Dash'                   , 'Dash'],
-			\ }
-else
-	let g:which_key_map.s = {
-			\ 'name' : '+search' ,
-			\ '/' : [':History/'              , 'history'],
-			\ ';' : [':Commands'              , 'commands'],
-			\ 'r' : [':MyCtrlSFPrompt'              , 'CtrlSF'],
-			\ 'a' : [':Ag'                    , 'text Ag'],
-			\ 'b' : [':BLines'                , 'current buffer'],
-			\ 'B' : [':Buffers'               , 'open buffers'],
-			\ 'c' : [':Commits'               , 'commits'],
-			\ 'C' : [':BCommits'              , 'buffer commits'],
-			\ 'f' : [':Files'                 , 'files'],
-			\ 'g' : [':GFiles'                , 'git files'],
-			\ 'G' : [':GFiles?'               , 'modified git files'],
-			\ 'h' : [':History'               , 'file history'],
-			\ 'H' : [':History:'              , 'command history'],
-			\ 'l' : [':Lines'                 , 'lines'] ,
-			\ 'm' : [':Marks'                 , 'marks'] ,
-			\ 'M' : [':Maps'                  , 'normal maps'] ,
-			\ 'p' : [':Helptags'              , 'help tags'] ,
-			\ 'P' : [':Tags'                  , 'project tags'],
-			\ 's' : [':CocList snippets'      , 'snippets'],
-			\ 'S' : [':Colors'                , 'color schemes'],
-			\ 't' : [':Rg'                    , 'text Rg'],
-			\ 'T' : [':BTags'                 , 'buffer tags'],
-			\ 'w' : [':Windows'               , 'search windows'],
-			\ 'x' : [':CocList floaterm'      , 'terminals'],
-			\ 'y' : [':Filetypes'             , 'file types'],
-			\ 'z' : [':FZF'                   , 'FZF'],
-			\ }
-endif
+let g:which_key_map.s = {
+		\ 'name' : '+search' ,
+		\ '/' : [':History/'              , 'history'],
+		\ ';' : [':Commands'              , 'commands'],
+		\ 'r' : [':MyCtrlSFPrompt'              , 'CtrlSF'],
+		\ 'a' : [':Ag'                    , 'text Ag'],
+		\ 'b' : [':BLines'                , 'current buffer'],
+		\ 'B' : [':Buffers'               , 'open buffers'],
+		\ 'c' : [':Commits'               , 'commits'],
+		\ 'C' : [':BCommits'              , 'buffer commits'],
+		\ 'f' : [':Files'                 , 'files'],
+		\ 'g' : [':GFiles'                , 'git files'],
+		\ 'G' : [':GFiles?'               , 'modified git files'],
+		\ 'h' : [':History'               , 'file history'],
+		\ 'H' : [':History:'              , 'command history'],
+		\ 'l' : [':Lines'                 , 'lines'] ,
+		\ 'm' : [':Marks'                 , 'marks'] ,
+		\ 'M' : [':Maps'                  , 'normal maps'] ,
+		\ 'p' : [':Helptags'              , 'help tags'] ,
+		\ 'P' : [':Tags'                  , 'project tags'],
+		\ 's' : [':CocList snippets'      , 'snippets'],
+		\ 'S' : [':Colors'                , 'color schemes'],
+		\ 't' : [':Rg'                    , 'text Rg'],
+		\ 'T' : [':BTags'                 , 'buffer tags'],
+		\ 'w' : [':Windows'               , 'search windows'],
+		\ 'x' : [':CocList floaterm'      , 'terminals'],
+		\ 'y' : [':Filetypes'             , 'file types'],
+		\ 'z' : [':FZF'                   , 'FZF'],
+		\ }
 " \ 's' : [':Snippets'     , 'snippets'],
 
 let g:which_key_map.S = {
