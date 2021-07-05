@@ -2,3 +2,4 @@ alias vi=vim
 alias v=nvim
 JAVA_HOME=$HOME/jdk
 PATH=".:$JAVA_HOME/bin:$PATH"
+eval $(/export/home/yasser/.linuxbrew/bin/brew shellenv)

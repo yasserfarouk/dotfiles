@@ -10,3 +10,4 @@ export _Z_DATA="$HOME/.z-data"
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH=".:$HOME/.linuxbrew/sbin:$PATH"
 export TERMINAL_DARK=1
+eval $(/export/home/yasser/.linuxbrew/bin/brew shellenv)
