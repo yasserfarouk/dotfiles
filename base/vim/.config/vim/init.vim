@@ -2,98 +2,98 @@ set nocompatible
 filetype plugin indent on
 
 
-source $HOME/.config/nvim/settings/basic.vim
-source $HOME/.config/nvim/settings/functions.vim
-source $HOME/.config/nvim/settings/mappings.vim
-source $HOME/.config/nvim/settings/textobjects.vim
+source $HOME/.config/vim/settings/basic.vim
+source $HOME/.config/vim/settings/functions.vim
+source $HOME/.config/vim/settings/mappings.vim
+source $HOME/.config/vim/settings/textobjects.vim
 if !exists('g:vscode')
 	let g:telescope_available = 0
-	" source $HOME/.config/nvim/settings/telescope.vim
-	source $HOME/.config/nvim/settings/statusline.vim
-	source $HOME/.config/nvim/settings/gui.vim
-	source $HOME/.config/nvim/settings/plugins.vim
+	" source $HOME/.config/vim/settings/telescope.vim
+	source $HOME/.config/vim/settings/statusline.vim
+	source $HOME/.config/vim/settings/gui.vim
+	source $HOME/.config/vim/settings/plugins.vim
 	" firenvim for chrome
 	if has('nvim')
-		" source $HOME/.config/nvim/settings/firenvim.vim
-		source $HOME/.config/nvim/settings/ghost.vim
+		" source $HOME/.config/vim/settings/firenvim.vim
+		source $HOME/.config/vim/settings/ghost.vim
 	endif
 	" language tool for grammatical check
-	" source $HOME/.config/nvim/settings/languagetool.vim
+	" source $HOME/.config/vim/settings/languagetool.vim
 	" navigation
-	" source $HOME/.config/nvim/settings/quickscope.vim
-	" source $HOME/.config/nvim/settings/multicursor.vim
-	" source $HOME/.config/nvim/settings/session.vim
-	source $HOME/.config/nvim/settings/startify.vim
+	" source $HOME/.config/vim/settings/quickscope.vim
+	" source $HOME/.config/vim/settings/multicursor.vim
+	" source $HOME/.config/vim/settings/session.vim
+	source $HOME/.config/vim/settings/startify.vim
 	" window management
-	" source $HOME/.config/nvim/settings/lens.vim
+	" source $HOME/.config/vim/settings/lens.vim
 	" language client
-	source $HOME/.config/nvim/settings/coc.vim
-	" source $HOME/.config/nvim/settings/ale.vim
+	source $HOME/.config/vim/settings/coc.vim
+	" source $HOME/.config/vim/settings/ale.vim
 	" debugging
-	source $HOME/.config/nvim/settings/vimspector.vim
-	" source $HOME/.config/nvim/settings/languageclient.vim
+	source $HOME/.config/vim/settings/vimspector.vim
+	" source $HOME/.config/vim/settings/languageclient.vim
 	" testing
-	source $HOME/.config/nvim/settings/vimtest.vim
-	source $HOME/.config/nvim/settings/ultest.vim
+	source $HOME/.config/vim/settings/vimtest.vim
+	source $HOME/.config/vim/settings/ultest.vim
 	" code editing
-	source $HOME/.config/nvim/settings/rainbow.vim
-	source $HOME/.config/nvim/settings/closetag.vim
-	source $HOME/.config/nvim/settings/tcomment.vim
-	source $HOME/.config/nvim/settings/unstack.vim
-	" source $HOME/.config/nvim/settings/treesitter.vim
+	source $HOME/.config/vim/settings/rainbow.vim
+	source $HOME/.config/vim/settings/closetag.vim
+	source $HOME/.config/vim/settings/tcomment.vim
+	source $HOME/.config/vim/settings/unstack.vim
+	" source $HOME/.config/vim/settings/treesitter.vim
 	" git
-	source $HOME/.config/nvim/settings/git.vim
-	source $HOME/.config/nvim/settings/mergetool.vim
-	" source $HOME/.config/nvim/settings/gitgutter.vim
-	source $HOME/.config/nvim/settings/fugitive.vim
+	source $HOME/.config/vim/settings/git.vim
+	source $HOME/.config/vim/settings/mergetool.vim
+	" source $HOME/.config/vim/settings/gitgutter.vim
+	source $HOME/.config/vim/settings/fugitive.vim
 	" language settings
-	source $HOME/.config/nvim/settings/markdown.vim
-	source $HOME/.config/nvim/settings/html.vim
-	source $HOME/.config/nvim/settings/java.vim
-	source $HOME/.config/nvim/settings/python.vim
-	source $HOME/.config/nvim/settings/pydocstring.vim
-	source $HOME/.config/nvim/settings/tex.vim
+	source $HOME/.config/vim/settings/markdown.vim
+	source $HOME/.config/vim/settings/html.vim
+	source $HOME/.config/vim/settings/java.vim
+	source $HOME/.config/vim/settings/python.vim
+	source $HOME/.config/vim/settings/pydocstring.vim
+	source $HOME/.config/vim/settings/tex.vim
 	" writing
-	source $HOME/.config/nvim/settings/grammarous.vim
+	source $HOME/.config/vim/settings/grammarous.vim
 	" searching
-	source $HOME/.config/nvim/settings/fzf.vim
-	source $HOME/.config/nvim/settings/ctrls.vim
-	source $HOME/.config/nvim/settings/anyjump.vim
-	" source $HOME/.config/nvim/settings/ag.vim
-	" source $HOME/.config/nvim/settings/easysearch.vim
+	source $HOME/.config/vim/settings/fzf.vim
+	source $HOME/.config/vim/settings/ctrls.vim
+	source $HOME/.config/vim/settings/anyjump.vim
+	" source $HOME/.config/vim/settings/ag.vim
+	" source $HOME/.config/vim/settings/easysearch.vim
 	" tmux
-	source $HOME/.config/nvim/settings/tmux.vim
-	source $HOME/.config/nvim/settings/tmux_navigator.vim
+	source $HOME/.config/vim/settings/tmux.vim
+	source $HOME/.config/vim/settings/tmux_navigator.vim
 	" snippets
-	source $HOME/.config/nvim/settings/snippets.vim
+	source $HOME/.config/vim/settings/snippets.vim
 	" terminals
-	source $HOME/.config/nvim/settings/floatterm.vim
-	source $HOME/.config/nvim/settings/tablemode.vim
+	source $HOME/.config/vim/settings/floatterm.vim
+	source $HOME/.config/vim/settings/tablemode.vim
 	" display
-	source $HOME/.config/nvim/settings/context.vim
+	source $HOME/.config/vim/settings/context.vim
 	" close buffer without closing window
-	source $HOME/.config/nvim/settings/bunlink.vim
-	" source $HOME/.config/nvim/settings/unstack.vim
+	source $HOME/.config/vim/settings/bunlink.vim
+	" source $HOME/.config/vim/settings/unstack.vim
 	" file drawer (I use coc-explorer now)
-	" source $HOME/.config/nvim/settings/fern.vim
-	" source $HOME/.config/nvim/settings/nerdtree.vim
+	" source $HOME/.config/vim/settings/fern.vim
+	" source $HOME/.config/vim/settings/nerdtree.vim
 	" session management
-	" source $HOME/.config/nvim/settings/workspace.vim
+	" source $HOME/.config/vim/settings/workspace.vim
 	" key help
-	" source $HOME/.config/nvim/settings/ultisnip.vim
+	" source $HOME/.config/vim/settings/ultisnip.vim
 	" ripple
-	" source $HOME/.config/nvim/settings/slime.vim
+	" source $HOME/.config/vim/settings/slime.vim
 	" coloring
-	" source $HOME/.config/nvim/settings/hexokinase.vim
+	" source $HOME/.config/vim/settings/hexokinase.vim
 	" statusbar
-	" source $HOME/.config/nvim/settings/airline.vim
+	" source $HOME/.config/vim/settings/airline.vim
 	" distraction free editing
-	" source $HOME/.config/nvim/settings/goyo.vim
-	" source $HOME/.config/nvim/settings/limelight.vim
+	" source $HOME/.config/vim/settings/goyo.vim
+	" source $HOME/.config/vim/settings/limelight.vim
 	" visual appearance
-	source $HOME/.config/nvim/settings/visual.vim
-	source $HOME/.config/nvim/settings/theme.vim
-	source $HOME/.config/nvim/settings/whichkey.vim
+	source $HOME/.config/vim/settings/visual.vim
+	source $HOME/.config/vim/settings/theme.vim
+	source $HOME/.config/vim/settings/whichkey.vim
 else
-	" source $HOME/.config/nvim/settings/vscode.vim
+	" source $HOME/.config/vim/settings/vscode.vim
 endif

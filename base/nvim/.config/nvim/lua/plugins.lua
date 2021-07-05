@@ -174,7 +174,7 @@ return require("packer").startup({
 
         -- Snippets
         use {"hrsh7th/vim-vsnip", opt = false}
-        use {'SirVer/ultisnips', opt = false}
+        -- use {'SirVer/ultisnips', opt = false}
         use {'honza/vim-snippets', opt = false}
 
         -- Treesitter
