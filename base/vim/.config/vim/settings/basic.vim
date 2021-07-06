@@ -261,3 +261,7 @@ let g:indentLine_conceallevel = 0
 " statusline
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 set statusline+=%{zoom#statusline()}
+
+" set the paths to python
+let g:python_host_prog='$HOME/virtualenvs/neovim2/bin/python'
+let g:python3_host_prog='$HOME/virtualenvs/neovim3/bin/python'
