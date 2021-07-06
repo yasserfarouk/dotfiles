@@ -5,11 +5,8 @@ if has("gui_running")
 	if has("gui_mac") || has("gui_macvim")
 		set transparency=0
 	endif
-	let g:indentLine_char="|"
-	let g:indentLine_char = '┆'
+	let g:indentLine_char='┆'
 else
-	let g:CSApprox_loaded = 1
-
 	" Indent Line
 	let g:indentLine_enabled = 1
 	let g:indentLine_concealcursor = 0

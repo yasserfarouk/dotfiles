@@ -18,14 +18,8 @@ if has('unnamedplus')
 	set clipboard=unnamed,unnamedplus
 endif
 " colors
+" set termguicolors
 set t_Co=256
-set t_AB=m
-set t_AF=m
-if $TERM =~# '256color' && ( $TERM =~# '^screen'  || $TERM =~# '^tmux' )
-    " let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    " let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-    set termguicolors
-endif
 syntax on
 
 "  mouse settings
@@ -268,3 +262,7 @@ let g:indentLine_conceallevel = 0
 " statusline
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 set statusline+=%{zoom#statusline()}
+
+let g:python_host_prog = '~/virtualenvs/neovim2/bin/python'
+let g:python3_host_prog = '~/virtualenvs/neovim3/bin/python'
+
