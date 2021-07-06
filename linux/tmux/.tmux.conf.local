@@ -1,1 +1,2 @@
 bind | split-window -h 
+set -g default-terminal "screens-256color" # colors!
