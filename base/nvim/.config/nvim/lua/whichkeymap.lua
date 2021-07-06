@@ -288,6 +288,7 @@ wk.register({
         t = {"<cmd>FloatermToggle<cr>", "terminal"},
         w = {"<cmd>StripWhitespace<cr>", "strip whitespace"},
         s = {"<cmd>Ds1z=`]<cr>", "correct spelling"},
-        y = {"<cmd>let @+= expand(' % ')<cr>", "copy path"}
+        y = {"<cmd>let @+= expand(' % ')<cr>", "copy path"},
+		l = {"<cmd>%s/^/\\=printf('%-4d', line('.'))<cr>", "write line numbers"}
     }
 }, {prefix = "<leader>"})
