@@ -5,5 +5,7 @@ tmux/plugins/tmux-*
 weechat/
 tags
 base/vifm/.config/vifm/vifminfo
+base/nvim/.config/nvim/plugin/packer_compiled.lua
+base/nvim/.config/nvim/plugin/packer_compiled.vim
 */vifminfo
 
