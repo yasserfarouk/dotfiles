@@ -1,2 +1,3 @@
 bind | split-window -h 
 set -g default-terminal "screen-256color" # colors!
+set -ga terminal-overrides ",*256col*:Tc"

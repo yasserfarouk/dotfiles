@@ -1,4 +1,3 @@
-" set TERM="tmux-256color"
 "
 " Ask before unsafe actions
 set confirm
@@ -18,8 +17,8 @@ if has('unnamedplus')
 	set clipboard=unnamed,unnamedplus
 endif
 " colors
-" set termguicolors
 set t_Co=256
+" set termguicolors
 syntax on
 
 "  mouse settings
@@ -262,7 +261,3 @@ let g:indentLine_conceallevel = 0
 " statusline
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 set statusline+=%{zoom#statusline()}
-
-let g:python_host_prog = '~/virtualenvs/neovim2/bin/python'
-let g:python3_host_prog = '~/virtualenvs/neovim3/bin/python'
-
