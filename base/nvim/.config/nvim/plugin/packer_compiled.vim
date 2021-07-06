@@ -141,7 +141,7 @@ _G.packer_plugins = {
     path = "/Users/yasser/.local/share/nvim/site/pack/packer/start/matchit"
   },
   neoformat = {
-    loaded = false,
+    loaded = true,
     needs_bufread = false,
     path = "/Users/yasser/.local/share/nvim/site/pack/packer/opt/neoformat"
   },
@@ -165,7 +165,7 @@ _G.packer_plugins = {
     path = "/Users/yasser/.local/share/nvim/site/pack/packer/start/nvim-compe"
   },
   ["nvim-dap"] = {
-    config = { "\27LJ\2\nõ\b\0\0\4\0\a\0\v6\0\0\0009\0\1\0009\0\2\0'\2\3\0005\3\4\0B\0\3\0016\0\0\0009\0\5\0'\2\6\0B\0\2\1K\0\1\0ü\a\t\t\t\tnnoremap <silent> <F3> :DebugScopes<CR>\n\t\t\t\tnnoremap <silent> <F4> :DebugHover<CR>\n\t\t\t\tnnoremap <silent> <S-F4> :DebugVHover<CR>\n\t\t\t\tnnoremap <silent> <F5> :DebugContinue<CR>\n\t\t\t\tnnoremap <silent> <S-F5> :DebugLast<CR>\n\t\t\t\tnnoremap <silent> <C-F5> :DebugPause<CR>\n\t\t\t\tnnoremap <silent> <F6> :DebugToggleRepl<CR>\n\t\t\t\tnnoremap <silent> <F7> :DebugUp<CR>\n\t\t\t\tnnoremap <silent> <F8> :DebugDown<CR>\n\t\t\t\tnnoremap <silent> <A-F8> :DebugSetExceptionBreakpointsDefault<CR>\n\t\t\t\tnnoremap <silent> <S-F8> :DebugSetExceptionBreakpointsRaised<CR>\n\t\t\t\tnnoremap <silent> <C-F8> :DebugSetExceptionBreakpointsUncaught<CR>\n\t\t\t\tnnoremap <silent> <F9> :DebugToggleBreakpoint<CR>\n\t\t\t\tnnoremap <silent> <A-F9> :DebugLogPoint<CR>\n\t\t\t\tnnoremap <silent> <S-F9> :DebugConditionalBreakpoint<CR>\n\t\t\t\tnnoremap <silent> <C-F9> :DebugListBreakpoints<CR>\n\t\t\t\tnnoremap <silent> <F10> :DebugStepOver<CR>\n\t\t\t\tnnoremap <silent> <F11> :DebugStepInto<CR>\n\t\t\t\tnnoremap <silent> <S-F11> :DebugStepOut<CR>\n\t\t\t\tnnoremap <silent> <F12> :DebugStop<CR>\n\t\t\t\t\bcmd\1\0\4\vtexthl\5\ttext\tðŸ›‘\nnumhl\5\vlinehl\5\18DapBreakpoint\16sign_define\afn\bvim\0" },
+    config = { "\27LJ\2\nõ\b\0\0\4\0\a\0\v6\0\0\0009\0\1\0009\0\2\0'\2\3\0005\3\4\0B\0\3\0016\0\0\0009\0\5\0'\2\6\0B\0\2\1K\0\1\0ü\a\t\t\t\tnnoremap <silent> <F3> :DebugScopes<CR>\n\t\t\t\tnnoremap <silent> <F4> :DebugHover<CR>\n\t\t\t\tnnoremap <silent> <S-F4> :DebugVHover<CR>\n\t\t\t\tnnoremap <silent> <F5> :DebugContinue<CR>\n\t\t\t\tnnoremap <silent> <S-F5> :DebugLast<CR>\n\t\t\t\tnnoremap <silent> <C-F5> :DebugPause<CR>\n\t\t\t\tnnoremap <silent> <F6> :DebugToggleRepl<CR>\n\t\t\t\tnnoremap <silent> <F7> :DebugUp<CR>\n\t\t\t\tnnoremap <silent> <F8> :DebugDown<CR>\n\t\t\t\tnnoremap <silent> <A-F8> :DebugSetExceptionBreakpointsDefault<CR>\n\t\t\t\tnnoremap <silent> <S-F8> :DebugSetExceptionBreakpointsRaised<CR>\n\t\t\t\tnnoremap <silent> <C-F8> :DebugSetExceptionBreakpointsUncaught<CR>\n\t\t\t\tnnoremap <silent> <F9> :DebugToggleBreakpoint<CR>\n\t\t\t\tnnoremap <silent> <A-F9> :DebugLogPoint<CR>\n\t\t\t\tnnoremap <silent> <S-F9> :DebugConditionalBreakpoint<CR>\n\t\t\t\tnnoremap <silent> <C-F9> :DebugListBreakpoints<CR>\n\t\t\t\tnnoremap <silent> <F10> :DebugStepOver<CR>\n\t\t\t\tnnoremap <silent> <F11> :DebugStepInto<CR>\n\t\t\t\tnnoremap <silent> <S-F11> :DebugStepOut<CR>\n\t\t\t\tnnoremap <silent> <F12> :DebugStop<CR>\n\t\t\t\t\bcmd\1\0\4\vtexthl\5\nnumhl\5\ttext\tðŸ›‘\vlinehl\5\18DapBreakpoint\16sign_define\afn\bvim\0" },
     loaded = true,
     path = "/Users/yasser/.local/share/nvim/site/pack/packer/start/nvim-dap"
   },
@@ -263,10 +263,6 @@ _G.packer_plugins = {
     config = { "\27LJ\2\nþ\4\0\0\6\0\25\00076\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\a\0'\4\b\0005\5\t\0B\0\5\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\n\0'\4\v\0005\5\f\0B\0\5\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\r\0'\4\14\0005\5\15\0B\0\5\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\16\0'\4\17\0005\5\18\0B\0\5\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\19\0'\4\20\0005\5\21\0B\0\5\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\22\0'\4\23\0005\5\24\0B\0\5\1K\0\1\0\1\0\2\vsilent\2\fnoremap\2$<cmd>Trouble lsp_references<cr>\agR\1\0\2\vsilent\2\fnoremap\2\30<cmd>Trouble quickfix<cr>\15<leader>iq\1\0\2\vsilent\2\fnoremap\2\29<cmd>Trouble loclist<cr>\15<leader>il\1\0\2\vsilent\2\fnoremap\2.<cmd>Trouble lsp_document_diagnostics<cr>\15<leader>id\1\0\2\vsilent\2\fnoremap\2/<cmd>Trouble lsp_workspace_diagnostics<cr>\15<leader>iw\1\0\2\vsilent\2\fnoremap\2\21<cmd>Trouble<cr>\15<leader>ix\6n\20nvim_set_keymap\bapi\bvim\nsetup\ftrouble\frequire\0" },
     loaded = true,
     path = "/Users/yasser/.local/share/nvim/site/pack/packer/start/trouble.nvim"
-  },
-  ultisnips = {
-    loaded = true,
-    path = "/Users/yasser/.local/share/nvim/site/pack/packer/start/ultisnips"
   },
   undotree = {
     loaded = true,
@@ -404,18 +400,6 @@ time([[Setup for neoformat]], false)
 time([[packadd for neoformat]], true)
 vim.cmd [[packadd neoformat]]
 time([[packadd for neoformat]], false)
--- Config for: dashboard-nvim
-time([[Config for dashboard-nvim]], true)
-try_loadstring("\27LJ\2\n/\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\20theme.dashboard\frequire\0", "config", "dashboard-nvim")
-time([[Config for dashboard-nvim]], false)
--- Config for: nvim-comment
-time([[Config for nvim-comment]], true)
-try_loadstring("\27LJ\2\n:\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\17nvim_comment\frequire\0", "config", "nvim-comment")
-time([[Config for nvim-comment]], false)
--- Config for: barbar.nvim
-time([[Config for barbar.nvim]], true)
-try_loadstring("\27LJ\2\n,\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\17theme.barbar\frequire\0", "config", "barbar.nvim")
-time([[Config for barbar.nvim]], false)
 -- Config for: diffview.nvim
 time([[Config for diffview.nvim]], true)
 try_loadstring("\27LJ\2\n,\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\17git.diffview\frequire\0", "config", "diffview.nvim")
@@ -424,6 +408,22 @@ time([[Config for diffview.nvim]], false)
 time([[Config for telescope-fzy-native.nvim]], true)
 try_loadstring("\27LJ\2\nO\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0'\2\3\0B\0\2\1K\0\1\0\15fzy_native\19load_extension\14telescope\frequire\0", "config", "telescope-fzy-native.nvim")
 time([[Config for telescope-fzy-native.nvim]], false)
+-- Config for: telescope.nvim
+time([[Config for telescope.nvim]], true)
+try_loadstring("\27LJ\2\n0\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\21search.telescope\frequire\0", "config", "telescope.nvim")
+time([[Config for telescope.nvim]], false)
+-- Config for: barbar.nvim
+time([[Config for barbar.nvim]], true)
+try_loadstring("\27LJ\2\n,\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\17theme.barbar\frequire\0", "config", "barbar.nvim")
+time([[Config for barbar.nvim]], false)
+-- Config for: which-key.nvim
+time([[Config for which-key.nvim]], true)
+try_loadstring("\27LJ\2\n+\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\16whichkeymap\frequire\0", "config", "which-key.nvim")
+time([[Config for which-key.nvim]], false)
+-- Config for: nvim-dap
+time([[Config for nvim-dap]], true)
+try_loadstring("\27LJ\2\nõ\b\0\0\4\0\a\0\v6\0\0\0009\0\1\0009\0\2\0'\2\3\0005\3\4\0B\0\3\0016\0\0\0009\0\5\0'\2\6\0B\0\2\1K\0\1\0ü\a\t\t\t\tnnoremap <silent> <F3> :DebugScopes<CR>\n\t\t\t\tnnoremap <silent> <F4> :DebugHover<CR>\n\t\t\t\tnnoremap <silent> <S-F4> :DebugVHover<CR>\n\t\t\t\tnnoremap <silent> <F5> :DebugContinue<CR>\n\t\t\t\tnnoremap <silent> <S-F5> :DebugLast<CR>\n\t\t\t\tnnoremap <silent> <C-F5> :DebugPause<CR>\n\t\t\t\tnnoremap <silent> <F6> :DebugToggleRepl<CR>\n\t\t\t\tnnoremap <silent> <F7> :DebugUp<CR>\n\t\t\t\tnnoremap <silent> <F8> :DebugDown<CR>\n\t\t\t\tnnoremap <silent> <A-F8> :DebugSetExceptionBreakpointsDefault<CR>\n\t\t\t\tnnoremap <silent> <S-F8> :DebugSetExceptionBreakpointsRaised<CR>\n\t\t\t\tnnoremap <silent> <C-F8> :DebugSetExceptionBreakpointsUncaught<CR>\n\t\t\t\tnnoremap <silent> <F9> :DebugToggleBreakpoint<CR>\n\t\t\t\tnnoremap <silent> <A-F9> :DebugLogPoint<CR>\n\t\t\t\tnnoremap <silent> <S-F9> :DebugConditionalBreakpoint<CR>\n\t\t\t\tnnoremap <silent> <C-F9> :DebugListBreakpoints<CR>\n\t\t\t\tnnoremap <silent> <F10> :DebugStepOver<CR>\n\t\t\t\tnnoremap <silent> <F11> :DebugStepInto<CR>\n\t\t\t\tnnoremap <silent> <S-F11> :DebugStepOut<CR>\n\t\t\t\tnnoremap <silent> <F12> :DebugStop<CR>\n\t\t\t\t\bcmd\1\0\4\vtexthl\5\nnumhl\5\ttext\tðŸ›‘\vlinehl\5\18DapBreakpoint\16sign_define\afn\bvim\0", "config", "nvim-dap")
+time([[Config for nvim-dap]], false)
 -- Config for: indent-blankline.nvim
 time([[Config for indent-blankline.nvim]], true)
 try_loadstring("\27LJ\2\n6\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\27theme.indent-blankline\frequire\0", "config", "indent-blankline.nvim")
@@ -432,42 +432,38 @@ time([[Config for indent-blankline.nvim]], false)
 time([[Config for nvim-tree.lua]], true)
 try_loadstring("\27LJ\2\n,\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\17nav.nvimtree\frequire\0", "config", "nvim-tree.lua")
 time([[Config for nvim-tree.lua]], false)
--- Config for: vim-better-whitespace
-time([[Config for vim-better-whitespace]], true)
-try_loadstring("\27LJ\2\n‚\1\0\0\2\0\4\0\0056\0\0\0009\0\1\0005\1\3\0=\1\2\0K\0\1\0\1\t\0\0\14dashboard\tdiff\14gitcommit\nunite\rnvimtree\aqf\thelp\vpacker*better_whitespace_filetypes_blacklist\6g\bvim\0", "config", "vim-better-whitespace")
-time([[Config for vim-better-whitespace]], false)
--- Config for: galaxyline.nvim
-time([[Config for galaxyline.nvim]], true)
-try_loadstring("\27LJ\2\n0\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\21theme.galaxyline\frequire\0", "config", "galaxyline.nvim")
-time([[Config for galaxyline.nvim]], false)
--- Config for: telescope.nvim
-time([[Config for telescope.nvim]], true)
-try_loadstring("\27LJ\2\n0\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\21search.telescope\frequire\0", "config", "telescope.nvim")
-time([[Config for telescope.nvim]], false)
--- Config for: nvim-dap
-time([[Config for nvim-dap]], true)
-try_loadstring("\27LJ\2\nõ\b\0\0\4\0\a\0\v6\0\0\0009\0\1\0009\0\2\0'\2\3\0005\3\4\0B\0\3\0016\0\0\0009\0\5\0'\2\6\0B\0\2\1K\0\1\0ü\a\t\t\t\tnnoremap <silent> <F3> :DebugScopes<CR>\n\t\t\t\tnnoremap <silent> <F4> :DebugHover<CR>\n\t\t\t\tnnoremap <silent> <S-F4> :DebugVHover<CR>\n\t\t\t\tnnoremap <silent> <F5> :DebugContinue<CR>\n\t\t\t\tnnoremap <silent> <S-F5> :DebugLast<CR>\n\t\t\t\tnnoremap <silent> <C-F5> :DebugPause<CR>\n\t\t\t\tnnoremap <silent> <F6> :DebugToggleRepl<CR>\n\t\t\t\tnnoremap <silent> <F7> :DebugUp<CR>\n\t\t\t\tnnoremap <silent> <F8> :DebugDown<CR>\n\t\t\t\tnnoremap <silent> <A-F8> :DebugSetExceptionBreakpointsDefault<CR>\n\t\t\t\tnnoremap <silent> <S-F8> :DebugSetExceptionBreakpointsRaised<CR>\n\t\t\t\tnnoremap <silent> <C-F8> :DebugSetExceptionBreakpointsUncaught<CR>\n\t\t\t\tnnoremap <silent> <F9> :DebugToggleBreakpoint<CR>\n\t\t\t\tnnoremap <silent> <A-F9> :DebugLogPoint<CR>\n\t\t\t\tnnoremap <silent> <S-F9> :DebugConditionalBreakpoint<CR>\n\t\t\t\tnnoremap <silent> <C-F9> :DebugListBreakpoints<CR>\n\t\t\t\tnnoremap <silent> <F10> :DebugStepOver<CR>\n\t\t\t\tnnoremap <silent> <F11> :DebugStepInto<CR>\n\t\t\t\tnnoremap <silent> <S-F11> :DebugStepOut<CR>\n\t\t\t\tnnoremap <silent> <F12> :DebugStop<CR>\n\t\t\t\t\bcmd\1\0\4\vtexthl\5\ttext\tðŸ›‘\nnumhl\5\vlinehl\5\18DapBreakpoint\16sign_define\afn\bvim\0", "config", "nvim-dap")
-time([[Config for nvim-dap]], false)
--- Config for: gitsigns.nvim
-time([[Config for gitsigns.nvim]], true)
-try_loadstring("\27LJ\2\n,\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\17git.gitsigns\frequire\0", "config", "gitsigns.nvim")
-time([[Config for gitsigns.nvim]], false)
--- Config for: nvim-compe
-time([[Config for nvim-compe]], true)
-try_loadstring("\27LJ\2\n*\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\15completion\frequire\0", "config", "nvim-compe")
-time([[Config for nvim-compe]], false)
+-- Config for: nvim-comment
+time([[Config for nvim-comment]], true)
+try_loadstring("\27LJ\2\n:\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\17nvim_comment\frequire\0", "config", "nvim-comment")
+time([[Config for nvim-comment]], false)
 -- Config for: playground
 time([[Config for playground]], true)
 try_loadstring("\27LJ\2\n0\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\21theme.playground\frequire\0", "config", "playground")
 time([[Config for playground]], false)
--- Config for: which-key.nvim
-time([[Config for which-key.nvim]], true)
-try_loadstring("\27LJ\2\n+\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\16whichkeymap\frequire\0", "config", "which-key.nvim")
-time([[Config for which-key.nvim]], false)
+-- Config for: gitsigns.nvim
+time([[Config for gitsigns.nvim]], true)
+try_loadstring("\27LJ\2\n,\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\17git.gitsigns\frequire\0", "config", "gitsigns.nvim")
+time([[Config for gitsigns.nvim]], false)
+-- Config for: vim-better-whitespace
+time([[Config for vim-better-whitespace]], true)
+try_loadstring("\27LJ\2\n‚\1\0\0\2\0\4\0\0056\0\0\0009\0\1\0005\1\3\0=\1\2\0K\0\1\0\1\t\0\0\14dashboard\tdiff\14gitcommit\nunite\rnvimtree\aqf\thelp\vpacker*better_whitespace_filetypes_blacklist\6g\bvim\0", "config", "vim-better-whitespace")
+time([[Config for vim-better-whitespace]], false)
+-- Config for: dashboard-nvim
+time([[Config for dashboard-nvim]], true)
+try_loadstring("\27LJ\2\n/\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\20theme.dashboard\frequire\0", "config", "dashboard-nvim")
+time([[Config for dashboard-nvim]], false)
+-- Config for: nvim-compe
+time([[Config for nvim-compe]], true)
+try_loadstring("\27LJ\2\n*\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\15completion\frequire\0", "config", "nvim-compe")
+time([[Config for nvim-compe]], false)
 -- Config for: trouble.nvim
 time([[Config for trouble.nvim]], true)
 try_loadstring("\27LJ\2\nþ\4\0\0\6\0\25\00076\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\a\0'\4\b\0005\5\t\0B\0\5\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\n\0'\4\v\0005\5\f\0B\0\5\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\r\0'\4\14\0005\5\15\0B\0\5\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\16\0'\4\17\0005\5\18\0B\0\5\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\19\0'\4\20\0005\5\21\0B\0\5\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\22\0'\4\23\0005\5\24\0B\0\5\1K\0\1\0\1\0\2\vsilent\2\fnoremap\2$<cmd>Trouble lsp_references<cr>\agR\1\0\2\vsilent\2\fnoremap\2\30<cmd>Trouble quickfix<cr>\15<leader>iq\1\0\2\vsilent\2\fnoremap\2\29<cmd>Trouble loclist<cr>\15<leader>il\1\0\2\vsilent\2\fnoremap\2.<cmd>Trouble lsp_document_diagnostics<cr>\15<leader>id\1\0\2\vsilent\2\fnoremap\2/<cmd>Trouble lsp_workspace_diagnostics<cr>\15<leader>iw\1\0\2\vsilent\2\fnoremap\2\21<cmd>Trouble<cr>\15<leader>ix\6n\20nvim_set_keymap\bapi\bvim\nsetup\ftrouble\frequire\0", "config", "trouble.nvim")
 time([[Config for trouble.nvim]], false)
+-- Config for: galaxyline.nvim
+time([[Config for galaxyline.nvim]], true)
+try_loadstring("\27LJ\2\n0\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\21theme.galaxyline\frequire\0", "config", "galaxyline.nvim")
+time([[Config for galaxyline.nvim]], false)
 -- Conditional loads
 time("Condition for { 'vim-tmux-navigator' }", true)
 if
@@ -495,11 +491,11 @@ vim.cmd [[augroup packer_load_aucmds]]
 vim.cmd [[au!]]
   -- Filetype lazy-loads
 time([[Defining lazy-load filetype autocommands]], true)
-vim.cmd [[au FileType tex ++once lua require("packer.load")({'vimtex'}, { ft = "tex" }, _G.packer_plugins)]]
-vim.cmd [[au FileType bib ++once lua require("packer.load")({'vimtex'}, { ft = "bib" }, _G.packer_plugins)]]
-vim.cmd [[au FileType python ++once lua require("packer.load")({'nvim-dap-virtual-text', 'nvim-dap-python', 'telescope-dap.nvim'}, { ft = "python" }, _G.packer_plugins)]]
-vim.cmd [[au FileType lua ++once lua require("packer.load")({'nvim-dap-virtual-text', 'nlua.nvim', 'telescope-dap.nvim'}, { ft = "lua" }, _G.packer_plugins)]]
+vim.cmd [[au FileType python ++once lua require("packer.load")({'telescope-dap.nvim', 'nvim-dap-python', 'nvim-dap-virtual-text'}, { ft = "python" }, _G.packer_plugins)]]
 vim.cmd [[au FileType markdown ++once lua require("packer.load")({'vim-markdown', 'markdown-preview.nvim'}, { ft = "markdown" }, _G.packer_plugins)]]
+vim.cmd [[au FileType tex ++once lua require("packer.load")({'vimtex'}, { ft = "tex" }, _G.packer_plugins)]]
+vim.cmd [[au FileType lua ++once lua require("packer.load")({'telescope-dap.nvim', 'nlua.nvim', 'nvim-dap-virtual-text'}, { ft = "lua" }, _G.packer_plugins)]]
+vim.cmd [[au FileType bib ++once lua require("packer.load")({'vimtex'}, { ft = "bib" }, _G.packer_plugins)]]
 time([[Defining lazy-load filetype autocommands]], false)
 vim.cmd("augroup END")
 vim.cmd [[augroup filetypedetect]]

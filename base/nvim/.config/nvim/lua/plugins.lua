@@ -2,6 +2,7 @@ local execute = vim.api.nvim_command
 local fn = vim.fn
 
 local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+local compile_path = fn.stdpath("config") .. "/plugin/packer_compiled.vim"
 
 if fn.empty(fn.glob(install_path)) > 0 then
     execute("!git clone https://github.com/wbthomason/packer.nvim " ..
@@ -366,7 +367,6 @@ return require("packer").startup({
         -- show indent lines
         use {
             'lukas-reineke/indent-blankline.nvim',
-            branch = 'lua',
             config = function() require 'theme.indent-blankline' end,
             disable = windows()
         }
@@ -384,5 +384,5 @@ return require("packer").startup({
             config = function() require 'nav.nvimtree' end
         }
     end,
-    config = {ensure_dependencies = true, compile_on_sync = true}
+    config = {ensure_dependencies = true, compile_on_sync = true, compile_path=compile_path}
 })

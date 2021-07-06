@@ -1,4 +1,3 @@
-" set TERM="tmux-256color"
 "
 " Ask before unsafe actions
 set confirm
@@ -19,13 +18,7 @@ if has('unnamedplus')
 endif
 " colors
 set t_Co=256
-set t_AB=m
-set t_AF=m
-if $TERM =~# '256color' && ( $TERM =~# '^screen'  || $TERM =~# '^tmux' )
-    " let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    " let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-    set termguicolors
-endif
+" set termguicolors
 syntax on
 
 "  mouse settings
