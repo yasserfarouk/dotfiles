@@ -36,6 +36,7 @@ return require("packer").startup({
         -- Telescope
         use {"nvim-lua/popup.nvim", opt = false}
         use {"nvim-lua/plenary.nvim", opt = false}
+        use {"tjdevries/astronauta.nvim", opt = false}
         use {
             "nvim-telescope/telescope.nvim",
             opt = false,
@@ -55,6 +56,11 @@ return require("packer").startup({
                 require('telescope').load_extension('fzy_native')
             end
         }
+        use {
+            "nvim-telescope/telescope-project.nvim",
+            event = "BufRead",
+            setup = function() vim.cmd [[packadd telescope.nvim]] end
+        }
         -- auto vormatting
         use {
             'sbdchd/neoformat',
@@ -68,7 +74,6 @@ return require("packer").startup({
         use {"glepnir/lspsaga.nvim", opt = false}
         use {"kabouzeid/nvim-lspinstall", opt = false}
         use {'ray-x/lsp_signature.nvim', opt = false}
-
 
         -- Markdown
         use {'tpope/vim-markdown', opt = false, ft = 'markdown'}
@@ -85,8 +90,25 @@ return require("packer").startup({
             opt = false,
             -- ft = {"python", "lua"},
             config = function()
-				vim.fn.sign_define('DapBreakpoint', {text = '🛑', texthl = '', linehl = '', numhl = ''})
-				vim.cmd([[
+                vim.fn.sign_define('DapBreakpoint', {
+                    text = "🔸",
+                    texthl = "",
+                    linehl = "",
+                    numhl = ""
+                })
+                vim.fn.sign_define('DapBreakpointRejected', {
+                    text = "💀",
+                    texthl = "",
+                    linehl = "",
+                    numhl = ""
+                })
+                vim.fn.sign_define('DapLogPoint', {
+                    text = "📚",
+                    texthl = "",
+                    linehl = "",
+                    numhl = ""
+                })
+                vim.cmd([[
 				nnoremap <silent> <F3> :DebugScopes<CR>
 				nnoremap <silent> <F4> :DebugHover<CR>
 				nnoremap <silent> <S-F4> :DebugVHover<CR>
@@ -108,7 +130,20 @@ return require("packer").startup({
 				nnoremap <silent> <S-F11> :DebugStepOut<CR>
 				nnoremap <silent> <F12> :DebugStop<CR>
 				]])
-			end
+            end
+        }
+        use {
+            "Pocco81/DAPInstall.nvim",
+            opt = false,
+            config = function()
+
+                local dap_install = require("dap-install")
+                local dbg_list = require("dap-install.debuggers_list").debuggers
+
+                for debugger, _ in pairs(dbg_list) do
+					dap_install.config(debugger, {})
+                end
+            end
         }
 
         -- use {
@@ -137,21 +172,19 @@ return require("packer").startup({
             ft = {"python", "lua"},
             requires = "mfussenegger/nvim-dap",
             -- after = {"mfussenegger/nvim-dap"},
-            config = function()
-                vim.g.dap_virtual_text = true
-            end
+            config = function() vim.g.dap_virtual_text = true end
         }
-        use {
-            'mfussenegger/nvim-dap-python',
-            opt = true,
-            ft = {"python"},
-            requires = "mfussenegger/nvim-dap",
-            -- after = {"mfussenegger/nvim-dap"},
-            config = function()
-				dap = require('nvim-dap')
-                require('debug.dap-py')
-            end
-        }
+        -- use {
+        --     'mfussenegger/nvim-dap-python',
+        --     opt = true,
+        --     ft = {"python"},
+        --     requires = "mfussenegger/nvim-dap",
+        --     -- after = {"mfussenegger/nvim-dap"},
+        --     config = function()
+        --         local dap = require('nvim-dap')
+        --         require('debug.dap-py')
+        --     end
+        -- }
 
         -- Testing
         use {'5long/pytest-vim-compiler', opt = false}
@@ -264,37 +297,36 @@ return require("packer").startup({
 
         -- Color
         use {"christianchiarulli/nvcode-color-schemes.vim", opt = false}
-		use 'folke/tokyonight.nvim'
+        use 'folke/tokyonight.nvim'
 
         -- Icons
         -- use {"kyazdani42/nvim-web-devicons", opt = false}
 
-		-- Diagnostic and niceties
-		use {
-		  "folke/trouble.nvim",
-		  requires = "kyazdani42/nvim-web-devicons",
-		  config = function()
-			require("trouble").setup {}
-			vim.api.nvim_set_keymap("n", "<leader>ix", "<cmd>Trouble<cr>",
-			  {silent = true, noremap = true}
-			)
-			vim.api.nvim_set_keymap("n", "<leader>iw", "<cmd>Trouble lsp_workspace_diagnostics<cr>",
-			  {silent = true, noremap = true}
-			)
-			vim.api.nvim_set_keymap("n", "<leader>id", "<cmd>Trouble lsp_document_diagnostics<cr>",
-			  {silent = true, noremap = true}
-			)
-			vim.api.nvim_set_keymap("n", "<leader>il", "<cmd>Trouble loclist<cr>",
-			  {silent = true, noremap = true}
-			)
-			vim.api.nvim_set_keymap("n", "<leader>iq", "<cmd>Trouble quickfix<cr>",
-			  {silent = true, noremap = true}
-			)
-			vim.api.nvim_set_keymap("n", "gR", "<cmd>Trouble lsp_references<cr>",
-			  {silent = true, noremap = true}
-			)
-		end
-		}
+        -- Diagnostic and niceties
+        use {
+            "folke/trouble.nvim",
+            requires = "kyazdani42/nvim-web-devicons",
+            config = function()
+                require("trouble").setup {}
+                vim.api.nvim_set_keymap("n", "<leader>ix", "<cmd>Trouble<cr>",
+                                        {silent = true, noremap = true})
+                vim.api.nvim_set_keymap("n", "<leader>iw",
+                                        "<cmd>Trouble lsp_workspace_diagnostics<cr>",
+                                        {silent = true, noremap = true})
+                vim.api.nvim_set_keymap("n", "<leader>id",
+                                        "<cmd>Trouble lsp_document_diagnostics<cr>",
+                                        {silent = true, noremap = true})
+                vim.api.nvim_set_keymap("n", "<leader>il",
+                                        "<cmd>Trouble loclist<cr>",
+                                        {silent = true, noremap = true})
+                vim.api.nvim_set_keymap("n", "<leader>iq",
+                                        "<cmd>Trouble quickfix<cr>",
+                                        {silent = true, noremap = true})
+                vim.api.nvim_set_keymap("n", "gR",
+                                        "<cmd>Trouble lsp_references<cr>",
+                                        {silent = true, noremap = true})
+            end
+        }
         -- Colorize whitespace
         use {
             'ntpeters/vim-better-whitespace',
@@ -384,5 +416,9 @@ return require("packer").startup({
             config = function() require 'nav.nvimtree' end
         }
     end,
-    config = {ensure_dependencies = true, compile_on_sync = true, compile_path=compile_path}
+    config = {
+        ensure_dependencies = true,
+        compile_on_sync = true,
+        compile_path = compile_path
+    }
 })
