@@ -660,6 +660,19 @@ for app in "Activity Monitor" "Address Book" "Calendar" "Contacts" "cfprefsd" \
 	killall "${app}" > /dev/null 2>&1
 done
 
+defaults write -g AppleShowAllExtensions -bool true
+defaults write com.apple.finder AppleShowAllFiles true
+defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+defaults write com.apple.dock expose-animation-duration -float 0.05
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true 
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true 
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
+
+
 echo "restoring application settings using mackup"
 mackup restore
 
