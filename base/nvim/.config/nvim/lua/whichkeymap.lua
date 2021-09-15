@@ -90,8 +90,14 @@ wk.register({
         P = {"<cmd>call PublishMedium()<cr>", "publish (medium)"},
         l = {"<cmd>call PandocPDFLandscape()<cr>", "compile (landscape)"},
         p = {"<cmd>MarkdownPreview<cr>", "preview"},
-        C = {"<cmd>call PandocPDFNoContents()<cr>", "compile (portrait - no contents)"},
-        L = {"<cmd>call PandocPDFLandscapeNoContents()<cr>", "compile (landscape - no contents)"}
+        C = {
+            "<cmd>call PandocPDFNoContents()<cr>",
+            "compile (portrait - no contents)"
+        },
+        L = {
+            "<cmd>call PandocPDFLandscapeNoContents()<cr>",
+            "compile (landscape - no contents)"
+        }
     },
     b = {
         name = "+buffer",
@@ -120,10 +126,15 @@ wk.register({
         p = {"<cmd>DebugPause<cr>", "pause"},
         u = {"<cmd>DebugUp<cr>", "up"},
         d = {"<cmd>DebugDown<cr>", "down"},
-        D = {"<cmd>DebugSetExceptionBreakpointsDefault<cr>", "exceptions-default"},
+        D = {
+            "<cmd>DebugSetExceptionBreakpointsDefault<cr>", "exceptions-default"
+        },
         N = {"<cmd>DebugSetExceptionBreakpointsNone<cr>", "exceptions-none"},
         R = {"<cmd>DebugSetExceptionBreakpointsRaised<cr>", "exceptions-raised"},
-        U = {"<cmd>DebugSetExceptionBreakpointsUncaught<cr>", "exceptions-uncaught"},
+        U = {
+            "<cmd>DebugSetExceptionBreakpointsUncaught<cr>",
+            "exceptions-uncaught"
+        },
         L = {"<cmd>DebugLogPoint<cr>", "log"},
         C = {"<cmd>DebugConditionalBreakpoint<cr>", "conditional breakpoint"}
     },
@@ -145,8 +156,14 @@ wk.register({
         name = "+search",
         ["."] = {"<cmd>Telescope filetypes<cr>", "filetypes"},
         B = {"<cmd>Telescope git_branches<cr>", "git branches"},
-        d = {"<cmd>Telescope lsp_document_diagnostics<cr>", "document diagnostics"},
-        D = {"<cmd>Telescope lsp_workspace_diagnostics<cr>", "workspace diagnostics"},
+        d = {
+            "<cmd>Telescope lsp_document_diagnostics<cr>",
+            "document diagnostics"
+        },
+        D = {
+            "<cmd>Telescope lsp_workspace_diagnostics<cr>",
+            "workspace diagnostics"
+        },
         f = {"<cmd>Telescope find_files<cr>", "files"},
         ["*"] = {"<cmd>Telescope grep_string<cr>", "search current word"},
         F = {"<cmd>Telescope file_browser<cr>", "file browser"},
@@ -167,7 +184,11 @@ wk.register({
         s = {"<cmd>CtrlSF <cr>", "CtrlSF"}
     },
 
-    S = {name = "+Session", s = {"<cmd>SessionSave", "save session"}, l = {"<cmd>DSessionLoad<cr>", "load Session"}},
+    S = {
+        name = "+Session",
+        s = {"<cmd>SessionSave", "save session"},
+        l = {"<cmd>DSessionLoad<cr>", "load Session"}
+    },
     g = {
         name = "+git",
         a = {"<cmd>Git add .<cr>", "add all"},
@@ -191,19 +212,39 @@ wk.register({
         X = {"<cmd>!git checkout --conflict=diff3<cr>", "reverse mergetool"}
     },
 
+    i = {
+        name = "+trouble",
+        i = {"<cmd>Trouble<cr>", "Show"},
+        w = {"<cmd>Trouble lsp_workspace_diagnostics<cr>", "Worspace Diagnostics"},
+        d = {"<cmd>Trouble lsp_document_diagnostics<cr>", "Document Diagnostics"},
+        l = {"<cmd>Trouble loclist<cr>", "Location List"},
+        q = {"<cmd>Trouble quickfix<cr>", "Quick Fix"},
+        r = {"<cmd>Trouble lsp_references<cr>", "References"}
+    },
+
     c = {
         name = "+lsp",
         a = {"<cmd>Lspsaga code_action<cr>", "code action"},
         A = {"<cmd>Lspsaga range_code_action<cr>", "selected action"},
-        d = {"<cmd>Telescope lsp_document_diagnostics<cr>", "document diagnostics"},
-        D = {"<cmd>Telescope lsp_workspace_diagnostics<cr>", "workspace diagnostics"},
+        d = {
+            "<cmd>Telescope lsp_document_diagnostics<cr>",
+            "document diagnostics"
+        },
+        D = {
+            "<cmd>Telescope lsp_workspace_diagnostics<cr>",
+            "workspace diagnostics"
+        },
         f = {"<cmd>Neoformat<cr>", "format"},
         I = {"<cmd>LspInfo<cr>", "lsp info"},
         v = {"<cmd>LspVirtualTextToggle<cr>", "lsp toggle virtual text"},
         c = {"<cmd>Lspsaga lsp_finder<cr>", "lsp finder"},
         L = {"<cmd>Lspsaga show_line_diagnostics<cr>", "line_diagnostics"},
-        [">"] = {"<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>", "next diagnostic"},
-        ["<"] = {"<cmd>lua vim.lsp.diagnostic.goto_next()<cr>", "next diagnostic"},
+        [">"] = {
+            "<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>", "next diagnostic"
+        },
+        ["<"] = {
+            "<cmd>lua vim.lsp.diagnostic.goto_next()<cr>", "next diagnostic"
+        },
         p = {"<cmd>Lspsaga preview_definition<cr>", "preview definition"},
         q = {"<cmd>Telescope quickfix<cr>", "quickfix"},
         r = {"<cmd>Lspsaga rename<cr>", "rename"},
@@ -257,8 +298,13 @@ wk.register({
         g = {"<cmd>FloatermNew lazygit<cr>", "lazygit"},
         ["]"] = {"<cmd>FloatermNext<cr>", "next"},
         ["["] = {"<cmd>FloatermPrev<cr>", "prev"},
-        ["\\"] = {"<cmd>FloatermNew --wintype=normal --position=right<cr>", "right"},
-        ["-"] = {"<cmd>FloatermNew --wintype=normal --height=0.3 --position=bottom<cr>", "bottom"}
+        ["\\"] = {
+            "<cmd>FloatermNew --wintype=normal --position=right<cr>", "right"
+        },
+        ["-"] = {
+            "<cmd>FloatermNew --wintype=normal --height=0.3 --position=bottom<cr>",
+            "bottom"
+        }
     },
 
     t = {
@@ -316,6 +362,6 @@ wk.register({
         w = {"<cmd>StripWhitespace<cr>", "strip whitespace"},
         s = {"<cmd>Ds1z=`]<cr>", "correct spelling"},
         y = {"<cmd>let @+= expand(' % ')<cr>", "copy path"},
-		l = {"<cmd>%s/^/\\=printf('%-4d', line('.'))<cr>", "write line numbers"}
+        l = {"<cmd>%s/^/\\=printf('%-4d', line('.'))<cr>", "write line numbers"}
     }
 }, {prefix = "<leader>"})

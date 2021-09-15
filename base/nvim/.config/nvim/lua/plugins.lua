@@ -37,25 +37,25 @@ return require("packer").startup({
         use {"nvim-lua/popup.nvim", opt = false}
         use {"nvim-lua/plenary.nvim", opt = false}
         use {"tjdevries/astronauta.nvim", opt = false}
-        -- use {
-        --     "nvim-telescope/telescope.nvim",
-        --     opt = false,
-        --     requires = {"nvim-lua/plenary.nvim"},
-        --     config = function() require 'search.telescope' end
-        -- }
-        -- use {
-        --     'nvim-telescope/telescope-symbols.nvim',
-        --     opt = false,
-        --     requires = {"nvim-telescope/telescope.nvim"}
-        -- }
-        -- use {
-        --     'nvim-telescope/telescope-fzy-native.nvim',
-        --     opt = false,
-        --     requires = {"nvim-telescope/telescope.nvim"},
-        --     config = function()
-        --         require('telescope').load_extension('fzy_native')
-        --     end
-        -- }
+        use {
+            "nvim-telescope/telescope.nvim",
+            opt = false,
+            requires = {"nvim-lua/plenary.nvim"},
+            -- config = function() require 'search.telescope' end
+        }
+        use {
+            'nvim-telescope/telescope-symbols.nvim',
+            opt = false,
+            requires = {"nvim-telescope/telescope.nvim"}
+        }
+        use {
+            'nvim-telescope/telescope-fzy-native.nvim',
+            opt = false,
+            requires = {"nvim-telescope/telescope.nvim"},
+            config = function()
+                require('telescope').load_extension('fzy_native')
+            end
+        }
         -- use {
         --     "nvim-telescope/telescope-project.nvim",
         --     event = "BufRead",
@@ -301,33 +301,33 @@ return require("packer").startup({
         use 'folke/tokyonight.nvim'
 
         -- Icons
-        -- use {"kyazdani42/nvim-web-devicons", opt = false}
+        use {"kyazdani42/nvim-web-devicons", opt = false}
 
         -- Diagnostic and niceties
-        -- use {
-        --     "folke/trouble.nvim",
-        --     requires = "kyazdani42/nvim-web-devicons",
-        --     config = function()
-        --         require("trouble").setup {}
-        --         vim.api.nvim_set_keymap("n", "<leader>ix", "<cmd>Trouble<cr>",
-        --                                 {silent = true, noremap = true})
-        --         vim.api.nvim_set_keymap("n", "<leader>iw",
-        --                                 "<cmd>Trouble lsp_workspace_diagnostics<cr>",
-        --                                 {silent = true, noremap = true})
-        --         vim.api.nvim_set_keymap("n", "<leader>id",
-        --                                 "<cmd>Trouble lsp_document_diagnostics<cr>",
-        --                                 {silent = true, noremap = true})
-        --         vim.api.nvim_set_keymap("n", "<leader>il",
-        --                                 "<cmd>Trouble loclist<cr>",
-        --                                 {silent = true, noremap = true})
-        --         vim.api.nvim_set_keymap("n", "<leader>iq",
-        --                                 "<cmd>Trouble quickfix<cr>",
-        --                                 {silent = true, noremap = true})
-        --         vim.api.nvim_set_keymap("n", "gR",
-        --                                 "<cmd>Trouble lsp_references<cr>",
-        --                                 {silent = true, noremap = true})
-        --     end
-        -- }
+        use {
+            "folke/trouble.nvim",
+            requires = "kyazdani42/nvim-web-devicons",
+            config = function()
+                require("trouble").setup {}
+                vim.api.nvim_set_keymap("n", "<leader>ix", "<cmd>Trouble<cr>",
+                                        {silent = true, noremap = true})
+                vim.api.nvim_set_keymap("n", "<leader>iw",
+                                        "<cmd>Trouble lsp_workspace_diagnostics<cr>",
+                                        {silent = true, noremap = true})
+                vim.api.nvim_set_keymap("n", "<leader>id",
+                                        "<cmd>Trouble lsp_document_diagnostics<cr>",
+                                        {silent = true, noremap = true})
+                vim.api.nvim_set_keymap("n", "<leader>il",
+                                        "<cmd>Trouble loclist<cr>",
+                                        {silent = true, noremap = true})
+                vim.api.nvim_set_keymap("n", "<leader>iq",
+                                        "<cmd>Trouble quickfix<cr>",
+                                        {silent = true, noremap = true})
+                vim.api.nvim_set_keymap("n", "gR",
+                                        "<cmd>Trouble lsp_references<cr>",
+                                        {silent = true, noremap = true})
+            end
+        }
         -- Colorize whitespace
         use {
             'ntpeters/vim-better-whitespace',
