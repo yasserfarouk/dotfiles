@@ -37,30 +37,30 @@ return require("packer").startup({
         use {"nvim-lua/popup.nvim", opt = false}
         use {"nvim-lua/plenary.nvim", opt = false}
         use {"tjdevries/astronauta.nvim", opt = false}
-        use {
-            "nvim-telescope/telescope.nvim",
-            opt = false,
-            requires = {"nvim-lua/plenary.nvim"},
-            config = function() require 'search.telescope' end
-        }
-        use {
-            'nvim-telescope/telescope-symbols.nvim',
-            opt = false,
-            requires = {"nvim-telescope/telescope.nvim"}
-        }
-        use {
-            'nvim-telescope/telescope-fzy-native.nvim',
-            opt = false,
-            requires = {"nvim-telescope/telescope.nvim"},
-            config = function()
-                require('telescope').load_extension('fzy_native')
-            end
-        }
-        use {
-            "nvim-telescope/telescope-project.nvim",
-            event = "BufRead",
-            setup = function() vim.cmd [[packadd telescope.nvim]] end
-        }
+        -- use {
+        --     "nvim-telescope/telescope.nvim",
+        --     opt = false,
+        --     requires = {"nvim-lua/plenary.nvim"},
+        --     config = function() require 'search.telescope' end
+        -- }
+        -- use {
+        --     'nvim-telescope/telescope-symbols.nvim',
+        --     opt = false,
+        --     requires = {"nvim-telescope/telescope.nvim"}
+        -- }
+        -- use {
+        --     'nvim-telescope/telescope-fzy-native.nvim',
+        --     opt = false,
+        --     requires = {"nvim-telescope/telescope.nvim"},
+        --     config = function()
+        --         require('telescope').load_extension('fzy_native')
+        --     end
+        -- }
+        -- use {
+        --     "nvim-telescope/telescope-project.nvim",
+        --     event = "BufRead",
+        --     setup = function() vim.cmd [[packadd telescope.nvim]] end
+        -- }
         -- auto vormatting
         use {
             'sbdchd/neoformat',
@@ -132,19 +132,18 @@ return require("packer").startup({
 				]])
             end
         }
-        use {
-            "Pocco81/DAPInstall.nvim",
-            opt = false,
-            config = function()
-
-                local dap_install = require("dap-install")
-                local dbg_list = require("dap-install.api.debuggers").get_installed_debuggers()
-
-                for debugger, _ in pairs(dbg_list) do
-					dap_install.config(debugger)
-                end
-            end
-        }
+        -- use {
+        --     "Pocco81/DAPInstall.nvim",
+        --     opt = false,
+        --     config = function()
+		-- 		local dap_install = require("dap-install")
+		-- 		local dbg_list = require("dap-install.api.debuggers").get_installed_debuggers()
+        --
+		-- 		for _, debugger in ipairs(dbg_list) do
+		-- 			dap_install.config(debugger)
+		-- 		end
+        --     end
+        -- }
 
         -- use {
         --     "rcarriga/nvim-dap-ui",
@@ -230,11 +229,11 @@ return require("packer").startup({
             opt = false,
             config = function() require 'git.gitsigns' end
         }
-        use {
-            'sindrets/diffview.nvim',
-            opt = false,
-            config = function() require 'git.diffview' end
-        }
+        -- use {
+        --     'sindrets/diffview.nvim',
+        --     opt = false,
+        --     config = function() require 'git.diffview' end
+        -- }
         use {'tpope/vim-fugitive', opt = false}
         use {'tpope/vim-rhubarb', opt = false}
 
@@ -274,10 +273,12 @@ return require("packer").startup({
         use {'tpope/vim-repeat', opt = false}
         use {'tpope/vim-dispatch', opt = false}
         use {'tpope/vim-abolish', opt = false}
+		use {'tpope/vim-capslock', opt=false} -- <C-g>c for capslock
+		use {'tpope/vim-eunuch', opt=false} -- Unix helpful commands like Move, SudoWrite
 
-        -- kitty interaction
-        -- use {'knubie/vim-kitty-navigator', opt = false}
-        use {'knubie/vim-kitty-navigator', opt = false, cond = {kitty}}
+        -- -- kitty interaction
+        -- -- use {'knubie/vim-kitty-navigator', opt = false}
+        -- use {'knubie/vim-kitty-navigator', opt = false, cond = {kitty}}
         -- tumx integration
         use {
             'christoomey/vim-tmux-navigator',
@@ -303,30 +304,30 @@ return require("packer").startup({
         -- use {"kyazdani42/nvim-web-devicons", opt = false}
 
         -- Diagnostic and niceties
-        use {
-            "folke/trouble.nvim",
-            requires = "kyazdani42/nvim-web-devicons",
-            config = function()
-                require("trouble").setup {}
-                vim.api.nvim_set_keymap("n", "<leader>ix", "<cmd>Trouble<cr>",
-                                        {silent = true, noremap = true})
-                vim.api.nvim_set_keymap("n", "<leader>iw",
-                                        "<cmd>Trouble lsp_workspace_diagnostics<cr>",
-                                        {silent = true, noremap = true})
-                vim.api.nvim_set_keymap("n", "<leader>id",
-                                        "<cmd>Trouble lsp_document_diagnostics<cr>",
-                                        {silent = true, noremap = true})
-                vim.api.nvim_set_keymap("n", "<leader>il",
-                                        "<cmd>Trouble loclist<cr>",
-                                        {silent = true, noremap = true})
-                vim.api.nvim_set_keymap("n", "<leader>iq",
-                                        "<cmd>Trouble quickfix<cr>",
-                                        {silent = true, noremap = true})
-                vim.api.nvim_set_keymap("n", "gR",
-                                        "<cmd>Trouble lsp_references<cr>",
-                                        {silent = true, noremap = true})
-            end
-        }
+        -- use {
+        --     "folke/trouble.nvim",
+        --     requires = "kyazdani42/nvim-web-devicons",
+        --     config = function()
+        --         require("trouble").setup {}
+        --         vim.api.nvim_set_keymap("n", "<leader>ix", "<cmd>Trouble<cr>",
+        --                                 {silent = true, noremap = true})
+        --         vim.api.nvim_set_keymap("n", "<leader>iw",
+        --                                 "<cmd>Trouble lsp_workspace_diagnostics<cr>",
+        --                                 {silent = true, noremap = true})
+        --         vim.api.nvim_set_keymap("n", "<leader>id",
+        --                                 "<cmd>Trouble lsp_document_diagnostics<cr>",
+        --                                 {silent = true, noremap = true})
+        --         vim.api.nvim_set_keymap("n", "<leader>il",
+        --                                 "<cmd>Trouble loclist<cr>",
+        --                                 {silent = true, noremap = true})
+        --         vim.api.nvim_set_keymap("n", "<leader>iq",
+        --                                 "<cmd>Trouble quickfix<cr>",
+        --                                 {silent = true, noremap = true})
+        --         vim.api.nvim_set_keymap("n", "gR",
+        --                                 "<cmd>Trouble lsp_references<cr>",
+        --                                 {silent = true, noremap = true})
+        --     end
+        -- }
         -- Colorize whitespace
         use {
             'ntpeters/vim-better-whitespace',

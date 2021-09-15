@@ -1,6 +1,6 @@
-vim.cmd([[
-set completeopt=menuone,noselect
-]])
+-- vim.cmd([[
+-- set completeopt=menuone,noselect
+-- ]])
 
 require'compe'.setup {
     enabled = true,

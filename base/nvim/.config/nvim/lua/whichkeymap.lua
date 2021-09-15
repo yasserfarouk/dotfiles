@@ -1,35 +1,44 @@
 local wk = require("which-key")
-vim.cmd([[
-function! GoogleSearch()
-	let searchterm = getreg("g")
-	silent! exec "!chrome \"http://google.com/search?q=" . searchterm . "\" &"
-endfunction
 
+vim.cmd([[
 function! PandocPDF()
 	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
 endfunction
+]])
 
+vim.cmd([[
 function! PandocPDFNoContents()
 	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0  -V geometry:margin=2cm -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
 endfunction
+]])
 
+vim.cmd([[
 function! PandocHTML()
 	silent exec "Dispatch pandoc  -o " . expand("%:r"). ".html -s " . expand("%") . "; open " . expand("%:r") . ".html"
 endfunction
+]])
 
+vim.cmd([[
 function! PublishMedium()
 	silent exec "Dispatch pandoc  -o " . expand("%:r"). ".html -s " . expand("%") . "; ~/go/bin/md-publisher publish --medium-token `cat $HOME/bin/.medium_token` " . expand("%:r") . ".html"
 
 endfunction
+]])
 
+vim.cmd([[
 function! PandocPDFLandscape()
 	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
 endfunction
+]])
 
+vim.cmd([[
 function! PandocPDFLandscapeNoContents()
 	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
 endfunction
 
+]])
+
+vim.cmd([[
 function! SetupWrapping()
 	if &wrap == 1
 		set nowrap
@@ -44,6 +53,9 @@ function! SetupWrapping()
 	endif
 endfunction
 
+]])
+
+vim.cmd([[
 function! SetBackground()
 	if &background == 'dark'
 		" if &colors != 'gruvbox'
@@ -55,6 +67,7 @@ function! SetBackground()
 	endif
 endfunction
 ]])
+
 wk.setup {}
 wk.register({
     ["'"] = {"<cmd>Dashboard<cr>", "Home"},
