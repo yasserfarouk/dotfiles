@@ -6,7 +6,11 @@ function! GoogleSearch()
 endfunction
 
 function! PandocPDF()
-	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=12pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
+	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
+endfunction
+
+function! PandocPDFNoContents()
+	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0  -V geometry:margin=2cm -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
 endfunction
 
 function! PandocHTML()
@@ -19,16 +23,24 @@ function! PublishMedium()
 endfunction
 
 function! PandocPDFLandscape()
-	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=12pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
+	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
+endfunction
+
+function! PandocPDFLandscapeNoContents()
+	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
 endfunction
 
 function! SetupWrapping()
 	if &wrap == 1
 		set nowrap
+		nnoremap j j
+		nnoremap k k
 	else
 		set wrap
 		set wm=2
 		set textwidth=79
+		nnoremap j gj
+		nnoremap k gk
 	endif
 endfunction
 
@@ -64,7 +76,9 @@ wk.register({
         h = {"<cmd>call PandocHTML()<cr>", "compile (html)"},
         P = {"<cmd>call PublishMedium()<cr>", "publish (medium)"},
         l = {"<cmd>call PandocPDFLandscape()<cr>", "compile (landscape)"},
-        p = {"<cmd>MarkdownPreview<cr>", "preview"}
+        p = {"<cmd>MarkdownPreview<cr>", "preview"},
+        C = {"<cmd>call PandocPDFNoContents()<cr>", "compile (portrait - no contents)"},
+        L = {"<cmd>call PandocPDFLandscapeNoContents()<cr>", "compile (landscape - no contents)"}
     },
     b = {
         name = "+buffer",
@@ -76,7 +90,7 @@ wk.register({
         d = {"<cmd>BufferClose<cr>", "delete-buffer"},
         n = {"<cmd>bnext<cr>", "next-buffer"},
         p = {"<cmd>bprevious<cr>", "previous-buffer"},
-        o = {"<cmd>Bufonly<cr>", "close others"}
+        o = {"<cmd>BufferCloseAllButCurrent<cr>", "close others"}
     },
     d = {
         name = "+debug",
@@ -170,7 +184,7 @@ wk.register({
         A = {"<cmd>Lspsaga range_code_action<cr>", "selected action"},
         d = {"<cmd>Telescope lsp_document_diagnostics<cr>", "document diagnostics"},
         D = {"<cmd>Telescope lsp_workspace_diagnostics<cr>", "workspace diagnostics"},
-        f = {"<cmd>LspFormatting<cr>", "format"},
+        f = {"<cmd>Neoformat<cr>", "format"},
         I = {"<cmd>LspInfo<cr>", "lsp info"},
         v = {"<cmd>LspVirtualTextToggle<cr>", "lsp toggle virtual text"},
         c = {"<cmd>Lspsaga lsp_finder<cr>", "lsp finder"},
