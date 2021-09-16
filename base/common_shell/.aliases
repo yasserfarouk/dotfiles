@@ -326,3 +326,6 @@ alias cls='clear'
 
 # kitty
 alias kitty='kitty --single-instance --start-as=maximized --listen-on=unix:/tmp/mykitty --single-instance '
+
+# kill tmux session
+alias tkill="for s in \$(tmux list-sessions | awk '{print \$1}' | rg ':' -r '' | fzf); do tmux kill-session -t \$s; done;"

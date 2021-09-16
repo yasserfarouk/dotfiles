@@ -9,10 +9,11 @@ vim.fn.sign_define("LspDiagnosticsSignInformation",
                    {texthl = "LspDiagnosticsSignInformation", text = "", numhl = "LspDiagnosticsSignInformation"})
 
 vim.cmd("nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>")
-vim.cmd("nnoremap <silent> gh <cmd>lua Lspsaga lsp_finder<CR>")
+vim.cmd("nnoremap <silent> gh <cmd>Lspsaga lsp_finder<CR>")
 vim.cmd("nnoremap <silent> gD <cmd>lua vim.lsp.buf.declaration()<CR>")
 vim.cmd("nnoremap <silent> gu <cmd>lua vim.lsp.buf.references()<CR>")
 vim.cmd("nnoremap <silent> gR <cmd>lua vim.lsp.buf.references()<CR>")
+vim.cmd("nnoremap <silent> gs <cmd>Lspsaga signature_help<CR>")
 vim.cmd("nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>")
 vim.cmd("nnoremap <silent> <F2> <cmd>Lspsaga rename<CR>")
 vim.cmd("nnoremap <silent> ca <cmd>Lspsaga code_action<CR>")
