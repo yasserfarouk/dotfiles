@@ -71,7 +71,14 @@ return require("packer").startup({
         }
         -- LSP
         use {"neovim/nvim-lspconfig", opt = false}
-        use {"glepnir/lspsaga.nvim", opt = false}
+        use {"glepnir/lspsaga.nvim", opt = false, 
+			config = function()
+                vim.cmd([[
+					nnoremap <silent> gh :Lspsaga lsp_finder<CR>
+				]])
+			end
+
+		}
         use {"kabouzeid/nvim-lspinstall", opt = false}
         use {'ray-x/lsp_signature.nvim', opt = false}
 
