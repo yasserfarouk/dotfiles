@@ -41,7 +41,7 @@ return require("packer").startup({
             "nvim-telescope/telescope.nvim",
             opt = false,
             requires = {"nvim-lua/plenary.nvim"},
-            -- config = function() require 'search.telescope' end
+            config = function() require 'search.telescope' end
         }
         use {
             'nvim-telescope/telescope-symbols.nvim',
