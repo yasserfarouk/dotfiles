@@ -18,7 +18,7 @@ root: ~/storage/gdrive/Research/Papers/Mypapers/<%= typ or "Current" %>/<%= proj
 
 # Run on project start, the first time
 on_project_first_start:
-  - mkdir --parents ~/storage/gdrive/Research/Papers/Mypapers/<%= typ or "Current" %>/<%= project %>
+  - mkdir -p ~/storage/gdrive/Research/Papers/Mypapers/<%= typ or "Current" %>/<%= project %>
   - cd ~/storage/gdrive/Research/Papers/Mypapers/<%= typ or "Current" %>/<%= project %>
 
 # Run on project start, after the first time

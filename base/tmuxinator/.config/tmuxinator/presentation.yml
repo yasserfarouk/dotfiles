@@ -16,7 +16,7 @@ root: ~/code/presentations/<%= project %>
 
 # Run on project start, the first time
 on_project_first_start:
-  - mkdir --parents ~/code/presentations/<%= project %>
+  - mkdir -p ~/code/presentations/<%= project %>
   - cd ~/code/presentations/<%= project %>
 
 # Run on project start, after the first time

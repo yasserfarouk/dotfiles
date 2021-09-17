@@ -154,7 +154,8 @@ wk.register({
 
     s = {
         name = "+search",
-        ["."] = {"<cmd>Telescope filetypes<cr>", "filetypes"},
+        ["."] = {"<cmd>lua require\"telescope.builtin\".find_files({ hidden = true })<CR>", "files (hidden)"},
+        [";"] = {"<cmd>Telescope filetypes<cr>", "filetypes"},
         B = {"<cmd>Telescope git_branches<cr>", "git branches"},
         d = {
             "<cmd>Telescope lsp_document_diagnostics<cr>",

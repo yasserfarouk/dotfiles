@@ -16,7 +16,7 @@ root: ~/code/sites/<%= project %>
 
 # Run on project start, the first time
 on_project_first_start:
-  - mkdir --parents ~/code/sites/<%= project %>
+  - mkdir -p ~/code/sites/<%= project %>
   - cd ~/code/sites/<%= project %>
 
 # Run on project start, after the first time
