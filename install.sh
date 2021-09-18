@@ -84,6 +84,8 @@ packages=(
 	"zathura"
 	"zathura-pdf-poppler"
 	"transmission"
+	"javac"
+	"starship"
 )
 pip_packages=(
 	"msgpack"

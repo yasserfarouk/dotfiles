@@ -21,32 +21,17 @@ antigen bundle git
 antigen bundle pip
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
-# case `uname` in
-#   Darwin)
-# 	antigen bundle marzocchi/zsh-notify
-# 	zstyle ':notify:*' command-complete-timeout 5
-# 	zstyle ':notify:*' error-icon "https://media3.giphy.com/media/10ECejNtM1GyRy/200_s.gif"
-# 	zstyle ':notify:*' error-title "Fail"
-# 	zstyle ':notify:*' success-icon "https://s-media-cache-ak0.pinimg.com/564x/b5/5a/18/b55a1805f5650495a74202279036ecd2.jpg"
-# 	zstyle ':notify:*' success-title "Success"
-#   ;;
-#   Linux)
-#     # commands for Linux go here
-#   ;;
-#   FreeBSD)
-#     # commands for FreeBSD go here
-#   ;;
-# esac
 antigen bundle mafredri/zsh-async
 antigen bundle sindresorhus/pure
 antigen apply
 
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-eval "$(direnv hook zsh)"
+
+if command -v direnv >/dev/null; then
+	eval "$(direnv hook zsh)"
+fi
 
 # Enable Ctrl-x-e to edit command line
 autoload -U edit-command-line
@@ -54,61 +39,25 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
-#===============================================================================
-# icl - interactive command library
-#===============================================================================
-
-# f_run_icl(){
-#     icl_OUTPUT=$(icl)
-#     print -z $icl_OUTPUT
-#     zle accept-line # no idea if this is the way it's done
-# }
-#
-# zle -N w_run_icl f_run_icl # create a widget
-# bindkey ^i w_run_icl
-#
-#===============================================================================
-# END  icl - interactive command library END
-#===============================================================================
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[ -f ~/.postzsh ] && source ~/.postzsh
-
 autoload -Uz compinit
 zstyle ':completion:*' menu select
 fpath+=~/.zfunc
 
-### Multiple java verstions
-export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8)
-export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
-export JAVA_13_HOME=$(/usr/libexec/java_home -v13)
-export JAVA_15_HOME=$(/usr/libexec/java_home -v15)
-export JAVA_16_HOME=$(/usr/libexec/java_home -v16)
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f ~/.postzsh ] && source ~/.postzsh
 
-alias java8='export JAVA_HOME=$JAVA_8_HOME'
-alias java11='export JAVA_HOME=$JAVA_11_HOME'
-alias java13='export JAVA_HOME=$JAVA_13_HOME'
-alias java15='export JAVA_HOME=$JAVA_15_HOME'
-alias java16='export JAVA_HOME=$JAVA_16_HOME'
-
-# default to Java 11
-java16
-
-export PATH="$HOME/.jenv/bin:$PATH"
-eval "$(jenv init -)"
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('$HOME/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "$HOME/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="$HOME/anaconda3/bin:$PATH"
-    fi
+if [ -f $HOME/anaconda3/bin/conda ] ; then
+	__conda_setup="$('$HOME/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+	if [ $? -eq 0 ]; then
+			eval "$__conda_setup"
+	else
+			if [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
+					. "$HOME/anaconda3/etc/profile.d/conda.sh"
+			else
+					export PATH="$HOME/anaconda3/bin:$PATH"
+			fi
+	fi
+	unset __conda_setup
 fi
-unset __conda_setup
-# <<< conda initialize <<<
 
-
+eval "$(starship init zsh)"
