@@ -21,7 +21,7 @@ export TERMINAL_DARK=1
 export _Z_DATA="$HOME/.z-data"
 
 # ## Multiple java verstions
-if [-f /usr/libexec/java_home]; then
+if [ -f /usr/libexec/java_home ]; then
 	export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8)
 	export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
 	export JAVA_13_HOME=$(/usr/libexec/java_home -v13)

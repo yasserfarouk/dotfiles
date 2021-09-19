@@ -1,5 +1,8 @@
 alias vi=vim
 alias v=nvim
-JAVA_HOME=$HOME/jdk
-PATH=".:$JAVA_HOME/bin:$PATH"
-eval $(/export/home/yasser/.linuxbrew/bin/brew shellenv)
+# always use the jdk in home if it exists. Works well on daiba
+if [-d $HOME/jdk ]; then
+	JAVA_HOME=$HOME/jdk
+	PATH=".:$JAVA_HOME/bin:$PATH"
+fi
+eval $($HOME/.linuxbrew/bin/brew shellenv)
