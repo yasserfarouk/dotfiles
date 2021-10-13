@@ -1,12 +1,24 @@
 -- TODO figure out why this don't work
-vim.fn.sign_define("LspDiagnosticsSignError",
-                   {texthl = "LspDiagnosticsSignError", text = "", numhl = "LspDiagnosticsSignError"})
-vim.fn.sign_define("LspDiagnosticsSignWarning",
-                   {texthl = "LspDiagnosticsSignWarning", text = "", numhl = "LspDiagnosticsSignWarning"})
-vim.fn.sign_define("LspDiagnosticsSignHint",
-                   {texthl = "LspDiagnosticsSignHint", text = "", numhl = "LspDiagnosticsSignHint"})
-vim.fn.sign_define("LspDiagnosticsSignInformation",
-                   {texthl = "LspDiagnosticsSignInformation", text = "", numhl = "LspDiagnosticsSignInformation"})
+vim.fn.sign_define("LspDiagnosticsSignError", {
+    texthl = "LspDiagnosticsSignError",
+    text = "",
+    numhl = "LspDiagnosticsSignError"
+})
+vim.fn.sign_define("LspDiagnosticsSignWarning", {
+    texthl = "LspDiagnosticsSignWarning",
+    text = "",
+    numhl = "LspDiagnosticsSignWarning"
+})
+vim.fn.sign_define("LspDiagnosticsSignHint", {
+    texthl = "LspDiagnosticsSignHint",
+    text = "",
+    numhl = "LspDiagnosticsSignHint"
+})
+vim.fn.sign_define("LspDiagnosticsSignInformation", {
+    texthl = "LspDiagnosticsSignInformation",
+    text = "",
+    numhl = "LspDiagnosticsSignInformation"
+})
 
 vim.cmd("nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>")
 vim.cmd("nnoremap <silent> gh <cmd>Lspsaga lsp_finder<CR>")
@@ -22,18 +34,23 @@ vim.cmd('nnoremap <silent> <c-space> <cmd>Lspsaga signature_help<CR>')
 vim.cmd("nnoremap <silent> <C-p> <cmd>Lspsaga diagnostic_jump_prev<CR>")
 vim.cmd("nnoremap <silent> <C-n> <cmd>Lspsaga diagnostic_jump_next<CR>")
 -- scroll down hover doc or scroll in definition preview
-vim.cmd("nnoremap <silent> <C-f> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>")
+vim.cmd(
+    "nnoremap <silent> <C-f> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>")
 -- scroll up hover doc
-vim.cmd("nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>")
-vim.cmd('command! -nargs=0 LspVirtualTextToggle lua require("lsp/virtual_text").toggle()')
+vim.cmd(
+    "nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>")
+vim.cmd(
+    'command! -nargs=0 LspVirtualTextToggle lua require("lsp/virtual_text").toggle()')
 
 -- symbols for autocomplete
 vim.lsp.protocol.CompletionItemKind = {
-    "   (Text) ", "   (Method)", "   (Function)", "   (Constructor)", " ﴲ  (Field)", "[] (Variable)",
-    "   (Class)", " ﰮ  (Interface)", "   (Module)", " 襁 (Property)", "   (Unit)", "   (Value)",
-    " 練 (Enum)", "   (Keyword)", " ﬌  (Snippet)", "   (Color)", "   (File)", "   (Reference)",
-    "   (Folder)", "   (EnumMember)", " ﲀ  (Constant)", " ﳤ  (Struct)", "   (Event)", "   (Operator)",
-    "   (TypeParameter)"
+    "   (Text) ", "   (Method)", "   (Function)",
+    "   (Constructor)", " ﴲ  (Field)", "[] (Variable)", "   (Class)",
+    " ﰮ  (Interface)", "   (Module)", " 襁 (Property)", "   (Unit)",
+    "   (Value)", " 練 (Enum)", "   (Keyword)", " ﬌  (Snippet)",
+    "   (Color)", "   (File)", "   (Reference)", "   (Folder)",
+    "   (EnumMember)", " ﲀ  (Constant)", " ﳤ  (Struct)", "   (Event)",
+    "   (Operator)", "   (TypeParameter)"
 }
 
 --[[ " autoformat
@@ -62,14 +79,14 @@ local lsp_config = {}
 
 function lsp_config.common_on_attach(client, bufnr)
     documentHighlight(client, bufnr)
-	require'lsp_signature'.on_attach(client)
+    require'lsp_signature'.on_attach(client)
     local function buf_set_keymap(...)
         vim.api.nvim_buf_set_keymap(bufnr, ...)
     end
     local function buf_set_option(...)
         vim.api.nvim_buf_set_option(bufnr, ...)
     end
-	buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 end
 
 -- Use a loop to conveniently both setup defined servers

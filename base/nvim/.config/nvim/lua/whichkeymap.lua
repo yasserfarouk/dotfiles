@@ -39,9 +39,26 @@ endfunction
 ]])
 
 vim.cmd([[
-function! SetupWrapping()
+function! SetupWrappingSoft()
 	if &wrap == 1
 		set nowrap
+		set textwidth=0
+		nnoremap j j
+		nnoremap k k
+	else
+		set wrap
+		nnoremap j gj
+		nnoremap k gk
+	endif
+endfunction
+
+]])
+
+vim.cmd([[
+function! SetupWrappingHard()
+	if &wrap == 1
+		set nowrap
+		set textwidth=0
 		nnoremap j j
 		nnoremap k k
 	else
@@ -54,7 +71,6 @@ function! SetupWrapping()
 endfunction
 
 ]])
-
 vim.cmd([[
 function! SetBackground()
 	if &background == 'dark'
@@ -264,7 +280,8 @@ wk.register({
         h = {"<cmd>call GoHighlight()<cr>", "highlight"},
         o = {"<c-w>o", "only window"},
         q = {"<c-w>q", "close window"},
-        r = {"<cmd>call SetupWrapping()<cr>", "wrap text"},
+        r = {"<cmd>call SetupWrappingSoft()<cr>", "wrap text (soft)"},
+        R = {"<cmd>call SetupWrappingHard()<cr>", "wrap text (hard)"},
         s = {"<cmd>set invspel<cr>", "spell checker"},
         c = {"<cmd>ContextToggle<cr>", "show context"}
     },

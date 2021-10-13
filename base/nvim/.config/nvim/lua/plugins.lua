@@ -71,14 +71,16 @@ return require("packer").startup({
         }
         -- LSP
         use {"neovim/nvim-lspconfig", opt = false}
-        use {"glepnir/lspsaga.nvim", opt = false, 
-			config = function()
+        use {
+            "glepnir/lspsaga.nvim",
+            opt = false,
+            config = function()
                 vim.cmd([[
 					nnoremap <silent> gh :Lspsaga lsp_finder<CR>
 				]])
-			end
+            end
 
-		}
+        }
         use {"kabouzeid/nvim-lspinstall", opt = false}
         use {'ray-x/lsp_signature.nvim', opt = false}
 
@@ -143,12 +145,12 @@ return require("packer").startup({
         --     "Pocco81/DAPInstall.nvim",
         --     opt = false,
         --     config = function()
-		-- 		local dap_install = require("dap-install")
-		-- 		local dbg_list = require("dap-install.api.debuggers").get_installed_debuggers()
+        -- 		local dap_install = require("dap-install")
+        -- 		local dbg_list = require("dap-install.api.debuggers").get_installed_debuggers()
         --
-		-- 		for _, debugger in ipairs(dbg_list) do
-		-- 			dap_install.config(debugger)
-		-- 		end
+        -- 		for _, debugger in ipairs(dbg_list) do
+        -- 			dap_install.config(debugger)
+        -- 		end
         --     end
         -- }
 
@@ -206,15 +208,27 @@ return require("packer").startup({
         use {'nanotee/sqls.nvim', disable = windows()}
 
         -- Autocomplete
+        -- use {
+        --     "hrsh7th/nvim-compe",
+        --     opt = false,
+        --     config = function() require('completion') end
+        -- }
+        use {'onsails/lspkind-nvim', opt = false}
         use {
-            "hrsh7th/nvim-compe",
+            'hrsh7th/nvim-cmp',
             opt = false,
+            requires = {
+                "hrsh7th/cmp-buffer", "hrsh7th/cmp-nvim-lsp",
+                'quangnguyen30192/cmp-nvim-ultisnips', 'hrsh7th/cmp-nvim-lua',
+                'octaltree/cmp-look', 'hrsh7th/cmp-path', 'hrsh7th/cmp-calc',
+                'f3fora/cmp-spell', 'hrsh7th/cmp-emoji'
+            },
             config = function() require('completion') end
         }
 
         -- Snippets
-        use {"hrsh7th/vim-vsnip", opt = false}
-        -- use {'SirVer/ultisnips', opt = false}
+        -- use {"hrsh7th/vim-vsnip", opt = false}
+        use {'SirVer/ultisnips', opt = false}
         use {'honza/vim-snippets', opt = false}
 
         -- Treesitter
@@ -280,8 +294,8 @@ return require("packer").startup({
         use {'tpope/vim-repeat', opt = false}
         use {'tpope/vim-dispatch', opt = false}
         use {'tpope/vim-abolish', opt = false}
-		use {'tpope/vim-capslock', opt=false} -- <C-g>c for capslock
-		use {'tpope/vim-eunuch', opt=false} -- Unix helpful commands like Move, SudoWrite
+        use {'tpope/vim-capslock', opt = false} -- <C-g>c for capslock
+        use {'tpope/vim-eunuch', opt = false} -- Unix helpful commands like Move, SudoWrite
 
         -- -- kitty interaction
         -- -- use {'knubie/vim-kitty-navigator', opt = false}
@@ -381,7 +395,7 @@ return require("packer").startup({
         use {'tmhedberg/matchit', opt = false}
 
         -- add closing parentheses automatically.
-        use {'jiangmiao/auto-pairs', opt = false}
+        -- use {'jiangmiao/auto-pairs', opt = false}
         -- use {"windwp/nvim-autopairs", opt = false}
         -- use {'Raimondi/delimitMate', opt = false}
 
