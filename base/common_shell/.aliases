@@ -284,6 +284,10 @@ function searchFolder(){
     cd `dirname "$f"`
 }
 
+function searchMyFolders(){
+	f=`{ fd . --type d --full-path $HOME/code --max-depth 2 & fd . --type d --full-path $HOME/storage/gdrive/research/papers --max-depth 4; } | fzf-tmux --multi --height=100% --no-preview | xargs -I {} tmuxinator any {}`
+    cd "$f"
+}
 function openInVim(){
     searchFolder $@
     v
@@ -315,6 +319,7 @@ alias tp="tmuxInVim $mypapers"
 alias tc="tmuxInVim $HOME/code 2"
 alias vc="openInVim $HOME/code 2"
 alias gf="searchFolder"
+alias gg="searchMyFolders"
 alias vf="openInVim"
 
 # convenient aliases

@@ -1,6 +1,5 @@
 local execute = vim.api.nvim_command
 local fn = vim.fn
-
 local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 local compile_path = fn.stdpath("config") .. "/plugin/packer_compiled.vim"
 
@@ -18,7 +17,7 @@ end
 
 local tmux = function() return vim.fn.exists('$TMUX') == 1 end
 
-local kitty = function() return vim.fn.exists('$KITTY_WINDOW_ID') == 1 end
+-- local kitty = function() return vim.fn.exists('$KITTY_WINDOW_ID') == 1 end
 
 vim.cmd "autocmd BufWritePost plugins.lua PackerCompile" -- Auto compile when there are changes in plugins.lua
 
@@ -312,7 +311,7 @@ return require("packer").startup({
         use {'dyng/ctrlsf.vim', opt = false}
 
         -- Show current context
-        use {'wellle/context.vim', opt = true}
+        use {'wellle/context.vim', opt = false}
 
         -- search and replace in multipole files
         use {'brooth/far.vim', opt = false}
@@ -398,6 +397,20 @@ return require("packer").startup({
         -- use {'jiangmiao/auto-pairs', opt = false}
         -- use {"windwp/nvim-autopairs", opt = false}
         -- use {'Raimondi/delimitMate', opt = false}
+		use{ "steelsojka/pears.nvim", opt=false,
+		config= function ()
+			local pears = require "pears"
+			pears.setup(function(conf)
+			  conf.on_enter(function(pears_handle)
+				if vim.fn.pumvisible() == 1 and vim.fn.complete_info().selected ~= -1 then
+				  return vim.fn["cmp#confirm"]("<CR>")
+				else
+				  pears_handle()
+				end
+			  end)
+			end)
+		end
+		}
 
         -- closes html tags
         use {'alvan/vim-closetag', opt = false}
@@ -435,7 +448,7 @@ return require("packer").startup({
         use {
             "kyazdani42/nvim-tree.lua",
             opt = false,
-            config = function() require 'nav.nvimtree' end
+			config = function() require'nvim-tree'.setup {} end
         }
     end,
     config = {

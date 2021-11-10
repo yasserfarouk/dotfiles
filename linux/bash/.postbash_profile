@@ -1,0 +1,4 @@
+eval "$(pyenv init --path)"
+
+export PATH=".:$HOME/.linuxbrew/sbin:$PATH"
+eval $(/export/home/yasser/.linuxbrew/bin/brew shellenv)

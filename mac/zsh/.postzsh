@@ -21,3 +21,4 @@ alias dsclean='find . -type f -name .DS_Store -print0 | xargs -0 rm'
 # Flush your dns cache
 alias flush='dscacheutil -flushcache'
 export PATH="/usr/local/opt/openjdk@15/bin:$PATH"
+eval "$(pyenv init -)"

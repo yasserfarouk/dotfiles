@@ -44,7 +44,6 @@ zstyle ':completion:*' menu select
 fpath+=~/.zfunc
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[ -f ~/.postzsh ] && source ~/.postzsh
 
 if [ -f $HOME/anaconda3/bin/conda ] ; then
 	__conda_setup="$('$HOME/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
@@ -61,3 +60,4 @@ if [ -f $HOME/anaconda3/bin/conda ] ; then
 fi
 
 eval "$(starship init zsh)"
+[ -f ~/.postzsh ] && source ~/.postzsh

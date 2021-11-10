@@ -85,3 +85,5 @@ export SAVEHIST=100000
 # typically the same as SAVEHIST.
 export HISTSIZE=100000
 
+
+[ -f ~/.postzprofile ] && source ~/.postzprofile

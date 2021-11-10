@@ -1,5 +1,4 @@
 local cmp = require('cmp')
-
 local t = function(str)
     return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
@@ -8,6 +7,7 @@ local space_found_before_cursor = function()
     local col = vim.fn.col(".") - 1
     return col == 0 or vim.fn.getline("."):sub(col, col):match("%s") ~= nil
 end
+
 cmp.setup {
 
     formatting = {
@@ -35,7 +35,7 @@ cmp.setup {
         ['<C-n>'] = cmp.mapping.select_next_item(),
         ['<C-b>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-o>'] = cmp.mapping.complete(),
+        ['<C-c>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.close(),
         ['<CR>'] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Insert,
@@ -70,10 +70,15 @@ cmp.setup {
     snippet = {expand = function(args) vim.fn["UltiSnips#Anon"](args.body) end},
     sources = {
         {name = 'nvim_lsp'}, {name = "ultisnips"}, {name = "nvim_lua"},
-        {name = 'buffer'}, {name = "look"}, {name = "path"}, {name = "calc"},
+        {name = 'buffer', keyword_length = 5},
+        {name = "look", keyword_length = 3}, {name = "path"}, {name = "calc"},
         {name = "spell"}, {name = "emoji"}
     },
-    completion = {completeopt = 'menu,menuone,noinsert'}
+    -- completion = {completeopt = 'menu,menuone,noinsert'},
+	experimental = {
+		native_menu=false,
+		ghost_text=true,
+	}
 }
 -- Autopairs
 -- require("nvim-autopairs.completion.cmp").setup(
