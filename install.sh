@@ -86,9 +86,32 @@ packages=(
 	"transmission"
 	"javac"
 	"starship"
+	"glances"
+)
+pipx_packages=(
+	"asciinema"
+	"autoflake"
+	"black"
+	"cookiecutter"
+	"copier"
+	"doq"
+	"isort"
+	"pip-tools"
+	"pre-commit"
+	"proselint"
+	"tiptop"
+	"spyder"
+	"python-language-server"
+	"typer"
+	"tox"
+	"removestar"
+	"pygemnts"
+	"typer-cli"
+	"wisdom-tree"
 )
 pip_packages=(
 	"msgpack"
+	"pipx"
 )
 linux_packages=(
 	"terminal-notifier"
@@ -252,6 +275,12 @@ do
 	pip3 install --upgrade $i
 done
 
+echo "Installing pipx packages assuming that pipx is available"
+echo "------------------------------------------------------"
+for i in "${pipx_packages[@]}"
+do
+	pipx install $i
+done
 echo "Installing neovim2/3 python envs"
 echo "--------------------------------"
 # curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
