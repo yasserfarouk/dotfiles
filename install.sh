@@ -121,12 +121,15 @@ case "$(uname -s)" in
 
 		# installing nvim nightly correctly with lua support
 		brew tap jason0x43/homebrew-neovim-nightly
-		brew install --cask neovim-nightly
+		brew install neovim-nightly
 		;;
 
 	Linux)
 		[[ -e "$HOME/bin" ]] || mkdir "$HOME/bin"
-
+        test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+        test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >>~/.bash_profile
+        echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >>~/.profile
 		# curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage ~/bin
 		# chmod u+x ~/bin/nvim.appimage
 		# echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
@@ -145,10 +148,11 @@ case "$(uname -s)" in
 		else
 			echo "Installing Linuxbrew"
 			echo "---------------------"
-			sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
-			test -d ~/.linuxbrew && PATH="$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH"
-			test -d /home/linuxbrew/.linuxbrew && PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
-			export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
+            sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+            test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
+            test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+            test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.bash_profile
+            echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.profile
 			echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
 		fi
 		install_or_upgrade gcc
