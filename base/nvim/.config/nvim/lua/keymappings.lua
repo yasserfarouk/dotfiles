@@ -11,7 +11,7 @@ vim.api.nvim_set_keymap('n', '<Leader>h', ':set hlsearch!<CR>', {noremap = true,
 
 -- explorer
 vim.api.nvim_set_keymap('n', '<Leader>e', ':NvimTreeToggle<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '-', ':RnvimrToggle<CR>', {noremap = true, silent = true})
+-- vim.api.nvim_set_keymap('n', '-', ':RnvimrToggle<CR>', {noremap = true, silent = true})
 
 -- better window movement
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', {silent = true})
@@ -26,6 +26,9 @@ vim.api.nvim_set_keymap('n', '==', 'ggVG=<C-o>', {silent = true, noremap = true}
 vim.api.nvim_set_keymap('i', '<C-s>', '<esc>[s1z=`]a', {silent = true, noremap = true})
 vim.api.nvim_set_keymap('n', 'Y', 'y$', {silent = true, noremap = true})
 
+-- splitting 
+vim.api.nvim_set_keymap('n', '-', '<C-W>s', {silent = true, noremap = true})
+vim.api.nvim_set_keymap('n', '_', '<C-W>v', {silent = true, noremap = true})
 -- folding
 vim.api.nvim_set_keymap('n', '\\', 'za', {silent = true, noremap = true})
 vim.api.nvim_set_keymap('n', 'S-\\', 'zO', {silent = true, noremap = true})

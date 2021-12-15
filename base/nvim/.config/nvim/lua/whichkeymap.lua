@@ -39,6 +39,15 @@ endfunction
 ]])
 
 vim.cmd([[
+function! ToggleFileFold()
+	if &foldlevel == 0
+		norm zR
+	else
+		norm zM
+	endif
+endfunction
+]])
+vim.cmd([[
 function! SetupWrappingSoft()
 	if &wrap == 1
 		set nowrap
@@ -87,8 +96,8 @@ endfunction
 wk.setup {}
 wk.register({
     ["'"] = {"<cmd>Dashboard<cr>", "Home"},
-    ["?"] = {"<cmd>NvimTreeFindFile<cr>", "find current file"},
-    ["e"] = {"<cmd>NvimTreeToggle<cr>", "explorer"},
+    ["E"] = {"<cmd>NvimTreeToggle<cr>", "explorer on root"},
+    ["e"] = {"<cmd>NvimTreeFindFileToggle<cr>", "explorer"},
     ["f"] = {"<cmd>Telescope find_files<cr>", "find files"},
     [";"] = {"<cmd>Telescope file_browser<cr>", "file browser"},
     ["h"] = {"<cmd>let @/ = ''<cr>", "no highlight"},
@@ -283,7 +292,8 @@ wk.register({
         r = {"<cmd>call SetupWrappingSoft()<cr>", "wrap text (soft)"},
         R = {"<cmd>call SetupWrappingHard()<cr>", "wrap text (hard)"},
         s = {"<cmd>set invspel<cr>", "spell checker"},
-        c = {"<cmd>ContextToggle<cr>", "show context"}
+        c = {"<cmd>ContextToggle<cr>", "show context"},
+        t = {"<cmd>TransparentToggle<cr>", "Toggle transparency"}
     },
 
     y = {

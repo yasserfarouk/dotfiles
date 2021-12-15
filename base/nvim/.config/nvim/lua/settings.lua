@@ -84,5 +84,6 @@ let g:neoformat_enabled_python = ['black']
 let g:python_host_prog='$HOME/virtualenvs/neovim2/bin/python'
 let g:python3_host_prog='$HOME/virtualenvs/neovim3/bin/python'
 set foldmethod=indent
+set foldlevel=0
 set foldcolumn=1
 ]])

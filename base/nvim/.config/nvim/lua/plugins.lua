@@ -71,7 +71,7 @@ return require("packer").startup({
         -- LSP
         use {"neovim/nvim-lspconfig", opt = false}
         use {
-            "glepnir/lspsaga.nvim",
+            "tami5/lspsaga.nvim",
             opt = false,
             config = function()
                 vim.cmd([[
@@ -397,20 +397,23 @@ return require("packer").startup({
         -- use {'jiangmiao/auto-pairs', opt = false}
         -- use {"windwp/nvim-autopairs", opt = false}
         -- use {'Raimondi/delimitMate', opt = false}
-		use{ "steelsojka/pears.nvim", opt=false,
-		config= function ()
-			local pears = require "pears"
-			pears.setup(function(conf)
-			  conf.on_enter(function(pears_handle)
-				if vim.fn.pumvisible() == 1 and vim.fn.complete_info().selected ~= -1 then
-				  return vim.fn["cmp#confirm"]("<CR>")
-				else
-				  pears_handle()
-				end
-			  end)
-			end)
-		end
-		}
+        use {
+            "steelsojka/pears.nvim",
+            opt = false,
+            config = function()
+                local pears = require "pears"
+                pears.setup(function(conf)
+                    conf.on_enter(function(pears_handle)
+                        if vim.fn.pumvisible() == 1 and
+                            vim.fn.complete_info().selected ~= -1 then
+                            return vim.fn["cmp#confirm"]("<CR>")
+                        else
+                            pears_handle()
+                        end
+                    end)
+                end)
+            end
+        }
 
         -- closes html tags
         use {'alvan/vim-closetag', opt = false}
@@ -448,7 +451,27 @@ return require("packer").startup({
         use {
             "kyazdani42/nvim-tree.lua",
             opt = false,
-			config = function() require'nvim-tree'.setup {} end
+            config = function() require 'nav/nvimtree' end
+        }
+
+        -- transparent background
+        use {
+            "xiyaowong/nvim-transparent",
+            config = function()
+                require"transparent".setup(
+                    {
+                        enable = true,
+                        extra_groups = { -- table/string: additional groups that should be clear
+                            -- In particular, when you set it to 'all', that means all avaliable groups
+
+                            -- example of akinsho/nvim-bufferline.lua
+                            "BufferLineTabClose", "BufferlineBufferSelected",
+                            "BufferLineFill", "BufferLineBackground",
+                            "BufferLineSeparator", "BufferLineIndicatorSelected"
+                        },
+                        exclude = {} -- table: groups you don't want to clear
+                    })
+            end
         }
     end,
     config = {
