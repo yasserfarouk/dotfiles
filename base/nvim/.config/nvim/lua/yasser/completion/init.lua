@@ -1,0 +1,1 @@
+require("yasser.completion.cmpconf")

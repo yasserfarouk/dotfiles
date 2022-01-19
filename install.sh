@@ -375,9 +375,10 @@ echo "--------------------------"
 mkdir ~/antigen 2>&1 >/dev/null
 curl -L git.io/antigen > ~/antigen/antigen.zsh
 
-echo "Installing pure theme"
+echo "Installing starship theme"
 echo "--------------------------"
-npm install --global pure-prompt
+# npm install --global pure-prompt
+sh -c "$(curl -fsSL https://starship.rs/install.sh)"
 
 echo "Updating npm"
 echo "------------"

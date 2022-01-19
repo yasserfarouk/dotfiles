@@ -2,7 +2,46 @@ local actions = require('telescope.actions')
 -- Global remapping
 ------------------------------
 -- '--color=never',
+-- nvim-telescope/telescope.nvim
+_G.telescope_find_files_in_path = function(path)
+    local _path = path or vim.fn.input("Dir: ", "", "dir")
+    require("telescope.builtin").find_files({search_dirs = {_path}})
+end
+_G.telescope_live_grep_in_path = function(path)
+    local _path = path or vim.fn.input("Dir: ", "", "dir")
+    require("telescope.builtin").live_grep({search_dirs = {_path}})
+end
+_G.telescope_files_or_git_files = function()
+    local utils = require('telescope.utils')
+    local builtin = require('telescope.builtin')
+    local _, ret, _ = utils.get_os_command_output(
+                          {'git', 'rev-parse', '--is-inside-work-tree'})
+    if ret == 0 then
+        builtin.git_files()
+    else
+        builtin.find_files()
+    end
+end
+local telescope_actions = require("telescope.actions.set")
+
+local fixfolds = {
+    hidden = true,
+    attach_mappings = function(_)
+        telescope_actions.select:enhance(
+            {post = function() vim.cmd(":normal! zx") end})
+        return true
+    end
+}
 require('telescope').setup {
+    pickers = {
+        buffers = fixfolds,
+        file_browser = fixfolds,
+        find_files = fixfolds,
+        git_files = fixfolds,
+        grep_string = fixfolds,
+        live_grep = fixfolds,
+        oldfiles = fixfolds
+    },
     defaults = {
         vimgrep_arguments = {
             'rg', '--color=never', '--no-heading', '--with-filename',
@@ -66,7 +105,7 @@ require('telescope').setup {
             override_generic_sorter = false,
             override_file_sorter = true
         },
-        -- dap = {}
+        dap = {}
     }
 }
 

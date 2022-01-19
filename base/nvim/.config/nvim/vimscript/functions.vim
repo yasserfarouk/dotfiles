@@ -48,15 +48,15 @@ command! DebugSetExceptionBreakpointsNone lua require'dap'.set_exception_breakpo
 command! DebugSetExceptionBreakpointsUncaught lua require'dap'.set_exception_breakpoints({"uncaught"})<CR>
 command! DebugSetExceptionBreakpointsRaised lua require'dap'.set_exception_breakpoints({"uncaught", "raised"})<CR>
 command! DebugPause lua require'dap'.pause(vim.fn.inpu("Thread ID: "))<CR>
-command! DebugHover lua require'dap.ui.variables'.hover()<CR>
-command! DebugScopes lua require'dap.ui.variables'.scopes()<CR>
-command! DebugVHover lua require'dap.ui.variables'.visual_hover()<CR>
-command! DebugHoverToggleMultiline lua require'dap.ui.variables'.toggle_multiline_display()<CR>
+command! DebugHover lua require'dap.ui.widgets'.hover()<CR>
+command! DebugScopes lua require'dap.ui.widgets'.scopes()<CR>
+command! DebugVHover lua require'dap.ui.widgets'.visual_hover()<CR>
+command! DebugHoverToggleMultiline lua require'dap.ui.widgets'.toggle_multiline_display()<CR>
 
 
 " telescope
-command! TelescopeVim lua require("search.telescope.vimrc").search_vimfiles()
-command! TelescopeConfig lua require("search.telescope.configs").search_vimfiles()
+command! TelescopeVim lua require("yasser.search.telescope.vimrc").search_vimfiles()
+command! TelescopeConfig lua require("yasser.search.telescope.configs").search_vimfiles()
 command! TelescopeEmoji lua require("telescope.builtin").symbols{sources={"emoji", "kaomoji"}}
 command! TelescopeLatex lua require("telescope.builtin").symbols{sources={"latex", "math"}}
 command! TelescopeWord lua require("telescope.builtin").grep_string{search = vim.fn.expand("<cword>")}

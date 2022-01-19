@@ -1,14 +1,29 @@
 local execute = vim.api.nvim_command
 local fn = vim.fn
 local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-local compile_path = fn.stdpath("config") .. "/plugin/packer_compiled.vim"
+local compile_path = fn.stdpath("config") .. "/lua/packer_compiled.lua"
+local dap_types = {"python", "lua", "c", "cpp", "php", "java", "js"}
 
 if fn.empty(fn.glob(install_path)) > 0 then
     execute("!git clone https://github.com/wbthomason/packer.nvim " ..
                 install_path)
     execute "packadd packer.nvim"
 end
-
+-- Autocommand that reloads neovim whenever you save the plugins.lua file
+-- vim.cmd "autocmd BufWritePost plugins.lua PackerCompile" -- Auto compile when there are changes in plugins.lua
+function recompile()
+    vim [[
+	luafile %
+	PackerCompile
+	PackerSync
+	]]
+end
+vim.cmd [[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua lua recompile()
+  augroup end
+]]
 -- helpers. taken from datwaft https://github.com/datwaft/nvim/blob/master/lua/plugins/init.lua
 local windows = function()
     return vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 or
@@ -19,15 +34,19 @@ local tmux = function() return vim.fn.exists('$TMUX') == 1 end
 
 -- local kitty = function() return vim.fn.exists('$KITTY_WINDOW_ID') == 1 end
 
-vim.cmd "autocmd BufWritePost plugins.lua PackerCompile" -- Auto compile when there are changes in plugins.lua
-
 return require("packer").startup({
     function(use)
+        use_rocks "inspect"
         -- Packer can manage itself as an optional plugin
+        --
         use "wbthomason/packer.nvim"
 
         -- grammer check
-        use {'rhysd/vim-grammarous', opt = false}
+        use {
+            'rhysd/vim-grammarous',
+            opt = true,
+            cmd = {'GrammarousCheck', 'GrammarousReset'}
+        }
 
         -- CDing into the project root always
         use {'airblade/vim-rooter'}
@@ -40,12 +59,20 @@ return require("packer").startup({
             "nvim-telescope/telescope.nvim",
             opt = false,
             requires = {"nvim-lua/plenary.nvim"},
-            config = function() require 'search.telescope' end
+            config = function() require 'yasser.search.telescope' end
         }
         use {
             'nvim-telescope/telescope-symbols.nvim',
             opt = false,
             requires = {"nvim-telescope/telescope.nvim"}
+        }
+        use {
+            'nvim-telescope/telescope-packer.nvim',
+            opt = false,
+            requires = {"nvim-telescope/telescope.nvim"},
+            config = function()
+                require("telescope").load_extension "packer"
+            end
         }
         use {
             'nvim-telescope/telescope-fzy-native.nvim',
@@ -69,7 +96,7 @@ return require("packer").startup({
             end
         }
         -- LSP
-        use {"neovim/nvim-lspconfig", opt = false}
+        use {"neovim/nvim-lspconfig", opt = true}
         use {
             "tami5/lspsaga.nvim",
             opt = false,
@@ -80,95 +107,52 @@ return require("packer").startup({
             end
 
         }
-        use {"kabouzeid/nvim-lspinstall", opt = false}
-        use {'ray-x/lsp_signature.nvim', opt = false}
+        use {
+            "kabouzeid/nvim-lspinstall",
+            opt = true,
+            cmd = {"LspInstall", "LspUninstall"}
+        }
+        use {'ray-x/lsp_signature.nvim', opt = true, ft = {"python"}}
+        use "williamboman/nvim-lsp-installer"
 
         -- Markdown
-        use {'tpope/vim-markdown', opt = false, ft = 'markdown'}
+        use {'tpope/vim-markdown', opt = true, ft = 'markdown'}
         use {
             'iamcco/markdown-preview.nvim',
-            opt = false,
+            opt = true,
             ft = 'markdown',
             run = 'cd app & yarn install'
         }
 
         -- Debugging
+        use {"jbyuki/one-small-step-for-vimkind", opt = true, ft = {"lua"}}
         use {
             "mfussenegger/nvim-dap",
-            opt = false,
-            -- ft = {"python", "lua"},
-            config = function()
-                vim.fn.sign_define('DapBreakpoint', {
-                    text = "🔸",
-                    texthl = "",
-                    linehl = "",
-                    numhl = ""
-                })
-                vim.fn.sign_define('DapBreakpointRejected', {
-                    text = "💀",
-                    texthl = "",
-                    linehl = "",
-                    numhl = ""
-                })
-                vim.fn.sign_define('DapLogPoint', {
-                    text = "📚",
-                    texthl = "",
-                    linehl = "",
-                    numhl = ""
-                })
-                vim.cmd([[
-				nnoremap <silent> <F3> :DebugScopes<CR>
-				nnoremap <silent> <F4> :DebugHover<CR>
-				nnoremap <silent> <S-F4> :DebugVHover<CR>
-				nnoremap <silent> <F5> :DebugContinue<CR>
-				nnoremap <silent> <S-F5> :DebugLast<CR>
-				nnoremap <silent> <C-F5> :DebugPause<CR>
-				nnoremap <silent> <F6> :DebugToggleRepl<CR>
-				nnoremap <silent> <F7> :DebugUp<CR>
-				nnoremap <silent> <F8> :DebugDown<CR>
-				nnoremap <silent> <A-F8> :DebugSetExceptionBreakpointsDefault<CR>
-				nnoremap <silent> <S-F8> :DebugSetExceptionBreakpointsRaised<CR>
-				nnoremap <silent> <C-F8> :DebugSetExceptionBreakpointsUncaught<CR>
-				nnoremap <silent> <F9> :DebugToggleBreakpoint<CR>
-				nnoremap <silent> <A-F9> :DebugLogPoint<CR>
-				nnoremap <silent> <S-F9> :DebugConditionalBreakpoint<CR>
-				nnoremap <silent> <C-F9> :DebugListBreakpoints<CR>
-				nnoremap <silent> <F10> :DebugStepOver<CR>
-				nnoremap <silent> <F11> :DebugStepInto<CR>
-				nnoremap <silent> <S-F11> :DebugStepOut<CR>
-				nnoremap <silent> <F12> :DebugStop<CR>
-				]])
-            end
+            opt = true,
+            ft = dap_types,
+            config = function() require "yasser.debug.dapcfg" end
         }
-        -- use {
-        --     "Pocco81/DAPInstall.nvim",
-        --     opt = false,
-        --     config = function()
-        -- 		local dap_install = require("dap-install")
-        -- 		local dbg_list = require("dap-install.api.debuggers").get_installed_debuggers()
-        --
-        -- 		for _, debugger in ipairs(dbg_list) do
-        -- 			dap_install.config(debugger)
-        -- 		end
-        --     end
-        -- }
+        use {
+            "Pocco81/DAPInstall.nvim",
+            opt = true,
+            cmd = {"DIInstall", "DIUninstall", "DIList"},
+            config = function() require "yasser.debug.dapinstall" end
+        }
 
-        -- use {
-        --     "rcarriga/nvim-dap-ui",
-        --     opt = true,
-        --     ft = {"python", "lua"},
-        --     requires = {"mfussenegger/nvim-dap"},
-        --     after = {"nvim-dap"},
-        --     config = function()
-        --         require('debug.dapui')
-        --     end
-        -- }
+        use {
+            "rcarriga/nvim-dap-ui",
+            opt = true,
+            ft = dap_types,
+            -- requires = {{"mfussenegger/nvim-dap", opt=true}},
+            -- after = {"mfussenegger/nvim-dap"},
+            config = function() require('yasser.debug.dapui') end
+        }
         use {
             'nvim-telescope/telescope-dap.nvim',
             opt = true,
-            ft = {"python", "lua"},
-            requires = "mfussenegger/nvim-dap",
-            -- after = {"mfussenegger/nvim-dap"},
+            ft = dap_types,
+            -- requires = {{"mfussenegger/nvim-dap", opt=true},{ "nvim-telescope/telescope.nvim", opt=true}},
+            -- after = {"mfussenegger/nvim-dap", "nvim-telescope/telescope.nvim"},
             config = function()
                 require('telescope').load_extension('dap')
             end
@@ -176,35 +160,33 @@ return require("packer").startup({
         use {
             'theHamsta/nvim-dap-virtual-text',
             opt = true,
-            ft = {"python", "lua"},
-            requires = "mfussenegger/nvim-dap",
+            ft = dap_types,
+            -- requires = {{"mfussenegger/nvim-dap", opt=true},{ "nvim-telescope/telescope.nvim", opt=true}},
+            -- requires = {{"mfussenegger/nvim-dap", opt=true}},
             -- after = {"mfussenegger/nvim-dap"},
             config = function() vim.g.dap_virtual_text = true end
         }
-        -- use {
-        --     'mfussenegger/nvim-dap-python',
-        --     opt = true,
-        --     ft = {"python"},
-        --     requires = "mfussenegger/nvim-dap",
-        --     -- after = {"mfussenegger/nvim-dap"},
-        --     config = function()
-        --         local dap = require('nvim-dap')
-        --         require('debug.dap-py')
-        --     end
-        -- }
+        use {
+            'mfussenegger/nvim-dap-python',
+            opt = true,
+            ft = {"python"},
+            -- requires = "mfussenegger/nvim-dap",
+            -- after = {"mfussenegger/nvim-dap"},
+            config = function() require('yasser.debug.dappy') end
+        }
 
         -- Testing
-        use {'5long/pytest-vim-compiler', opt = false}
-        use {'janko/vim-test', opt = false}
+        use {'5long/pytest-vim-compiler', opt = true, ft = {"python"}}
+        use {'janko/vim-test', opt = true, ft = {"python"}}
         -- use {'rcarriga/vim-ultest', opt = false, require = {'janko/vim-test'}}
 
         -- Python
 
         -- Lua
-        use {'tjdevries/nlua.nvim', opt = false, ft = "lua"}
+        use {'tjdevries/nlua.nvim', opt = true, ft = "lua"}
 
         -- SQL
-        use {'nanotee/sqls.nvim', disable = windows()}
+        use {'nanotee/sqls.nvim', disable = windows(), opt = true, ft = {"sql"}}
 
         -- Autocomplete
         -- use {
@@ -218,17 +200,20 @@ return require("packer").startup({
             opt = false,
             requires = {
                 "hrsh7th/cmp-buffer", "hrsh7th/cmp-nvim-lsp",
-                'quangnguyen30192/cmp-nvim-ultisnips', 'hrsh7th/cmp-nvim-lua',
+                -- 'quangnguyen30192/cmp-nvim-ultisnips',
+                "saadparwaiz1/cmp_luasnip", 'hrsh7th/cmp-nvim-lua',
                 'octaltree/cmp-look', 'hrsh7th/cmp-path', 'hrsh7th/cmp-calc',
                 'f3fora/cmp-spell', 'hrsh7th/cmp-emoji'
             },
-            config = function() require('completion') end
+            config = function() require('yasser.completion.cmpconf') end
         }
 
         -- Snippets
+        -- use {'SirVer/ultisnips', opt = false}
+        -- use {'honza/vim-snippets', opt = false}
         -- use {"hrsh7th/vim-vsnip", opt = false}
-        use {'SirVer/ultisnips', opt = false}
-        use {'honza/vim-snippets', opt = false}
+        use "L3MON4D3/LuaSnip" -- snippet engine
+        use "rafamadriz/friendly-snippets" -- a bunch of snippets to use
 
         -- Treesitter
         use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
@@ -237,7 +222,7 @@ return require("packer").startup({
         use {
             "nvim-treesitter/playground",
             opt = false,
-            config = function() require 'theme.playground' end
+            config = function() require 'yasser.theme.playground' end
         }
 
         -- symbol preview
@@ -247,7 +232,7 @@ return require("packer").startup({
         use {
             "lewis6991/gitsigns.nvim",
             opt = false,
-            config = function() require 'git.gitsigns' end
+            config = function() require 'yasser.git.gitsigns' end
         }
         -- use {
         --     'sindrets/diffview.nvim',
@@ -265,12 +250,18 @@ return require("packer").startup({
         --         vim.cmd('source $HOME/.config/nvim/vimscript/whichkey.vim')
         --     end
         -- }
-
+        -- performance (faster startup)
+        use {'lewis6991/impatient.nvim', opt = false}
         -- Start screen
+        -- use {
+        --     "ChristianChiarulli/dashboard-nvim",
+        --     opt = false,
+        --     config = function() require 'theme.dashboard' end
+        -- }
         use {
-            "ChristianChiarulli/dashboard-nvim",
+            "goolord/alpha-nvim",
             opt = false,
-            config = function() require 'theme.dashboard' end
+            config = function() require 'yasser.theme.alpha' end
         }
 
         use {
@@ -278,6 +269,7 @@ return require("packer").startup({
             opt = false,
             config = function() require('nvim_comment').setup() end
         }
+        -- use {"JoosepAlviste/nvim-ts-context-commentstring", opt=false}
         -- use {"kevinhwang91/nvim-bqf", opt = false}
 
         -- Floating terminal (may be unnecesasry)
@@ -304,7 +296,7 @@ return require("packer").startup({
             'christoomey/vim-tmux-navigator',
             opt = false,
             cond = {tmux},
-            setup = function() require 'nav.tmux' end
+            setup = function() require 'yasser.nav.tmux' end
         }
 
         -- Extra search and replace
@@ -327,26 +319,7 @@ return require("packer").startup({
         use {
             "folke/trouble.nvim",
             requires = "kyazdani42/nvim-web-devicons",
-            config = function()
-                require("trouble").setup {}
-                vim.api.nvim_set_keymap("n", "<leader>ix", "<cmd>Trouble<cr>",
-                                        {silent = true, noremap = true})
-                vim.api.nvim_set_keymap("n", "<leader>iw",
-                                        "<cmd>Trouble lsp_workspace_diagnostics<cr>",
-                                        {silent = true, noremap = true})
-                vim.api.nvim_set_keymap("n", "<leader>id",
-                                        "<cmd>Trouble lsp_document_diagnostics<cr>",
-                                        {silent = true, noremap = true})
-                vim.api.nvim_set_keymap("n", "<leader>il",
-                                        "<cmd>Trouble loclist<cr>",
-                                        {silent = true, noremap = true})
-                vim.api.nvim_set_keymap("n", "<leader>iq",
-                                        "<cmd>Trouble quickfix<cr>",
-                                        {silent = true, noremap = true})
-                vim.api.nvim_set_keymap("n", "gR",
-                                        "<cmd>Trouble lsp_references<cr>",
-                                        {silent = true, noremap = true})
-            end
+            config = function() require "yasser.debug.trouble" end
         }
         -- Colorize whitespace
         use {
@@ -355,8 +328,8 @@ return require("packer").startup({
             config = function()
                 vim.g.better_whitespace_filetypes_blacklist =
                     {
-                        'dashboard', 'diff', 'gitcommit', 'unite', 'nvimtree',
-                        'qf', 'help', 'packer'
+                        'dashboard', 'ALPHA', 'diff', 'gitcommit', 'unite',
+                        'nvimtree', 'qf', 'help', 'packer'
                     }
             end
         }
@@ -365,12 +338,12 @@ return require("packer").startup({
         use {
             "glepnir/galaxyline.nvim",
             opt = false,
-            config = function() require 'theme.galaxyline' end
+            config = function() require 'yasser.theme.galaxyline' end
         }
         use {
             "romgrk/barbar.nvim",
             opt = false,
-            config = function() require 'theme.barbar' end
+            config = function() require 'yasser.theme.barbar' end
         }
 
         -- visual start search
@@ -395,28 +368,28 @@ return require("packer").startup({
 
         -- add closing parentheses automatically.
         -- use {'jiangmiao/auto-pairs', opt = false}
-        -- use {"windwp/nvim-autopairs", opt = false}
+        use {"windwp/nvim-autopairs", opt = false}
         -- use {'Raimondi/delimitMate', opt = false}
-        use {
-            "steelsojka/pears.nvim",
-            opt = false,
-            config = function()
-                local pears = require "pears"
-                pears.setup(function(conf)
-                    conf.on_enter(function(pears_handle)
-                        if vim.fn.pumvisible() == 1 and
-                            vim.fn.complete_info().selected ~= -1 then
-                            return vim.fn["cmp#confirm"]("<CR>")
-                        else
-                            pears_handle()
-                        end
-                    end)
-                end)
-            end
-        }
+        -- use {
+        --     "steelsojka/pears.nvim",
+        --     opt = false,
+        --     config = function()
+        --         local pears = require "pears"
+        --         pears.setup(function(conf)
+        --             conf.on_enter(function(pears_handle)
+        --                 if vim.fn.pumvisible() == 1 and
+        --                     vim.fn.complete_info().selected ~= -1 then
+        --                     return vim.fn["cmp#confirm"]("<CR>")
+        --                 else
+        --                     pears_handle()
+        --                 end
+        --             end)
+        --         end)
+        --     end
+        -- }
 
         -- closes html tags
-        use {'alvan/vim-closetag', opt = false}
+        use {'alvan/vim-closetag', opt = true, ft = {"html", "xml", "php"}}
 
         -- maps <leader>[, <leader>] to move to top and bottom of indent
         use {'tmhedberg/indent-motion', opt = false}
@@ -437,41 +410,35 @@ return require("packer").startup({
         -- show indent lines
         use {
             'lukas-reineke/indent-blankline.nvim',
-            config = function() require 'theme.indent-blankline' end,
+            config = function()
+                require 'yasser.theme.indent-blankline'
+            end,
             disable = windows()
         }
 
         -- Which Key
         use {
             "folke/which-key.nvim",
-            config = function() require 'whichkeymap' end
+            config = function() require 'yasser.whichkeymap' end
         }
 
         -- Explorer
         use {
             "kyazdani42/nvim-tree.lua",
             opt = false,
-            config = function() require 'nav/nvimtree' end
+            config = function() require 'yasser.nav.nvimtree' end
         }
+
+        -- notebook-like environment
+        use {"benmills/vimux", opt = true, ft = {"python"}}
+        use {"julienr/vim-cellmode", opt = true, ft = {"python"}}
+        use {"greghor/vim-pyShell", opt = true, ft = "python"}
 
         -- transparent background
         use {
             "xiyaowong/nvim-transparent",
-            config = function()
-                require"transparent".setup(
-                    {
-                        enable = true,
-                        extra_groups = { -- table/string: additional groups that should be clear
-                            -- In particular, when you set it to 'all', that means all avaliable groups
-
-                            -- example of akinsho/nvim-bufferline.lua
-                            "BufferLineTabClose", "BufferlineBufferSelected",
-                            "BufferLineFill", "BufferLineBackground",
-                            "BufferLineSeparator", "BufferLineIndicatorSelected"
-                        },
-                        exclude = {} -- table: groups you don't want to clear
-                    })
-            end
+            opt = false,
+            config = function() require "yasser.theme.transparent" end
         }
     end,
     config = {

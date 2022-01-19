@@ -98,7 +98,8 @@ wk.register({
     ["'"] = {"<cmd>Dashboard<cr>", "Home"},
     ["E"] = {"<cmd>NvimTreeToggle<cr>", "explorer on root"},
     ["e"] = {"<cmd>NvimTreeFindFileToggle<cr>", "explorer"},
-    ["f"] = {"<cmd>Telescope find_files<cr>", "find files"},
+
+	["f"] = {"<cmd>lua telescope_files_or_git_files()<cr>", "files/git"},
     [";"] = {"<cmd>Telescope file_browser<cr>", "file browser"},
     ["h"] = {"<cmd>let @/ = ''<cr>", "no highlight"},
     ["w"] = {"<cmd>wa<cr>", "save all"},
@@ -108,6 +109,16 @@ wk.register({
     ["="] = {"<C-W>=", "balance windows"},
     ["u"] = {"<cmd>UndotreeToggle<cr>", "undo tree"},
     ["z"] = {"<C-W>m", "zoom window"},
+		j = {
+			name = "+jupyter",
+
+			s = {"<cmd>call StartPyShell()<cr>", "start"},
+			S = {"<cmd>call StopPyShell()<cr>", "stop"},
+			l = {"<cmd>call PyShellSendLine()<cr>", "line"},
+			c = {"<cmd>call RunTmuxPythonCell()<cr>", "cell"},
+			a = {"<cmd>call RunTmuxPythonAllCellsAbove()<cr>", "cell"},
+			b = {"<cmd>call RunTmuxPythonAllCellsBelow()<cr>", "cell"},
+	},
     m = {
         name = "+markdown",
         c = {"<cmd>call PandocPDF()<cr>", "compile (portrait)"},
@@ -138,7 +149,9 @@ wk.register({
     },
     d = {
         name = "+debug",
-        b = {"<cmd>DebugToggleBreakpoint <cr>", "toggle breakpoint"},
+        t = {"<cmd>lua require('dapui').toggle()<cr>", "toggle breakpoint"},
+		e = {"<Cmd>lua require('dapui').eval()<CR>", "evaluate"},
+        b = {"<cmd>DebugToggleBreakpoint<cr>", "toggle breakpoint"},
         l = {"<cmd>DebugStepInto<cr>", "step into"},
         h = {"<cmd>DebugStepOut<cr>", "step out"},
         j = {"<cmd>DebugStepOver<cr>", "step over"},
@@ -161,7 +174,7 @@ wk.register({
             "exceptions-uncaught"
         },
         L = {"<cmd>DebugLogPoint<cr>", "log"},
-        C = {"<cmd>DebugConditionalBreakpoint<cr>", "conditional breakpoint"}
+        C = {"<cmd>DebugConditionalBreakpoint<cr>", "conditional breakpoint"},
     },
     F = {
         name = "+fold",
@@ -183,7 +196,7 @@ wk.register({
         [";"] = {"<cmd>Telescope filetypes<cr>", "filetypes"},
         B = {"<cmd>Telescope git_branches<cr>", "git branches"},
         d = {
-            "<cmd>Telescope lsp_document_diagnostics<cr>",
+            "<cmd>Telescope diagnostics bufnr=0<cr>",
             "document diagnostics"
         },
         D = {
@@ -208,7 +221,9 @@ wk.register({
         e = {"<cmd>TelescopeEmoji<cr>", "Emoji Symbols"},
         H = {"<cmd>TelescopeHelp<cr>", "help"},
         w = {"<cmd>TelescopeWord<cr>", "word"},
-        s = {"<cmd>CtrlSF <cr>", "CtrlSF"}
+        s = {"<cmd>CtrlSF<cr>", "CtrlSF"},
+        S = {":CtrlSF ", "CtrlSF"},
+        a = {"<cmd>Telescope find_files<cr>", "find files"},
     },
 
     S = {
@@ -254,7 +269,7 @@ wk.register({
         a = {"<cmd>Lspsaga code_action<cr>", "code action"},
         A = {"<cmd>Lspsaga range_code_action<cr>", "selected action"},
         d = {
-            "<cmd>Telescope lsp_document_diagnostics<cr>",
+            "<cmd>Telescope diagnostics bufnr=0<cr>",
             "document diagnostics"
         },
         D = {
@@ -392,5 +407,5 @@ wk.register({
         s = {"<cmd>Ds1z=`]<cr>", "correct spelling"},
         y = {"<cmd>let @+= expand(' % ')<cr>", "copy path"},
         l = {"<cmd>%s/^/\\=printf('%-4d', line('.'))<cr>", "write line numbers"}
-    }
+    },
 }, {prefix = "<leader>"})

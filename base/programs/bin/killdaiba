@@ -1,0 +1,7 @@
+#!/bin/bash
+for i in "$@"; do
+	ssh -i ~/.ssh/daiba_rsa yasser@192.168.101.$i "killall java; killall python; killall java; killall screen"
+done
+for i in "$@"; do
+	ssh -i ~/.ssh/daiba_rsa yasser@192.168.101.$i "rm -rf ~/tmp/*"
+done
