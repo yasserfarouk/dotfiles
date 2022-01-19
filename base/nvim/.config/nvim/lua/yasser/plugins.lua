@@ -3,25 +3,25 @@ local fn = vim.fn
 local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 local compile_path = fn.stdpath("config") .. "/lua/packer_compiled.lua"
 local dap_types = {"python", "lua", "c", "cpp", "php", "java", "js"}
-
 if fn.empty(fn.glob(install_path)) > 0 then
     execute("!git clone https://github.com/wbthomason/packer.nvim " ..
                 install_path)
     execute "packadd packer.nvim"
 end
 -- Autocommand that reloads neovim whenever you save the plugins.lua file
--- vim.cmd "autocmd BufWritePost plugins.lua PackerCompile" -- Auto compile when there are changes in plugins.lua
-function recompile()
-    vim [[
+function OnPluginRecompile()
+    vim.cmd [[
 	luafile %
 	PackerCompile
-	PackerSync
+	PackerClean
+	PackerInstall
 	]]
 end
+
 vim.cmd [[
   augroup packer_user_config
     autocmd!
-    autocmd BufWritePost plugins.lua lua recompile()
+    autocmd BufWritePost plugins.lua lua OnPluginRecompile()
   augroup end
 ]]
 -- helpers. taken from datwaft https://github.com/datwaft/nvim/blob/master/lua/plugins/init.lua
@@ -36,7 +36,7 @@ local tmux = function() return vim.fn.exists('$TMUX') == 1 end
 
 return require("packer").startup({
     function(use)
-        use_rocks "inspect"
+        -- use_rocks {"inspect"}
         -- Packer can manage itself as an optional plugin
         --
         use "wbthomason/packer.nvim"
@@ -96,7 +96,9 @@ return require("packer").startup({
             end
         }
         -- LSP
-        use {"neovim/nvim-lspconfig", opt = true}
+        use {"neovim/nvim-lspconfig", opt = false}
+        -- fix lsp highlight
+        use {"antoinemadec/FixCursorHold.nvim", opt = false}
         use {
             "tami5/lspsaga.nvim",
             opt = false,
@@ -113,7 +115,15 @@ return require("packer").startup({
             cmd = {"LspInstall", "LspUninstall"}
         }
         use {'ray-x/lsp_signature.nvim', opt = true, ft = {"python"}}
-        use "williamboman/nvim-lsp-installer"
+        use {
+            "williamboman/nvim-lsp-installer",
+            opt = true,
+            cmd = {
+                "LspInstall", "LspUninstall", "LspInstallInfo",
+                "LspUninstallAll", "LspPrintInstalled"
+            },
+            config = function() require("yasser.lsp.lspinstaller") end
+        }
 
         -- Markdown
         use {'tpope/vim-markdown', opt = true, ft = 'markdown'}
@@ -269,8 +279,8 @@ return require("packer").startup({
             opt = false,
             config = function() require('nvim_comment').setup() end
         }
-        -- use {"JoosepAlviste/nvim-ts-context-commentstring", opt=false}
-        -- use {"kevinhwang91/nvim-bqf", opt = false}
+        use {"JoosepAlviste/nvim-ts-context-commentstring", opt = false}
+        use {"kevinhwang91/nvim-bqf", opt = false}
 
         -- Floating terminal (may be unnecesasry)
         use {'voldikss/vim-floaterm', opt = false}
@@ -335,10 +345,15 @@ return require("packer").startup({
         }
 
         -- Status Line and Bufferline
+        -- use {
+        --     "glepnir/galaxyline.nvim",
+        --     opt = false,
+        --     config = function() require 'yasser.theme.galaxyline' end
+        -- }
         use {
-            "glepnir/galaxyline.nvim",
+            "nvim-lualine/lualine.nvim",
             opt = false,
-            config = function() require 'yasser.theme.galaxyline' end
+            config = function() require "yasser.theme.lualine" end
         }
         use {
             "romgrk/barbar.nvim",
@@ -368,7 +383,13 @@ return require("packer").startup({
 
         -- add closing parentheses automatically.
         -- use {'jiangmiao/auto-pairs', opt = false}
-        use {"windwp/nvim-autopairs", opt = false}
+        use {
+            "windwp/nvim-autopairs",
+            opt = false,
+            config = function()
+                require("yasser.completion.autopairs")
+            end
+        }
         -- use {'Raimondi/delimitMate', opt = false}
         -- use {
         --     "steelsojka/pears.nvim",
