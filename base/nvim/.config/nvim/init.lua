@@ -5,7 +5,6 @@ require('packer_compiled')
 require('yasser.settings')
 require('yasser.keymappings')
 require('yasser.autocommands')
-require('yasser.theme.treesitter')
 require('yasser.theme.colorscheme')
 -- vimscipt only plugins and helpers
 vim.cmd('source ~/.config/nvim/vimscript/functions.vim')

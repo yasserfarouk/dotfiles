@@ -96,23 +96,23 @@ return require("packer").startup({
             end
         }
         -- LSP
-        use {"neovim/nvim-lspconfig", opt = false}
+        use {
+            "neovim/nvim-lspconfig",
+            opt = false,
+            config = function() require('yasser.lsp.config') end
+        }
         -- fix lsp highlight
         use {"antoinemadec/FixCursorHold.nvim", opt = false}
         use {
             "tami5/lspsaga.nvim",
             opt = false,
-            config = function()
-                vim.cmd([[
-					nnoremap <silent> gh :Lspsaga lsp_finder<CR>
-				]])
-            end
+            config = function() require('yasser.lsp.saga') end
 
         }
         use {
             "kabouzeid/nvim-lspinstall",
-            opt = true,
-            cmd = {"LspInstall", "LspUninstall"}
+            opt = false,
+            config = function() require("yasser.lsp.lspinstaller") end
         }
         use {'ray-x/lsp_signature.nvim', opt = true, ft = {"python"}}
         use {
@@ -226,7 +226,20 @@ return require("packer").startup({
         use "rafamadriz/friendly-snippets" -- a bunch of snippets to use
 
         -- Treesitter
-        use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
+        use {
+            "nvim-treesitter/nvim-treesitter",
+            run = ":TSUpdate",
+            config = function() require('yasser.theme.treesitter') end
+        }
+        use {
+            'heavenshell/vim-pydocstring',
+            run = "make install",
+            opt = true,
+            ft = {"python"},
+            config = function()
+                vim.cmd [[let g:pydocstring_formatter = 'google']]
+            end
+        }
         -- closes autotags using treesitter
         -- use {"windwp/nvim-ts-autotag", opt = false}
         use {
@@ -280,7 +293,7 @@ return require("packer").startup({
             config = function() require('nvim_comment').setup() end
         }
         use {"JoosepAlviste/nvim-ts-context-commentstring", opt = false}
-        use {"kevinhwang91/nvim-bqf", opt = false}
+        -- use {"kevinhwang91/nvim-bqf", opt = false}
 
         -- Floating terminal (may be unnecesasry)
         use {'voldikss/vim-floaterm', opt = false}
@@ -303,10 +316,10 @@ return require("packer").startup({
         -- use {'knubie/vim-kitty-navigator', opt = false, cond = {kitty}}
         -- tumx integration
         use {
-            'christoomey/vim-tmux-navigator',
-            opt = false,
+            'robaire/nvim-tmux-navigator',
+            opt = true,
             cond = {tmux},
-            setup = function() require 'yasser.nav.tmux' end
+            setup = function() require 'yasser.nav.tmuxconf' end
         }
 
         -- Extra search and replace
@@ -355,11 +368,12 @@ return require("packer").startup({
             opt = false,
             config = function() require "yasser.theme.lualine" end
         }
-        use {
-            "romgrk/barbar.nvim",
-            opt = false,
-            config = function() require 'yasser.theme.barbar' end
-        }
+        use {"moll/vim-bbye", opt = false}
+        -- use {
+        --     "romgrk/barbar.nvim",
+        --     opt = false,
+        --     config = function() require 'yasser.theme.barbar' end
+        -- }
 
         -- visual start search
         use {'nelstrom/vim-visual-star-search', opt = false}
@@ -371,6 +385,13 @@ return require("packer").startup({
         use {'rhysd/vim-textobj-anyblock', opt = false}
         use {'kana/vim-textobj-line', opt = false}
         use {'michaeljsmith/vim-indent-object', opt = false}
+        use {
+            'nvim-treesitter/nvim-treesitter-textobjects',
+            opt = false,
+            config = function()
+                require "yasser.nav.treesitter_textobjects"
+            end
+        }
 
         -- tex
         use {'lervag/vimtex', opt = true, ft = {"tex", "bib"}}

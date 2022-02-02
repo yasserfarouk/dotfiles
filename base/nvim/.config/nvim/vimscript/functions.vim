@@ -1,3 +1,4 @@
+command! BufOnly silent! execute "%bd|e#|bd#"
 command! LspCodeAction lua require 'utils.nv_utils'.code_action()
 command! LspDeclaration lua require 'utils.nv_utils'.declaration()
 command! LspDefinition lua require 'utils.nv_utils'.definition()

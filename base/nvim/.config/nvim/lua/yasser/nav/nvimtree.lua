@@ -54,8 +54,8 @@ nvim_tree.setup {
     auto_close = true,
     open_on_tab = false,
     hijack_cursor = false,
-    update_cwd = true,
-    update_to_buf_dir = {enable = true, auto_open = true},
+    update_cwd = false,
+    update_to_buf_dir = {enable = false, auto_open = false},
     diagnostics = {
         enable = true,
         icons = {hint = "", info = "", warning = "", error = ""}
@@ -76,6 +76,7 @@ nvim_tree.setup {
                 {key = {"l", "<CR>"}, cb = tree_cb "edit"},
                 {key = "h", cb = tree_cb "close_node"},
                 {key = "v", cb = tree_cb "vsplit"},
+                {key = "o", cb = "NvimTreeOSOpen"},
                 {key = "o", cb = "NvimTreeQuicklook"},
             }
         },

@@ -95,7 +95,7 @@ endfunction
 
 wk.setup {}
 wk.register({
-    ["'"] = {"<cmd>Dashboard<cr>", "Home"},
+    ["'"] = {"<cmd>Alpha<cr>", "Home"},
     ["E"] = {"<cmd>NvimTreeToggle<cr>", "explorer on root"},
     ["e"] = {"<cmd>NvimTreeFindFileToggle<cr>", "explorer"},
 
@@ -107,6 +107,7 @@ wk.register({
     ["-"] = {"<C-W>s", "split below"},
     ["\\"] = {"<C-W>v", "split right"},
     ["="] = {"<C-W>=", "balance windows"},
+	["/"] = {"<cmd>Telescope current_buffer_fuzzy_find fuzzy=false case_mode=ignore_case<cr>", "fuzzy search buffer"},
     ["u"] = {"<cmd>UndotreeToggle<cr>", "undo tree"},
     ["z"] = {"<C-W>m", "zoom window"},
 		j = {
@@ -142,10 +143,10 @@ wk.register({
         ["$"] = {"<cmd>blast<cr>", "last"},
         ["^"] = {"<cmd>bfirst<cr>", "first"},
         b = {"<cmd>Telescope buffers<cr>", "pick buffer"},
-        d = {"<cmd>BufferClose<cr>", "delete-buffer"},
+        d = {"<cmd>Bdelete<cr>", "delete-buffer"},
         n = {"<cmd>bnext<cr>", "next-buffer"},
         p = {"<cmd>bprevious<cr>", "previous-buffer"},
-        o = {"<cmd>BufferCloseAllButCurrent<cr>", "close others"}
+        o = {"<cmd>BufOnly<cr>", "close others"}
     },
     d = {
         name = "+debug",
@@ -277,10 +278,14 @@ wk.register({
             "workspace diagnostics"
         },
         f = {"<cmd>Neoformat<cr>", "format"},
-        I = {"<cmd>LspInfo<cr>", "lsp info"},
+        i = {"<cmd>LspInfo<cr>", "lsp info"},
+        -- r = {"<cmd>Lspsaga rename<cr>", "rename"},
+        r = {"<cmd>LspInfo<cr>", "lsp info"},
+        m = {"<cmd>LspInstallInfo<cr>", "manage LSP"},
         v = {"<cmd>LspVirtualTextToggle<cr>", "lsp toggle virtual text"},
         c = {"<cmd>Lspsaga lsp_finder<cr>", "lsp finder"},
-        L = {"<cmd>Lspsaga show_line_diagnostics<cr>", "line_diagnostics"},
+        C = {"<cmd>Telescope lsp_document_symbols<cr>", "document symbols"},
+        l = {"<cmd>Lspsaga show_line_diagnostics<cr>", "line_diagnostics"},
         [">"] = {
             "<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>", "next diagnostic"
         },
@@ -289,12 +294,11 @@ wk.register({
         },
         p = {"<cmd>Lspsaga preview_definition<cr>", "preview definition"},
         q = {"<cmd>Telescope quickfix<cr>", "quickfix"},
-        r = {"<cmd>Lspsaga rename<cr>", "rename"},
         h = {"<cmd>Lspsaga signature_help<cr>", "signature help"},
         T = {"<cmd>LspTypeDefinition<cr>", "type defintion"},
         x = {"<cmd>cclose<cr>", "close quickfix"},
-        S = {"<cmd>Telescope lsp_document_symbols<cr>", "document symbols"},
-        s = {"<cmd>Telescope lsp_workspace_symbols<cr>", "workspace symbols"}
+        s = {"<cmd>Telescope lsp_workspace_symbols<cr>", "workspace symbols"},
+		_ = {"<Plug>(pydocstring)<cr>", "doc string"}
     },
 
     v = {
