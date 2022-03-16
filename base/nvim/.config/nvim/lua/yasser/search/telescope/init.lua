@@ -1,3 +1,4 @@
+local telescope = require('telescope')
 local actions = require('telescope.actions')
 -- Global remapping
 ------------------------------
@@ -32,7 +33,7 @@ local fixfolds = {
         return true
     end
 }
-require('telescope').setup {
+telescope.setup {
     pickers = {
         buffers = fixfolds,
         file_browser = fixfolds,
@@ -105,7 +106,13 @@ require('telescope').setup {
             override_generic_sorter = false,
             override_file_sorter = true
         },
-        dap = {}
+        dap = {},
+        project = {
+            base_dirs = {
+                {'~/code', max_depth = 4},
+                {'~/storage/gdrive/research', max_depth = 4}
+            },
+            hidden_files = false -- default: false
+        }
     }
 }
-

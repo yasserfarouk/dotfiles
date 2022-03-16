@@ -1,0 +1,14 @@
+matches:
+  - trigger: ":site"
+    replace: "http://yasserm.com"
+  - trigger: ":gmail"
+    replace: "yasserfarouk@gmail.com"
+  - trigger: ":nec"
+    replace: "y.mohammad@nec.com"
+  - trigger: ":aist"
+    replace: "y.mohammad@aist.go.jp"
+  - trigger: ":ass"
+    replace: "yasserm@aun.edu.eg"
+  - trigger: ":ieee"
+    replace: "ymohammad@ieee.org"
+

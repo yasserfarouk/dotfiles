@@ -7,6 +7,14 @@ endfunction
 ]])
 
 vim.cmd([[
+function! OrganizeImports()
+  silent exec PyrightOrganizeImports
+	silent exec "!isort %"
+  silent exec "!autoflake --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports --in-place --exclude '__init__.py' %s"
+endfunction
+]])
+
+vim.cmd([[
 function! PandocPDFNoContents()
 	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0  -V geometry:margin=2cm -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
 endfunction
@@ -109,6 +117,16 @@ wk.register({
     ["="] = {"<C-W>=", "balance windows"},
 	["/"] = {"<cmd>Telescope current_buffer_fuzzy_find fuzzy=false case_mode=ignore_case<cr>", "fuzzy search buffer"},
     ["u"] = {"<cmd>UndotreeToggle<cr>", "undo tree"},
+    ["<space>"] = {"<cmd>SnipRun<cr>", "run"},
+	["1"] = {"<Cmd>BufferLineGoToBuffer 1<CR>", "Buf 1"},
+	["2"] = {"<Cmd>BufferLineGoToBuffer 2<CR>", "Buf 2"},
+	["3"] = {"<Cmd>BufferLineGoToBuffer 3<CR>", "Buf 2"},
+	["4"] = {"<Cmd>BufferLineGoToBuffer 4<CR>", "Buf 2"},
+	["5"] = {"<Cmd>BufferLineGoToBuffer 5<CR>", "Buf 2"},
+	["6"] = {"<Cmd>BufferLineGoToBuffer 6<CR>", "Buf 2"},
+	["7"] = {"<Cmd>BufferLineGoToBuffer 7<CR>", "Buf 2"},
+	["8"] = {"<Cmd>BufferLineGoToBuffer 8<CR>", "Buf 2"},
+	["9"] = {"<Cmd>BufferLineGoToBuffer 9<CR>", "Buf 2"},
     ["z"] = {"<C-W>m", "zoom window"},
 		j = {
 			name = "+jupyter",
@@ -225,6 +243,8 @@ wk.register({
         s = {"<cmd>CtrlSF<cr>", "CtrlSF"},
         S = {":CtrlSF ", "CtrlSF"},
         a = {"<cmd>Telescope find_files<cr>", "find files"},
+        P = {"<cmd>Telescope project<cr>", "projects"},
+        p = {"<cmd>Telescope projects<cr>", "recent projects"},
     },
 
     S = {
@@ -298,6 +318,9 @@ wk.register({
         T = {"<cmd>LspTypeDefinition<cr>", "type defintion"},
         x = {"<cmd>cclose<cr>", "close quickfix"},
         s = {"<cmd>Telescope lsp_workspace_symbols<cr>", "workspace symbols"},
+        S = {"<cmd>!ssort %<cr>", "Sort Code"},
+        I = {"<cmd>call OrganizeImports()<cr>", "Sort Imports"},
+        o = {"<cmd>SymbolsOutline<cr>", "Symbols sidebar"},
 		_ = {"<Plug>(pydocstring)<cr>", "doc string"}
     },
 

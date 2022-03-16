@@ -115,8 +115,8 @@ cmp.setup {
         {name = "look", keyword_length = 3}, {name = "path"}, {name = "calc"},
         {name = "spell"}, {name = "emoji"}
     },
-    -- completion = {completeopt = 'menu,menuone,noinsert'},
-    experimental = {native_menu = false, ghost_text = true}
+    -- completion = {completeopt = 'menu,menuone'},
+    experimental = {ghost_text = true},
 }
 -- Autopairs
 -- require("nvim-autopairs.completion.cmp").setup(

@@ -61,6 +61,7 @@ end
 local spaces = function()
 	return "spaces: " .. vim.api.nvim_buf_get_option(0, "shiftwidth")
 end
+local gps = require("nvim-gps")
 
 lualine.setup({
 	options = {
@@ -74,7 +75,9 @@ lualine.setup({
 	sections = {
 		lualine_a = { branch},
 		lualine_b = { mode },
-		lualine_c = {},
+		lualine_c = {
+				{ gps.get_location, cond = gps.is_available },
+			},
 		-- lualine_x = { "encoding", "fileformat", "filetype" },
 		lualine_x = { diagnostics, diff, spaces, "encoding", filetype },
 		lualine_y = { location },

@@ -39,6 +39,8 @@ vim.api.nvim_set_keymap('n', '<C-o>', '<C-o>zz', {silent = true, noremap = true}
 vim.api.nvim_set_keymap('n', '<C-i>', '<C-i>zz', {silent = true, noremap = true})
 vim.api.nvim_set_keymap('n', 'z-', 'z^', {silent = true, noremap = true})
 vim.api.nvim_set_keymap('n', '}', '}zvzz', {silent = true, noremap = true})
+vim.api.nvim_set_keymap('n', 'n', 'nzvzz', {silent = true, noremap = true})
+vim.api.nvim_set_keymap('n', 'N', 'Nzvzz', {silent = true, noremap = true})
 vim.api.nvim_set_keymap('n', '{', '{zvzz', {silent = true, noremap = true})
 vim.api.nvim_set_keymap('n', ']]', ']]zvzz', {silent = true, noremap = true})
 vim.api.nvim_set_keymap('n', '[[', '[[zvzz', {silent = true, noremap = true})
@@ -96,6 +98,8 @@ vim.api.nvim_set_keymap('n', '<S-TAB>', ':bprevious<CR>', {noremap = true, silen
 vim.api.nvim_set_keymap('x', 'K', ':move \'<-2<CR>gv-gv', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('x', 'J', ':move \'>+1<CR>gv-gv', {noremap = true, silent = true})
 
+-- easy buffer navigation
+vim.api.nvim_set_keymap('n', "gb", "<cmd>BufferLinePick<CR>", {silent=true})
 -- Better nav for omnicomplete
 -- vim.cmd('inoremap <expr> <c-j> (\"\\<C-n>\")')
 -- vim.cmd('inoremap <expr> <c-k> (\"\\<C-p>\")')

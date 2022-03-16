@@ -27,7 +27,7 @@ if has('unix')
 					\ = '/Applications/Skim.app/Contents/SharedSupport/displayline'
 		" This adds a callback hook that updates Skim after compilation
 		" let g:vimtex_compiler_callback_hooks = ['UpdateSkim']
-		let g:vimtex_view_general_options_latexmk = '--unique'
+		" let g:vimtex_view_general_options_latexmk = '--unique'
 	" elseif has('win32')
 	else
 		let g:latex_view_general_viewer = "zathura"
@@ -45,12 +45,25 @@ let g:vimtex_compiler_latexmk = {
 			\   '-interaction=nonstopmode',
 			\ ],
 			\}
-let g:tex_flavor = "latexmk"
+" let g:tex_flavor = "latexmk"
+let g:tex_flavor = "latex"
 let g:vimtex_quickfix_open_on_warning = 0
+
+let g:vimtex_quickfix_ignore_filters = [
+	  \ 'Marginpar on page',
+	  \ 'Overfull ',
+	  \ 'Underfull ',
+	  \ 'LaTeX warning:',
+	  \ 'LaTeX Warning:',
+	  \ 'Package hyperref Warning',
+	  \ 'Package pgf Warning',
+	  \ 'Package inputenc Warning',
+	  \ 'Package listingsutf8 Warning',
+	  \]
 let g:vimtex_quickfix_mode = 2
-if has('nvim')
-	let g:vimtex_compiler_progname = 'nvr'
-endif
+" if has('nvim')
+" 	let g:vimtex_compiler_progname = 'nvr'
+" endif
 
 " Concealment
 let g:tex_conceal=""
@@ -78,8 +91,3 @@ augroup tex_settings
     autocmd!
 	autocmd BufEnter *.tex set conceallevel=0
 augroup END
-" augroup vimtex_common
-"     autocmd!
-"     autocmd FileType tex call SetServerName()
-" 	" autocmd FileType tex set conceallevel=0
-" augroup END

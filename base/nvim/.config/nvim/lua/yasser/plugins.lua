@@ -82,6 +82,24 @@ return require("packer").startup({
                 require('telescope').load_extension('fzy_native')
             end
         }
+        use {
+            "nvim-telescope/telescope-project.nvim",
+
+            opt = false,
+            requires = {"nvim-telescope/telescope.nvim"},
+            config = function()
+                require'telescope'.load_extension('project')
+            end
+        }
+        use "tom-anders/telescope-vim-bookmarks.nvim"
+        use "nvim-telescope/telescope-media-files.nvim"
+        use "nvim-telescope/telescope-ui-select.nvim"
+        use "nvim-telescope/telescope-file-browser.nvim"
+        use {
+            "ahmedkhalf/project.nvim",
+            opt = false,
+            config = function() require("yasser.search.projects") end
+        }
         -- use {
         --     "nvim-telescope/telescope-project.nvim",
         --     event = "BufRead",
@@ -123,6 +141,12 @@ return require("packer").startup({
                 "LspUninstallAll", "LspPrintInstalled"
             },
             config = function() require("yasser.lsp.lspinstaller") end
+        }
+        -- eye candy
+        use {
+            "j-hui/fidget.nvim",
+            opt = false,
+            config = function() require("fidget").setup {} end
         }
 
         -- Markdown
@@ -184,6 +208,7 @@ return require("packer").startup({
             -- after = {"mfussenegger/nvim-dap"},
             config = function() require('yasser.debug.dappy') end
         }
+        -- use "simrat39/symbols-outline.nvim"
 
         -- Testing
         use {'5long/pytest-vim-compiler', opt = true, ft = {"python"}}
@@ -220,10 +245,14 @@ return require("packer").startup({
 
         -- Snippets
         -- use {'SirVer/ultisnips', opt = false}
-        -- use {'honza/vim-snippets', opt = false}
         -- use {"hrsh7th/vim-vsnip", opt = false}
-        use "L3MON4D3/LuaSnip" -- snippet engine
+        use {
+            "L3MON4D3/LuaSnip",
+            opt = false,
+            config = function() require("yasser.completion.luasnip") end
+        } -- snippet engine
         use "rafamadriz/friendly-snippets" -- a bunch of snippets to use
+        use {'honza/vim-snippets', opt = false}
 
         -- Treesitter
         use {
@@ -303,13 +332,29 @@ return require("packer").startup({
         use {'dhruvasagar/vim-table-mode', opt = false}
 
         -- basic navigation (tpope)
+			--         use {
+			--             "blackCauldron7/surround.nvim",
+			-- opt = false,
+			--             config = function()
+			--                 require"surround".setup {mappings_style = "surround"}
+			--             end
+			--         }
         use {'tpope/vim-surround', opt = false}
+
         use {'tpope/vim-unimpaired', opt = false}
         use {'tpope/vim-repeat', opt = false}
         use {'tpope/vim-dispatch', opt = false}
         use {'tpope/vim-abolish', opt = false}
-        use {'tpope/vim-capslock', opt = false} -- <C-g>c for capslock
+        -- use {'tpope/vim-capslock', opt = false} -- <C-g>c for capslock
         use {'tpope/vim-eunuch', opt = false} -- Unix helpful commands like Move, SudoWrite
+
+        -- gps showing where am i in status bar
+        use {
+            "SmiteshP/nvim-gps",
+            requires = "nvim-treesitter/nvim-treesitter",
+            opt = false,
+            config = function() require("nvim-gps").setup() end
+        }
 
         -- -- kitty interaction
         -- -- use {'knubie/vim-kitty-navigator', opt = false}
@@ -317,16 +362,22 @@ return require("packer").startup({
         -- tumx integration
         use {
             'robaire/nvim-tmux-navigator',
-            opt = true,
-            cond = {tmux},
+            opt = false,
             setup = function() require 'yasser.nav.tmuxconf' end
         }
 
         -- Extra search and replace
         use {'dyng/ctrlsf.vim', opt = false}
-
+        -- REPL  and run code
+        use {
+            'michaelb/sniprun',
+            opt = true,
+            ft = {"python", "md"},
+            run = 'bash ./install.sh',
+            config = function() require "yasser.repl.sniprun" end
+        }
         -- Show current context
-        use {'wellle/context.vim', opt = false}
+        -- use {'wellle/context.vim', opt = false}
 
         -- search and replace in multipole files
         use {'brooth/far.vim', opt = false}
@@ -367,6 +418,15 @@ return require("packer").startup({
             "nvim-lualine/lualine.nvim",
             opt = false,
             config = function() require "yasser.theme.lualine" end
+        }
+
+        use {"rcarriga/nvim-notify", opt = false}
+
+        -- using packer.nvim
+        use {
+            'akinsho/bufferline.nvim',
+            requires = 'kyazdani42/nvim-web-devicons',
+            config = function() require "yasser.theme.bufferline" end
         }
         use {"moll/vim-bbye", opt = false}
         -- use {
@@ -411,6 +471,7 @@ return require("packer").startup({
                 require("yasser.completion.autopairs")
             end
         }
+        use "andymass/vim-matchup"
         -- use {'Raimondi/delimitMate', opt = false}
         -- use {
         --     "steelsojka/pears.nvim",
