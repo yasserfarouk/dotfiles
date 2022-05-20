@@ -1,2 +1,4 @@
-require('dap-python').setup('$HOME/.pyenv/versions/neovim3/bin/python')
-require('dap-python').test_runner = 'pytest'
+local dappy = require('dap-python')
+-- print(vim.g["python3_host_prog"])
+dappy.setup(vim.g["python3_host_prog"])
+dappy.test_runner = 'pytest'

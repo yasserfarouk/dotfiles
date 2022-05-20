@@ -27,5 +27,6 @@ nnoremap <silent> <F10> :DebugStepOver<CR>
 nnoremap <silent> <F11> :DebugStepInto<CR>
 nnoremap <silent> <S-F11> :DebugStepOut<CR>
 nnoremap <silent> <F12> :DebugStop<CR>
+nnoremap <silent> <F12> :DebugStop<CR>
 ]])
 require('dap.ext.vscode').load_launchjs()

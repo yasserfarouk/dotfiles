@@ -52,4 +52,4 @@ windows:
       layout: main-horizontal
       panes:
         - v
-        - source .envrc && clear
+        - 

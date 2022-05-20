@@ -70,7 +70,7 @@ set nowrap
 set modeline
 set modelines=10
 set undofile
-set undodir="$HOME/.VIM_UNDO_FILES"
+set undodir=~/.VIM_UNDO_FILES
 set exrc
 set secure
 set nobackup
@@ -78,11 +78,11 @@ set noswapfile
 set fileformats=unix,mac,dos
 set autoread
 set dictionary+=/usr/share/dict/words
-set thesaurus+=$HOME/.ysupport/thesaurii.txt
+set thesaurus+=~/.ysupport/thesaurii.txt
 set cursorline
 let g:neoformat_enabled_python = ['black']
-let g:python_host_prog='$HOME/.pyenv/versions/neovim2/bin/python'
-let g:python3_host_prog='$HOME/.pyenv/versions/neovim3/bin/python'
+let g:python_host_prog="~/.pyenv/versions/miniforge3/envs/neovim3/bin/python"
+let g:python3_host_prog="~/.pyenv/versions/miniforge3/envs/neovim3/bin/python"
 set foldmethod=indent
 set foldlevel=99
 set foldcolumn=1

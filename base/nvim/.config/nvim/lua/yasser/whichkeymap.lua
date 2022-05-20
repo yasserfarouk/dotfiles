@@ -62,10 +62,16 @@ function! SetupWrappingSoft()
 		set textwidth=0
 		nnoremap j j
 		nnoremap k k
+		nnoremap 0 0
+		nnoremap ^ ^
+		nnoremap $ $
 	else
 		set wrap
 		nnoremap j gj
 		nnoremap k gk
+		nnoremap 0 g0
+		nnoremap ^ g^
+		nnoremap $ g$
 	endif
 endfunction
 
@@ -144,6 +150,7 @@ wk.register({
         h = {"<cmd>call PandocHTML()<cr>", "compile (html)"},
         P = {"<cmd>call PublishMedium()<cr>", "publish (medium)"},
         l = {"<cmd>call PandocPDFLandscape()<cr>", "compile (landscape)"},
+        v = {"<cmd>MarkdownPreview<cr>", "preview"},
         p = {"<cmd>MarkdownPreview<cr>", "preview"},
         C = {
             "<cmd>call PandocPDFNoContents()<cr>",
@@ -300,7 +307,9 @@ wk.register({
         f = {"<cmd>Neoformat<cr>", "format"},
         i = {"<cmd>LspInfo<cr>", "lsp info"},
         -- r = {"<cmd>Lspsaga rename<cr>", "rename"},
-        r = {"<cmd>LspInfo<cr>", "lsp info"},
+        r = {"<cmd>RunFile<cr>", "Rund file"},
+        R = {"<cmd>RunFile tab<cr>", "Rund file (tab)"},
+        x = {"<cmd>RunCode<cr>", "Rund code"},
         m = {"<cmd>LspInstallInfo<cr>", "manage LSP"},
         v = {"<cmd>LspVirtualTextToggle<cr>", "lsp toggle virtual text"},
         c = {"<cmd>Lspsaga lsp_finder<cr>", "lsp finder"},
@@ -316,12 +325,13 @@ wk.register({
         q = {"<cmd>Telescope quickfix<cr>", "quickfix"},
         h = {"<cmd>Lspsaga signature_help<cr>", "signature help"},
         T = {"<cmd>LspTypeDefinition<cr>", "type defintion"},
-        x = {"<cmd>cclose<cr>", "close quickfix"},
         s = {"<cmd>Telescope lsp_workspace_symbols<cr>", "workspace symbols"},
         S = {"<cmd>!ssort %<cr>", "Sort Code"},
         I = {"<cmd>call OrganizeImports()<cr>", "Sort Imports"},
         o = {"<cmd>SymbolsOutline<cr>", "Symbols sidebar"},
-		_ = {"<Plug>(pydocstring)<cr>", "doc string"}
+		_ = {"<Plug>(pydocstring)<cr>", "doc string"},
+		g = { "<cmd>Neogen func<Cr>", "Func Doc" },
+	    G = { "<cmd>Neogen class<Cr>", "Class Doc" }
     },
 
     v = {
@@ -360,13 +370,14 @@ wk.register({
         name = "+terminal",
         X = {"<cmd>FloatermNew<cr>", "new"},
         x = {"<cmd>FloatermToggle<cr>", "toggle"},
-        f = {"<cmd>FloatermNew vifm<cr>", "vifm"},
-        t = {"<cmd>FloatermNew ytop<cr>", "ytop"},
+        f = {"<cmd>FloatermNew  --width=0.95 --height=0.95  vifm<cr>", "vifm"},
+        t = {"<cmd>FloatermNew  --width=0.95 --height=0.95 bpytop<cr>", "bpytop"},
+        h = {"<cmd>FloatermNew  --width=0.95 --height=0.95 htop<cr>", "htop"},
         P = {"<cmd>FloatermNew ipython<cr>", "python"},
         n = {"<cmd>FloatermNext<cr>", "next"},
         p = {"<cmd>FloatermPrev<cr>", "prev"},
         r = {"<cmd>FloatermSend<cr>", "send"},
-        g = {"<cmd>FloatermNew lazygit<cr>", "lazygit"},
+        g = {"<cmd>FloatermNew  --width=0.95 --height=0.95 lazygit<cr>", "lazygit"},
         ["]"] = {"<cmd>FloatermNext<cr>", "next"},
         ["["] = {"<cmd>FloatermPrev<cr>", "prev"},
         ["\\"] = {
@@ -433,6 +444,7 @@ wk.register({
         w = {"<cmd>StripWhitespace<cr>", "strip whitespace"},
         s = {"<cmd>Ds1z=`]<cr>", "correct spelling"},
         y = {"<cmd>let @+= expand(' % ')<cr>", "copy path"},
-        l = {"<cmd>%s/^/\\=printf('%-4d', line('.'))<cr>", "write line numbers"}
+        l = {"<cmd>%s/^/\\=printf('%-4d', line('.'))<cr>", "write line numbers"},
+        x = {"<cmd>cclose<cr>", "close quickfix"},
     },
 }, {prefix = "<leader>"})

@@ -36,6 +36,8 @@ local tmux = function() return vim.fn.exists('$TMUX') == 1 end
 
 return require("packer").startup({
     function(use)
+		-- use gF to go to file:line:col
+		use {'wsdjeg/vim-fetch', opt=false}
         -- use_rocks {"inspect"}
         -- Packer can manage itself as an optional plugin
         --
@@ -54,7 +56,7 @@ return require("packer").startup({
         -- Telescope
         use {"nvim-lua/popup.nvim", opt = false}
         use {"nvim-lua/plenary.nvim", opt = false}
-        use {"tjdevries/astronauta.nvim", opt = false}
+        -- use {"tjdevries/astronauta.nvim", opt = false}
         use {
             "nvim-telescope/telescope.nvim",
             opt = false,
@@ -142,6 +144,9 @@ return require("packer").startup({
             },
             config = function() require("yasser.lsp.lspinstaller") end
         }
+		-- search cheat.sh
+		use{'RishabhRD/popfix'}
+		use{'RishabhRD/nvim-cheat.sh'}
         -- eye candy
         use {
             "j-hui/fidget.nvim",
@@ -157,7 +162,22 @@ return require("packer").startup({
             ft = 'markdown',
             run = 'cd app & yarn install'
         }
-
+		-- running code
+		use {'CRAG666/code_runner.nvim',
+			requires = 'nvim-lua/plenary.nvim',
+			opt=true,
+			ft = dap_types,
+			config = function()
+				require('code_runner').setup({
+				  filetype = {
+						java = "cd $dir && javac $fileName && java $fileNameWithoutExt",
+						python = "python3 -u",
+						typescript = "deno run",
+						rust = "cd $dir && rustc $fileName && $dir/$fileNameWithoutExt"
+					},
+				})
+			end
+		}
         -- Debugging
         use {"jbyuki/one-small-step-for-vimkind", opt = true, ft = {"lua"}}
         use {
@@ -237,8 +257,8 @@ return require("packer").startup({
                 "hrsh7th/cmp-buffer", "hrsh7th/cmp-nvim-lsp",
                 -- 'quangnguyen30192/cmp-nvim-ultisnips',
                 "saadparwaiz1/cmp_luasnip", 'hrsh7th/cmp-nvim-lua',
-                'octaltree/cmp-look', 'hrsh7th/cmp-path', 'hrsh7th/cmp-calc',
-                'f3fora/cmp-spell', 'hrsh7th/cmp-emoji'
+                'octaltree/cmp-look',  'hrsh7th/cmp-cmdline', 'hrsh7th/cmp-path', 'hrsh7th/cmp-calc',
+                'f3fora/cmp-spell', 'hrsh7th/cmp-emoji', 'petertriho/cmp-git'
             },
             config = function() require('yasser.completion.cmpconf') end
         }
@@ -269,6 +289,15 @@ return require("packer").startup({
                 vim.cmd [[let g:pydocstring_formatter = 'google']]
             end
         }
+		use {
+		  "danymat/neogen",
+		  config = function()
+		   require("yasser.lsp.neogen")
+		  end,
+		  cmd = { "Neogen" },
+		  module = "neogen",
+		  disable = false,
+		}
         -- closes autotags using treesitter
         -- use {"windwp/nvim-ts-autotag", opt = false}
         use {
@@ -362,8 +391,9 @@ return require("packer").startup({
         -- tumx integration
         use {
             'robaire/nvim-tmux-navigator',
-            opt = false,
-            setup = function() require 'yasser.nav.tmuxconf' end
+            opt = true,
+						cond = {tmux},
+            config = function() require 'yasser.nav.tmuxconf' end
         }
 
         -- Extra search and replace
@@ -535,7 +565,7 @@ return require("packer").startup({
         -- notebook-like environment
         use {"benmills/vimux", opt = true, ft = {"python"}}
         use {"julienr/vim-cellmode", opt = true, ft = {"python"}}
-        use {"greghor/vim-pyShell", opt = true, ft = "python"}
+        use {"greghor/vim-pyShell", opt = true, ft = {"python"}}
 
         -- transparent background
         use {
@@ -544,17 +574,30 @@ return require("packer").startup({
             config = function() require "yasser.theme.transparent" end
         }
 
-		-- motion
-		use {
-		  'phaazon/hop.nvim',
-		  branch = 'v1', -- optional but strongly recommended
-		  config = function()
-			-- you can configure Hop the way you like here; see :h hop-config
-			-- require'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
-			require'hop'.setup {}
-		  end
-		}
+		-- -- motion
+		-- use {
+		--   'phaazon/hop.nvim',
+		--   branch = 'v1', -- optional but strongly recommended
+		--   config = function()
+		-- 	-- you can configure Hop the way you like here; see :h hop-config
+		-- 	-- require'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
+		-- 	require'hop'.setup {}
+		--   end
+		-- }
 		--
+		-- note taking
+		-- use {
+		-- 	"oberblastmeister/neuron.nvim",
+		-- 	config = function()
+		-- 		require'neuron'.setup {
+		-- 			virtual_titles = true,
+		-- 			mappings = true,
+		-- 			run = nil, -- function to run when in neuron dir
+		-- 			neuron_dir = "~/code/notes", -- the directory of all of your notes, expanded by default (currently supports only one directory for notes, find a way to detect neuron.dhall to use any directory)
+		-- 			leader = "<leader>n", -- the leader key to for all mappings, remember with 'go zettel'
+		-- 		}
+		-- 	end
+		-- }
     end,
     config = {
         ensure_dependencies = true,

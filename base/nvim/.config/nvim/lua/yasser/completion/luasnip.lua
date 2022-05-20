@@ -1,7 +1,12 @@
+local snippets_folder = vim.fn.stdpath "config" .. "/lua/yasser/snippets/"
 local luasnip = require("luasnip")
 local util = require("luasnip.util.util")
 local types = require("luasnip.util.types")
 luasnip.config.setup({
+	history = true,
+	updateevents = "TextChanged,TextChangedI",
+	enable_autosnippets = true,
+	store_selection_keys = "<C-q>",
     -- emulate vscode jumping inside nestted placeholders
     parser_nested_assembler = function(_, snippet)
         local select = function(snip, no_move)
@@ -63,20 +68,21 @@ luasnip.config.setup({
         return snippet
     end,
     -- add virtual text to nodes
-    -- ext_opts = {
-    --     [types.choiceNode] = {active = {virt_text = {{"●", "GruvboxOrange"}}}},
-    --     [types.insertNode] = {active = {virt_text = {{"●", "GruvboxBlue"}}}}
-    -- }
+    ext_opts = {
+        [types.choiceNode] = {active = {virt_text = {{"●", "GruvboxOrange"}}}},
+        -- [types.insertNode] = {active = {virt_text = {{"●", "GruvboxBlue"}}}}
+    }
 })
 
 -- load all snippets. Now I load them as needed in clear
--- luasnip.loaders.from_vscode.lazy_load()
--- luasnip.loaders.from_snipmate.lazy_load()
+require("luasnip.loaders.from_vscode").lazy_load()
+require("luasnip.loaders.from_snipmate").lazy_load()
+require("luasnip.loaders.from_lua").lazy_load{paths = snippets_folder}
 -- load snippts as needed from everyplace including my own file
 function _G.snippets_clear()
-    for m, _ in pairs(luasnip.snippets) do
-        package.loaded["snippets." .. m] = nil
-    end
+	for m, _ in pairs(luasnip.snippets) do
+		package.loaded["snippets." .. m] = nil
+	end
     luasnip.snippets = setmetatable({}, {
         __index = function(t, k)
             local ok, m = pcall(require, "snippets." .. k)
@@ -89,31 +95,32 @@ function _G.snippets_clear()
             --
             require("luasnip.loaders.from_vscode").load({include = {k}})
             require("luasnip.loaders.from_snipmate").load({include = {k}})
+            require("luasnip.loaders.from_lua").load({paths = snippets_folder, include = {k}})
             return t[k]
         end
     })
 end
 
-_G.snippets_clear()
+-- _G.snippets_clear()
 
-vim.cmd [[
-augroup snippets_clear
-au!
-au BufWritePost ~/.config/nvim/lua/snippets/*.lua lua _G.snippets_clear()
-augroup END
-]]
+-- vim.cmd [[
+-- augroup snippets_clear_ac
+-- au!
+-- au BufWritePost ~/.config/nvim/lua/yasser/snippets/*.lua lua _G.snippets_clear()
+-- augroup END
+-- ]]
 
-function _G.edit_ft()
+function _G.snippets_edit_ft()
     -- returns table like {"lua", "all"}
     local fts = require("luasnip.util.util").get_snippet_filetypes()
     vim.ui.select(fts, {prompt = "Select which filetype to edit:"},
                   function(item, idx)
         -- selection aborted -> idx == nil
         if idx then
-            vim.cmd("edit ~/.config/nvim/lua/snippets/" .. item .. ".lua")
+            vim.cmd("edit ~/.config/nvim/lua/yasser/snippets/" .. item .. ".lua")
         end
     end)
 end
 
-vim.cmd [[command! LuaSnipEdit :lua _G.edit_ft()]]
+vim.cmd [[command! LuaSnipEdit :lua _G.snippets_edit_ft()]]
 

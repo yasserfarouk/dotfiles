@@ -1,4 +1,9 @@
-require('nvim-tmux-navigator').setup{
+local status_ok, tmuxnav = pcall(require, "nvim-tmux-navigator")
+if not status_ok then
+	print("TMUX navigator not loaded")
+	return
+end
+tmuxnav.setup{
     bindings = {
         left = '<C-H>',
         down = '<C-J>',

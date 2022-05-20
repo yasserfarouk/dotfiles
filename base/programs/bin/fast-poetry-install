@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# do a poetry install fast using a workaround.
+poetry export -f requirements.txt > requirements.txt
+python -m pip install -r requirements.txt
+poetry install

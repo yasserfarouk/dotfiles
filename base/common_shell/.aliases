@@ -348,6 +348,9 @@ function daibaJupyter(){
 alias daibajupyter="daibaJupyter"
 alias dt="daibaJupyter"
 
+# connect to scml's server on brown
+alias gobrown="ssh -i ~/.ssh/mybrown_rsa -t ymohamm1@ssh.cs.brown.edu host=scml"
+
 # kitty
 alias kitty='kitty --single-instance --start-as=maximized --listen-on=unix:/tmp/mykitty --single-instance '
 

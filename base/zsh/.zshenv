@@ -1,4 +1,4 @@
-# Wrime new entries to the history incrementally instead of on
+# Write new entries to the history incrementally instead of on
 # shell exit.
 setopt INC_APPEND_HISTORY
 # Let multiple instances of ZSH share the same active history. This doesn't

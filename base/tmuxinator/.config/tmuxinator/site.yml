@@ -55,5 +55,5 @@ windows:
       # synchronize: after
       panes:
         - v
-        - source .envrc && clear
-  - console: source .envrc && clear
+        - 
+  - console: 
