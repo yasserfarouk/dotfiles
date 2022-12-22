@@ -841,3 +841,8 @@ key_bindings:
    # - { key: N,                           mode: Vi, action: SearchNext              }
    # - { key: N,      mods: Shift,         mode: Vi, action: SearchPrevious          }  
    # - { key: NumpadEnter,             chars: "\n"                              }
+   - { key: H, mods: Control, chars: "\x1b[104;5u" }
+   - { key: I, mods: Control, chars: "\x1b[105;5u" }
+   - { key: J, mods: Control, chars: "\x1b[106;5u" }
+   - { key: M, mods: Control, chars: "\x1b[109;5u" }
+

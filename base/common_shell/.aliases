@@ -335,6 +335,34 @@ alias dl=download
 alias k='clear'
 alias cls='clear'
 
+
+function enablejava(){
+	# ## Multiple java verstions
+	if [ -f /usr/libexec/java_home ]; then
+		export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8)
+		export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
+		export JAVA_13_HOME=$(/usr/libexec/java_home -v13)
+		export JAVA_15_HOME=$(/usr/libexec/java_home -v15)
+		export JAVA_16_HOME=$(/usr/libexec/java_home -v16)
+		export JAVA_18_HOME=$(/usr/libexec/java_home -v18)
+
+		alias java8='export JAVA_HOME=$JAVA_8_HOME'
+		alias java11='export JAVA_HOME=$JAVA_11_HOME'
+		alias java13='export JAVA_HOME=$JAVA_13_HOME'
+		alias java15='export JAVA_HOME=$JAVA_15_HOME'
+		alias java16='export JAVA_HOME=$JAVA_16_HOME'
+		alias java18='export JAVA_HOME=$JAVA_18_HOME'
+
+		# default to Java 18
+		export JAVA_HOME=$JAVA_18_HOME
+	fi
+
+	if command -v jenv >/dev/null; then
+		export PATH="$HOME/.jenv/bin:$PATH"
+		eval "$(jenv init -)"
+	fi
+	#
+}
 # open a tunnel to a daiba server running of a
 # server  (default 11) on remote port (deafault 1234)
 # to local port (default 1234)
@@ -378,3 +406,13 @@ elif [[ "$OSTYPE" == "freebsd"* ]]; then
 else
         # Unknown.
 fi
+
+function create_x86_conda_env () {
+  # create a conda environment using x86 architecture
+  # first argument is environment name, all subsequent arguments will be passed to `conda create`
+  # example usage: create_x86_conda_environment myenv_x86 python=3.9
+  CONDA_SUBDIR=osx-64 conda create -n $@
+  conda activate $1
+  conda config --env --set subdir osx-64
+}
+

@@ -91,6 +91,8 @@ local function lsp_keymaps(bufnr)
         [[command! -nargs=0 LspVirtualTextToggle lua require("lsp/virtual_text").toggle()]])
     local sigok, lspsig = pcall(require, "lsp_signature")
     if sigok then lspsig.on_attach(client) end
+	api.nvim_set_keymap("i", "<Tab>", [[pumvisible() ? "\<C-n>" : "\<Tab>"]], { noremap = true, expr = true })
+  	api.nvim_set_keymap("i", "<S-Tab>", [[pumvisible() ? "\<C-p>" : "\<S-Tab>"]], { noremap = true, expr = true })
 end
 
 M.on_attach = function(client, bufnr)

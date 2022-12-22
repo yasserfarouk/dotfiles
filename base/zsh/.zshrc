@@ -42,50 +42,54 @@ bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 autoload -Uz compinit
 zstyle ':completion:*' menu select
-fpath+=~/.zfunc
+fpath+=$HOME/.zfunc
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 
 eval "$(starship init zsh)"
-
-
-# # >>> conda initialize >>>
-# # !! Contents within this block are managed by 'conda init' !!
-# __conda_setup="$('/Users/yasser/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-# if [ $? -eq 0 ]; then
-#     eval "$__conda_setup"
-# else
-#     if [ -f "/Users/yasser/miniforge3/etc/profile.d/conda.sh" ]; then
-#         . "/Users/yasser/miniforge3/etc/profile.d/conda.sh"
-#     else
-#         export PATH="/Users/yasser/miniforge3/bin:$PATH"
-#     fi
-# fi
-# unset __conda_setup
-# # <<< conda initialize <<<
 #
+#
+function pyenvrehash(){
+	command pyenv rehash 2>/dev/null
+}
 if command -v pyenv >/dev/null; then
-	eval "$(pyenv init -)"
+	export PYENV_ROOT="$HOME/.pyenv"
+	command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+	# eval "$(pyenv init -)"
+	#
+	PATH="$(bash --norc -ec 'IFS=:; paths=($PATH); for i in ${!paths[@]}; do if [[ ${paths[i]} == "'/Users/yasser/.pyenv/shims'" ]]; then unset '\''paths[i]'\''; fi; done; echo "${paths[*]}"')"
+	export PATH="/Users/yasser/.pyenv/shims:${PATH}"
+	export PYENV_SHELL=zsh
+	source '/opt/homebrew/Cellar/pyenv/2.3.3/libexec/../completions/pyenv.zsh'
+	pyenv() {
+	  local command
+	  command="${1:-}"
+	  if [ "$#" -gt 0 ]; then
+		shift
+	  fi
+
+	  case "$command" in
+	  activate|deactivate|rehash|shell)
+		eval "$(pyenv "sh-$command" "$@")"
+		;;
+	  *)
+		command pyenv "$command" "$@"
+		;;
+	  esac
+	}
+	# eval "$(pyenv init --path)"
 	eval "$(pyenv virtualenv-init -)"
-	# make py-launcher use pyenv global version
+	# # make py-launcher use pyenv global version
 	export PY_PYTHON=$(pyenv exec python -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
 	ANACONDAPATH=`pyenv virtualenv-prefix miniforge3`
-	if [ -z $ANACONDAPATH ]; then
-		if [ -d "$HOME/anaconda3" ]; then
-			ANACONDAPATH="$HOME/anaconda3"
-		else
-			ANACONDAPATH="$HOME/miniforge3"
-		fi
-	fi
 else
 	if [ -d "$HOME/anaconda3" ]; then
 		ANACONDAPATH="$HOME/anaconda3"
 	else
 		ANACONDAPATH="$HOME/miniforge3"
 	fi
+	eval "$(conda init -)"
 fi
 
 [ -f ~/.postzsh ] && source ~/.postzsh
-
-export PATH="$HOME/.poetry/bin:$PATH"

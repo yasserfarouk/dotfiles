@@ -1,4 +1,14 @@
-function NvimTreeOSOpen()
+-- following options are the default
+-- each of these are documented in `:help nvim-tree.OPTION_NAME`
+-- vim.g.
+local status_ok, nvim_tree = pcall(require, "nvim-tree")
+if not status_ok then return end
+
+local config_status_ok, nvim_tree_config = pcall(require, "nvim-tree.config")
+if not config_status_ok then return end
+
+
+local function nvimtree_os_open()
     local lib = require "nvim-tree.lib"
     local node = lib.get_node_at_cursor()
     if node then
@@ -6,7 +16,8 @@ function NvimTreeOSOpen()
             .jobstart("open '" .. node.absolute_path .. "' &", {detach = true})
     end
 end
-function NvimTreeQuicklook()
+
+local function nvimtree_quicklook()
     local lib = require "nvim-tree.lib"
     local node = lib.get_node_at_cursor()
     if node then
@@ -15,41 +26,12 @@ function NvimTreeQuicklook()
     end
 end
 
--- following options are the default
--- each of these are documented in `:help nvim-tree.OPTION_NAME`
-vim.g.nvim_tree_icons = {
-    default = "",
-    symlink = "",
-    git = {
-        unstaged = "",
-        staged = "S",
-        unmerged = "",
-        renamed = "➜",
-        deleted = "",
-        untracked = "U",
-        ignored = "◌"
-    },
-    folder = {
-        default = "",
-        open = "",
-        empty = "",
-        empty_open = "",
-        symlink = ""
-    }
-}
-
-local status_ok, nvim_tree = pcall(require, "nvim-tree")
-if not status_ok then return end
-
-local config_status_ok, nvim_tree_config = pcall(require, "nvim-tree.config")
-if not config_status_ok then return end
-
 local tree_cb = nvim_tree_config.nvim_tree_callback
 
 
-nvim_tree.setup {
-	auto_reload_on_write = true,
-  disable_netrw = false,
+nvim_tree.setup { 
+  auto_reload_on_write = true,
+  disable_netrw = true,
   hijack_cursor = false,
   hijack_netrw = true,
   hijack_unnamed_buffer_when_opening = false,
@@ -59,30 +41,11 @@ nvim_tree.setup {
   open_on_tab = false,
   sort_by = "name",
   update_cwd = false,
-  view = {
-    width = 30,
-    height = 30,
-    hide_root_folder = false,
-    side = "left",
-    preserve_window_proportions = false,
-    number = false,
-    relativenumber = false,
-    signcolumn = "yes",
-    mappings = {
-      custom_only = false,
-	  list = {
-	  	{key = {"l", "<CR>"}, cb = tree_cb "edit"},
-	  	{key = "h", cb = tree_cb "close_node"},
-	  	{key = "v", cb = tree_cb "vsplit"},
-	  	{key = "o", cb = "NvimTreeOSOpen"},
-	  	{key = "<space>", cb = "NvimTreeQuicklook"},
-	  },
-    },
-  },
+
   renderer = {
     indent_markers = {
-      enable = false,
-	  icons = {
+      enable = true,
+  	  icons = {
         corner = "└ ",
         edge = "│ ",
         none = "  ",
@@ -91,6 +54,26 @@ nvim_tree.setup {
     icons = {
       webdev_colors = true,
       git_placement = "before",
+  	  glyphs = {
+  		default = "",
+  		symlink = "",
+  		git = {
+  			unstaged = "",
+  			staged = "S",
+  			unmerged = "",
+  			renamed = "➜",
+  			deleted = "",
+  			untracked = "U",
+  			ignored = "◌"
+  		},
+  		folder = {
+  			default = "",
+  			open = "",
+  			empty = "",
+  			empty_open = "",
+  			symlink = ""
+  		}
+  	  },
     }
   },
   hijack_directories = {
@@ -98,18 +81,18 @@ nvim_tree.setup {
     auto_open = true,
   },
   update_focused_file = {
-    enable = false,
+    enable = true,
     update_cwd = false,
     ignore_list = {},
   },
   ignore_ft_on_setup = {},
-  system_open = {
-    cmd = "",
-    args = {},
-  },
+  -- system_open = {
+  --   cmd = "open ",
+  --   args = {},
+  -- },
   diagnostics = {
-    enable = false,
-    show_on_dirs = false,
+    enable = true,
+    show_on_dirs = true,
     icons = {
       hint = "",
       info = "",
@@ -163,4 +146,17 @@ nvim_tree.setup {
       profile = false,
     },
   },
+  view = {
+    mappings = {
+      custom_only = false,
+  	  list = {
+  	  	{key = {"l", "<CR>"}, action ="edit"},
+  	  	{key = "h", action = "close_node"},
+  	  	{key = "v", action = "vsplit"},
+  	  	{key = "o", action = "system-open", action_cb = nvimtree_os_open},
+  	  	{key = "<space>", action="quickview", action_cb = nvimtree_quicklook},
+  	  },
+    },
+  },
 }
+

@@ -1,17 +1,19 @@
-vim.api.nvim_set_keymap('n', '<Space>', '<NOP>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Space>', '<NOP>', { noremap = true, silent = true })
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
-
+-- never go to this weird mode
+vim.keymap.set("n", "Q", "<nop>")
 -- my most import map
-vim.api.nvim_set_keymap('n', ';', ':', {noremap = true, silent = false})
-vim.api.nvim_set_keymap('v', ';', ':', {noremap = true, silent = false})
-vim.api.nvim_set_keymap('n', ':', ';', {noremap = true, silent = false})
-vim.api.nvim_set_keymap('v', ':', ';', {noremap = true, silent = false})
+vim.api.nvim_set_keymap("n", "<C-i>", "<C-i>", { noremap = true, silent = false })
+vim.api.nvim_set_keymap('n', ';', ':', { noremap = true, silent = false })
+vim.api.nvim_set_keymap('v', ';', ':', { noremap = true, silent = false })
+vim.api.nvim_set_keymap('n', ':', ';', { noremap = true, silent = false })
+vim.api.nvim_set_keymap('v', ':', ';', { noremap = true, silent = false })
 -- no hl
-vim.api.nvim_set_keymap('n', '<esc><esc>', ':set hlsearch!<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<esc><esc>', ':set hlsearch!<CR>', { noremap = true, silent = true })
 
 -- explorer
-vim.api.nvim_set_keymap('n', '<Leader>e', ':NvimTreeToggle<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Leader>e', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('n', '-', ':RnvimrToggle<CR>', {noremap = true, silent = true})
 
 -- better window movement
@@ -19,45 +21,45 @@ vim.api.nvim_set_keymap('n', '<Leader>e', ':NvimTreeToggle<CR>', {noremap = true
 -- vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', {silent = true})
 -- vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', {silent = true})
 -- vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', {silent = true})
-vim.api.nvim_set_keymap('n', '<Left>', '<C-w>h', {silent = true})
-vim.api.nvim_set_keymap('n', '<Up>', '<C-w>k', {silent = true})
-vim.api.nvim_set_keymap('n', '<Down>', '<C-w>j', {silent = true})
-vim.api.nvim_set_keymap('n', '<Right>', '<C-w>l', {silent = true})
-vim.api.nvim_set_keymap('n', '==', 'ggVG=<C-o>', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('i', '<C-s>', '<esc>[s1z=`]a', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', 'Y', 'y$', {silent = true, noremap = true})
+vim.api.nvim_set_keymap('n', '<Left>', '<C-w>h', { silent = true })
+vim.api.nvim_set_keymap('n', '<Up>', '<C-w>k', { silent = true })
+vim.api.nvim_set_keymap('n', '<Down>', '<C-w>j', { silent = true })
+vim.api.nvim_set_keymap('n', '<Right>', '<C-w>l', { silent = true })
+vim.api.nvim_set_keymap('n', '==', 'ggVG=<C-o>', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('i', '<C-s>', '<esc>[s1z=`]a', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', 'Y', 'y$', { silent = true, noremap = true })
 
--- splitting 
-vim.api.nvim_set_keymap('n', '-', '<C-W>s', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '_', '<C-W>v', {silent = true, noremap = true})
+-- splitting
+vim.api.nvim_set_keymap('n', '-', '<C-W>s', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '_', '<C-W>v', { silent = true, noremap = true })
 -- folding
-vim.api.nvim_set_keymap('n', '\\', 'za', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', 'S-\\', 'zO', {silent = true, noremap = true})
+vim.api.nvim_set_keymap('n', '\\', 'za', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', 'S-\\', 'zO', { silent = true, noremap = true })
 
 -- center things
-vim.api.nvim_set_keymap('n', '<C-o>', '<C-o>zz', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '<C-i>', '<C-i>zz', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', 'z-', 'z^', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '}', '}zvzz', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', 'n', 'nzvzz', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', 'N', 'Nzvzz', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '{', '{zvzz', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', ']]', ']]zvzz', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '[[', '[[zvzz', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '[]', '[]zvzz', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '][', '][zvzz', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '<BS>', 'i<BS>', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '<leader>z', 'zMzvzz', {silent = true, noremap = true})
+vim.api.nvim_set_keymap('n', '<C-o>', '<C-o>zz', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '<C-i>', '<C-i>zz', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', 'z-', 'z^', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '}', '}zvzz', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', 'n', 'nzvzz', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', 'N', 'Nzvzz', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '{', '{zvzz', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', ']]', ']]zvzz', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '[[', '[[zvzz', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '[]', '[]zvzz', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '][', '][zvzz', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '<BS>', 'i<BS>', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>z', 'zMzvzz', { silent = true, noremap = true })
 
 -- navigate matching list and preview window
-vim.api.nvim_set_keymap('n', '<silent>]t', ':tnext<CR>', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '<silent>[t', ':tprev<CR>', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '<silent>]T', ':tlast<CR>', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '<silent>[T', ':tfirst<CR>', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '<silent>]p', ':ptnext<CR>', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '<silent>[p', ':ptprev<CR>', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '<silent>]P', ':ptlast<CR>', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '<silent>[P', ':ptfirst<CR>', {silent = true, noremap = true})
+vim.api.nvim_set_keymap('n', '<silent>]t', ':tnext<CR>', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '<silent>[t', ':tprev<CR>', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '<silent>]T', ':tlast<CR>', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '<silent>[T', ':tfirst<CR>', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '<silent>]p', ':ptnext<CR>', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '<silent>[p', ':ptprev<CR>', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '<silent>]P', ':ptlast<CR>', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '<silent>[P', ':ptfirst<CR>', { silent = true, noremap = true })
 -- TODO fix this
 -- Terminal window navigation
 vim.cmd([[
@@ -72,6 +74,14 @@ vim.cmd([[
   tnoremap <Esc> <C-\><C-n>
 ]])
 
+-- keep place when joining lines
+vim.keymap.set("n", "J", "mzJ`z")
+
+-- paste and keep old copy
+vim.keymap.set("x", "<localleader>p", [["_dP]])
+vim.keymap.set("x", "<leader>p", [["_dP]])
+vim.keymap.set({ "n", "v" }, "<leader>D", [["_d]])
+vim.keymap.set({ "n", "v" }, "<localleader>d", [["_d]])
 -- TODO fix this
 -- resize with arrows
 vim.cmd([[
@@ -82,24 +92,24 @@ vim.cmd([[
 ]])
 
 -- better indenting
-vim.api.nvim_set_keymap('v', '<', '<gv', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('v', '>', '>gv', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('v', '<', '<gv', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '>', '>gv', { noremap = true, silent = true })
 
 -- I hate escape
-vim.api.nvim_set_keymap('i', 'jk', '<ESC>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('i', 'jk', '<ESC>', { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('i', 'kj', '<ESC>', {noremap = true, silent = true})
 -- vim.api.nvim_set_keymap('i', 'jj', '<ESC>', {noremap = true, silent = true})
 
 -- Tab switch buffer
-vim.api.nvim_set_keymap('n', '<TAB>', ':bnext<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<S-TAB>', ':bprevious<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<TAB>', ':bnext<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<S-TAB>', ':bprevious<CR>', { noremap = true, silent = true })
 
 -- Move selected line / block of text in visual mode
-vim.api.nvim_set_keymap('x', 'K', ':move \'<-2<CR>gv-gv', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('x', 'J', ':move \'>+1<CR>gv-gv', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('x', 'K', ':move \'<-2<CR>gv-gv', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('x', 'J', ':move \'>+1<CR>gv-gv', { noremap = true, silent = true })
 
 -- easy buffer navigation
-vim.api.nvim_set_keymap('n', "gb", "<cmd>BufferLinePick<CR>", {silent=true})
+vim.api.nvim_set_keymap('n', "gb", "<cmd>BufferLinePick<CR>", { silent = true })
 -- Better nav for omnicomplete
 -- vim.cmd('inoremap <expr> <c-j> (\"\\<C-n>\")')
 -- vim.cmd('inoremap <expr> <c-k> (\"\\<C-p>\")')

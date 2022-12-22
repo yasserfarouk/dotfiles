@@ -1,10 +1,10 @@
 vim.cmd([[
+set termguicolors
 set signcolumn=yes
 let mapleader = ' '
 let maplocalleader = ','
 set clipboard=unnamed,unnamedplus
 set confirm
-set termguicolors
 set t_Co=256
 set conceallevel=0
 set mouse=a
@@ -83,7 +83,9 @@ set cursorline
 let g:neoformat_enabled_python = ['black']
 let g:python_host_prog="~/.pyenv/versions/miniforge3/envs/neovim3/bin/python"
 let g:python3_host_prog="~/.pyenv/versions/miniforge3/envs/neovim3/bin/python"
+let g:markdown_fenced_languages = ['html', 'python', 'ruby', 'vim', 'lua', 'php', 'c', 'go', 'rust']
 set foldmethod=indent
 set foldlevel=99
 set foldcolumn=1
+set spell
 ]])

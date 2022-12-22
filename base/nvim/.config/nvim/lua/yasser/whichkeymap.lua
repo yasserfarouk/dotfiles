@@ -294,8 +294,8 @@ wk.register({
 
     c = {
         name = "+lsp",
-        a = {"<cmd>Lspsaga code_action<cr>", "code action"},
-        A = {"<cmd>Lspsaga range_code_action<cr>", "selected action"},
+        a = {"<cmd>lua vim.lsp.buf.code_action()<cr>", "code action"},
+        -- A = {"<cmd>lua vim.lsp.buf.range_code_action()<cr>", "selected action"},
         d = {
             "<cmd>Telescope diagnostics bufnr=0<cr>",
             "document diagnostics"
@@ -304,26 +304,27 @@ wk.register({
             "<cmd>Telescope lsp_workspace_diagnostics<cr>",
             "workspace diagnostics"
         },
-        f = {"<cmd>Neoformat<cr>", "format"},
+        f = {"<cmd>LspFormatting<cr>", "format"},
         i = {"<cmd>LspInfo<cr>", "lsp info"},
-        -- r = {"<cmd>Lspsaga rename<cr>", "rename"},
+        -- r = {"<cmd>lua vim.lsp.buf.rename()<cr>", "rename"},
         r = {"<cmd>RunFile<cr>", "Rund file"},
         R = {"<cmd>RunFile tab<cr>", "Rund file (tab)"},
         x = {"<cmd>RunCode<cr>", "Rund code"},
         m = {"<cmd>LspInstallInfo<cr>", "manage LSP"},
         v = {"<cmd>LspVirtualTextToggle<cr>", "lsp toggle virtual text"},
-        c = {"<cmd>Lspsaga lsp_finder<cr>", "lsp finder"},
-        C = {"<cmd>Telescope lsp_document_symbols<cr>", "document symbols"},
-        l = {"<cmd>Lspsaga show_line_diagnostics<cr>", "line_diagnostics"},
+        c = {"<cmd>lua vim.lsp.buf.document_symbol()<cr>", "lsp finder"},
+        C = {"<cmd>lua vim.lsp.buf.workspace_symbol()<cr>", "lsp finder"},
+        -- C = {"<cmd>Telescope lsp_document_symbols<cr>", "document symbols"},
+        l = {"<cmd>lua vim.lsp.buf.diagnostics.get_line_diagnostics()<cr>", "line_diagnostics"},
         [">"] = {
             "<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>", "next diagnostic"
         },
         ["<"] = {
             "<cmd>lua vim.lsp.diagnostic.goto_next()<cr>", "next diagnostic"
         },
-        p = {"<cmd>Lspsaga preview_definition<cr>", "preview definition"},
+        p = {"<cmd>lua vim.lsp.buf.preview_definition()<cr>", "preview definition"},
         q = {"<cmd>Telescope quickfix<cr>", "quickfix"},
-        h = {"<cmd>Lspsaga signature_help<cr>", "signature help"},
+        h = {"<cmd>lua vim.lsp.buf.signature_help()<cr>", "signature help"},
         T = {"<cmd>LspTypeDefinition<cr>", "type defintion"},
         s = {"<cmd>Telescope lsp_workspace_symbols<cr>", "workspace symbols"},
         S = {"<cmd>!ssort %<cr>", "Sort Code"},

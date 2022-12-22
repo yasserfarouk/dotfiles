@@ -10,3 +10,7 @@ require"transparent".setup({
     },
     exclude = {} -- table: groups you don't want to clear
 })
+
+require("notify").setup({
+  background_colour = "#000000",
+})
