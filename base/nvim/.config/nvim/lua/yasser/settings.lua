@@ -1,91 +1,82 @@
-vim.cmd([[
-set termguicolors
-set signcolumn=yes
-let mapleader = ' '
-let maplocalleader = ','
-set clipboard=unnamed,unnamedplus
-set confirm
-set t_Co=256
-set conceallevel=0
-set mouse=a
-set mousemodel=popup
-set encoding=utf-8
-set fileencoding=utf-8
-set fileencodings=utf-8
-set hidden
-set nopaste
-set noshowmode
-set tabstop=4 shiftwidth=4 expandtab
-set splitbelow splitright
-set conceallevel=0
-set colorcolumn=79
-set virtualedit=
-set laststatus=2
-set linebreak nolist
-set autoread
-set updatetime=200
-set cmdheight=2
-set fillchars+=vert:│
-set bomb
-set binary
-set relativenumber number
-set numberwidth=1
-set backspace=indent,eol,start
-set hlsearch
-set incsearch
-set ignorecase
-set smartcase
-set complete=.,w,b,u,t,k
-set formatoptions+=t
-set signcolumn=yes
-set shortmess=atIc
-set isfname-==
-set timeoutlen=500
-set updatetime=200
-set guifont="JetBrainsMono Nerd Font Mono":h10
-set colorcolumn=79
-set wildmenu
-set wildmode=list:longest,list:full
-set wildignore+=*/tmp/*,*.so,*.swp,*.pyc,*.db,*.sqlite
-set wildignore+=*.o,*.obj,.git,*.rbc,*.pyc,__pycache__,*_build/*,**coverage/*
-set wildignore+=**node_modules/*,**android/*,**/.git/*
-set complete=.,w,b,u,t,k
-set ttyfast
-set synmaxcol=200
-set backspace=indent,eol,start
-set ignorecase
-set smartcase
-set fileencoding=utf-8
-set fileencodings=utf-8
-set noswapfile
-set lazyredraw
-set redrawtime=500
-set title
-set titleold="Terminal"
-set titlestring=%F
-set scrolloff=3
-set laststatus=2
-set ruler
-set nowrap
-set modeline
-set modelines=10
-set undofile
-set undodir=~/.VIM_UNDO_FILES
-set exrc
-set secure
-set nobackup
-set noswapfile
-set fileformats=unix,mac,dos
-set autoread
-set dictionary+=/usr/share/dict/words
-set thesaurus+=~/.ysupport/thesaurii.txt
-set cursorline
-let g:neoformat_enabled_python = ['black']
-let g:python_host_prog="~/.pyenv/versions/miniforge3/envs/neovim3/bin/python"
-let g:python3_host_prog="~/.pyenv/versions/miniforge3/envs/neovim3/bin/python"
-let g:markdown_fenced_languages = ['html', 'python', 'ruby', 'vim', 'lua', 'php', 'c', 'go', 'rust']
-set foldmethod=indent
-set foldlevel=99
-set foldcolumn=1
-set spell
-]])
+local indent = 4
+vim.opt.formatoptions="jcroqlnt"
+vim.opt.breakindent=true
+vim.opt.termguicolors=true
+vim.opt.signcolumn="yes"
+vim.opt.clipboard="unnamed,unnamedplus"
+vim.opt.confirm=true
+vim.opt.mouse="a"
+-- vim.opt.mousemodel="popup"
+vim.opt.encoding="utf-8"
+vim.opt.fileencoding="utf-8"
+vim.opt.fileencodings="utf-8"
+vim.opt.hidden=true
+vim.opt.paste=false
+vim.opt.showmode=false
+vim.opt.tabstop=indent
+vim.opt.shiftwidth=indent
+vim.opt.expandtab=true
+vim.opt.splitbelow=true
+vim.opt.splitright=true
+vim.opt.conceallevel=0
+vim.opt.laststatus=2
+vim.opt.linebreak=true
+vim.opt.list=false
+vim.opt.updatetime=200
+vim.opt.cmdheight=2
+-- vim.opt.fillchars+=vert:│
+-- vim.opt.bomb=true
+vim.opt.binary=true
+vim.opt.relativenumber=true
+vim.opt.number=true
+vim.opt.numberwidth=1
+vim.opt.backspace="indent,eol,start"
+vim.opt.hlsearch=true
+vim.opt.incsearch=true
+vim.opt.ignorecase=true
+vim.opt.smartcase=true
+vim.opt.shortmess="filnxtToOF"
+-- vim.opt.isfname-==
+vim.opt.timeoutlen=300
+-- vim.opt.guifont="JetBrainsMono Nerd Font Mono":h10
+-- vim.opt.colorcolumn=79
+vim.opt.wildmenu=true
+vim.opt.wildmode="list:longest,list:full"
+-- vim.opt.wildignore=vim.opt.wildignore .. ",*/tmp/*,*.so,*.swp,*.pyc,*.db,*.sqlite"
+-- vim.opt.wildignore=vim.opt.wildignore .. ",*.o,*.obj,.git,*.rbc,*.pyc,__pycache__,*_build/*,**coverage/*"
+-- vim.opt.wildignore=vim.opt.wildignore .. ",**node_modules/*,**android/*,**/.git/*"
+-- vim.opt.ttyfast=true
+vim.opt.synmaxcol=200
+vim.opt.swapfile=false
+-- vim.opt.lazyredraw=true
+-- vim.opt.redrawtime=500
+vim.opt.title=true
+vim.opt.titleold="Terminal"
+vim.opt.titlestring="%F"
+vim.opt.scrolloff=3
+vim.opt.laststatus=2
+vim.opt.ruler=true
+vim.opt.wrap=false
+vim.opt.modeline=true
+vim.opt.modelines=10
+vim.opt.undofile=true
+vim.opt.undodir="~/.VIM_UNDO_FILES"
+vim.opt.exrc=true
+vim.opt.secure=true
+vim.opt.backup=false
+vim.opt.fileformats="unix,mac,dos"
+vim.opt.autoread=true
+-- vim.opt.dictionary=vim.opt.dictionary .. ",/usr/share/dict/words"
+-- vim.opt.thesaurus=vim.opt.thesaurus .. ",~/.ysupport/thesaurii.txt"
+vim.opt.cursorline=true
+vim.opt.foldmethod="indent"
+vim.opt.foldlevel=99
+-- vim.opt.foldcolumn=1
+vim.opt.spell=true
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.python_host_prog="$HOME/myvenvs/neovim3/bin/python"
+vim.g.python3_host_prog="$HOME/myvenvs/neovim3/bin/python3"
+-- vim.g.markdown_fenced_languages = ['html', 'python', 'ruby', 'vim', 'lua', 'php', 'c', 'go', 'rust']
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ','

@@ -28,7 +28,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export TERMINAL_DARK=1
 # [[ $TMUX = "" ]] && export TERM="xterm-kitty"
 [[ $TMUX = "" ]] && export TERM="tmux-256color"
-[[ $TMUX != "" ]] && export TERM="screen-256color"
+[[ $TMUX != "" ]] && export TERM="tmux-256color"
 export _Z_DATA="$HOME/.z-data"
 
 
@@ -37,6 +37,10 @@ if [ -d "$HOME/.linuxbrew/bin" ] ; then
 fi
 if [ -d /opt/homebrew/bin ] ; then
 	export PATH="/opt/homebrew/bin:$PATH"
+fi
+
+if [ -d /opt/homebrew/bin ] ; then
+	export PATH="/opt/homebrew/sbin:$PATH"
 fi
 # add pyenv path
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
@@ -79,7 +83,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export KEYTIMEOUT=1
 export TERMINAL_DARK=1
 # [[ $TMUX = "" ]] && export TERM="xterm-kitty"
-[[ $TMUX != "" ]] && export TERM="screen-256color"
+[[ $TMUX != "" ]] && export TERM="tmux-256color"
 export CLICOLOR=1
 export EDITOR=nvim
 export _Z_DATA="$HOME/.z-data"
@@ -107,3 +111,5 @@ export PYENV_ROOT=$HOME/.pyenv
 # add current path
 export PATH=".:$PATH"
 
+export ENABLE_PYENV=false
+export ENABLE_CONDA=false

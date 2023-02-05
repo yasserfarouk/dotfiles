@@ -416,3 +416,9 @@ function create_x86_conda_env () {
   conda config --env --set subdir osx-64
 }
 
+# alias python to the latest version (usually installed by brew)
+alias python=python3.11
+alias python3=python3.11
+
+# alias for modern-vim
+alias mnv='XDG_DATA_HOME=$MODERN_NEOVIM/share XDG_CACHE_HOME=$MODERN_NEOVIM XDG_CONFIG_HOME=$MODERN_NEOVIM nvim'

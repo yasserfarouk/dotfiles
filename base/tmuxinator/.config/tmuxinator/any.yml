@@ -15,9 +15,9 @@ root: <%= path %>
 # on_project_start: command
 
 # Run on project start, the first time
-on_project_first_start:
-  - mkdir -p <%= path %>
-  - cd <%= path %>
+# on_project_first_start:
+  # - mkdir -p <%= path %>
+  # - cd <%= path %>
 
 # Run on project start, after the first time
 # on_project_restart: command
@@ -29,7 +29,7 @@ on_project_first_start:
 # on_project_stop: command
 
 # Runs in each window and pane before window/pane specific commands. Useful for setting up interpreter versions.
-# pre_window: rbenv shell 2.0.0-p247
+# pre_window: if [[ <%= path %> == *projects* ]]; then; pyenv activate miniforge3/envs/`basename <%= path %>`; fi
 
 # Pass command line options to tmux. Useful for specifying a different tmux.conf.
 # tmux_options: -f ~/.tmux.mac.conf
@@ -49,7 +49,7 @@ on_project_first_start:
 
 windows:
   - vim:
-      layout: main-horizontal
+      layout: 3cf4,238x60,0,0[238x52,0,0,17,238x7,0,53,18]]
       panes:
         - v
         - 

@@ -113,6 +113,7 @@
         "/Users/yasser/.local/share/nvim/site/pack/packer/start/playground/after",
         "/Users/yasser/.local/share/nvim/site/pack/packer/start/tabular/after",
         "/Users/yasser/.local/share/nvim/site/pack/packer/start/vim-matchup/after",
-        "${3rd}/luassert/library"
+        "${3rd}/luassert/library",
+        "${3rd}/luv/library"
     ]
 }

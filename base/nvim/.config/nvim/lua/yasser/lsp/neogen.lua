@@ -1,6 +1,6 @@
 local neogen = require("neogen")
 neogen.setup {
-snippet_engine = "luasnip",
+snippet_engine = "snippy",
 enabled = true,
 languages = {
   lua = {

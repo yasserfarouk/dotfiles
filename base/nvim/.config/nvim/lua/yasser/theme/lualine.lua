@@ -75,10 +75,6 @@ lualine.setup({
 	sections = {
 		lualine_a = { branch},
 		lualine_b = { mode },
-		-- lualine_c = {
-		-- 		{ gps.get_location, cond = gps.is_available },
-		-- 	},
-		-- lualine_x = { "encoding", "fileformat", "filetype" },
 		lualine_x = { diagnostics, diff, spaces, "encoding", filetype },
 		lualine_y = { location },
 		lualine_z = { progress },

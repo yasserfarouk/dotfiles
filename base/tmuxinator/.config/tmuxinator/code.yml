@@ -15,9 +15,9 @@ root: ~/code/projects/<%= project %>
 # on_project_start: command
 
 # Run on project start, the first time
-on_project_first_start:
-  - mkdir -p ~/code/projects/<%= project %>
-  - cd ~/code/projects/<%= project %>
+# on_project_first_start:
+  # - mkdir -p ~/code/projects/<%= project %>
+  # - cd ~/code/projects/<%= project %>
 
 # Run on project start, after the first time
 # on_project_restart: command
