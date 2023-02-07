@@ -1,66 +1,12 @@
 local wk = require("which-key")
 
 vim.cmd([[
-function! PandocPDFBib()
-	exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable colorlinks=true --resource-path=. --citeproc --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -o \"" . expand("%:r") . ".pdf\" " . " && open \"" . expand("%:r") . ".pdf\"&"
-endfunction
-]])
-vim.cmd([[
-function! PandocPDFBibNoContents()
-	exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable colorlinks=true --resource-path=. --citeproc --variable fontsize=10pt --variable version=2.0 -V geometry:margin=2cm --bibliography=references.bib -o \"" . expand("%:r") . ".pdf\" " . " && open \"" . expand("%:r") . ".pdf\"&"
-endfunction
-]])
-
-vim.cmd([[
-function! PandocWord()
-	exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=. --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -o \"" . expand("%:r") . ".docx\" " . " && open \"" . expand("%:r") . ".docx\"&"
-endfunction
-]])
-vim.cmd([[
-function! PandocPDF()
-	exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=. --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -o \"" . expand("%:r") . ".pdf\" " . " && open \"" . expand("%:r") . ".pdf\"&"
-endfunction
-]])
-
-vim.cmd([[
-function! PandocPDFLandscape()
-	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
-endfunction
-]])
-
-vim.cmd([[
-function! PandocPDFLandscapeNoContents()
-	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
-endfunction
-]])
-
-vim.cmd([[
 function! OrganizeImports()
   silent exec PyrightOrganizeImports
 	silent exec "!isort %"
   silent exec "!autoflake --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports --in-place --exclude '__init__.py' %s"
 endfunction
 ]])
-
-vim.cmd([[
-function! PandocPDFNoContents()
-	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0  -V geometry:margin=2cm -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
-endfunction
-]])
-
-vim.cmd([[
-function! PandocHTML()
-	silent exec "Dispatch pandoc  -o " . expand("%:r"). ".html -s " . expand("%") . "; open " . expand("%:r") . ".html"
-endfunction
-]])
-
-vim.cmd([[
-function! PublishMedium()
-	silent exec "Dispatch pandoc  -o " . expand("%:r"). ".html -s " . expand("%") . "; ~/go/bin/md-publisher publish --medium-token `cat $HOME/bin/.medium_token` " . expand("%:r") . ".html"
-
-endfunction
-]])
-
 
 vim.cmd([[
 function! ToggleFileFold()
@@ -70,8 +16,6 @@ function! ToggleFileFold()
 		norm zM
 	endif
 endfunction
-]])
-vim.cmd([[
 function! SetupWrappingSoft()
 	if &wrap == 1
 		set nowrap
@@ -90,10 +34,6 @@ function! SetupWrappingSoft()
 		nnoremap $ g$
 	endif
 endfunction
-
-]])
-
-vim.cmd([[
 function! SetupWrappingHard()
 	if &wrap == 1
 		set nowrap
@@ -108,8 +48,8 @@ function! SetupWrappingHard()
 		nnoremap k gk
 	endif
 endfunction
-
 ]])
+
 vim.cmd([[
 function! SetBackground()
 	if &background == 'dark'
@@ -123,12 +63,12 @@ function! SetBackground()
 endfunction
 ]])
 
-wk.setup {}
+wk.setup({})
 wk.register({
 	["'"] = { "<cmd>Alpha<cr>", "Home" },
 	["E"] = { "<cmd>NvimTreeToggle<cr>", "explorer on root" },
 	["e"] = { "<cmd>NvimTreeFindFileToggle<cr>", "explorer" },
-
+	["p"] = { "<cmd>Lazy<cr>", "Plugins" },
 	["f"] = { "<cmd>lua telescope_files_or_git_files()<cr>", "files/git" },
 	[";"] = { "<cmd>Telescope file_browser<cr>", "file browser" },
 	["h"] = { "<cmd>let @/ = ''<cr>", "no highlight" },
@@ -160,26 +100,7 @@ wk.register({
 		a = { "<cmd>call RunTmuxPythonAllCellsAbove()<cr>", "cell" },
 		b = { "<cmd>call RunTmuxPythonAllCellsBelow()<cr>", "cell" },
 	},
-	m = {
-		name = "+markdown",
-		b = { "<cmd>call PandocPDFBib()<cr>", "compile (portrait)" },
-		B = { "<cmd>call PandocPDFBibNoContents()<cr>", "compile (portrait)" },
-		c = { "<cmd>call PandocPDF()<cr>", "compile (portrait)" },
-		w = { "<cmd>call PandocWord()<cr>", "compile (portrait)" },
-		h = { "<cmd>call PandocHTML()<cr>", "compile (html)" },
-		P = { "<cmd>call PublishMedium()<cr>", "publish (medium)" },
-		l = { "<cmd>call PandocPDFLandscape()<cr>", "compile (landscape)" },
-		v = { "<cmd>MarkdownPreview<cr>", "preview" },
-		p = { "<cmd>MarkdownPreview<cr>", "preview" },
-		C = {
-			"<cmd>call PandocPDFNoContents()<cr>",
-			"compile (portrait - no contents)"
-		},
-		L = {
-			"<cmd>call PandocPDFLandscapeNoContents()<cr>",
-			"compile (landscape - no contents)"
-		}
-	},
+	m = { name = "+markdown" },
 	b = {
 		name = "+buffer",
 		[">"] = { "<cmd>bnext<cr>", "next" },
@@ -190,36 +111,10 @@ wk.register({
 		d = { "<cmd>Bdelete<cr>", "delete-buffer" },
 		n = { "<cmd>bnext<cr>", "next-buffer" },
 		p = { "<cmd>bprevious<cr>", "previous-buffer" },
-		o = { "<cmd>BufOnly<cr>", "close others" }
+		o = { "<cmd>BufOnly<cr>", "close others" },
 	},
 	d = {
 		name = "+debug",
-		t = { "<cmd>lua require('dapui').toggle()<cr>", "toggle breakpoint" },
-		e = { "<Cmd>lua require('dapui').eval()<CR>", "evaluate" },
-		b = { "<cmd>DebugToggleBreakpoint<cr>", "toggle breakpoint" },
-		l = { "<cmd>DebugStepInto<cr>", "step into" },
-		h = { "<cmd>DebugStepOut<cr>", "step out" },
-		j = { "<cmd>DebugStepOver<cr>", "step over" },
-		r = { "<cmd>DebugToggleRepl<cr>", "toggle repl" },
-		g = { "<cmd>DebugStart<cr>", "start/continue" },
-		k = { "<cmd>DebugHover<cr>", "hover" },
-		s = { "<cmd>DebugScopes<cr>", "scopes" },
-		v = { "<cmd>DebugVHover<cr>", "visual-hover" },
-		z = { "<cmd>DebugLast<cr>", "last" },
-		p = { "<cmd>DebugPause<cr>", "pause" },
-		u = { "<cmd>DebugUp<cr>", "up" },
-		d = { "<cmd>DebugDown<cr>", "down" },
-		D = {
-			"<cmd>DebugSetExceptionBreakpointsDefault<cr>", "exceptions-default"
-		},
-		N = { "<cmd>DebugSetExceptionBreakpointsNone<cr>", "exceptions-none" },
-		R = { "<cmd>DebugSetExceptionBreakpointsRaised<cr>", "exceptions-raised" },
-		U = {
-			"<cmd>DebugSetExceptionBreakpointsUncaught<cr>",
-			"exceptions-uncaught"
-		},
-		L = { "<cmd>DebugLogPoint<cr>", "log" },
-		C = { "<cmd>DebugConditionalBreakpoint<cr>", "conditional breakpoint" },
 	},
 	F = {
 		name = "+fold",
@@ -232,21 +127,21 @@ wk.register({
 		["3"] = { "<cmd>set foldlevel=3<cr>", "level3" },
 		["4"] = { "<cmd>set foldlevel=4<cr>", "level4" },
 		["5"] = { "<cmd>set foldlevel=5<cr>", "level5" },
-		["6"] = { "<cmd>set foldlevel=6<cr>", "level6" }
+		["6"] = { "<cmd>set foldlevel=6<cr>", "level6" },
 	},
 
 	s = {
 		name = "+search",
-		["."] = { "<cmd>lua require\"telescope.builtin\".find_files({ hidden = true })<CR>", "files (hidden)" },
+		["."] = { '<cmd>lua require"telescope.builtin".find_files({ hidden = true })<CR>', "files (hidden)" },
 		[";"] = { "<cmd>Telescope filetypes<cr>", "filetypes" },
 		B = { "<cmd>Telescope git_branches<cr>", "git branches" },
 		d = {
 			"<cmd>Telescope diagnostics bufnr=0<cr>",
-			"document diagnostics"
+			"document diagnostics",
 		},
 		D = {
 			"<cmd>Telescope lsp_workspace_diagnostics<cr>",
-			"workspace diagnostics"
+			"workspace diagnostics",
 		},
 		f = { "<cmd>Telescope find_files<cr>", "files" },
 		["*"] = { "<cmd>Telescope grep_string<cr>", "search current word" },
@@ -258,8 +153,10 @@ wk.register({
 		M = { "<cmd>Telescope man_pages<cr>", "man_pages" },
 		o = { "<cmd>Telescope vim_options<cr>", "vim_options" },
 		t = { "<cmd>Telescope live_grep<cr>", "text" },
-		z = { "<cmd>lua require'telescope.builtin'.live_grep{ vimgrep_arguments = { 'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '-u', '--no-ignore', '--hidden' } }<cr>",
-			"test (everywhere)" },
+		z = {
+			"<cmd>lua require'telescope.builtin'.live_grep{ vimgrep_arguments = { 'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '-u', '--no-ignore', '--hidden' } }<cr>",
+			"test (everywhere)",
+		},
 		r = { "<cmd>Telescope registers<cr>", "registers" },
 		c = { "<cmd>Telescope colorscheme<cr>", "colors" },
 		v = { "<cmd>TelescopeVim<cr>", "vim-config" },
@@ -277,7 +174,7 @@ wk.register({
 	S = {
 		name = "+Session",
 		s = { "<cmd>SessionSave", "save session" },
-		l = { "<cmd>DSessionLoad<cr>", "load Session" }
+		l = { "<cmd>DSessionLoad<cr>", "load Session" },
 	},
 	g = {
 		name = "+git",
@@ -299,7 +196,7 @@ wk.register({
 		v = { "<cmd>GV<cr>", "view commits" },
 		V = { "<cmd>GV!<cr>", "view buffer commits" },
 		m = { "<cmd>MergetoolToggle<cr>", "mergetool" },
-		X = { "<cmd>!git checkout --conflict=diff3<cr>", "reverse mergetool" }
+		X = { "<cmd>!git checkout --conflict=diff3<cr>", "reverse mergetool" },
 	},
 
 	i = {
@@ -309,7 +206,7 @@ wk.register({
 		d = { "<cmd>Trouble lsp_document_diagnostics<cr>", "Document Diagnostics" },
 		l = { "<cmd>Trouble loclist<cr>", "Location List" },
 		q = { "<cmd>Trouble quickfix<cr>", "Quick Fix" },
-		r = { "<cmd>Trouble lsp_references<cr>", "References" }
+		r = { "<cmd>Trouble lsp_references<cr>", "References" },
 	},
 
 	c = {
@@ -318,11 +215,11 @@ wk.register({
 		A = { "<cmd>Lspsaga range_code_action<cr>", "selected action" },
 		d = {
 			"<cmd>Telescope diagnostics bufnr=0<cr>",
-			"document diagnostics"
+			"document diagnostics",
 		},
 		D = {
 			"<cmd>Telescope diagnostics<cr>",
-			"workspace diagnostics"
+			"workspace diagnostics",
 		},
 		-- f = { "<cmd>LspFormatting<cr>", "format" },
 		-- f = { "<cmd>Neoformat<cr>", "format" },
@@ -341,21 +238,23 @@ wk.register({
 		-- C = {"<cmd>Telescope lsp_document_symbols<cr>", "document symbols"},
 		l = { "<cmd>Lspsaga show_line_diagnostics<cr>", "line_diagnostics" },
 		[">"] = {
-			"<cmd>Lspsaga diagnostics_jump_next<cr>", "next diagnostic"
+			"<cmd>Lspsaga diagnostics_jump_next<cr>",
+			"next diagnostic",
 		},
 		["<"] = {
-			"<cmd>Lspsaga diagnostics_jump_prev<cr>", "previous diagnostic"
+			"<cmd>Lspsaga diagnostics_jump_prev<cr>",
+			"previous diagnostic",
 		},
 		p = { "<cmd>Lspsaga preview_definition<cr>", "preview definition" },
 		q = { "<cmd>Telescope quickfix<cr>", "quickfix" },
 		h = { "<cmd>Lspsaga signature_help<cr>", "signature help" },
-		T = { "<cmd>LspTypeDefinition<cr>", "type defintion" },
+		z = { "<cmd>LspTypeDefinition<cr>", "type defintion" },
 		S = { "<cmd>!ssort %<cr>", "Sort Code" },
 		I = { "<cmd>PyrightOrganizeImports<cr>", "Sort Imports" },
 		o = { "<cmd>SymbolsOutline<cr>", "Symbols sidebar" },
-		_ = { "<Plug>(pydocstring)<cr>", "doc string" },
-		g = { "<cmd>Neogen func<Cr>", "Func Doc" },
-		G = { "<cmd>Neogen class<Cr>", "Class Doc" }
+		-- _ = { "<Plug>(pydocstring)<cr>", "doc string" },
+		-- g = { "<cmd>Neogen func<Cr>", "Func Doc" },
+		-- G = { "<cmd>Neogen class<Cr>", "Class Doc" },
 	},
 
 	v = {
@@ -371,7 +270,7 @@ wk.register({
 		c = { "<cmd>ContextToggle<cr>", "show context" },
 		t = { "<cmd>TransparentToggle<cr>", "Toggle transparency" },
 		v = { "<cmd>SymbolsOutline<cr>", "Symbol Sidebar" },
-		S = { "<cmd>set scrollbind!<cr>", "bind scrolling" }
+		S = { "<cmd>set scrollbind!<cr>", "bind scrolling" },
 	},
 
 	y = {
@@ -380,7 +279,7 @@ wk.register({
 		y = { "<Plug>(ripple-send-motion)<cr>", "send motion" },
 		l = { "<Plug>(ripple-send-line)<cr>", "send motion" },
 		b = { "<Plug>(ripple-send-buffer)<cr>", "send motion" },
-		p = { "<Plug>(ripple-send-previous)<cr>", "send last" }
+		p = { "<Plug>(ripple-send-previous)<cr>", "send last" },
 	},
 
 	T = {
@@ -390,7 +289,7 @@ wk.register({
 		d = { "<cmd>TableModeDisable<cr>", "disable" },
 		r = { "<cmd>TableModeRealign<cr>", "align" },
 		a = { "<cmd>TableModeRealign<cr>", "align" },
-		t = { "<cmd><Plug>(table-mode-tabelize)<cr><cr>", "make table" }
+		t = { "<cmd><Plug>(table-mode-tabelize)<cr><cr>", "make table" },
 	},
 	x = {
 		name = "+terminal",
@@ -407,12 +306,13 @@ wk.register({
 		["]"] = { "<cmd>FloatermNext<cr>", "next" },
 		["["] = { "<cmd>FloatermPrev<cr>", "prev" },
 		["\\"] = {
-			"<cmd>FloatermNew --wintype=normal --position=right<cr>", "right"
+			"<cmd>FloatermNew --wintype=normal --position=right<cr>",
+			"right",
 		},
 		["-"] = {
 			"<cmd>FloatermNew --wintype=normal --height=0.3 --position=bottom<cr>",
-			"bottom"
-		}
+			"bottom",
+		},
 	},
 
 	t = {
@@ -424,7 +324,6 @@ wk.register({
 		l = { "<cmd>TestLast<cr>", "last" },
 		g = { "<cmd>TestVisit<cr>", "visit" },
 		v = { "<cmd>TestNearest -vv<cr>", "nearest vv" },
-		d = { "<cmd>lua require('dap-python').test_method()<cr>", "debug" },
 		N = { "<Plug>(ultest-run-nearest)<cr>", "nearest" },
 		F = { "<Plug>Ultest<cr>", "file" },
 		["]"] = { "<Plug>(ultest-next-fail)<cr>", "next failure" },
@@ -435,32 +334,9 @@ wk.register({
 		J = { "<Plug>(ultest-output-jump)<cr>", "jump to output" },
 		X = { "<Plug>(ultest-stop-file)<cr>", "stop file" },
 		x = { "<Plug>(ultest-stop-nearest)<cr>", "stop nearest" },
-		a = { "<Plug>(ultest-attach)<cr>", "stop nearest" }
+		a = { "<Plug>(ultest-attach)<cr>", "stop nearest" },
 	},
-
-	l = {
-		name = "+LateX",
-		v = { "<cmd>VimtexView<cr>", "View" },
-		c = { "<cmd>VimtexCompile<cr>", "Auto Compile" },
-		S = { "<cmd>VimtexStop<cr>", "Stop" },
-		x = { "<cmd>VimtexCompileSelected<cr>", "CompileSelected" },
-		X = { "<cmd>VimtexStopAll<cr>", "StopAll" },
-		C = { "<cmd>VimtexCompileSS<cr>", "Compile once" },
-		n = { "<cmd>VimtexClean<cr>", "Clean" },
-		m = { "<cmd>VimtexContextMenu<cr>", "ContextMenu" },
-		o = { "<cmd>VimtexCompileOutput<cr>", "CompileOutput" },
-		s = { "<cmd>VimtexStatus<cr>", "Status" },
-		t = { "<cmd>VimtexTocToggle<cr>", "TocToggle" },
-		r = { "<cmd>VimtexReload<cr>", "Reload" },
-		R = { "<cmd>VimtexReloadState<cr>", "ReloadState" },
-		L = { "<cmd>VimtexCountLetters<cr>", "CountLetters" },
-		W = { "<cmd>VimtexCountWords<cr>", "CountWords" },
-		l = { "<cmd>VimtexLog<cr>", "Log" },
-		i = { "<cmd>VimtexInfo<cr>", "Info" },
-		p = { "<cmd>VimtexDocPackage<cr>", "DocPackage" },
-		P = { "<cmd>call PresentWithPympress()<cr>", "Present" }
-	},
-
+	l = { name = "+LateX" },
 	a = {
 		name = "+actions",
 		h = { "<cmd>let @/ = ''<cr>", "remove search highlight" },

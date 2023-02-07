@@ -26,9 +26,8 @@ function alphaconf()
 		dashboard.button("c", "  Configuration", ":e ~/.config/nvim/init.lua<CR>"),
 		dashboard.button("z", "  Plugins", "<cmd>Lazy<CR>"),
 		dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
-		dashboard.button("v", '🖊️  Vim File', ':TelescopeVim<CR>')
+		dashboard.button("v", "🖊️  Vim File", ":TelescopeVim<CR>"),
 	}
-
 	local function footer()
 		-- NOTE: requires the fortune-mod package to work
 		-- local handle = io.popen("fortune")
@@ -50,17 +49,20 @@ function alphaconf()
 end
 
 function transparentconf()
-	require "transparent".setup({
+	require("transparent").setup({
 		enable = true,
 		extra_groups = { -- table/string: additional groups that should be clear
 			-- In particular, when you set it to 'all', that means all avaliable groups
 
 			-- example of akinsho/nvim-bufferline.lua
-			"BufferLineTabClose", "BufferlineBufferSelected", "BufferLineFill",
-			"BufferLineBackground", "BufferLineSeparator",
-			"BufferLineIndicatorSelected"
+			"BufferLineTabClose",
+			"BufferlineBufferSelected",
+			"BufferLineFill",
+			"BufferLineBackground",
+			"BufferLineSeparator",
+			"BufferLineIndicatorSelected",
 		},
-		exclude = {} -- table: groups you don't want to clear
+		exclude = {}, -- table: groups you don't want to clear
 	})
 
 	local status_ok, notify = pcall(require, "notify")
@@ -83,33 +85,49 @@ return {
 		dependencies = { "rcarriga/nvim-notify" },
 		config = transparentconf,
 	},
-
-	{
-		"nvim-lualine/lualine.nvim",
-		config = function()
-			require("yasser.theme.lualine")
-		end,
-	},
-	{
-		"akinsho/bufferline.nvim",
-		dependencies = "kyazdani42/nvim-web-devicons",
-		config = function()
-			require("yasser.theme.bufferline")
-		end,
-	},
+	-- {
+	-- 	"nvim-lualine/lualine.nvim",
+	-- 	config = function()
+	-- 		require("yasser.theme.lualine")
+	-- 	end,
+	-- },
+	-- {
+	-- 	"akinsho/bufferline.nvim",
+	-- 	dependencies = "kyazdani42/nvim-web-devicons",
+	-- 	config = function()
+	-- 		require("yasser.theme.bufferline")
+	-- 	end,
+	-- },
 	-- show indent lines
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		config = function()
-			vim.g.indent_blankline_char = '│'
-			vim.g.indent_blankline_use_treesitter = true
-			vim.g.indent_blankline_filetype_exclude = {'help', 'nvimtree', 'fern', 'packer', 'dashboard', 'alpha', 'ALPHA'}
-			vim.g.indent_blankline_buftype_exclude = {'terminal'}
+			vim.g.indent_blankline_char = "│"
+			vim.g.yasser = true
+			vim.g.indent_blankline_filetype_exclude =
+				{ "help", "nvimtree", "fern", "packer", "dashboard", "alpha", "ALPHA" }
+			vim.g.indent_blankline_buftype_exclude = { "terminal" }
 			vim.g.indent_blankline_show_current_context = false
 			vim.g.indent_blankline_context_patterns = {
-				'class', 'return', 'function', 'method', '^if', '^while', 'jsx_element', '^for', '^object', '^table', 'block',
-				'arguments', 'if_statement', 'else_clause', 'jsx_element', 'jsx_self_closing_element', 'try_statement',
-				'catch_clause', 'import_statement'
+				"class",
+				"return",
+				"function",
+				"method",
+				"^if",
+				"^while",
+				"jsx_element",
+				"^for",
+				"^object",
+				"^table",
+				"block",
+				"arguments",
+				"if_statement",
+				"else_clause",
+				"jsx_element",
+				"jsx_self_closing_element",
+				"try_statement",
+				"catch_clause",
+				"import_statement",
 			}
 		end,
 		-- disable = windows(),
@@ -136,8 +154,6 @@ return {
 
 	-- Icons
 	"kyazdani42/nvim-web-devicons",
-
-
 
 	-- {
 	-- 	"folke/noice.nvim",
@@ -168,5 +184,17 @@ return {
 	-- 		--   If not available, we use `mini` as the fallback
 	-- 		"rcarriga/nvim-notify",
 	-- 	}
+	-- },
+
+	-- {
+	-- 	"utilyre/barbecue.nvim",
+	-- 	event = "VeryLazy",
+	-- 	enable = false,
+	-- 	dependencies = {
+	-- 		"neovim/nvim-lspconfig",
+	-- 		"SmiteshP/nvim-navic",
+	-- 		-- "nvim-tree/nvim-web-devicons",
+	-- 	},
+	-- 	config = true,
 	-- },
 }

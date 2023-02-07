@@ -1,5 +1,4 @@
 return {
-
 	-- grammer check
 	{
 		"rhysd/vim-grammarous",
@@ -32,8 +31,4 @@ return {
 			}
 		end,
 	},
-
-	-- tex
-	"lervag/vimtex",
-
 }

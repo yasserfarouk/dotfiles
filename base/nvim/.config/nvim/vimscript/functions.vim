@@ -63,31 +63,5 @@ command! TelescopeLatex lua require("telescope.builtin").symbols{sources={"latex
 command! TelescopeWord lua require("telescope.builtin").grep_string{search = vim.fn.expand("<cword>")}
 command! TelescopeHelp lua require("telescope.builtin").help_tags()
 
-" Available Debug Adapters:
-"   https://microsoft.github.io/debug-adapter-protocol/implementors/adapters/
-" 
-" Adapter configuration and installation instructions:
-"   https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
-" 
-" Debug Adapter protocol:
-"   https://microsoft.github.io/debug-adapter-protocol/
 
-" TODO Add full support later
-" nnoremap <silent> <F5> :lua require'dap'.continue()<CR>
-" nnoremap <silent> <F10> :lua require'dap'.step_over()<CR>
-" nnoremap <silent> <F11> :lua require'dap'.step_into()<CR>
-" nnoremap <silent> <F12> :lua require'dap'.step_out()<CR>
-" nnoremap <silent> <leader>b :lua require'dap'.toggle_breakpoint()<CR>
-" nnoremap <silent> <leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
-" nnoremap <silent> <leader>lp :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
-" nnoremap <silent> <leader>dr :lua require'dap'.repl.open()<CR>
-" nnoremap <silent> <leader>dl :lua require'dap'.run_last()<CR>
 
-autocmd! User GoyoEnter lua require('gitsigns').toggle_signs()
-autocmd! User GoyoLeave lua require('gitsigns').toggle_signs()
-
-autocmd User GoyoEnter set laststatus=0 
-autocmd User GoyoLeave set laststatus=2
-
-" autocmd! User GoyoEnter lua require('galaxyline').disable_galaxyline()
-" autocmd! User GoyoLeave lua require('galaxyline').galaxyline_augroup()

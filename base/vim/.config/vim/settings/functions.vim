@@ -1,5 +1,3 @@
-
-
 function! MyFoldText()
 	let line = getline(v:foldstart)
 	let nucolwidth = &fdc + &number * &numberwidth

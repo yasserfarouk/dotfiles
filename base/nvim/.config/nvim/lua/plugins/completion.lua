@@ -1,20 +1,21 @@
 local function cmpconfig()
 	local cmp_status_ok, cmp = pcall(require, "cmp")
-	if not cmp_status_ok then return end
+	if not cmp_status_ok then
+		return
+	end
 
 	-- local snip_status_ok, luasnip = pcall(require, "luasnip")
-	local snippy_status_ok, snippy = pcall(require, "nvim-snippy")
-
+	local snippy = require("snippy")
 	-- if snip_status_ok then
 	-- 	require("luasnip/loaders/from_vscode").lazy_load()
 	-- end
 
-	vim.cmd "set completeopt=menu,menuone,noselect"
+	vim.cmd("set completeopt=menu,menuone,noselect")
 
-	local check_backspace = function()
-		local col = vim.fn.col "." - 1
-		return col == 0 or vim.fn.getline("."):sub(col, col):match "%s"
-	end
+	-- local check_backspace = function()
+	-- 	local col = vim.fn.col(".") - 1
+	-- 	return col == 0 or vim.fn.getline("."):sub(col, col):match("%s")
+	-- end
 
 	--   פּ ﯟ   some other good icons
 	local kind_icons = {
@@ -42,7 +43,7 @@ local function cmpconfig()
 		Struct = "",
 		Event = "",
 		Operator = "",
-		TypeParameter = ""
+		TypeParameter = "",
 	}
 
 	local has_words_before = function()
@@ -51,7 +52,7 @@ local function cmpconfig()
 		return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 	end
 	-- find more here: https://www.nerdfonts.com/cheat-sheet
-	cmp.setup {
+	cmp.setup({
 		snippet = {
 			-- REQUIRED - you must specify a snippet engine
 			expand = function(args)
@@ -63,11 +64,11 @@ local function cmpconfig()
 		},
 		window = {},
 		mapping = cmp.mapping.preset.insert({
-			['<C-b>'] = cmp.mapping.scroll_docs(-4),
-			['<C-f>'] = cmp.mapping.scroll_docs(4),
-			['<C-Space>'] = cmp.mapping.complete(),
-			['<C-e>'] = cmp.mapping.abort(),
-			['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+			["<C-b>"] = cmp.mapping.scroll_docs(-4),
+			["<C-f>"] = cmp.mapping.scroll_docs(4),
+			["<C-Space>"] = cmp.mapping.complete(),
+			["<C-e>"] = cmp.mapping.abort(),
+			["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 			["<Tab>"] = cmp.mapping(function(fallback)
 				if cmp.visible() then
 					cmp.select_next_item()
@@ -105,58 +106,57 @@ local function cmpconfig()
 					path = "",
 					spell = "",
 					calc = "",
-					emoji = "ﲃ"
+					emoji = "ﲃ",
 				})[entry.source.name]
 				return vim_item
-			end
+			end,
 		},
 		sources = {
-			{ name = 'nvim_lsp' }, { name = "snippy" },
+			{ name = "nvim_lsp" },
+			{ name = "snippy" },
 			{ name = "path", keyword_length = 3 },
-			{ name = 'buffer', keyword_length = 5 },
+			{ name = "buffer", keyword_length = 5 },
 			{ name = "look", keyword_length = 3 },
-			{ name = "emoji" }, { name = "spell", keyword_length = 6 },
+			{ name = "emoji" },
+			{ name = "spell", keyword_length = 6 },
 		},
 		--  { name = "nvim_lua" },  { name = "calc" },
 		-- completion = {completeopt = 'menu,menuone'},
 		experimental = { ghost_text = true },
-	}
+	})
 	-- Set configuration for specific filetype.
-	cmp.setup.filetype('gitcommit', {
+	cmp.setup.filetype("gitcommit", {
 		sources = cmp.config.sources({
-			{ name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+			{ name = "cmp_git" }, -- You can specify the `cmp_git` source if you were installed it.
 		}, {
-			{ name = 'buffer' },
-		})
+			{ name = "buffer" },
+		}),
 	})
 	-- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 	--
-	cmp.setup.cmdline('/', {
+	cmp.setup.cmdline("/", {
 		mapping = cmp.mapping.preset.cmdline(),
 		sources = {
-			{ name = 'buffer' }
-		}
+			{ name = "buffer" },
+		},
 	})
 
 	-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-	cmp.setup.cmdline(':', {
+	cmp.setup.cmdline(":", {
 		mapping = cmp.mapping.preset.cmdline(),
 		sources = cmp.config.sources({
-			{ name = 'path' }
+			{ name = "path" },
 		}, {
-			{ name = 'cmdline' }
-		})
+			{ name = "cmdline" },
+		}),
 	})
 end
 
 local function autopaironf()
 	-- Setup nvim-cmp.
-	local status_ok, npairs = pcall(require, "nvim-autopairs")
-	if not status_ok then
-		return
-	end
+	local npairs = require("nvim-autopairs")
 
-	npairs.setup {
+	npairs.setup({
 		check_ts = true,
 		ts_config = {
 			lua = { "string", "source" },
@@ -175,20 +175,23 @@ local function autopaironf()
 			highlight = "PmenuSel",
 			highlight_grey = "LineNr",
 		},
-	}
+	})
 
-	local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+	local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 	local cmp_status_ok, cmp = pcall(require, "cmp")
 	if not cmp_status_ok then
 		return
 	end
-	cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done { map_char = { tex = "" } })
+	cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({ map_char = { tex = "" } }))
 end
 
 return {
 	{
+		"dcampos/nvim-snippy",
+		lazy = false,
+	},
+	{
 		"hrsh7th/nvim-cmp",
-
 		dependencies = {
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-nvim-lsp",
@@ -208,9 +211,6 @@ return {
 		},
 		config = cmpconfig,
 	},
-
-	-- matching pairs
-	"tmhedberg/matchit",
 
 	-- add closing parentheses automatically.
 	-- 'jiangmiao/auto-pairs',
