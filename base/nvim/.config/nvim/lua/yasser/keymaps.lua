@@ -13,8 +13,6 @@ keymap("v", ":", ";")
 -- no hl
 keymap("n", "<esc><esc>", ":set hlsearch!<CR>")
 
--- explorer
-keymap("n", "<Leader>e", ":NvimTreeToggle<CR>")
 -- vim.api.nvim_set_keymap('n', '-', ':RnvimrToggle<CR>', {noremap = true, silent = true})
 
 -- better window movement
@@ -25,11 +23,11 @@ keymap("n", "<Leader>e", ":NvimTreeToggle<CR>")
 keymap("n", "==", "ggVG=<C-o>")
 keymap("i", "<C-s>", "<esc>[s1z=`]a")
 keymap("n", "Y", "y$")
-keymap("n", "<F2>", ":lua vim.lsp.buf.rename()<cr>")
+-- keymap("n", "<F2>", ":lua vim.lsp.buf.rename()<cr>")
 
 -- splitting
-keymap("n", "-", "<C-W>s")
-keymap("n", "_", "<C-W>v")
+-- keymap("n", "-", "<C-W>s")
+-- keymap("n", "|", "<C-W>v")
 -- folding
 keymap("n", "\\", "za")
 keymap("n", "S-\\", "zO")
@@ -78,7 +76,7 @@ keymap({ "n", "v" }, "<leader>D", [["_d]])
 keymap({ "n", "v" }, "<localleader>d", [["_d]])
 -- TODO fix this
 -- resize with arrows
---
+-- resize windows
 keymap("n", "<Left>", "<C-w>h")
 keymap("n", "<Up>", "<C-w>k")
 keymap("n", "<Down>", "<C-w>j")
@@ -87,6 +85,21 @@ keymap("n", "<M-k>", ":resize -2<CR>")
 keymap("n", "<M-j>", ":resize +2<CR>")
 keymap("n", "<M-l>", ":vertical resize -2<CR>")
 keymap("n", "<M-h>", ":vertical resize +2<CR>")
+-- move windows around
+keymap("n", "<M-S-K>", "<C-w>K")
+keymap("n", "<M-S-J>", "<C-w>J")
+keymap("n", "<M-S-L>", "<C-w>L")
+keymap("n", "<M-S-H>", "<C-w>H")
+
+-- whichkey movement and size change commands
+-- keymap("n", "<leader>Wk", "<C-w>K", { desc = "Move Top" })
+-- keymap("n", "<leader>Wj", "<C-w>J", { desc = "Move Bottom" })
+-- keymap("n", "<leader>Wl", "<C-w>L", { desc = "Move Right" })
+-- keymap("n", "<leader>Wh", "<C-w>H", { desc = "Move Left" })
+-- keymap("n", "<leader>WK", ":resize -2<CR>", { desc = "Shrink Up" })
+-- keymap("n", "<leader>WJ", ":resize +2<CR>", { desc = "Grow Up" })
+-- keymap("n", "<leader>WL", ":vertical resize -2<CR>", { desc = "Grow Right" })
+-- keymap("n", "<leader>WH", ":vertical resize +2<CR>", { desc = "Grow Left" })
 -- better indenting
 keymap("v", "<", "<gv")
 keymap("v", ">", ">gv")
@@ -102,5 +115,63 @@ keymap("n", "<S-TAB>", ":bnext<CR>")
 keymap("x", "K", ":move '<-2<CR>gv-gv")
 keymap("x", "J", ":move '>+1<CR>gv-gv")
 
--- easy buffer navigation
-keymap("n", "gb", "<cmd>BufferLinePick<CR>")
+-- -- easy buffer navigation
+-- keymap("n", "gb", "<cmd>BufferLinePick<CR>")
+
+-- highlight last inserted text
+keymap({ "n" }, "gV", [[`[v`]']])
+
+-- Execute "q" macro over visual line selections
+keymap({ "x" }, "Q", [[:'<,'>:normal @q<CR>]])
+
+-- Use / to search inside a visual selection
+keymap("x", "/", "<Esc>/\\%V")
+
+-- whichkey maps
+keymap("n", "<leader>h", "<cmd>let @/ = ''<cr>", { desc = "no highlight" })
+keymap("n", "<leader>w", "<cmd>wa<cr>", { desc = "save all" })
+keymap("n", "<leader>q", "<C-W>c", { desc = "quit window" })
+keymap("n", "<leader>-", "<C-W>s", { desc = "split below" })
+keymap("n", "<leader>\\", "<C-W>v", { desc = "split right" })
+keymap("n", "<leader>=", "<C-W>=", { desc = "balance windows" })
+keymap("n", "<leader>z", "<C-W>m", { desc = "zoom window" })
+-- buffer operations
+keymap("n", "<leader>bo", "<cmd>%bd|e#|bd#<cr>", { desc = "close others" })
+keymap("n", "<leader>bl", "<cmd>bnext<cr>", { desc = "next" })
+keymap("n", "<leader>bh", "<cmd>bprevious<cr>", { desc = "prev" })
+keymap("n", "<leader>bk", "<cmd>blast<cr>", { desc = "last" })
+keymap("n", "<leader>bj", "<cmd>bfirst<cr>", { desc = "first" })
+keymap("n", "<leader>bn", "<cmd>bnext<cr>", { desc = "next-buffer" })
+keymap("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "previous-buffer" })
+keymap("n", "<leader>bd", "<cmd>Bdelete<cr>", { desc = "delete-buffer" })
+-- folding operations
+keymap("n", "<leader>FO", "<cmd>set foldlevel=20<cr>", { desc = "open all" })
+keymap("n", "<leader>FC", "<cmd>set foldlevel=0<cr>", { desc = "close all" })
+keymap("n", "<leader>Fc", "<cmd>foldclose<cr>", { desc = "close" })
+keymap("n", "<leader>Fo", "<cmd>foldopen<cr>", { desc = "open" })
+keymap("n", "<leader>F1", "<cmd>set foldlevel=1<cr>", { desc = "level1" })
+keymap("n", "<leader>F2", "<cmd>set foldlevel=2<cr>", { desc = "level2" })
+keymap("n", "<leader>F3", "<cmd>set foldlevel=3<cr>", { desc = "level3" })
+keymap("n", "<leader>F4", "<cmd>set foldlevel=4<cr>", { desc = "level4" })
+keymap("n", "<leader>F5", "<cmd>set foldlevel=5<cr>", { desc = "level5" })
+keymap("n", "<leader>F6", "<cmd>set foldlevel=6<cr>", { desc = "level6" })
+-- view maps
+keymap("n", "<leader>vw", "<cmd>StripWhitespace<cr>", { desc = "strip whitespace" })
+keymap("n", "<leader>vb", "<cmd>call SetBackground()<cr>", { desc = "background" })
+keymap("n", "<leader>vh", "<cmd>call GoHighlight()<cr>", { desc = "highlight" })
+keymap("n", "<leader>vo", "<c-w>o", { desc = "only window" })
+keymap("n", "<leader>vq", "<c-w>q", { desc = "close window" })
+keymap("n", "<leader>vr", "<cmd>call SetupWrappingSoft()<cr>", { desc = "wrap text (soft)" })
+keymap("n", "<leader>vR", "<cmd>call SetupWrappingHard()<cr>", { desc = "wrap text (hard)" })
+keymap("n", "<leader>vs", "<cmd>set spell!<cr>", { desc = "spell checker" })
+keymap("n", "<leader>vt", "<cmd>TransparentToggle<cr>", { desc = "Toggle transparency" })
+keymap("n", "<leader>vS", "<cmd>set scrollbind!<cr>", { desc = "bind scrolling" })
+-- general actions
+keymap("n", "<leader>ah", "<cmd>let @/ = ''<cr>", { desc = "remove search highlight" })
+keymap("n", "<leader>an", "<cmd>set nonumber!<cr>", { desc = "line-numbers" })
+keymap("n", "<leader>ar", "<cmd>set norelativenumber!<cr>", { desc = "relative line nums" })
+keymap("n", "<leader>aw", "<cmd>StripWhitespace<cr>", { desc = "strip whitespace" })
+keymap("n", "<leader>as", "<cmd>Ds1z=`]<cr>", { desc = "correct spelling" })
+keymap("n", "<leader>ay", "<cmd>let @+= expand(' % ')<cr>", { desc = "copy path" })
+keymap("n", "<leader>al", "<cmd>%s/^/\\=printf('%-4d', line('.'))<cr>", { desc = "write line numbers" })
+keymap("n", "<leader>ax", "<cmd>cclose<cr>", { desc = "close quickfix" })

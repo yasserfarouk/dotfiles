@@ -10,8 +10,8 @@ return {
 					library = { plugins = { "neotest", "nvim-dap-ui" }, types = true },
 				},
 			},
-			{ "j-hui/fidget.nvim", config = true },
-			{ "smjonas/inc-rename.nvim", config = true },
+			-- { "j-hui/fidget.nvim", config = true },
+			-- { "smjonas/inc-rename.nvim", config = true },
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			"hrsh7th/cmp-nvim-lsp",
@@ -89,6 +89,9 @@ return {
 				sources = {
 					nls.builtins.formatting.stylua,
 					nls.builtins.diagnostics.ruff.with({ extra_args = { "--max-line-length=180" } }),
+					nls.builtins.formatting.isort,
+					nls.builtins.formatting.black,
+					-- nls.builtins.diagnostics.pylint,
 				},
 			})
 		end,
@@ -98,21 +101,43 @@ return {
 		cmd = { "TroubleToggle", "Trouble" },
 		opts = { use_diagnostic_signs = true },
 		keys = {
-			{ "<leader>cd", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics" },
-			{ "<leader>cD", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics" },
+			{ "<leader>id", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics" },
+			{ "<leader>ii", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics" },
+			{ "<leader>ii", "<cmd>Trouble<cr>", desc = "Show" },
+			{ "<leader>il", "<cmd>Trouble loclist<cr>", desc = "Location List" },
+			{ "<leader>iq", "<cmd>Trouble quickfix<cr>", desc = "Quick Fix" },
 		},
 	},
 	{
 		"glepnir/lspsaga.nvim",
+		dependencies = { "neovim/nvim-lspconfig" },
 		event = "VeryLazy",
-		config = true,
+		opts = {
+			symbol_in_winbar = {
+				enable = true,
+			},
+		},
+		-- config = true,
+		keys = {
+			{ "<leader>vl", "<cmd>Lspsaga outline<cr>", desc = "Lspsaga Sidebar" },
+			{ "<leader>vW", "<cmd>lua vim.opt.winbar = ''<cr>", desc = "Winbar ON" },
+			{
+				"<leader>vw",
+				"<cmd>lua vim.opt.winbar = require('lspsaga.symbolwinbar'):get_winbar()<cr>",
+				desc = "Winbar ON",
+			},
+		},
 	},
-	"ray-x/lsp_signature.nvim",
-	-- symbol previe
+	{ "ray-x/lsp_signature.nvim", event = "VeryLazy" },
+	-- symbol preview
 	{
 		"simrat39/symbols-outline.nvim",
 		event = "VeryLazy",
 		ft = { "python", "tex" },
+		keys = {
+			{ "<leader>vv", "<cmd>SymbolsOutline<cr>", desc = "Symbol Sidebar" },
+			{ "<leader>co", "<cmd>SymbolsOutline<cr>", desc = "Symbols sidebar" },
+		},
 		opts = {
 			highlight_hovered_item = true,
 			show_guides = true,

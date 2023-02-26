@@ -24,7 +24,7 @@ function alphaconf()
 		dashboard.button("r", "  Recently used files", ":Telescope oldfiles<CR>"),
 		dashboard.button("t", "  Find text", ":Telescope live_grep<CR>"),
 		dashboard.button("c", "  Configuration", ":e ~/.config/nvim/init.lua<CR>"),
-		dashboard.button("z", "  Plugins", "<cmd>Lazy<CR>"),
+		dashboard.button("z", "🛠️ Plugins", "<cmd>Lazy<CR>"),
 		dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
 		dashboard.button("v", "🖊️  Vim File", ":TelescopeVim<CR>"),
 	}
@@ -93,7 +93,7 @@ return {
 	-- },
 	-- {
 	-- 	"akinsho/bufferline.nvim",
-	-- 	dependencies = "kyazdani42/nvim-web-devicons",
+	-- 	dependencies = "nvim-tree/nvim-web-devicons",
 	-- 	config = function()
 	-- 		require("yasser.theme.bufferline")
 	-- 	end,
@@ -133,27 +133,27 @@ return {
 		-- disable = windows(),
 	},
 	-- UI improvements
-	-- {
-	-- 	"stevearc/dressing.nvim",
-	-- 	event = "BufReadPre",
-	-- 	config = function()
-	-- 		require("dressing").setup({
-	-- 			input = { relative = "editor" },
-	-- 			select = {
-	-- 				backend = { "telescope", "fzf", "builtin" },
-	-- 			},
-	-- 		})
-	-- 	end,
-	-- 	disable = false,
-	-- },
+	{
+		"stevearc/dressing.nvim",
+		event = "BufReadPre",
+		opts = {
+			input = { relative = "editor" },
+			select = {
+				backend = { "telescope", "fzf", "builtin" },
+			},
+		},
+		disable = false,
+	},
 	--
 
 	-- Color
 	"christianchiarulli/nvcode-color-schemes.vim",
-	"folke/tokyonight.nvim",
 
 	-- Icons
-	"kyazdani42/nvim-web-devicons",
+	"nvim-tree/nvim-web-devicons",
+
+	-- bufferline
+	--	{ "akinsho/bufferline.nvim", version = "v3.*", dependencies = "nvim-tree/nvim-web-devicons", config = true },
 
 	-- {
 	-- 	"folke/noice.nvim",
@@ -197,4 +197,5 @@ return {
 	-- 	},
 	-- 	config = true,
 	-- },
+	--
 }

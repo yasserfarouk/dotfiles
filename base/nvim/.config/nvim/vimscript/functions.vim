@@ -1,4 +1,5 @@
 command! BufOnly silent! execute "%bd|e#|bd#"
+
 command! LspCodeAction lua vim.lsp.buf.code_action()
 command! LspDeclaration lua vim.lsp.buf.declaration()
 command! LspDefinition lua vim.lsp.buf.definition()
@@ -24,6 +25,9 @@ command! ResetHunk lua vim.lsp.buf.reset_hunk()
 command! ResetBuffer lua vim.lsp.buf.reset_buffer()
 command! PreviewHunk lua vim.lsp.buf.preview_hunk()
 command! BlameLine lua vim.lsp.buf.blame_line()
+command! -nargs=0 LspVirtualTextEnable lua vim.diagnostic.config({virtual_text=true})
+command! -nargs=0 LspVirtualTextDisable lua vim.diagnostic.config({virtual_text=false})
+
 command! W noa w
 
 " Debugging
@@ -62,6 +66,62 @@ command! TelescopeEmoji lua require("telescope.builtin").symbols{sources={"emoji
 command! TelescopeLatex lua require("telescope.builtin").symbols{sources={"latex", "math"}}
 command! TelescopeWord lua require("telescope.builtin").grep_string{search = vim.fn.expand("<cword>")}
 command! TelescopeHelp lua require("telescope.builtin").help_tags()
+command! TelescopeHidden lua require("telescope.builtin").live_grep{ vimgrep_arguments = { 'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '-u', '--no-ignore', '--hidden' } }
 
 
+
+function! OrganizeImports()
+  silent exec PyrightOrganizeImports
+	silent exec "!isort %"
+  silent exec "!autoflake --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports --in-place --exclude '__init__.py' %s"
+endfunction
+function! ToggleFileFold()
+	if &foldlevel == 0
+		norm zR
+	else
+		norm zM
+	endif
+endfunction
+function! SetupWrappingSoft()
+	if &wrap == 1
+		set nowrap
+		set textwidth=0
+		nnoremap j j
+		nnoremap k k
+		nnoremap 0 0
+		nnoremap ^ ^
+		nnoremap $ $
+	else
+		set wrap
+		nnoremap j gj
+		nnoremap k gk
+		nnoremap 0 g0
+		nnoremap ^ g^
+		nnoremap $ g$
+	endif
+endfunction
+function! SetupWrappingHard()
+	if &wrap == 1
+		set nowrap
+		set textwidth=0
+		nnoremap j j
+		nnoremap k k
+	else
+		set wrap
+		set wm=2
+		set textwidth=79
+		nnoremap j gj
+		nnoremap k gk
+	endif
+endfunction
+function! SetBackground()
+	if &background == 'dark'
+		" if &colors != 'gruvbox'
+		" 	execute "set colors=gruvbox"
+		" endif
+		execute "set background=light"
+	else
+		execute "set background=dark"
+	endif
+endfunction
 

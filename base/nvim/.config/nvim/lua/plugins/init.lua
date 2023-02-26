@@ -11,6 +11,7 @@ end
 -- local kitty = function() return vim.fn.exists('$KITTY_WINDOW_ID') == 1 end
 return {
 
+	"folke/tokyonight.nvim",
 	-- performance (faster startup)
-	"lewis6991/impatient.nvim",
+	-- "lewis6991/impatient.nvim",
 }

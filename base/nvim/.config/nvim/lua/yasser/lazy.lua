@@ -3,15 +3,16 @@ vim.g.maplocalleader = ","
 local execute = vim.api.nvim_command
 local fn = vim.fn
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local keymap = vim.keymap.set
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- latest stable release
+		lazypath,
+	})
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -27,4 +28,5 @@ vim.opt.rtp:prepend(lazypath)
 --   augroup end
 -- ]])
 -- helpers. taken from datwaft https://github.com/datwaft/nvim/blob/master/lua/plugins/init.lua
-return require("lazy").setup( "plugins")
+keymap("n", "<leader>p", "<cmd>Lazy<cr>", { desc = "Plugins" })
+return require("lazy").setup("plugins")

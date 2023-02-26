@@ -102,4 +102,13 @@ return {
 	-- closes autotags using treesitter
 	{ "windwp/nvim-ts-autotag", event = "VeryLazy" },
 	{ "JoosepAlviste/nvim-ts-context-commentstring", event = "VeryLazy" },
+
+	-- undo tree
+	{
+		"mbbill/undotree",
+		event = "VeryLazy",
+		keys = {
+			{ "<leader>u", "<cmd>UndotreeToggle<cr>", desc = "undo tree" },
+		},
+	},
 }

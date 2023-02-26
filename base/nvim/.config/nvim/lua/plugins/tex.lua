@@ -4,8 +4,8 @@ return {
 		"lervag/vimtex",
 		ft = { "tex", "latex", "bib" },
 		keys = {
-			{ "<F9>", "<cmd>VimtexCompile<cr>", mode = { "n" }, desc = "Auto Compile" },
-			{ "<F5>", "<cmd>VimtexView<cr>", mode = { "n" }, desc = "Auto Compile" },
+			-- { "<F9>", "<cmd>VimtexCompile<cr>", mode = { "n" }, desc = "Auto Compile" },
+			-- { "<F5>", "<cmd>VimtexView<cr>", mode = { "n" }, desc = "Auto Compile" },
 			{ "<leader>lv", "<cmd>VimtexView<cr>", mode = { "n" }, desc = "View" },
 			{ "<leader>lc", "<cmd>VimtexCompile<cr>", mode = { "n" }, desc = "Auto Compile" },
 			{ "<leader>lS", "<cmd>VimtexStop<cr>", mode = { "n" }, desc = "Stop" },
@@ -26,5 +26,8 @@ return {
 			{ "<leader>lp", "<cmd>VimtexDocPackage<cr>", mode = { "n" }, desc = "DocPackage" },
 			{ "<leader>lP", "<cmd>call PresentWithPympress()<cr>", mode = { "n" }, desc = "Present" },
 		},
+		config = function()
+			vim.cmd("source ~/.config/nvim/vimscript/tex.vim")
+		end,
 	},
 }

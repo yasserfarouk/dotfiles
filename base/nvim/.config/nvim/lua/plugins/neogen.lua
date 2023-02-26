@@ -2,7 +2,7 @@ return {
 	"danymat/neogen",
 	event = "VeryLazy",
 	opts = {
-		snippet_engine = "luasnip",
+		snippet_engine = "snippy",
 		enabled = true,
 		languages = {
 			lua = {
@@ -37,11 +37,34 @@ return {
 			},
 		},
 	},
-  --stylua: ignore
-  keys = {
-    { "<leader>g_", function() require("neogen").generate() end, desc = "Annotation", },
-    { "<leader>cG", function() require("neogen").generate { type = "class" } end, desc = "Class", },
-    { "<leader>cg", function() require("neogen").generate { type = "func" } end, desc = "Function", },
-    { "<leader>cT", function() require("neogen").generate { type = "type" } end, desc = "Type", },
-  },
+	keys = {
+		{
+			"<leader>c_",
+			function()
+				require("neogen").generate()
+			end,
+			desc = "Annotation",
+		},
+		{
+			"<leader>cG",
+			function()
+				require("neogen").generate({ type = "class" })
+			end,
+			desc = "Class",
+		},
+		{
+			"<leader>cg",
+			function()
+				require("neogen").generate({ type = "func" })
+			end,
+			desc = "Function",
+		},
+		{
+			"<leader>cT",
+			function()
+				require("neogen").generate({ type = "type" })
+			end,
+			desc = "Type",
+		},
+	},
 }

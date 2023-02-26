@@ -195,8 +195,6 @@ return {
 	{ "tmhedberg/indent-motion", event = "VeryLazy" },
 	{ "moll/vim-bbye", event = "VeryLazy" },
 
-	-- undo tree
-	{ "mbbill/undotree", event = "VeryLazy" },
 	-- zooms windows out and in using <c-w>m
 	{ "dhruvasagar/vim-zoom", event = "VeryLazy" },
 
@@ -204,5 +202,9 @@ return {
 	{
 		"kyazdani42/nvim-tree.lua",
 		config = nvimtreeconf,
+		keys = {
+			{ "<leader>E", "<cmd>NvimTreeToggle<cr>", desc = "explorer on root" },
+			{ "<leader>e", "<cmd>NvimTreeFindFileToggle<cr>", desc = "explorer" },
+		},
 	},
 }

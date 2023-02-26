@@ -380,7 +380,7 @@ nnoremap <leader><leader>b :call SetBackground()<CR>
 function! GoHighlight()
 	syntax on
 	syntax sync fromstart
-endfunction!
+endfunction
 " }}}
 noremap <F12> :call GoHighlight()<CR>
 inoremap <F12> <C-o>:syntax sync fromstart<CR>

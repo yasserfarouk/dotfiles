@@ -79,7 +79,6 @@ return {
 			{ "<F11>", "<cmd>DebugStepInto<CR>", mode = { "n" } },
 			{ "<S-F11>", "<cmd>DebugStepOut<CR>", mode = { "n" } },
 			{ "<F12>", "<cmd>DebugStop<CR>", mode = { "n" } },
-			{ "<F12>", "<cmd>DebugStop<CR>", mode = { "n" } },
 			{ "<leader>td", "<cmd>lua require('dap-python').test_method()<cr>", mode = { "n" }, desc = "debug" },
 			{ "<leader>dt", "<cmd>lua require('dapui').toggle()<cr>", mode = { "n" }, desc = "toggle breakpoint" },
 			{ "<leader>de", "<Cmd>lua require('dapui').eval()<CR>", mode = { "n" }, desc = "evaluate" },

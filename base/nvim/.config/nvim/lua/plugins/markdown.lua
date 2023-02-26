@@ -9,16 +9,16 @@ function! PandocWord()
 	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=. --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -o \"" . expand("%:r") . ".docx\" " . " && open \"" . expand("%:r") . ".docx\"&"
 endfunction
 function! PandocPDF()
-	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=. --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -o \"" . expand("%:r") . ".pdf\" " . " && open \"" . expand("%:r") . ".pdf\"&"
+	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=. -F mermaid-filter --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -o \"" . expand("%:r") . ".pdf\" " . " && open \"" . expand("%:r") . ".pdf\"&"
 endfunction
 function! PandocPDFLandscape()
-	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
+	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt -F mermaid-filter  --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
 endfunction
 function! PandocPDFLandscapeNoContents()
-	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
+	silent exec "Dispatch pandoc --pdf-engine=xelatex -F mermaid-filter  --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
 endfunction
 function! PandocPDFNoContents()
-	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0  -V geometry:margin=2cm -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
+	silent exec "Dispatch pandoc --pdf-engine=xelatex -F mermaid-filter  --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0  -V geometry:margin=2cm -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
 endfunction
 function! PandocHTML()
 	silent exec "Dispatch pandoc  -o " . expand("%:r"). ".html -s " . expand("%") . "; open " . expand("%:r") . ".html"
@@ -35,8 +35,8 @@ return {
 		ft = "markdown",
 		build = "cd app & yarn install",
 		keys = {
-			{ "<F9>", "<cmd>call PandocPDF()<cr>", mode = { "n" }, desc = "compile (portrait)" },
-			{ "<F5>", "<cmd>MarkdownPreview<cr>", mode = { "n" }, desc = "preview" },
+			-- { "<F9>", "<cmd>call PandocPDF()<cr>", mode = { "n" }, desc = "compile (portrait)" },
+			-- { "<F5>", "<cmd>MarkdownPreview<cr>", mode = { "n" }, desc = "preview" },
 			{ "<leader>mb", "<cmd>call PandocPDFBib()<cr>", mode = { "n" }, desc = "compile (portrait)" },
 			{ "<leader>mB", "<cmd>call PandocPDFBibNoContents()<cr>", mode = { "n" }, desc = "compile (portrait)" },
 			{ "<leader>mc", "<cmd>call PandocPDF()<cr>", mode = { "n" }, desc = "compile (portrait)" },
@@ -60,4 +60,7 @@ return {
 			{ "<leader>mp", "<cmd>MarkdownPreview<cr>", mode = { "n" }, desc = "preview" },
 		},
 	},
+	config = function()
+		vim.cmd("source ~/.config/nvim/vimscript/markdown.vim")
+	end,
 }
