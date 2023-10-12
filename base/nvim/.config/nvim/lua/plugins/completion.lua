@@ -113,6 +113,7 @@ local function cmpconfig()
 		},
 		sources = {
 			{ name = "nvim_lsp" },
+			{ name = "nvim_lsp_signature_help" },
 			{ name = "snippy" },
 			{ name = "path", keyword_length = 3 },
 			{ name = "buffer", keyword_length = 5 },
@@ -222,4 +223,5 @@ return {
 
 	-- closes html tags
 	"alvan/vim-closetag",
+	-- "ray-x/lsp_signature.nvim",
 }

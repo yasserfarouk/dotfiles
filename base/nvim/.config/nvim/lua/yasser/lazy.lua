@@ -28,5 +28,5 @@ vim.opt.rtp:prepend(lazypath)
 --   augroup end
 -- ]])
 -- helpers. taken from datwaft https://github.com/datwaft/nvim/blob/master/lua/plugins/init.lua
-keymap("n", "<leader>p", "<cmd>Lazy<cr>", { desc = "Plugins" })
+keymap("n", "<leader>ap", "<cmd>Lazy<cr>", { desc = "Plugins" })
 return require("lazy").setup("plugins")

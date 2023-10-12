@@ -50,50 +50,50 @@ fpath+=$HOME/.zfunc
 eval "$(starship init zsh)"
 #
 #
-if [ $ENABLE_PYENV = true ] ; then
-	function pyenvrehash(){
-		command pyenv rehash 2>/dev/null
-	}
-	if command -v pyenv >/dev/null; then
-		export PYENV_ROOT="$HOME/.pyenv"
-		command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-		# eval "$(pyenv init -)"
-		#
-		PATH="$(bash --norc -ec 'IFS=:; paths=($PATH); for i in ${!paths[@]}; do if [[ ${paths[i]} == "'/Users/yasser/.pyenv/shims'" ]]; then unset '\''paths[i]'\''; fi; done; echo "${paths[*]}"')"
-		export PATH="/Users/yasser/.pyenv/shims:${PATH}"
-		export PYENV_SHELL=zsh
-		source '/opt/homebrew/Cellar/pyenv/2.3.3/libexec/../completions/pyenv.zsh'
-		pyenv() {
-		  local command
-		  command="${1:-}"
-		  if [ "$#" -gt 0 ]; then
-			shift
-		  fi
-
-		  case "$command" in
-		  activate|deactivate|rehash|shell)
-			eval "$(pyenv "sh-$command" "$@")"
-			;;
-		  *)
-			command pyenv "$command" "$@"
-			;;
-		  esac
-		}
-		# eval "$(pyenv init --path)"
-		eval "$(pyenv virtualenv-init -)"
-		# # make py-launcher use pyenv global version
-		export PY_PYTHON=$(pyenv exec python -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
-		ANACONDAPATH=`pyenv virtualenv-prefix miniforge3`
-	else
-		if [ $ENABLE_CONDA=true ]; then
-			if [ -d "$HOME/anaconda3" ]; then
-				ANACONDAPATH="$HOME/anaconda3"
-			else
-				ANACONDAPATH="$HOME/miniforge3"
-			fi
-			eval "$(conda init -)"
-		fi
-
-	fi
-fi
+# if [ $ENABLE_PYENV = true ] ; then
+# 	function pyenvrehash(){
+# 		command pyenv rehash 2>/dev/null
+# 	}
+# 	if command -v pyenv >/dev/null; then
+# 		export PYENV_ROOT="$HOME/.pyenv"
+# 		command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+# 		# eval "$(pyenv init -)"
+# 		#
+# 		PATH="$(bash --norc -ec 'IFS=:; paths=($PATH); for i in ${!paths[@]}; do if [[ ${paths[i]} == "'/Users/yasser/.pyenv/shims'" ]]; then unset '\''paths[i]'\''; fi; done; echo "${paths[*]}"')"
+# 		export PATH="/Users/yasser/.pyenv/shims:${PATH}"
+# 		export PYENV_SHELL=zsh
+# 		source '/opt/homebrew/Cellar/pyenv/2.3.3/libexec/../completions/pyenv.zsh'
+# 		pyenv() {
+# 		  local command
+# 		  command="${1:-}"
+# 		  if [ "$#" -gt 0 ]; then
+# 			shift
+# 		  fi
+#
+# 		  case "$command" in
+# 		  activate|deactivate|rehash|shell)
+# 			eval "$(pyenv "sh-$command" "$@")"
+# 			;;
+# 		  *)
+# 			command pyenv "$command" "$@"
+# 			;;
+# 		  esac
+# 		}
+# 		# eval "$(pyenv init --path)"
+# 		eval "$(pyenv virtualenv-init -)"
+# 		# # make py-launcher use pyenv global version
+# 		export PY_PYTHON=$(pyenv exec python -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
+# 		ANACONDAPATH=`pyenv virtualenv-prefix miniforge3`
+# 	else
+# 		if [ $ENABLE_CONDA=true ]; then
+# 			if [ -d "$HOME/anaconda3" ]; then
+# 				ANACONDAPATH="$HOME/anaconda3"
+# 			else
+# 				ANACONDAPATH="$HOME/miniforge3"
+# 			fi
+# 			eval "$(conda init -)"
+# 		fi
+#
+# 	fi
+# fi
 [ -f ~/.postzsh ] && source ~/.postzsh

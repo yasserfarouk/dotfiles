@@ -19,35 +19,37 @@ return {
 		},
 		opts = {
 			servers = {
-				sumneko_lua = {
-					settings = {
-						Lua = {
-							workspace = {
-								checkThirdParty = false,
-							},
-							completion = { callSnippet = "Replace" },
-							diagnostics = {
-								-- Get the language server to recognize the `vim` global
-								globals = { "vim" },
-							},
-							telemetry = { enable = false },
-							hint = {
-								enable = false,
-							},
-						},
-					},
-				},
+				-- sumneko_lua = {
+				-- 	settings = {
+				-- 		Lua = {
+				-- 			workspace = {
+				-- 				checkThirdParty = false,
+				-- 			},
+				-- 			completion = { callSnippet = "Replace" },
+				-- 			diagnostics = {
+				-- 				-- Get the language server to recognize the `vim` global
+				-- 				globals = { "vim" },
+				-- 			},
+				-- 			telemetry = { enable = false },
+				-- 			hint = {
+				-- 				enable = false,
+				-- 			},
+				-- 		},
+				-- 	},
+				-- },
 				dockerls = {},
 			},
 			setup = {
 				sumneko_lua = function(_, _)
 					local lsp_utils = require("plugins.lsp.utils")
 					lsp_utils.on_attach(function(client, buffer)
-            -- stylua: ignore
-            if client.name == "sumneko_lua" then
-              vim.keymap.set("n", "<leader>dX", function() require("osv").run_this() end, { buffer = buffer, desc = "OSV Run" })
-              vim.keymap.set("n", "<leader>dL", function() require("osv").launch({port = 8086} ) end,{ buffer = buffer, desc = "OSV Launch" })
-            end
+						-- stylua: ignore
+						if client.name == "sumneko_lua" then
+							vim.keymap.set("n", "<leader>dX", function() require("osv").run_this() end,
+								{ buffer = buffer, desc = "OSV Run" })
+							vim.keymap.set("n", "<leader>dL", function() require("osv").launch({ port = 8086 }) end,
+								{ buffer = buffer, desc = "OSV Launch" })
+						end
 					end)
 				end,
 			},
@@ -63,7 +65,7 @@ return {
 		opts = {
 			ensure_installed = {
 				"stylua",
-				"ruff",
+				-- "ruff",
 				"debugpy",
 				"codelldb",
 			},
@@ -87,8 +89,8 @@ return {
 			local nls = require("null-ls")
 			nls.setup({
 				sources = {
-					nls.builtins.formatting.stylua,
-					nls.builtins.diagnostics.ruff.with({ extra_args = { "--max-line-length=180" } }),
+					-- nls.builtins.formatting.stylua,
+					-- nls.builtins.diagnostics.ruff.with({ extra_args = { "--max-line-length=180" } }),
 					nls.builtins.formatting.isort,
 					nls.builtins.formatting.black,
 					-- nls.builtins.diagnostics.pylint,
@@ -101,11 +103,11 @@ return {
 		cmd = { "TroubleToggle", "Trouble" },
 		opts = { use_diagnostic_signs = true },
 		keys = {
-			{ "<leader>id", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics" },
+			{ "<leader>id", "<cmd>TroubleToggle document_diagnostics<cr>",  desc = "Document Diagnostics" },
 			{ "<leader>ii", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics" },
-			{ "<leader>ii", "<cmd>Trouble<cr>", desc = "Show" },
-			{ "<leader>il", "<cmd>Trouble loclist<cr>", desc = "Location List" },
-			{ "<leader>iq", "<cmd>Trouble quickfix<cr>", desc = "Quick Fix" },
+			{ "<leader>ii", "<cmd>Trouble<cr>",                             desc = "Show" },
+			{ "<leader>il", "<cmd>Trouble loclist<cr>",                     desc = "Location List" },
+			{ "<leader>iq", "<cmd>Trouble quickfix<cr>",                    desc = "Quick Fix" },
 		},
 	},
 	{
@@ -119,7 +121,7 @@ return {
 		},
 		-- config = true,
 		keys = {
-			{ "<leader>vl", "<cmd>Lspsaga outline<cr>", desc = "Lspsaga Sidebar" },
+			{ "<leader>vl", "<cmd>Lspsaga outline<cr>",         desc = "Lspsaga Sidebar" },
 			{ "<leader>vW", "<cmd>lua vim.opt.winbar = ''<cr>", desc = "Winbar ON" },
 			{
 				"<leader>vw",
@@ -142,5 +144,12 @@ return {
 			highlight_hovered_item = true,
 			show_guides = true,
 		},
+	},
+	{
+		"folke/neodev.nvim",
+		opts = {
+			library = { plugins = { "neotest", "nvim-dap-ui" }, types = true },
+		},
+		event = "VeryLazy",
 	},
 }

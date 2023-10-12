@@ -12,6 +12,7 @@ end
 return {
 
 	"folke/tokyonight.nvim",
+	{ "catppuccin/nvim", name = "catppuccin" },
 	-- performance (faster startup)
 	-- "lewis6991/impatient.nvim",
 }

@@ -27,8 +27,8 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export TERMINAL_DARK=1
 # [[ $TMUX = "" ]] && export TERM="xterm-kitty"
-[[ $TMUX = "" ]] && export TERM="tmux-256color"
-[[ $TMUX != "" ]] && export TERM="tmux-256color"
+[[ $TMUX = "" ]] && export TERM="screen-256color"
+[[ $TMUX != "" ]] && export TERM="screen-256color" # I set this to screen instead of tmux to keep colors in vifm.
 export _Z_DATA="$HOME/.z-data"
 
 

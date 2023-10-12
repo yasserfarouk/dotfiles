@@ -22,7 +22,7 @@ return {
 		{ "<leader>ob", "<cmd>ObsidianBacklinks<cr>", mode = { "n" }, desc = "Back Links" },
 		{ "<leader>ot", "<cmd>ObsidianToday<cr>", mode = { "n" }, desc = "Today" },
 		{ "<leader>oy", "<cmd>ObsidianYesterday<cr>", mode = { "n" }, desc = "Yesterday" },
-		{ "<leader>on", "<cmd>ObsidianNew<cr>", mode = { "n" }, desc = "New Note" },
+		{ "<leader>on", ":ObsidianNew ", mode = { "n" }, desc = "New Note" },
 		{ "<leader>ol", "<cmd>ObsidianLinkNew<cr>", mode = { "n" }, desc = "New Link" },
 	},
 	config = function()

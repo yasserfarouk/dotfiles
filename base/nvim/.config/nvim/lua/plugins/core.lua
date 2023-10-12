@@ -4,17 +4,32 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		opts = {
-			ensure_installed = "all",
+			ensure_installed = { "cpp", "python", "lua", "java", "javascript", "php", "latex" },
+			sync_install = false,
 			ignore_install = { "phpdoc", "swift", "hack", "haskel" },
 			highlight = { enable = true },
-			playground = { enable = true, updatetime = 50, persist_queries = false },
+			playground = {
+				enable = true,
+				updatetime = 50,
+				persist_queries = false,
+				additional_vim_regex_highlighting = true,
+			},
 			indent = { enable = true, disable = { "python", "html", "javascript" } },
 			-- indent = {enable = {"javascriptreact"}},
 			autotag = { enable = true },
-			rainbow = { enable = true },
+			-- rainbow = {
+			-- 	enable = true,
+			-- 	-- list of languages you want to disable the plugin for
+			-- 	-- disable = { "jsx", "cpp" },
+			-- 	-- Which query to use for finding delimiters
+			-- 	query = "rainbow-parens",
+			-- 	-- Highlight the entire buffer all at once
+			-- 	-- strategy = require("ts-rainbow.strategy.global"),
+			-- 	-- Do not enable for files with more than n lines
+			-- 	max_file_lines = 3000,
+			-- },
 		},
 	},
-
 	{
 		"terrortylor/nvim-comment",
 		event = "VeryLazy",
@@ -110,5 +125,24 @@ return {
 		keys = {
 			{ "<leader>u", "<cmd>UndotreeToggle<cr>", desc = "undo tree" },
 		},
+	},
+	-- Rainbow Highlighting
+	{
+		"HiPhish/nvim-ts-rainbow2",
+		config = function()
+			require("nvim-treesitter.configs").setup({
+				rainbow = {
+					enable = true,
+					-- list of languages you want to disable the plugin for
+					disable = { "jsx", "cpp" },
+					-- Which query to use for finding delimiters
+					query = "rainbow-parens",
+					-- Highlight the entire buffer all at once
+					strategy = require("ts-rainbow.strategy.global"),
+					-- Do not enable for files with more than n lines
+					max_file_lines = 3000,
+				},
+			})
+		end,
 	},
 }

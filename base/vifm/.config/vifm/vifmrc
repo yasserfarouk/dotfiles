@@ -32,7 +32,7 @@ set nofollowlinks
 " With this option turned on you can run partially entered commands with
 " unambiguous beginning using :! (e.g. :!Te instead of :!Terminal or :!Te<tab>).
 
-" set fastrun
+set fastrun
 
 " Natural sort of (version) numbers within text.
 
@@ -56,7 +56,7 @@ set norunexec
 " The following line will cause issues if using vifm.vim with regular vim.
 " Either use neovim or comment out the following line.
 " colorscheme gruvbox
-colorscheme distrotube
+colorscheme dracula
 
 " Format for displaying time in file list. For example:
 " TIME_STAMP_FORMAT=%m/%d-%H:%M
@@ -99,11 +99,27 @@ set scrolloff=4
 if !has('win')
     set slowfs=curlftpfs
 endif
+" enable ls colors in folder preview
+fileviewer */ ls --color=always
+fileviewer .*/ ls --color=always 
+
+" show file and directory preview in right pane
+view!
+" preview text files using "man"
+fileviewer {*.[1-8]},<text/troff> man ./%c | col -b
+
+
+" what to suggest on the right pane
+set suggestoptions=normal,visual,view,otherpane,keys,marks,registers
+
+" set format of file modification time
+set timefmt='%b %d, %Y @ %H:%M'
+
 
 " Set custom status line look
 
-set statusline="  Hint: %z%= %A %10u:%-7g %15s %20d  "
-
+" set statusline="  Hint: %z%= %A %10u:%-7g %15s %20d  "
+set statusline="%t %20s %= %-30d %a"
 " Set line numbers to show
 
 " ------------------------------------------------------------------------------
@@ -111,6 +127,9 @@ set statusline="  Hint: %z%= %A %10u:%-7g %15s %20d  "
 " :mark mark /full/directory/path [filename]
 
 mark h ~/
+mark d ~/Downloads
+mark c ~/code/papers/current
+mark p ~/code/projects
 
 " ------------------------------------------------------------------------------
 
@@ -136,7 +155,12 @@ command! mkcd :mkdir %a | cd %a
 " command! term :bash | cd %a
 command! vgrep vim "+grep %a"
 command! reload :write | restart
-
+" use fzf to fuzzy search and run file
+command! FZFfind : set noquickview
+                \| let $FZF_PICK = term('find ./* | fzf --height 10 2>/dev/tty')
+                \| if $FZF_PICK != ''
+                \|     execute 'goto' fnameescape($FZF_PICK)
+                \| endif
 " ------------------------------------------------------------------------------
 
 " The file type is for the default programs to be used with
@@ -435,6 +459,19 @@ nnoremap <f6> :move<cr>
 nnoremap <f7> :mkdir<space>
 nnoremap <f8> :delete<cr>
 
+" create new tab
+nnoremap <c-t> :tabnew<cr>:view!<cr>
+
+" switch to tab to the left
+nnoremap H :tabprevious<cr>:view!<cr>
+
+" switch to tab to the left
+nnoremap L :tabnext<cr>:view!<cr>
+
+" switch to tab to the left
+nnoremap Q :q<cr>
+
+nnoremap / :FZFfind<cr>
 " ------------------------------------------------------------------------------
 
 " Various customization examples

@@ -6,6 +6,9 @@ function! PandocPDFBibNoContents()
 	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable colorlinks=true --resource-path=. --citeproc --variable fontsize=10pt --variable version=2.0 -V geometry:margin=2cm --bibliography=references.bib -o \"" . expand("%:r") . ".pdf\" " . " && open \"" . expand("%:r") . ".pdf\"&"
 endfunction
 function! PandocWord()
+	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=. --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -o \"" . expand("%:r") . ".docx\" " . " && open \"" . expand("%:r") . ".docx\"&"
+endfunction
+function! PandocWordBib()
 	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=. --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -o \"" . expand("%:r") . ".docx\" " . " && open \"" . expand("%:r") . ".docx\"&"
 endfunction
 function! PandocPDF()
@@ -37,12 +40,13 @@ return {
 		keys = {
 			-- { "<F9>", "<cmd>call PandocPDF()<cr>", mode = { "n" }, desc = "compile (portrait)" },
 			-- { "<F5>", "<cmd>MarkdownPreview<cr>", mode = { "n" }, desc = "preview" },
-			{ "<leader>mb", "<cmd>call PandocPDFBib()<cr>", mode = { "n" }, desc = "compile (portrait)" },
-			{ "<leader>mB", "<cmd>call PandocPDFBibNoContents()<cr>", mode = { "n" }, desc = "compile (portrait)" },
-			{ "<leader>mc", "<cmd>call PandocPDF()<cr>", mode = { "n" }, desc = "compile (portrait)" },
-			{ "<leader>mw", "<cmd>call PandocWord()<cr>", mode = { "n" }, desc = "compile (portrait)" },
-			{ "<leader>mh", "<cmd>call PandocHTML()<cr>", mode = { "n" }, desc = "compile (html)" },
-			{ "<leader>ml", "<cmd>call PandocPDFLandscape()<cr>", mode = { "n" }, desc = "compile (landscape)" },
+			{ "<leader>mb", "<cmd>call PandocPDFBib()<cr>",           mode = { "n" }, desc = "compile (references TOC)" },
+			{ "<leader>mB", "<cmd>call PandocPDFBibNoContents()<cr>", mode = { "n" }, desc = "compile (references no-ToC)" },
+			{ "<leader>ml", "<cmd>call PandocPDFLandscape()<cr>",     mode = { "n" }, desc = "compile (landscape)" },
+			{ "<leader>mc", "<cmd>call PandocPDF()<cr>",              mode = { "n" }, desc = "compile (no references TOC)" },
+			{ "<leader>mw", "<cmd>call PandocWord()<cr>",             mode = { "n" }, desc = "word (no references)" },
+			{ "<leader>mW", "<cmd>call PandocWordBib()<cr>",          mode = { "n" }, desc = "word (references)" },
+			{ "<leader>mh", "<cmd>call PandocHTML()<cr>",             mode = { "n" }, desc = "compile (html)" },
 			{
 				"<leader>mC",
 				"<cmd>call PandocPDFNoContents()<cr>",
@@ -56,8 +60,8 @@ return {
 				desc = "compile (landscape - no contents)",
 			},
 			{ "<leader>mP", "<cmd>call PublishMedium()<cr>", mode = { "n" }, desc = "publish (medium)" },
-			{ "<leader>mv", "<cmd>MarkdownPreview<cr>", mode = { "n" }, desc = "preview" },
-			{ "<leader>mp", "<cmd>MarkdownPreview<cr>", mode = { "n" }, desc = "preview" },
+			{ "<leader>mv", "<cmd>MarkdownPreview<cr>",      mode = { "n" }, desc = "preview" },
+			{ "<leader>mp", "<cmd>MarkdownPreview<cr>",      mode = { "n" }, desc = "preview" },
 		},
 	},
 	config = function()

@@ -14,6 +14,7 @@ export mypapers="$HOME/code/papers"
 export pdone="${mypapers}/done"
 export pcurrent="${mypapers}/current"
 export psubmitted="${mypapers}/submitted"
+alias kjp="killall java; killall python; killall java; killall python;"
 # spyder
 alias spyder="spyder3 -p \".\"&"
 # tmuxinator aliases
@@ -417,9 +418,10 @@ function create_x86_conda_env () {
 }
 
 # alias python to the latest version (usually installed by brew)
-alias python=python3.11
-alias python3=python3.11
+# alias python=python3.11
+# alias python3=python3.11
 
 # bug fixes
 # alias for modern-vim
 alias mnv='XDG_DATA_HOME=$MODERN_NEOVIM/share XDG_CACHE_HOME=$MODERN_NEOVIM XDG_CONFIG_HOME=$MODERN_NEOVIM nvim'
+alias sshscml="ssh -i $HOME/.ssh/mybrown_rsa -t ymohamm1@ssh.cs.brown.edu host=scml"
