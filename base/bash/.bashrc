@@ -29,3 +29,5 @@
 # 		ANACONDAPATH="$HOME/miniforge3"
 # 	fi
 # fi
+
+source /Users/yasser/.config/broot/launcher/bash/br

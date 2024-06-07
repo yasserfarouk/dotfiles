@@ -86,7 +86,7 @@ then
 fi
 alias la='ls -aF'       # Compact view, show hidden
 alias ll='ls -al'
-alias l='ls -a'
+# alias l='ls -a'
 alias l1='ls -1'
 
 function j(){
@@ -324,8 +324,8 @@ function separateNvim(){
 alias gp="searchFolder $mypapers"
 alias vp="openInVim $mypapers"
 alias tp="tmuxInVim $mypapers"
-alias tc="tmuxInVim $HOME/code 2"
-alias vc="openInVim $HOME/code 2"
+alias tc="tmuxInVim $HOME/code 3"
+alias vc="openInVim $HOME/code 3"
 alias gf="searchFolder"
 alias gg="searchMyFolders"
 alias vf="openInVim"
@@ -425,3 +425,6 @@ function create_x86_conda_env () {
 # alias for modern-vim
 alias mnv='XDG_DATA_HOME=$MODERN_NEOVIM/share XDG_CACHE_HOME=$MODERN_NEOVIM XDG_CONFIG_HOME=$MODERN_NEOVIM nvim'
 alias sshscml="ssh -i $HOME/.ssh/mybrown_rsa -t ymohamm1@ssh.cs.brown.edu host=scml"
+alias killdefender="launchctl unload /Library/LaunchAgents/com.microsoft.wdav.tray.plist"
+alias zv='NVIM_APPNAME=lazyvim nvim' # LazyVim
+alias l='NVIM_APPNAME=lazyvim nvim' # LazyVim

@@ -19,3 +19,6 @@ unset __conda_setup
 
 
 export PATH="$HOME/.poetry/bin:$PATH"
+
+source /Users/yasser/.config/broot/launcher/bash/br
+. "$HOME/.cargo/env"

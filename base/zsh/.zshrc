@@ -97,3 +97,9 @@ eval "$(starship init zsh)"
 # 	fi
 # fi
 [ -f ~/.postzsh ] && source ~/.postzsh
+export PATH="/opt/homebrew/opt/ruby@2.7/bin:$PATH"
+
+source /Users/yasser/.config/broot/launcher/bash/br
+
+[ -f ~/.secrets ] && source ~/.secrets
+. "$HOME/.cargo/env"

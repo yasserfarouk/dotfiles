@@ -115,5 +115,8 @@
         "/Users/yasser/.local/share/nvim/site/pack/packer/start/vim-matchup/after",
         "${3rd}/luassert/library",
         "${3rd}/luv/library"
+    ],
+    "diagnostics.globals": [
+        "vim"
     ]
 }
