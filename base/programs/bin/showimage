@@ -1,0 +1,20 @@
+#!/bin/sh
+# showimage path width height x y
+path=${1}
+width=${2:-300}
+height=${3:-150}
+x=${4:-0}
+y=${5:-0}
+shift
+shift
+shift
+shift
+shift
+# echo wezterm imgcat --width ${width} --height ${height}  "${path}" $@ 
+wezterm imgcat --width ${width} --height ${height}  "${path}" $@ 
+# if [ -z $ISKITTY ]; then
+# 	kitty icat --passthrough=detect --place=${width}x${height}@${x}x${y} ${path} $@
+# else
+# 	# wezterm imgcat --width=${width} --height=${height} --position="${x},${y}" --path-throu=detect ${path} $@
+# 	wezterm imgcat --width=${width} --height=${height} ${path} $@
+# fi
