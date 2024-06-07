@@ -43,7 +43,7 @@ return {
 			{ "<leader>s*", "<cmd>Telescope grep_string<cr>", desc = "search current word" },
 			{ "<leader>s;", "<cmd>Telescope filetypes<cr>", desc = "filetypes" },
 			{ "<leader>s/", "<cmd>Telescope command_history<cr>", desc = "history" },
-			{ "<leader>bb", "<cmd>Telescope buffers<cr>", desc = "pick buffer" },
+			{ "<leader>bb", "<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>", desc = "pick buffer" },
 			{ "<leader>cq", "<cmd>Telescope quickfix<cr>", desc = "quickfix" },
 			{ "<leader>sv", "<cmd>TelescopeVim<cr>", desc = "vim-config" },
 			{ "<leader>sl", "<cmd>TelescopeLatex<cr>", desc = "Latex Symbols" },
@@ -61,13 +61,28 @@ return {
 		dependencies = { "nvim-telescope/telescope.nvim" },
 		event = "VeryLazy",
 	},
+	-- {
+	-- 	"nvim-telescope/telescope-fzy-native.nvim",
+	-- 	dependencies = { "nvim-telescope/telescope.nvim" },
+	-- 	config = function()
+	-- 		require("telescope").load_extension("fzy_native")
+	-- 	end,
+	-- },
 	{
-		"nvim-telescope/telescope-fzy-native.nvim",
-		dependencies = { "nvim-telescope/telescope.nvim" },
-		config = function()
-			require("telescope").load_extension("fzy_native")
-		end,
+		"nvim-telescope/telescope-ui-select.nvim",
 	},
+	{
+		"nvim-telescope/telescope-fzf-native.nvim",
+		build = "make",
+	},
+	{ "nvim-telescope/telescope-dap.nvim" },
+	-- {
+	-- 	"nvim-telescope/telescope-file-browser.nvim",
+	-- 	dependencies = { "nvim-telescope/telescope.nvim" },
+	-- 	config = function()
+	-- 		require("telescope").load_extension("file-browser")
+	-- 	end,
+	-- },
 	-- {
 	-- 	"nvim-telescope/telescope-project.nvim",
 	-- 	dependencies = { "nvim-telescope/telescope.nvim" },

@@ -19,25 +19,36 @@ return {
 		},
 		opts = {
 			servers = {
-				-- sumneko_lua = {
-				-- 	settings = {
-				-- 		Lua = {
-				-- 			workspace = {
-				-- 				checkThirdParty = false,
-				-- 			},
-				-- 			completion = { callSnippet = "Replace" },
-				-- 			diagnostics = {
-				-- 				-- Get the language server to recognize the `vim` global
-				-- 				globals = { "vim" },
-				-- 			},
-				-- 			telemetry = { enable = false },
-				-- 			hint = {
-				-- 				enable = false,
-				-- 			},
-				-- 		},
-				-- 	},
-				-- },
+				texlab = {
+					settings = {
+						formatterLineLength = 0,
+					},
+				},
 				dockerls = {},
+				-- https://github.com/microsoft/pyright/discussions/5852#discussioncomment-6874502
+				pyright = {
+					settings = {
+						pyright = {
+							disableOrganizeImports = true, -- Using Ruff
+						},
+						-- python = {
+						-- 	analysis = {
+						-- 		ignore = { "*" }, -- Using Ruff
+						-- 		typeCheckingMode = "off", -- Using mypy
+						-- 	},
+						-- },
+					},
+					-- capabilities = {
+					-- 	textDocument = {
+					-- 		publishDiagnostics = {
+					-- 			tagSupport = {
+					-- 				valueSet = { 2 },
+					-- 			},
+					-- 		},
+					-- 		ruff_lsp = {},
+					-- 	},
+					-- },
+				},
 			},
 			setup = {
 				sumneko_lua = function(_, _)
@@ -82,32 +93,55 @@ return {
 		end,
 	},
 	{
-		"jose-elias-alvarez/null-ls.nvim",
-		event = "BufReadPre",
-		dependencies = { "mason.nvim" },
+		"jay-babu/mason-null-ls.nvim",
+		event = { "BufReadPre", "BufNewFile" },
+		dependencies = {
+			"williamboman/mason.nvim",
+			"nvimtools/none-ls.nvim",
+		},
 		config = function()
 			local nls = require("null-ls")
-			nls.setup({
-				sources = {
-					-- nls.builtins.formatting.stylua,
-					-- nls.builtins.diagnostics.ruff.with({ extra_args = { "--max-line-length=180" } }),
-					nls.builtins.formatting.isort,
-					nls.builtins.formatting.black,
-					-- nls.builtins.diagnostics.pylint,
-				},
-			})
+			-- {
+			-- 				sources = {
+			-- 					nls.builtins.formatting.stylua,
+			-- 					-- nls.builtins.diagnostics.ruff.with({ extra_args = { "--max-line-length=180" } }),
+			-- 					nls.builtins.formatting.isort,
+			-- 					nls.builtins.formatting.black,
+			-- 					-- nls.builtins.diagnostics.pylint,
+			-- 				},
+			-- 			}
+			nls.setup()
+			require("mason").setup()
+			require("mason-null-ls").setup({ handlers = {} })
 		end,
 	},
+	-- {
+	-- 	"nvimtools/none-ls.nvim",
+	-- 	event = "BufReadPre",
+	-- 	dependencies = { "mason.nvim" },
+	-- 	config = function()
+	-- 		local nls = require("null-ls")
+	-- 		nls.setup({
+	-- 			sources = {
+	-- 				-- nls.builtins.formatting.stylua,
+	-- 				-- nls.builtins.diagnostics.ruff.with({ extra_args = { "--max-line-length=180" } }),
+	-- 				nls.builtins.formatting.isort,
+	-- 				nls.builtins.formatting.black,
+	-- 				-- nls.builtins.diagnostics.pylint,
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- },
 	{
 		"folke/trouble.nvim",
 		cmd = { "TroubleToggle", "Trouble" },
 		opts = { use_diagnostic_signs = true },
 		keys = {
-			{ "<leader>id", "<cmd>TroubleToggle document_diagnostics<cr>",  desc = "Document Diagnostics" },
+			{ "<leader>id", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics" },
 			{ "<leader>ii", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics" },
-			{ "<leader>ii", "<cmd>Trouble<cr>",                             desc = "Show" },
-			{ "<leader>il", "<cmd>Trouble loclist<cr>",                     desc = "Location List" },
-			{ "<leader>iq", "<cmd>Trouble quickfix<cr>",                    desc = "Quick Fix" },
+			{ "<leader>ii", "<cmd>Trouble<cr>", desc = "Show" },
+			{ "<leader>il", "<cmd>Trouble loclist<cr>", desc = "Location List" },
+			{ "<leader>iq", "<cmd>Trouble quickfix<cr>", desc = "Quick Fix" },
 		},
 	},
 	{
@@ -118,14 +152,25 @@ return {
 			symbol_in_winbar = {
 				enable = true,
 			},
+			ui = {
+				code_action = "💡",
+			},
+			lightbulb = {
+				enable = false,
+				sign = false,
+				debounce = 10,
+				sign_priority = 0,
+				virtual_text = true,
+				enable_in_insert = false,
+			},
 		},
 		-- config = true,
 		keys = {
-			{ "<leader>vl", "<cmd>Lspsaga outline<cr>",         desc = "Lspsaga Sidebar" },
+			{ "<leader>vl", "<cmd>Lspsaga outline<cr>", desc = "Lspsaga Sidebar" },
 			{ "<leader>vW", "<cmd>lua vim.opt.winbar = ''<cr>", desc = "Winbar ON" },
 			{
 				"<leader>vw",
-				"<cmd>lua vim.opt.winbar = require('lspsaga.symbolwinbar'):get_winbar()<cr>",
+				"<cmd>lua vim.opt.winbar = require('lspsaga.symbol.winbar'):get_bar()<cr>",
 				desc = "Winbar ON",
 			},
 		},

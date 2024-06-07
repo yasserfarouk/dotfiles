@@ -17,5 +17,10 @@ return {
 		{ "<leader>x\\", "<cmd>FloatermNew --wintype=normal --position=right<cr>", desc = "right" },
 		{ "<leader>x-", "<cmd>FloatermNew --wintype=normal --height=0.3 --position=bottom<cr>", desc = "bottom" },
 		{ "<leader>xt", "<cmd>FloatermToggle<cr>", desc = "terminal" },
+		{
+			"<leader>xj",
+			"<cmd>FloatermNew  --silent  jupyter notebook<cr>",
+			desc = "jupyter",
+		},
 	},
 }

@@ -10,8 +10,6 @@ keymap("n", ";", ":")
 keymap("v", ";", ":")
 keymap("n", ":", ";")
 keymap("v", ":", ";")
--- no hl
-keymap("n", "<esc><esc>", ":set hlsearch!<CR>")
 
 -- vim.api.nvim_set_keymap('n', '-', ':RnvimrToggle<CR>', {noremap = true, silent = true})
 
@@ -127,8 +125,10 @@ keymap({ "x" }, "Q", [[:'<,'>:normal @q<CR>]])
 -- Use / to search inside a visual selection
 keymap("x", "/", "<Esc>/\\%V")
 
+-- keymap("n", "<esc><esc>", ":set hlsearch!<CR>")
+keymap("n", "<esc><esc>", "<cmd>let @/ = ''<cr>", { desc = "no highlight" })
 -- whichkey maps
-keymap("n", "<leader>h", "<cmd>let @/ = ''<cr>", { desc = "no highlight" })
+-- no hl
 keymap("n", "<leader>w", "<cmd>wa<cr>", { desc = "save all" })
 keymap("n", "<leader>q", "<C-W>c", { desc = "quit window" })
 keymap("n", "<leader>-", "<C-W>s", { desc = "split below" })
@@ -175,3 +175,4 @@ keymap("n", "<leader>as", "<cmd>Ds1z=`]<cr>", { desc = "correct spelling" })
 keymap("n", "<leader>ay", "<cmd>let @+= expand(' % ')<cr>", { desc = "copy path" })
 keymap("n", "<leader>al", "<cmd>%s/^/\\=printf('%-4d', line('.'))<cr>", { desc = "write line numbers" })
 keymap("n", "<leader>ax", "<cmd>cclose<cr>", { desc = "close quickfix" })
+keymap("n", "<leader>aL", "<cmd>g/^$/.,./-j<cr>", { desc = "remove extra empty lines" })

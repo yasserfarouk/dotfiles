@@ -135,6 +135,7 @@ return {
 		"rcarriga/nvim-dap-ui",
 		ft = dap_types,
 		config = dapuiconfig,
+		dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
 	},
 	{
 		"nvim-telescope/telescope-dap.nvim",

@@ -14,14 +14,14 @@ endfunction
 function! PandocPDF()
 	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=. -F mermaid-filter --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -o \"" . expand("%:r") . ".pdf\" " . " && open \"" . expand("%:r") . ".pdf\"&"
 endfunction
+function! PandocPDFNoContents()
+	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=. -F mermaid-filter --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 -V geometry:margin=2cm -o \"" . expand("%:r") . ".pdf\" " . " && open \"" . expand("%:r") . ".pdf\"&"
+endfunction
 function! PandocPDFLandscape()
 	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt -F mermaid-filter  --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
 endfunction
 function! PandocPDFLandscapeNoContents()
 	silent exec "Dispatch pandoc --pdf-engine=xelatex -F mermaid-filter  --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
-endfunction
-function! PandocPDFNoContents()
-	silent exec "Dispatch pandoc --pdf-engine=xelatex -F mermaid-filter  --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0  -V geometry:margin=2cm -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
 endfunction
 function! PandocHTML()
 	silent exec "Dispatch pandoc  -o " . expand("%:r"). ".html -s " . expand("%") . "; open " . expand("%:r") . ".html"
@@ -40,13 +40,28 @@ return {
 		keys = {
 			-- { "<F9>", "<cmd>call PandocPDF()<cr>", mode = { "n" }, desc = "compile (portrait)" },
 			-- { "<F5>", "<cmd>MarkdownPreview<cr>", mode = { "n" }, desc = "preview" },
-			{ "<leader>mb", "<cmd>call PandocPDFBib()<cr>",           mode = { "n" }, desc = "compile (references TOC)" },
-			{ "<leader>mB", "<cmd>call PandocPDFBibNoContents()<cr>", mode = { "n" }, desc = "compile (references no-ToC)" },
-			{ "<leader>ml", "<cmd>call PandocPDFLandscape()<cr>",     mode = { "n" }, desc = "compile (landscape)" },
-			{ "<leader>mc", "<cmd>call PandocPDF()<cr>",              mode = { "n" }, desc = "compile (no references TOC)" },
-			{ "<leader>mw", "<cmd>call PandocWord()<cr>",             mode = { "n" }, desc = "word (no references)" },
-			{ "<leader>mW", "<cmd>call PandocWordBib()<cr>",          mode = { "n" }, desc = "word (references)" },
-			{ "<leader>mh", "<cmd>call PandocHTML()<cr>",             mode = { "n" }, desc = "compile (html)" },
+			{
+				"<leader>mb",
+				"<cmd>call PandocPDFBib()<cr>",
+				mode = { "n" },
+				desc = "compile (references TOC)",
+			},
+			{
+				"<leader>mB",
+				"<cmd>call PandocPDFBibNoContents()<cr>",
+				mode = { "n" },
+				desc = "compile (references no-ToC)",
+			},
+			{ "<leader>ml", "<cmd>call PandocPDFLandscape()<cr>", mode = { "n" }, desc = "compile (landscape)" },
+			{
+				"<leader>mc",
+				"<cmd>call PandocPDF()<cr>",
+				mode = { "n" },
+				desc = "compile (no references TOC)",
+			},
+			{ "<leader>mw", "<cmd>call PandocWord()<cr>", mode = { "n" }, desc = "word (no references)" },
+			{ "<leader>mW", "<cmd>call PandocWordBib()<cr>", mode = { "n" }, desc = "word (references)" },
+			{ "<leader>mh", "<cmd>call PandocHTML()<cr>", mode = { "n" }, desc = "compile (html)" },
 			{
 				"<leader>mC",
 				"<cmd>call PandocPDFNoContents()<cr>",
@@ -60,8 +75,8 @@ return {
 				desc = "compile (landscape - no contents)",
 			},
 			{ "<leader>mP", "<cmd>call PublishMedium()<cr>", mode = { "n" }, desc = "publish (medium)" },
-			{ "<leader>mv", "<cmd>MarkdownPreview<cr>",      mode = { "n" }, desc = "preview" },
-			{ "<leader>mp", "<cmd>MarkdownPreview<cr>",      mode = { "n" }, desc = "preview" },
+			{ "<leader>mv", "<cmd>MarkdownPreview<cr>", mode = { "n" }, desc = "preview" },
+			{ "<leader>mp", "<cmd>MarkdownPreview<cr>", mode = { "n" }, desc = "preview" },
 		},
 	},
 	config = function()
