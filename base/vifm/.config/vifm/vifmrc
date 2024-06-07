@@ -253,10 +253,23 @@ fileviewer *.[1-8] man ./%c | col -b
 " Image
 filetype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,
        \ open -a Preview.app,
+fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,
+       \ wezterm imgcat --width %pw --height %ph %c:p %pd
+       " \ wezterm imgcat --width %pw --height %ph --tmux-passthru detect %c:p
+       " \ showimage  %c:p %pw %ph %px %py %pd
+       " \ wezterm imgcat --width %pw --height %ph %c:p %pd
+       " \ wezterm imgcat --width %pw --height %ph %c:p %pd
+       " \ showimage %pd %pw %ph %px %py
 " "fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
 " "\ kitty +icat --place %pwx%ph@%pxx%py  --silent %c
 " "\ %pc
 " "\ kitty icat --clear --silent %pd
+
+" md files
+filetype *.md nvim
+fileviewer *.md glow -w %pw %c | less
+filetype *.markdown nvim
+fileviewer *.markdown glow -w %pw %c | less
 
 " MD5
 filetype *.md5
@@ -306,12 +319,12 @@ filetype *.img open
 filetype *.pkg open
 
 " Office files
-filetype *.odt,*.doc,*.docx open -a "Microsoft Word".app
+filetype *.odt,*.doc,*.docx open -a "Microsoft\ Word.app"
 fileviewer *.doc antiword -
 fileviewer *.docx docx2txt.pl %f -
 
-filetype *.xls,*.xlsx,*.odp open -a "Microsoft Excel".app
-filetype *.pptx,*.ppt "open -a "Microsoft Powerpoint".app
+filetype *.xls,*.xlsx,*.odp open -a "Microsoft\ Excel.app"
+filetype *.pptx,*.ppt "open -a "Microsoft\ Powerpoint.app"
 " Syntax highlighting in preview
 "
 " Explicitly set highlight type for some extensions
@@ -471,7 +484,7 @@ nnoremap L :tabnext<cr>:view!<cr>
 " switch to tab to the left
 nnoremap Q :q<cr>
 
-nnoremap / :FZFfind<cr>
+nnoremap <space>/ :FZFfind<cr>
 " ------------------------------------------------------------------------------
 
 " Various customization examples
