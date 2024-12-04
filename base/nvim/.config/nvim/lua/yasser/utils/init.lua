@@ -10,7 +10,7 @@ function M.get_icon(icon_name)
 		warn = "!",
 		hint = "›",
 		lock = "",
-		success = " ",
+		success = "",
 		-- success = ' '
 	}
 	return ICONS[icon_name] or ""

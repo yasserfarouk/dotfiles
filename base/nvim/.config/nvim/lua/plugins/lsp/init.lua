@@ -75,7 +75,7 @@ return {
 		keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
 		opts = {
 			ensure_installed = {
-				"stylua",
+				-- "stylua",
 				-- "ruff",
 				"debugpy",
 				"codelldb",

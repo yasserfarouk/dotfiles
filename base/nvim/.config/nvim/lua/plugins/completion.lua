@@ -17,33 +17,33 @@ local function cmpconfig()
 	-- 	return col == 0 or vim.fn.getline("."):sub(col, col):match("%s")
 	-- end
 
-	--   פּ ﯟ   some other good icons
+	--  some other good icons
 	local kind_icons = {
-		Text = "",
-		Method = "m",
-		Function = "",
+		Text = "󰉿",
+		Method = "󰡱",
+		Function = "󰊕",
 		Constructor = "",
 		Field = "",
-		Variable = "",
-		Class = "",
+		Variable = "󰆧",
+		Class = "󰌗",
 		Interface = "",
 		Module = "",
 		Property = "",
 		Unit = "",
-		Value = "",
+		Value = "󰬺",
 		Enum = "",
-		Keyword = "",
+		Keyword = "󰌋",
 		Snippet = "",
-		Color = "",
-		File = "",
+		Color = "󰸌",
+		File = "󰈙",
 		Reference = "",
-		Folder = "",
+		Folder = "󰉋",
 		EnumMember = "",
-		Constant = "",
+		Constant = "󰇽",
 		Struct = "",
 		Event = "",
-		Operator = "",
-		TypeParameter = "",
+		Operator = "󰆕",
+		TypeParameter = "󰴑",
 	}
 
 	local has_words_before = function()
@@ -102,11 +102,11 @@ local function cmpconfig()
 					nvim_lsp = "",
 					snippy = "",
 					nvim_lua = "",
-					look = "",
-					path = "",
+					look = "󰃐",
+					path = "󰇘",
 					spell = "",
 					calc = "",
-					emoji = "ﲃ",
+					emoji = "󰞅",
 				})[entry.source.name]
 				return vim_item
 			end,

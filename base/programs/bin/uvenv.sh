@@ -3,7 +3,7 @@ curdir="$(pwd)"
 curdir="$(basename "${curdir}")"
 mydir="${1:-$curdir}"
 mydir="${mydir%/}" # remove trailing dash if any
-pyver="${2:-11}"
+pyver="${2:-12}"
 savedwd="$(pwd)"
 if [[  $curdir != $mydir ]]; then
   cd "${mydir}"
@@ -29,6 +29,9 @@ case $pyver in
 		;;
 	"3.12" | "12" | "")
 		uv venv -p 3.12 "$venv" 1>/dev/null || exit
+		;;
+	"3.13" | "13" | "")
+		uv venv -p 3.13 "$venv" 1>/dev/null || exit
 		;;
 	*)
 		uv venv -p "$pyver" "$venv" 1>/dev/null || exit
@@ -57,3 +60,6 @@ rm -rf ".envrc" 1>/dev/null
 echo  "source ${venv}/bin/activate" > ".envrc"
 cd "${savedwd}" || exit
 
+ln -s ${venvbase}/${name} ${mydir}/.venv
+cd  $mydir
+uv sync

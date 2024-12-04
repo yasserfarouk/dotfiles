@@ -17,15 +17,15 @@ function alphaconf()
 		[[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
 	}
 	dashboard.section.buttons.val = {
-		dashboard.button("f", "  Find file", ":Telescope find_files<CR>"),
+		dashboard.button("f", "󰈞  Find file", ":Telescope find_files<CR>"),
 		dashboard.button("e", "  New file", ":ene <BAR> startinsert<CR>"),
 		dashboard.button("P", "  Find project", ":Telescope project<CR>"),
 		dashboard.button("p", "  Recent project", ":Telescope projects<CR>"),
-		dashboard.button("r", "  Recently used files", ":Telescope oldfiles<CR>"),
-		dashboard.button("t", "  Find text", ":Telescope live_grep<CR>"),
+		dashboard.button("r", "󰄉  Recently used files", ":Telescope oldfiles<CR>"),
+		dashboard.button("t", "󰊄  Find text", ":Telescope live_grep<CR>"),
 		dashboard.button("c", "  Configuration", ":e ~/.config/nvim/init.lua<CR>"),
 		dashboard.button("z", "🛠️ Plugins", "<cmd>Lazy<CR>"),
-		dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
+		dashboard.button("q", "󰅚  Quit Neovim", ":qa<CR>"),
 		dashboard.button("v", "🖊️  Vim File", ":TelescopeVim<CR>"),
 	}
 	local function footer()
@@ -75,24 +75,24 @@ end
 
 return {
 	-- Rainbow Highlighting
-	{
-		"HiPhish/nvim-ts-rainbow2",
-		config = function()
-			require("nvim-treesitter.configs").setup({
-				rainbow = {
-					enable = true,
-					-- list of languages you want to disable the plugin for
-					disable = { "jsx", "cpp" },
-					-- Which query to use for finding delimiters
-					query = "rainbow-parens",
-					-- Highlight the entire buffer all at once
-					strategy = require("ts-rainbow.strategy.global"),
-					-- Do not enable for files with more than n lines
-					max_file_lines = 3000,
-				},
-			})
-		end,
-	},
+	-- {
+	-- 	"HiPhish/nvim-ts-rainbow2",
+	-- 	config = function()
+	-- 		require("nvim-treesitter.configs").setup({
+	-- 			rainbow = {
+	-- 				enable = true,
+	-- 				-- list of languages you want to disable the plugin for
+	-- 				disable = { "jsx", "cpp" },
+	-- 				-- Which query to use for finding delimiters
+	-- 				query = "rainbow-parens",
+	-- 				-- Highlight the entire buffer all at once
+	-- 				strategy = require("ts-rainbow.strategy.global"),
+	-- 				-- Do not enable for files with more than n lines
+	-- 				max_file_lines = 3000,
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- },
 	{
 		"goolord/alpha-nvim",
 		config = alphaconf,

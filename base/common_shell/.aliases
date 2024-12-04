@@ -82,7 +82,7 @@ alias sl=ls
 # alias ls='ls -G'        # Compact view, show colors
 if command -v exa &> /dev/null
 then
-	alias ls='exa --icons --group-directories-first'        # Compact view, show colors
+	alias ls='eza --icons --group-directories-first'        # Compact view, show colors
 fi
 alias la='ls -aF'       # Compact view, show hidden
 alias ll='ls -al'
@@ -106,7 +106,7 @@ function ghUpdate() {
     then
     echo "upstream is set"
   else
-    read "?Whats the URl of the original repo? | " answer
+    read "?What's the URl of the original repo? | " answer
     # Add the remote, call it "upstream":
     echo $answer
     git remote add upstream $answer
@@ -365,7 +365,7 @@ function enablejava(){
 	#
 }
 # open a tunnel to a daiba server running of a
-# server  (default 11) on remote port (deafault 1234)
+# server  (default 11) on remote port (default 1234)
 # to local port (default 1234)
 function daibaJupyter(){
 	local server=${1:=11}
@@ -379,6 +379,7 @@ alias dt="daibaJupyter"
 
 # connect to scml's server on brown
 alias gobrown="ssh -i ~/.ssh/mybrown_rsa -t ymohamm1@ssh.cs.brown.edu host=scml"
+alias gobrownnew="ssh -i ~/.ssh/mybrown_rsa -t ymohamm1@ssh.cs.brown.edu host=anac"
 
 # kitty
 alias kitty='kitty --single-instance --start-as=maximized --listen-on=unix:/tmp/mykitty --single-instance '
@@ -416,7 +417,14 @@ function create_x86_conda_env () {
   conda activate $1
   conda config --env --set subdir osx-64
 }
-
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
 # alias python to the latest version (usually installed by brew)
 # alias python=python3.11
 # alias python3=python3.11
@@ -428,3 +436,4 @@ alias sshscml="ssh -i $HOME/.ssh/mybrown_rsa -t ymohamm1@ssh.cs.brown.edu host=s
 alias killdefender="launchctl unload /Library/LaunchAgents/com.microsoft.wdav.tray.plist"
 alias zv='NVIM_APPNAME=lazyvim nvim' # LazyVim
 alias l='NVIM_APPNAME=lazyvim nvim' # LazyVim
+alias rm="echo Use 'trash', or the full path i.e. '/bin/rm'&& trash"

@@ -253,17 +253,13 @@ fileviewer *.[1-8] man ./%c | col -b
 " Image
 filetype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,
        \ open -a Preview.app,
-fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,
-       \ wezterm imgcat --width %pw --height %ph %c:p %pd
-       " \ wezterm imgcat --width %pw --height %ph --tmux-passthru detect %c:p
-       " \ showimage  %c:p %pw %ph %px %py %pd
-       " \ wezterm imgcat --width %pw --height %ph %c:p %pd
-       " \ wezterm imgcat --width %pw --height %ph %c:p %pd
-       " \ showimage %pd %pw %ph %px %py
-" "fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
-" "\ kitty +icat --place %pwx%ph@%pxx%py  --silent %c
-" "\ %pc
-" "\ kitty icat --clear --silent %pd
+
+" fileviewer *.jpg,*.jpeg,*png,*.gif,*.xpm,*.webp,
+"       \ cat %c 
+fileviewer {*.jpg,*.jpeg,*.png,*.gif}
+    \ kitten icat --silent --transfer-mode=file --place=%pwx%ph@%pxx%py %c >/dev/tty </dev/tty %N
+    \ %pc
+    \ kitten icat --clear --silent >/dev/tty </dev/tty %N
 
 " md files
 filetype *.md nvim
@@ -392,6 +388,8 @@ set vifminfo=dhistory,savedirs,chistory,state,tui,shistory,
 "
 " set viewcolumns=-{name}..,6{}.
 
+set viewcolumns=*{name}..,16{mtime},7{}.
+
 " Filter-out build and temporary files
 "
 " filter! /^.*\.(lo|o|d|class|py[co])$|.*~$/
@@ -509,3 +507,4 @@ nnoremap <space>/ :FZFfind<cr>
 "     vifm --server-name "$VIFM_SERVER_NAME" --remote +"cd '$PWD'"
 "
 " let $VIFM_SERVER_NAME = v:servername
+nnoremap <silent> <C-o> :!kitten icat --clear --silent<cr>:wincmd o<cr>

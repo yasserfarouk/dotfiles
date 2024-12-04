@@ -19,6 +19,7 @@ if [ -d "$HOME/usr/local/bin" ] ; then
     export PATH="$HOME/usr/local/bin:$PATH"
 fi
 export PATH="$HOME/.poetry/bin:$PATH"
+
 # Setting fd as the default source for fzf
 export FZF_DEFAULT_COMMAND='fd --type f'
 
@@ -114,13 +115,9 @@ export HISTSIZE=100000
 
 export PYENV_ROOT=$HOME/.pyenv
 
-# add current path
-export PATH=".:$PATH"
 
 export ENABLE_PYENV=false
 export ENABLE_CONDA=false
-
-export PATH="/Users/yasser/.gem/ruby/2.7.0/bin:$PATH"
 
 # set python cache folder for .pyc files:
 #   https://stackoverflow.com/a/57415054
@@ -141,3 +138,11 @@ case "${OSTYPE}" in
         return 1
         ;;
 esac
+
+export PATH="/Users/yasser/.gem/ruby/2.7.0/bin:$PATH"
+if [ -d "$HOME/bin/nvim/bin" ] ; then
+	export PATH="$HOME/bin/nvim/bin:$PATH"
+fi
+
+# add current path
+export PATH=".:$PATH"

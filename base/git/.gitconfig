@@ -15,9 +15,6 @@
 	smudge = git lfs smudge %f
 	required = true
 
-[github]
-  user = yasserfarouk
-
 [merge]
     tool = nvimdiff3
 	conflictStyle = diff3
@@ -48,8 +45,8 @@
 
 [pull]
 	rebase = false
-[credential]
-	helper = store
+; [credential]
+; 	helper = store
 [init]
 	defaultBranch = main
 [commit]

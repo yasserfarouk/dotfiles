@@ -101,13 +101,13 @@ function M.on_attach(client, buffer)
 	self:map("<leader>cB", "lua vim.lsp.buf.blame_line()", { desc = "signature help" })
 	self:map("gK", vim.lsp.buf.signature_help, { desc = "Signature Help", has = "signatureHelp" })
 
-	local format = require("plugins.lsp.format").format
-	self:map("<leader>cf", function()
-		format({ timeout = 3000 })
-	end, { desc = "Format Document", has = "documentFormatting" })
-	self:map("<leader>cF", function()
-		format({ timeout = 3000 })
-	end, { desc = "Format Range", mode = "v", has = "documentRangeFormatting" })
+	-- local format = require("plugins.lsp.format").format
+	-- self:map("<leader>cf", function()
+	-- 	format({ timeout = 3000 })
+	-- end, { desc = "Format Document", has = "documentFormatting" })
+	-- self:map("<leader>cF", function()
+	-- 	format({ timeout = 3000 })
+	-- end, { desc = "Format Range", mode = "v", has = "documentRangeFormatting" })
 end
 
 function M.new(client, buffer)

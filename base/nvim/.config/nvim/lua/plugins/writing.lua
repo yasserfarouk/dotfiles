@@ -39,12 +39,6 @@ return {
 		end,
 	},
 	-- better spell checking (ignoring keywords)
-	{
-		"lewis6991/spellsitter.nvim",
-		config = function()
-			require("spellsitter").setup()
-		end,
-	},
 	-- Tables
 	{ "godlygeek/tabular", event = "VeryLazy" },
 	{

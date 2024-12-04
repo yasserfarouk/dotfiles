@@ -16,19 +16,21 @@ return {
 	-- 'knubie/vim-kitty-navigator',
 	-- tumx integration
 	{
-		"robaire/nvim-tmux-navigator",
-		cond = { tmux },
-		opts = {
-			bindings = {
-				left = "<C-H>",
-				down = "<C-J>",
-				up = "<C-K>",
-				right = "<C-L>",
-				previous = "<C-\\>",
-			},
-		},
+		"alexghergh/nvim-tmux-navigation",
+		config = function()
+			require("nvim-tmux-navigation").setup({
+				disable_when_zoomed = true, -- defaults to false
+				keybindings = {
+					left = "<C-h>",
+					down = "<C-j>",
+					up = "<C-k>",
+					right = "<C-l>",
+					last_active = "<C-\\>",
+					next = "<C-Space>",
+				},
+			})
+		end,
 	},
-
 	-- maps <leader>[, <leader>] to move to top and bottom of indent
 	{ "tmhedberg/indent-motion", event = "VeryLazy" },
 	{ "moll/vim-bbye", event = "VeryLazy" },

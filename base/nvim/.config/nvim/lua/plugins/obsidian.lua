@@ -1,6 +1,6 @@
 return {
 	"epwalsh/obsidian.nvim",
-
+	ui = { enable = false },
 	keys = {
 		{
 			"gf",

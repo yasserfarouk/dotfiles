@@ -4,5 +4,6 @@
         "/Users/yasser/.config/valet/Sites",
         "/Users/yasser/code/sites"
     ],
+    "default": "/Users/yasser/code/sites/scmlweb",
     "loopback": "127.0.0.1"
 }
