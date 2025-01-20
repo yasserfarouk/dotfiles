@@ -3,9 +3,9 @@ return {
 	-- Floating terminal (may be unnecesasry)
 	"voldikss/vim-floaterm",
 	keys = {
-		{ "<leader>xx", "<cmd>FloatermToggle<cr>", desc = "toggle" },
-		{ "<leader>xy", "<cmd>FloatermNew  --width=0.95 --height=0.95  yazi<cr>", desc = "yazi" },
-		{ "<leader>xf", "<cmd>FloatermNew  --width=0.95 --height=0.95  vifm<cr>", desc = "vifm" },
+		{ "<leader>xx", "<cmd>FloatermToggle  --width=0.95 --height=0.95<cr>", desc = "toggle" },
+		{ "<leader>xf", "<cmd>FloatermNew  --width=0.95 --height=0.95  yazi<cr>", desc = "yazi" },
+		{ "<leader>xz", "<cmd>FloatermNew  --width=0.95 --height=0.95  vifm<cr>", desc = "vifm" },
 		{ "<leader>xt", "<cmd>FloatermNew  --width=0.95 --height=0.95 bpytop<cr>", desc = "bpytop" },
 		{ "<leader>xh", "<cmd>FloatermNew  --width=0.95 --height=0.95 htop<cr>", desc = "htop" },
 		{ "<leader>xP", "<cmd>FloatermNew ipython<cr>", desc = "python" },

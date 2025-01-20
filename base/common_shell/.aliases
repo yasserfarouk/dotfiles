@@ -393,20 +393,8 @@ function ad(){
 		startAlacritty "ssh -i ~/.ssh/daiba_rsa 192.168.101.${var}"
 	done
 }
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        # ...
-elif [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
 	alias unsplash="osascript $HOME/bin/unsplash.scpt"
-elif [[ "$OSTYPE" == "cygwin" ]]; then
-        # POSIX compatibility layer and Linux environment emulation for Windows
-elif [[ "$OSTYPE" == "msys" ]]; then
-        # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
-elif [[ "$OSTYPE" == "win32" ]]; then
-        # I'm not sure this can happen.
-elif [[ "$OSTYPE" == "freebsd"* ]]; then
-        # ...
-else
-        # Unknown.
 fi
 
 function create_x86_conda_env () {

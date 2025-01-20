@@ -45,7 +45,7 @@ return {
 					-- 				valueSet = { 2 },
 					-- 			},
 					-- 		},
-					-- 		ruff_lsp = {},
+					-- 		ruff = {},
 					-- 	},
 					-- },
 				},
@@ -92,29 +92,29 @@ return {
 			end
 		end,
 	},
-	{
-		"jay-babu/mason-null-ls.nvim",
-		event = { "BufReadPre", "BufNewFile" },
-		dependencies = {
-			"williamboman/mason.nvim",
-			"nvimtools/none-ls.nvim",
-		},
-		config = function()
-			local nls = require("null-ls")
-			-- {
-			-- 				sources = {
-			-- 					nls.builtins.formatting.stylua,
-			-- 					-- nls.builtins.diagnostics.ruff.with({ extra_args = { "--max-line-length=180" } }),
-			-- 					nls.builtins.formatting.isort,
-			-- 					nls.builtins.formatting.black,
-			-- 					-- nls.builtins.diagnostics.pylint,
-			-- 				},
-			-- 			}
-			nls.setup()
-			require("mason").setup()
-			require("mason-null-ls").setup({ handlers = {} })
-		end,
-	},
+	-- {
+	-- 	"jay-babu/mason-null-ls.nvim",
+	-- 	event = { "BufReadPre", "BufNewFile" },
+	-- 	dependencies = {
+	-- 		"williamboman/mason.nvim",
+	-- 		"nvimtools/none-ls.nvim",
+	-- 	},
+	-- 	config = function()
+	-- 		local nls = require("null-ls")
+	-- 		-- {
+	-- 		-- 				sources = {
+	-- 		-- 					nls.builtins.formatting.stylua,
+	-- 		-- 					-- nls.builtins.diagnostics.ruff.with({ extra_args = { "--max-line-length=180" } }),
+	-- 		-- 					nls.builtins.formatting.isort,
+	-- 		-- 					nls.builtins.formatting.black,
+	-- 		-- 					-- nls.builtins.diagnostics.pylint,
+	-- 		-- 				},
+	-- 		-- 			}
+	-- 		nls.setup()
+	-- 		require("mason").setup()
+	-- 		require("mason-null-ls").setup({ handlers = {} })
+	-- 	end,
+	-- },
 	-- {
 	-- 	"nvimtools/none-ls.nvim",
 	-- 	event = "BufReadPre",
@@ -178,17 +178,19 @@ return {
 	{ "ray-x/lsp_signature.nvim", event = "VeryLazy" },
 	-- symbol preview
 	{
-		"simrat39/symbols-outline.nvim",
-		event = "VeryLazy",
-		ft = { "python", "tex" },
+		"hedyhli/outline.nvim",
+
 		keys = {
-			{ "<leader>vv", "<cmd>SymbolsOutline<cr>", desc = "Symbol Sidebar" },
-			{ "<leader>co", "<cmd>SymbolsOutline<cr>", desc = "Symbols sidebar" },
+			{ "<leader>vv", "<cmd>Outline<cr>", desc = "Symbol Sidebar" },
+			{ "<leader>co", "<cmd>Outline<cr>", desc = "Symbols sidebar" },
 		},
-		opts = {
-			highlight_hovered_item = true,
-			show_guides = true,
-		},
+		config = function()
+			-- Example mapping to toggle outline
+			--
+			require("outline").setup({
+				-- Your setup opts here (leave empty to use defaults)
+			})
+		end,
 	},
 	{
 		"folke/neodev.nvim",

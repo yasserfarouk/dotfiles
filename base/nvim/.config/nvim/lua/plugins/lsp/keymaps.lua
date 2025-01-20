@@ -16,7 +16,7 @@ function M.on_attach(client, buffer)
 	end
 	if sok then
 		self:map("gp", "Lspsaga peek_definition", { desc = "Goto Definition" })
-		self:map("gr", "Lspsaga finder", { desc = "Goto Definition" })
+		self:map("grf", "Lspsaga finder", { desc = "Goto Definition" })
 		self:map("[d", "Lspsaga diagnostic_jump_prev", { desc = "Next Diagnostic" })
 		self:map("]d", "Lspsaga diagnostic_jump_next", { desc = "Prev Diagnostic" })
 		self:map("]e", function()

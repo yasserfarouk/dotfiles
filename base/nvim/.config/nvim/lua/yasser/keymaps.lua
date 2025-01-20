@@ -176,3 +176,25 @@ keymap("n", "<leader>ay", "<cmd>let @+= expand(' % ')<cr>", { desc = "copy path"
 keymap("n", "<leader>al", "<cmd>%s/^/\\=printf('%-4d', line('.'))<cr>", { desc = "write line numbers" })
 keymap("n", "<leader>ax", "<cmd>cclose<cr>", { desc = "close quickfix" })
 keymap("n", "<leader>aL", "<cmd>g/^$/.,./-j<cr>", { desc = "remove extra empty lines" })
+
+-- opening yazi
+keymap(
+	"n",
+	"<leader>xs",
+	":silent !tmux split-window -f -t : yazi<CR>",
+	-- ':!tmux split-window -f -c "#{pane_current_path}" -t : yazi<CR>',
+	{ noremap = true, silent = true, desc = "Yazi in a split" }
+)
+keymap(
+	"n",
+	"<leader>xY",
+	-- ':silent !tmux new-window -d -n yazi -c "#{pane_current_path}" "yazi"<CR><C-w>\\',
+	':silent !tmux new-window -d -n yazi "yazi"<CR><C-w>\\',
+	{ noremap = true, silent = true, desc = "Yazi in a full tmux pane" }
+)
+keymap(
+	"n",
+	"<leader>x;",
+	':!tmux popup -E -w 80\\% -h 80\\% "yazi"<CR>',
+	{ noremap = true, silent = true, desc = "Yazi in a tumux float" }
+)

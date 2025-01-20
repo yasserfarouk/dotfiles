@@ -81,7 +81,10 @@ function M.setup(_, opts)
 					return
 				end
 			end
-			require("lspconfig")[server].setup(server_opts)
+			local lspserver = require("lspconfig")[server]
+			if lspserver then
+				pcall(lspserver.setup, server_opts)
+			end
 		end,
 	})
 end

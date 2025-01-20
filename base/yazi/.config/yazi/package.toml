@@ -1,0 +1,5 @@
+[plugin]
+deps = [{ use = "dedukun/relative-motions", rev = "df97039" }, { use = "Reledia/miller", rev = "40e0265" }, { use = "Reledia/glow", rev = "5ce76dc" }, { use = "AnirudhG07/nbpreview", rev = "1d85745" }, { use = "yazi-rs/plugins:max-preview", rev = "e4aaf43" }, { use = "yazi-rs/plugins:hide-preview", rev = "e4aaf43" }]
+
+[flavor]
+deps = []
