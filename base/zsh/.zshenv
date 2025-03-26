@@ -1,3 +1,4 @@
+#!/bin/zsh
 # Write new entries to the history incrementally instead of on
 # shell exit.
 setopt INC_APPEND_HISTORY

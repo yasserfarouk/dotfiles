@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/bin/zsh
 
 # [[ $ZSHENVCALLED = "" ]] && source ~/.zshenv
 [ -f ~/.prezshrc ] && source ~/.prezshrc
@@ -47,9 +47,7 @@ fpath+=$HOME/.zfunc
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 
-eval "$(starship init zsh)"
-#
-#
+
 # if [ $ENABLE_PYENV = true ] ; then
 # 	function pyenvrehash(){
 # 		command pyenv rehash 2>/dev/null
@@ -103,3 +101,7 @@ source /Users/yasser/.config/broot/launcher/bash/br
 
 [ -f ~/.secrets ] && source ~/.secrets
 . "$HOME/.cargo/env"
+
+if command -v starship >/dev/null; then
+	eval "$(starship init zsh)"
+fi

@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$HOME/.poetry/bin:$PATH"
 # export PATH="$HOME/.pyenv/bin:$PATH"
@@ -28,8 +26,10 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export TERMINAL_DARK=1
 # [[ $TMUX = "" ]] && export TERM="xterm-kitty"
-[[ $TMUX = "" ]] && export TERM="screen-256color"
-[[ $TMUX != "" ]] && export TERM="screen-256color" # I set this to screen instead of tmux to keep colors in vifm.
+[[ $TMUX = "" ]] && export TERM="xterm-kitty"
+[[ $TMUX != "" ]] && export TERM="xterm-kitty" # I set this to screen instead of tmux to keep colors in vifm.
+# [[ $TMUX = "" ]] && export TERM="screen-256color"
+# [[ $TMUX != "" ]] && export TERM="screen-256color" # I set this to screen instead of tmux to keep colors in vifm.
 export _Z_DATA="$HOME/.z-data"
 
 

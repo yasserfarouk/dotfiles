@@ -1,3 +1,4 @@
+#!/bin/zsh
 if [ -z ZPROFILE_EXPORTED ]; then
 
 	# case `uname` in

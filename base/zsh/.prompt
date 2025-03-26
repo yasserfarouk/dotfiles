@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/bin/zsh
 
 fpath=( ~/.ysupport/faster-vcs-info "${fpath[@]}" )
 

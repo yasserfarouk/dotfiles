@@ -75,19 +75,23 @@ keymap({ "n", "v" }, "<localleader>d", [["_d]])
 -- TODO fix this
 -- resize with arrows
 -- resize windows
-keymap("n", "<Left>", "<C-w>h")
 keymap("n", "<Up>", "<C-w>k")
 keymap("n", "<Down>", "<C-w>j")
+keymap("n", "<Left>", "<C-w>h")
 keymap("n", "<Right>", "<C-w>l")
+keymap("n", "<C-Up>", ":resize -2<CR>")
+keymap("n", "<C-Down>", ":resize +2<CR>")
+keymap("n", "<C-Left>", ":vertical resize -2<CR>")
+keymap("n", "<C-Right>", ":vertical resize +2<CR>")
 keymap("n", "<M-k>", ":resize -2<CR>")
 keymap("n", "<M-j>", ":resize +2<CR>")
 keymap("n", "<M-l>", ":vertical resize -2<CR>")
 keymap("n", "<M-h>", ":vertical resize +2<CR>")
 -- move windows around
-keymap("n", "<M-S-K>", "<C-w>K")
-keymap("n", "<M-S-J>", "<C-w>J")
-keymap("n", "<M-S-L>", "<C-w>L")
-keymap("n", "<M-S-H>", "<C-w>H")
+keymap("n", "<M-S-Up>", "<C-w>K")
+keymap("n", "<M-S-Down>", "<C-w>J")
+keymap("n", "<M-S-Right>", "<C-w>L")
+keymap("n", "<M-S-Left>", "<C-w>H")
 
 -- whichkey movement and size change commands
 -- keymap("n", "<leader>Wk", "<C-w>K", { desc = "Move Top" })
@@ -180,21 +184,21 @@ keymap("n", "<leader>aL", "<cmd>g/^$/.,./-j<cr>", { desc = "remove extra empty l
 -- opening yazi
 keymap(
 	"n",
-	"<leader>xs",
+	"<leader>x;",
 	":silent !tmux split-window -f -t : yazi<CR>",
 	-- ':!tmux split-window -f -c "#{pane_current_path}" -t : yazi<CR>',
 	{ noremap = true, silent = true, desc = "Yazi in a split" }
 )
 keymap(
 	"n",
-	"<leader>xY",
+	"<leader>xw",
 	-- ':silent !tmux new-window -d -n yazi -c "#{pane_current_path}" "yazi"<CR><C-w>\\',
 	':silent !tmux new-window -d -n yazi "yazi"<CR><C-w>\\',
 	{ noremap = true, silent = true, desc = "Yazi in a full tmux pane" }
 )
 keymap(
 	"n",
-	"<leader>x;",
+	"<leader>xy",
 	':!tmux popup -E -w 80\\% -h 80\\% "yazi"<CR>',
 	{ noremap = true, silent = true, desc = "Yazi in a tumux float" }
 )

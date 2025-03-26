@@ -88,11 +88,11 @@ suppress_preload = false
 [plugin]
 
 prepend_previewers = [
-    { name = "*.csv", run = "rich-preview"}, # for csv files
+    # { name = "*.csv", run = "rich-preview"}, # for csv files
 	 { name = "*.md", run = "glow" },
-    { name = "*.rst", run = "rich-preview"}, # for restructured text (.rst) files
+    # { name = "*.rst", run = "rich-preview"}, # for restructured text (.rst) files
 	{ name = "*.ipynb", run = "nbpreview" },
-    { name = "*.json", run = "rich-preview"}, # for json (.json) files
+    # { name = "*.json", run = "rich-preview"}, # for json (.json) files
 #    { name = "*.lang_type", run = "rich-preview"} # for particular language files eg. .py, .go., .lua, etc.
 ]
 fetchers = [
