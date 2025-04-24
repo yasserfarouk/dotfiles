@@ -91,7 +91,7 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
 if exists('$SHELL')
 	set shell=$SHELL
 else
-	set shell=/bin/sh
+	set shell=/bin/zsh
 endif
 set undofile
 set undodir="$HOME/.VIM_UNDO_FILES"

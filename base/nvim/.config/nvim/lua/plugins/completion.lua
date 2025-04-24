@@ -47,6 +47,9 @@ local function cmpconfig()
 	}
 
 	local has_words_before = function()
+		if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+			return false
+		end
 		unpack = unpack or table.unpack
 		local line, col = unpack(vim.api.nvim_win_get_cursor(0))
 		return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
@@ -64,14 +67,25 @@ local function cmpconfig()
 		},
 		window = {},
 		mapping = cmp.mapping.preset.insert({
+			["<C-o>"] = cmp.mapping(function(fallback)
+				local fallback_key = vim.api.nvim_replace_termcodes("<Tab>", true, true, true)
+				local resolved_key = vim.fn["copilot#Accept"](fallback)
+				if fallback_key == resolved_key then
+					cmp.confirm({ select = true })
+				else
+					vim.api.nvim_feedkeys(resolved_key, "n", true)
+				end
+			end),
 			["<C-b>"] = cmp.mapping.scroll_docs(-4),
 			["<C-f>"] = cmp.mapping.scroll_docs(4),
 			["<C-Space>"] = cmp.mapping.complete(),
 			["<C-e>"] = cmp.mapping.abort(),
 			["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 			["<Tab>"] = cmp.mapping(function(fallback)
-				if cmp.visible() then
-					cmp.select_next_item()
+				-- if cmp.visible() then
+				-- 	cmp.select_next_item()
+				if cmp.visible() and has_words_before() then
+					cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
 				elseif snippy.can_expand_or_advance() then
 					snippy.expand_or_advance()
 				elseif has_words_before() then
@@ -107,11 +121,31 @@ local function cmpconfig()
 					spell = "",
 					calc = "",
 					emoji = "󰞅",
+					copilot = "C",
 				})[entry.source.name]
 				return vim_item
 			end,
 		},
+		sorting = {
+			priority_weight = 2,
+			comparators = {
+				require("copilot_cmp.comparators").prioritize,
+
+				-- Below is the default comparitor list and order for nvim-cmp
+				cmp.config.compare.offset,
+				-- cmp.config.compare.scopes, --this is commented in nvim-cmp too
+				cmp.config.compare.exact,
+				cmp.config.compare.score,
+				cmp.config.compare.recently_used,
+				cmp.config.compare.locality,
+				cmp.config.compare.kind,
+				cmp.config.compare.sort_text,
+				cmp.config.compare.length,
+				cmp.config.compare.order,
+			},
+		},
 		sources = {
+			{ name = "copilot", group_index = 2 },
 			{ name = "nvim_lsp" },
 			{ name = "nvim_lsp_signature_help" },
 			{ name = "snippy" },

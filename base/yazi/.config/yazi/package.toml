@@ -1,5 +1,32 @@
-[plugin]
-deps = [{ use = "dedukun/relative-motions", rev = "df97039" }, { use = "Reledia/miller", rev = "40e0265" }, { use = "Reledia/glow", rev = "5ce76dc" }, { use = "AnirudhG07/nbpreview", rev = "1d85745" }, { use = "yazi-rs/plugins:max-preview", rev = "e4aaf43" }, { use = "yazi-rs/plugins:hide-preview", rev = "e4aaf43" }]
+[[plugin.deps]]
+use = "dedukun/relative-motions"
+rev = "df97039"
+hash = "395940d2b22941e0acb1232579c9d4cf"
+
+[[plugin.deps]]
+use = "Reledia/miller"
+rev = "40e0265"
+hash = ""
+
+[[plugin.deps]]
+use = "Reledia/glow"
+rev = "5ce76dc"
+hash = "fe411c822272f844b32e4c0d5b65ec43"
+
+[[plugin.deps]]
+use = "AnirudhG07/nbpreview"
+rev = "1d85745"
+hash = "d378328e5d0a1b9fb9f04ab3aade4575"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:max-preview"
+rev = "e4aaf43"
+hash = "9bc26d10d2f6e2aa93b10905b1b76979"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:hide-preview"
+rev = "e4aaf43"
+hash = "5be5885898ca9df783bdec0d402bf4b0"
 
 [flavor]
 deps = []

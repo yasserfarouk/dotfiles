@@ -93,10 +93,10 @@ return {
 	-- 		})
 	-- 	end,
 	-- },
-	{
-		"goolord/alpha-nvim",
-		config = alphaconf,
-	},
+	-- {
+	-- 	"goolord/alpha-nvim",
+	-- 	config = alphaconf,
+	-- },
 	"rcarriga/nvim-notify",
 	-- transparent background
 	{
@@ -118,7 +118,7 @@ return {
 	-- 	end,
 	-- },
 	-- show indent lines
-	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+	-- { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 	-- {
 	-- 	"lukas-reineke/indent-blankline.nvim",
 	-- 	config = function()
