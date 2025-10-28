@@ -92,12 +92,13 @@ return {
 	-- 		require("telescope").load_extension("project")
 	-- 	end,
 	-- },
-	{ "tom-anders/telescope-vim-bookmarks.nvim" },
+	{ "tom-anders/telescope-vim-bookmarks.nvim", event = "VeryLazy" },
 	"nvim-telescope/telescope-media-files.nvim",
 	"nvim-telescope/telescope-ui-select.nvim",
 	"nvim-telescope/telescope-file-browser.nvim",
 	{
 		"ahmedkhalf/project.nvim",
+		event = "VeryLazy",
 		config = function()
 			local status_ok, project = pcall(require, "project_nvim")
 			if not status_ok then

@@ -45,9 +45,10 @@ return {
 		end,
 	},
 	-- text objects
-	{ "michaeljsmith/vim-indent-object" },
+	{ "michaeljsmith/vim-indent-object", event = "BufReadPost" },
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
+		event = "BufReadPost",
 		dependencies = "nvim-treesitter/nvim-treesitter",
 		config = function()
 			require("nvim-treesitter.configs").setup({
@@ -122,8 +123,8 @@ return {
 		end,
 	},
 	-- closes autotags using treesitter
-	{ "windwp/nvim-ts-autotag", event = "BufRead", ft = { "html", "xml", "javascript", "typescript", "javascriptreact", "typescriptreact", "svelte", "vue" } },
-	{ "JoosepAlviste/nvim-ts-context-commentstring" },
+	{ "windwp/nvim-ts-autotag", ft = { "html", "xml", "javascript", "typescript", "javascriptreact", "typescriptreact", "svelte", "vue" } },
+	{ "JoosepAlviste/nvim-ts-context-commentstring", event = "BufReadPost" },
 
 	-- undo tree
 	{
