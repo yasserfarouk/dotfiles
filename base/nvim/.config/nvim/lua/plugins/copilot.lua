@@ -17,8 +17,7 @@ return {
 				vim.g.copilot_nes_debounce = 500
 			end,
 		},
-		-- event = "InsertEnter",
-		event = "VeryLazy",
+		event = "InsertEnter",
 		config = function()
 			require("copilot").setup({
 				panel = {

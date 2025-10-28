@@ -1,7 +1,6 @@
 return {
 	{
 		"dhruvasagar/vim-table-mode",
-		event = "VeryLazy",
 		config = function()
 			vim.g.table_mode_map_prefix = "<Leader>T"
 			vim.g.table_mode_disable_tableize_mappings = 0

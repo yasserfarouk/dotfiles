@@ -3,7 +3,6 @@ return {
 	-- "5long/pytest-vim-compiler",
 	{
 		"janko/vim-test",
-		event = "VeryLazy",
 		keys = {
 			{ "<leader>tL", "<cmd>TestLast<cr>", desc = "last" },
 			{ "<leader>tN", "<cmd>TestNearest<cr>", desc = "nearest" },

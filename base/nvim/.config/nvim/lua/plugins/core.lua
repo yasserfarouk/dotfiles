@@ -32,16 +32,23 @@ return {
 	},
 	{
 		"terrortylor/nvim-comment",
-		event = "VeryLazy",
+		keys = {
+			{ "gcc", mode = { "n" }, desc = "Comment toggle current line" },
+			{ "gc", mode = { "n", "o" }, desc = "Comment toggle linewise" },
+			{ "gc", mode = "x", desc = "Comment toggle linewise (visual)" },
+			{ "gbc", mode = { "n" }, desc = "Comment toggle current block" },
+			{ "gb", mode = { "n", "o" }, desc = "Comment toggle blockwise" },
+			{ "gb", mode = "x", desc = "Comment toggle blockwise (visual)" },
+		},
 		config = function()
 			require("nvim_comment").setup()
 		end,
 	},
 	-- text objects
-	{ "michaeljsmith/vim-indent-object", event = "VeryLazy" },
+	{ "michaeljsmith/vim-indent-object" },
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
-		event = "VeryLazy",
+		dependencies = "nvim-treesitter/nvim-treesitter",
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				textobjects = {
@@ -115,13 +122,13 @@ return {
 		end,
 	},
 	-- closes autotags using treesitter
-	{ "windwp/nvim-ts-autotag", event = "VeryLazy" },
-	{ "JoosepAlviste/nvim-ts-context-commentstring", event = "VeryLazy" },
+	{ "windwp/nvim-ts-autotag", event = "BufRead", ft = { "html", "xml", "javascript", "typescript", "javascriptreact", "typescriptreact", "svelte", "vue" } },
+	{ "JoosepAlviste/nvim-ts-context-commentstring" },
 
 	-- undo tree
 	{
 		"mbbill/undotree",
-		event = "VeryLazy",
+		cmd = "UndotreeToggle",
 		keys = {
 			{ "<leader>u", "<cmd>UndotreeToggle<cr>", desc = "undo tree" },
 		},

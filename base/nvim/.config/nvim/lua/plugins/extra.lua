@@ -1,6 +1,6 @@
 return {
 	-- use gF to go to file:line:col
-	{ "wsdjeg/vim-fetch", event = "VeryLazy" },
+	{ "wsdjeg/vim-fetch" },
 
 	-- CDing into the project root always
 	-- { "airblade/vim-rooter", event = "VeryLazy" },

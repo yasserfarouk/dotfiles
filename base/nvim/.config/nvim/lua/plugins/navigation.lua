@@ -1,16 +1,16 @@
 return {
 	{ "wsdjeg/vim-fetch" },
 	-- "justinmk/vim-sneak",
-	{ "tpope/vim-surround", event = "VeryLazy" },
+	{ "tpope/vim-surround" },
 	-- useful pair like ]b
-	{ "tpope/vim-unimpaired", event = "VeryLazy" },
-	{ "tpope/vim-repeat", event = "VeryLazy" },
-	{ "tpope/vim-dispatch", event = "VeryLazy" },
+	{ "tpope/vim-unimpaired" },
+	{ "tpope/vim-repeat" },
+	{ "tpope/vim-dispatch", cmd = { "Dispatch", "Make", "Focus", "Start" } },
 	-- Enables S for substituting singular and plural (etc), and adds cr[st .-ucm] for turning to snake, title, space, dot, dash, upper, camel, and mixed cases
-	{ "tpope/vim-abolish", event = "VeryLazy" },
+	{ "tpope/vim-abolish" },
 	-- use {'tpope/vim-capslock',
 	-- file operations like Move
-	{ "tpope/vim-eunuch", event = "VeryLazy" },
+	{ "tpope/vim-eunuch", cmd = { "Delete", "Unlink", "Move", "Rename", "Chmod", "Mkdir", "Cfind", "Clocate", "Lfind", "Wall", "SudoWrite", "SudoEdit" } },
 
 	-- -- kitty interaction
 	-- 'knubie/vim-kitty-navigator',
@@ -32,9 +32,9 @@ return {
 		end,
 	},
 	-- maps <leader>[, <leader>] to move to top and bottom of indent
-	{ "tmhedberg/indent-motion", event = "VeryLazy" },
-	{ "moll/vim-bbye", event = "VeryLazy" },
+	{ "tmhedberg/indent-motion" },
+	{ "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
 
 	-- zooms windows out and in using <c-w>m
-	{ "dhruvasagar/vim-zoom", event = "VeryLazy" },
+	{ "dhruvasagar/vim-zoom" },
 }
