@@ -3,17 +3,17 @@ return {
 	{ "wsdjeg/vim-fetch", event = "VeryLazy" },
 
 	-- CDing into the project root always
-	{ "airblade/vim-rooter", event = "VeryLazy" },
+	-- { "airblade/vim-rooter", event = "VeryLazy" },
 
 	-- keeping copy histor
-	{
-		"AckslD/nvim-neoclip.lua",
-		dependencies = {
-			"nvim-telescope/telescope.nvim",
-			"ibhagwan/fzf-lua",
-		},
-		config = function()
-			require("neoclip").setup()
-		end,
-	},
+	-- {
+	-- 	"AckslD/nvim-neoclip.lua",
+	-- 	dependencies = {
+	-- 		"nvim-telescope/telescope.nvim",
+	-- 		"ibhagwan/fzf-lua",
+	-- 	},
+	-- 	config = function()
+	-- 		require("neoclip").setup()
+	-- 	end,
+	-- },
 }

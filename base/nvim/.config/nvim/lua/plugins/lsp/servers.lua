@@ -26,6 +26,7 @@ local function lsp_init()
 			-- virtual_text = false,
 			-- virtual_text = { spacing = 4, prefix = "●" },
 			virtual_text = {
+				prefix = "●",
 				severity = {
 					min = vim.diagnostic.severity.WARNING,
 				},
@@ -33,7 +34,7 @@ local function lsp_init()
 			signs = {
 				active = signs,
 			},
-			underline = false,
+			underline = true,
 			update_in_insert = false,
 			severity_sort = true,
 			float = {
@@ -44,7 +45,7 @@ local function lsp_init()
 				header = "",
 				prefix = "",
 			},
-			virtual_lines = true,
+			virtual_lines = false,
 		},
 	}
 
@@ -67,8 +68,9 @@ function M.setup(_, opts)
 	lsp_init() -- diagnostics, handlers
 
 	local servers = opts.servers
-	require("mason-lspconfig").setup({ ensure_installed = vim.tbl_keys(servers) })
-	require("mason-lspconfig").setup_handlers({
+	local mason_lspconfig = require("mason-lspconfig")
+	mason_lspconfig.setup({ ensure_installed = vim.tbl_keys(servers) })
+	mason_lspconfig.setup_handlers({
 		function(server)
 			local server_opts = servers[server] or {}
 			server_opts.capabilities = lsp_utils.capabilities()

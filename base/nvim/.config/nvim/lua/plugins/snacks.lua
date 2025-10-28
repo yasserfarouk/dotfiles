@@ -8,8 +8,68 @@ return {
 		-- or leave it empty to use the default settings
 		-- refer to the configuration section below
 		bigfile = { enabled = true },
-		dashboard = { enabled = true },
-		explorer = { enabled = true },
+		dashboard = {
+
+			sections = {
+				{ section = "header" },
+				{
+					pane = 2,
+					section = "terminal",
+					cmd = "hostname",
+					height = 5,
+					padding = 1,
+				},
+				{
+					pane = 2,
+					icon = " ",
+					desc = "Browse Repo",
+					padding = 1,
+					key = "b",
+					action = function()
+						Snacks.gitbrowse()
+					end,
+				},
+				{ section = "keys", gap = 1, padding = 1 },
+				{ pane = 2, icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
+				{ pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+				{
+					pane = 2,
+					icon = " ",
+					title = "Git Status",
+					section = "terminal",
+					enabled = function()
+						return Snacks.git.get_root() ~= nil
+					end,
+					cmd = "git status --short --branch --renames",
+					height = 5,
+					padding = 1,
+					ttl = 5 * 60,
+					indent = 3,
+				},
+				{ section = "startup" },
+			},
+		},
+
+		explorer = {
+			enabled = true,
+			finder = "explorer",
+			sort = { fields = { "sort" } },
+			focus = "list",
+			auto_close = false,
+			jump = { close = false },
+			layout = { preset = "sidebar", preview = false },
+			-- to show the explorer to the right, add the below to
+			-- your config under `opts.picker.sources.explorer`
+			-- layout = { layout = { position = "right" } },
+			formatters = {
+				file = { filename_only = true },
+				severity = { pos = "right" },
+			},
+			matcher = { sort_empty = false, fuzzy = true },
+			config = function(opts)
+				return require("snacks.picker.source.explorer").setup(opts)
+			end,
+		},
 		indent = { enabled = true },
 		image = {
 			enabled = true,

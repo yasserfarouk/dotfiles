@@ -32,21 +32,44 @@ if has('unix')
 		let g:vimtex_view_method = "zathura"
 	endif
 endif
-" let g:vimtex_compiler_latexmk = {
-" 			\ 'options' : [
-" 			\   '-pdf',
-" 			\   '-pdflatex="xelatex --shell-escape %O %S"',
-" 			\   '-shell-escape',
-" 			\   '-verbose',
-" 			\   '-file-line-error',
-" 			\   '-synctex=1',
-" 			\ ],
-" 			\}
+let g:use_pdflatex = {
+			\ 'options' : [
+			\   '-pdf',
+			\   '-pdflatex="pdflatex --shell-escape %O %S"',
+			\   '-shell-escape',
+			\   '-verbose',
+			\   '-file-line-error',
+			\   '-synctex=1',
+			\ ],
+			\}
+
+let g:use_xelatex = {
+			\ 'options' : [
+			\   '-pdf',
+			\   '-pdflatex="xelatex --shell-escape %O %S"',
+			\   '-shell-escape',
+			\   '-verbose',
+			\   '-file-line-error',
+			\   '-synctex=1',
+			\ ],
+			\}
+let g:vimtex_compiler_latexmk = g:use_pdflatex
 " \   '-interaction=nonstopmode',
 " let g:tex_flavor = "latexmk"
 " let g:tex_flavor = "latex"
 let g:vimtex_quickfix_open_on_warning = 0
 
+function! ToggleLatexmkSetting()
+  if g:vimtex_compiler_latexmk ==# g:use_pdflatex
+    let g:vimtex_compiler_latexmk = g:use_xelatex
+    echo "Switched to xelatex"
+  else
+    let g:vimtex_compiler_latexmk = g:use_pdflatex
+    echo "Switched to pdflatex"
+  endif
+endfunction
+
+nnoremap <leader>lz :call ToggleLatexmkSetting()<CR>
 let g:vimtex_quickfix_ignore_filters = [
 	  \ 'Marginpar on page',
 	  \ 'Overfull ',

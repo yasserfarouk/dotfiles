@@ -41,20 +41,21 @@ return {
 	-- better spell checking (ignoring keywords)
 	-- Tables
 	{ "godlygeek/tabular", event = "VeryLazy" },
-	{
-		"ntpeters/vim-better-whitespace",
-		config = function()
-			vim.g.better_whitespace_filetypes_blacklist = {
-				"dashboard",
-				"ALPHA",
-				"alpha",
-				"diff",
-				"gitcommit",
-				"unite",
-				"nvimtree",
-				"qf",
-				"help",
-			}
-		end,
-	},
+	-- {
+	-- 	"ntpeters/vim-better-whitespace",
+	-- 	config = function()
+	-- 		vim.g.better_whitespace_filetypes_blacklist = {
+	-- 			"dashboard",
+	-- 			"ALPHA",
+	-- 			"alpha",
+	-- 			"diff",
+	-- 			"gitcommit",
+	-- 			"unite",
+	-- 			"nvimtree",
+	-- 			"qf",
+	-- 			"help",
+	-- 			"snacks_dashboard",
+	-- 		}
+	-- 	end,
+	-- },
 }

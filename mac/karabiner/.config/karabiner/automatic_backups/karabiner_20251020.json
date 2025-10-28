@@ -1,5 +1,4 @@
 {
-    "machine_specific": { "krbn-43268e84-c688-4466-8876-f08b3a28219b": { "enable_multitouch_extension": true } },
     "profiles": [
         {
             "complex_modifications": {
@@ -319,21 +318,6 @@
                         "product_id": 12869,
                         "vendor_id": 6645
                     }
-                },
-                {
-                    "disable_built_in_keyboard_if_exists": true,
-                    "fn_function_keys": [
-                        {
-                            "from": { "key_code": "f2" },
-                            "to": [{ "key_code": "f2" }]
-                        }
-                    ],
-                    "identifiers": {
-                        "device_address": "d6-7a-02-72-81-83",
-                        "is_keyboard": true,
-                        "is_pointing_device": true
-                    },
-                    "ignore": false
                 }
             ],
             "fn_function_keys": [

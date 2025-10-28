@@ -11,7 +11,8 @@ return {
 	{
 		"zbirenbaum/copilot.lua",
 		cmd = "Copilot",
-		event = "InsertEnter",
+		-- event = "InsertEnter",
+		event = "VeryLazy",
 		config = function()
 			require("copilot").setup({
 				panel = {

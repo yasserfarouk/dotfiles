@@ -294,6 +294,26 @@ local function lsp()
 
 	return string.format("%s %s %s %s%%*", errors, warnings, hints, info)
 end
+---------------------------------------------------------------------------------
+-- Latex
+---------------------------------------------------------------------------------
+-- 1. Define the global Lua function that the statusline can call.
+--    This function is the same as before.
+local function vimtex()
+	-- Check if vimtex is active and the compiler is running.
+	if vim.g.vimtex_is_compiling == 1 then
+		return "🚀"
+	else
+		if vim.g.vimtex_is_succeeded == 1 then
+			return "✅"
+		elseif vim.b.vimtex_is_succeeded == -1 then
+			return "❌"
+		else
+			return "?"
+		end
+	end
+	return "" -- Return an empty string if not compiling.
+end
 
 ---------------------------------------------------------------------------------
 -- Statusline
@@ -308,6 +328,7 @@ function M.get_active_statusline()
 		"%9*%=%* ",
 		mode(),
 		" %*",
+		vimtex(),
 		paste(),
 		-- orgmode(),
 		lsp(),
@@ -336,6 +357,43 @@ function M.get_inactive_statusline()
 
 	return line
 end
+
+-- Create a dedicated augroup to ensure the autocommands are not duplicated
+local vimtex_events = vim.api.nvim_create_augroup("VimtexCompileEvents", { clear = true })
+
+-- Autocommand for when compilation starts
+vim.api.nvim_create_autocmd("User", {
+	pattern = "VimtexEventCompiling",
+	group = vimtex_events,
+	callback = function()
+		vim.g.vimtex_is_compiling = 1
+		vim.g.vimtex_is_succeeded = 0
+		vim.cmd("redrawstatus")
+		vim.notify("Vimtex: Compilation started... 🚀", vim.log.levels.INFO)
+	end,
+})
+
+-- Autocommand for when compilation stops
+vim.api.nvim_create_autocmd("User", {
+	pattern = "VimtexEventCompileSuccess",
+	group = vimtex_events,
+	callback = function()
+		vim.g.vimtex_is_compiling = 0
+		vim.g.vimtex_is_succeeded = 1
+		vim.cmd("redrawstatus")
+		vim.notify("Vimtex: Compilation succeeded. ✅", vim.log.levels.INFO)
+	end,
+})
+vim.api.nvim_create_autocmd("User", {
+	pattern = "VimtexEventCompileFailure",
+	group = vimtex_events,
+	callback = function()
+		vim.g.vimtex_is_compiling = 0
+		vim.g.vimtex_is_succeeded = -1
+		vim.cmd("redrawstatus")
+		vim.notify("Vimtex: Compilation failed. 🛑", vim.log.levels.INFO)
+	end,
+})
 
 function M.activate()
 	au.augroup("MyStatusLine", {

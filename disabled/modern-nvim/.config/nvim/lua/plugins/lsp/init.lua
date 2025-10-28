@@ -9,7 +9,7 @@ return {
 		dependencies = {
 			{ "folke/neoconf.nvim", cmd = "Neoconf", config = true },
 			{
-				"folke/neodev.nvim",
+				"folke/lazydev.nvim",
 				opts = {
 					library = { plugins = { "neotest", "nvim-dap-ui" }, types = true },
 				},
