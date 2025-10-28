@@ -43,8 +43,8 @@ return {
 					mode = "",
 					desc = "Format buffer",
 				},
-				{ "<leader>af", "FormatEnable", mode = "", desc = "Enable autoformat" },
-				{ "<leader>aV", "FormatDisable", mode = "", desc = "Disable autoformat" },
+				{ "<leader>cF", "FormatEnable", mode = "", desc = "Enable autoformat" },
+				{ "<leader>cv", "FormatDisable", mode = "", desc = "Disable autoformat" },
 			},
 		})
 	end,

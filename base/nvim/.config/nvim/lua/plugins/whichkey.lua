@@ -6,7 +6,7 @@ return {
 		config = function()
 			local wk = require("which-key")
 
-			wk.setup({})
+			wk.setup({ win = { height = { min = 4, max = 30 } } })
 			wk.add({
 				{ "<leader>F", group = "fold" },
 				{ "<leader>T", group = "table" },

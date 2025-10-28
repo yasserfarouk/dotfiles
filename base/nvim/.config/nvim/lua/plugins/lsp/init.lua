@@ -104,8 +104,7 @@ return {
 		opts = { use_diagnostic_signs = true },
 		keys = {
 			{ "<leader>id", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics" },
-			{ "<leader>ii", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics" },
-			{ "<leader>ii", "<cmd>Trouble<cr>", desc = "Show" },
+			{ "<leader>ii", "<cmd>LspInfo<cr>", desc = "LSP Info" },
 			{ "<leader>il", "<cmd>Trouble loclist<cr>", desc = "Location List" },
 			{ "<leader>iq", "<cmd>Trouble quickfix<cr>", desc = "Quick Fix" },
 		},

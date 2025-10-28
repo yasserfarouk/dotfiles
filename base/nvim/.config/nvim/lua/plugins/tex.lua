@@ -4,8 +4,8 @@ return {
 		"lervag/vimtex",
 		ft = { "tex", "latex", "bib" },
 		keys = {
-			-- { "<F9>", "<cmd>VimtexCompile<cr>", mode = { "n" }, desc = "Auto Compile" },
-			-- { "<F5>", "<cmd>VimtexView<cr>", mode = { "n" }, desc = "Auto Compile" },
+			{ "<F6>", "<cmd>VimtexCompile<cr>", mode = { "n" }, desc = "Auto Compile" },
+			{ "<F12>", "<cmd>VimtexStop<cr>", mode = { "n" }, desc = "Stop" },
 			{ "<leader>lv", "<cmd>VimtexView<cr>", mode = { "n" }, desc = "View" },
 			{ "<leader>lc", "<cmd>VimtexCompile<cr>", mode = { "n" }, desc = "Auto Compile" },
 			{ "<leader>lS", "<cmd>VimtexStop<cr>", mode = { "n" }, desc = "Stop" },
