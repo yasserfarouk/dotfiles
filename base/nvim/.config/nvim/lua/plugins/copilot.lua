@@ -94,16 +94,61 @@ return {
 	},
 	{
 		"CopilotC-Nvim/CopilotChat.nvim",
+		branch = "main",
 		dependencies = {
-			{
-				"zbirenbaum/copilot.lua",
-			},
-			{ "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
+			{ "zbirenbaum/copilot.lua" },
+			{ "nvim-lua/plenary.nvim", branch = "master" },
 		},
-		build = "make tiktoken", -- Only on MacOS or Linux
+		build = "make tiktoken",
+		cmd = {
+			"CopilotChat",
+			"CopilotChatOpen",
+			"CopilotChatToggle",
+			"CopilotChatExplain",
+			"CopilotChatReview",
+			"CopilotChatFix",
+			"CopilotChatOptimize",
+			"CopilotChatDocs",
+			"CopilotChatTests",
+			"CopilotChatCommit",
+		},
+		keys = {
+			{ "<leader>aa", "<cmd>CopilotChatToggle<cr>", desc = "Toggle Copilot Chat" },
+			{ "<leader>ae", "<cmd>CopilotChatExplain<cr>", mode = { "n", "v" }, desc = "Explain Code" },
+			{ "<leader>ar", "<cmd>CopilotChatReview<cr>", mode = { "n", "v" }, desc = "Review Code" },
+			{ "<leader>af", "<cmd>CopilotChatFix<cr>", mode = { "n", "v" }, desc = "Fix Code" },
+			{ "<leader>ao", "<cmd>CopilotChatOptimize<cr>", mode = { "n", "v" }, desc = "Optimize Code" },
+			{ "<leader>ad", "<cmd>CopilotChatDocs<cr>", mode = { "n", "v" }, desc = "Generate Docs" },
+			{ "<leader>at", "<cmd>CopilotChatTests<cr>", mode = { "n", "v" }, desc = "Generate Tests" },
+			{ "<leader>ac", "<cmd>CopilotChatCommit<cr>", desc = "Write Commit Message" },
+		},
 		opts = {
-			-- See Configuration section for options
+			debug = false,
+			model = "gpt-4",
+			window = {
+				layout = "vertical", -- 'vertical', 'horizontal', 'float', 'replace'
+				width = 0.4, -- relative width
+				height = 0.8, -- relative height
+				border = "rounded",
+			},
+			mappings = {
+				complete = {
+					detail = "Use @<Tab> or /<Tab> for options.",
+					insert = "<Tab>",
+				},
+				close = {
+					normal = "q",
+					insert = "<C-c>",
+				},
+				reset = {
+					normal = "<C-r>",
+					insert = "<C-r>",
+				},
+				submit_prompt = {
+					normal = "<CR>",
+					insert = "<C-s>",
+				},
+			},
 		},
-		-- See Commands section for default commands if you want to lazy load on them
 	},
 }
