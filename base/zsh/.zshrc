@@ -6,6 +6,7 @@
 [ -f  ~/.zshenv ] && source ~/.zshenv
 [ -f ~/.zfolder/z.sh ] && source ~/.zfolder/z.sh
 [ -f ~/.exports ] && source ~/.exports
+[ -f ~/.keys ] && source ~/.keys
 
 if ! [ -z $ZPROFILE_EXPORTED ]; then
 	[ -f  ~/.zprofile ] && source ~/.zprofile
