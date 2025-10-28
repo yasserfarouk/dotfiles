@@ -11,7 +11,6 @@ return {
 				},
 			},
 			{ "j-hui/fidget.nvim", config = true },
-			-- { "smjonas/inc-rename.nvim", config = true },
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			"hrsh7th/cmp-nvim-lsp",
@@ -19,50 +18,17 @@ return {
 		},
 		opts = {
 			servers = {
-				texlab = {
-					settings = {
-						formatterLineLength = 0,
-					},
-				},
-				dockerls = {},
-				-- https://github.com/microsoft/pyright/discussions/5852#discussioncomment-6874502
+				-- Python LSP - most important
 				pyright = {
 					settings = {
 						pyright = {
 							disableOrganizeImports = true, -- Using Ruff
 						},
-						-- python = {
-						-- 	analysis = {
-						-- 		ignore = { "*" }, -- Using Ruff
-						-- 		typeCheckingMode = "off", -- Using mypy
-						-- 	},
-						-- },
 					},
-					-- capabilities = {
-					-- 	textDocument = {
-					-- 		publishDiagnostics = {
-					-- 			tagSupport = {
-					-- 				valueSet = { 2 },
-					-- 			},
-					-- 		},
-					-- 		ruff = {},
-					-- 	},
-					-- },
 				},
-			},
-			setup = {
-				sumneko_lua = function(_, _)
-					local lsp_utils = require("plugins.lsp.utils")
-					lsp_utils.on_attach(function(client, buffer)
-						-- stylua: ignore
-						if client.name == "sumneko_lua" then
-							vim.keymap.set("n", "<leader>dX", function() require("osv").run_this() end,
-								{ buffer = buffer, desc = "OSV Run" })
-							vim.keymap.set("n", "<leader>dL", function() require("osv").launch({ port = 8086 }) end,
-								{ buffer = buffer, desc = "OSV Launch" })
-						end
-					end)
-				end,
+				-- Other servers
+				texlab = {},
+				dockerls = {},
 			},
 		},
 		config = function(plugin, opts)

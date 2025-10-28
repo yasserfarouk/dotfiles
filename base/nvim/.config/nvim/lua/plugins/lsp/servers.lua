@@ -3,7 +3,13 @@ local M = {}
 local lsp_utils = require("plugins.lsp.utils")
 local icons = require("yasser.icons")
 
-local function lsp_init()
+function M.setup(_, opts)
+	-- Setup keymaps on LSP attach
+	lsp_utils.on_attach(function(client, buffer)
+		require("plugins.lsp.keymaps").on_attach(client, buffer)
+	end)
+
+	-- Configure diagnostic signs
 	local signs = {
 		{ name = "DiagnosticSignError", text = icons.diagnostics.Error },
 		{ name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
@@ -14,81 +20,46 @@ local function lsp_init()
 		vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
 	end
 
-	-- LSP handlers configuration
-	local config = {
+	-- Configure diagnostics
+	vim.diagnostic.config({
+		virtual_text = {
+			prefix = "●",
+			severity = { min = vim.diagnostic.severity.WARNING },
+		},
+		underline = true,
+		update_in_insert = false,
+		severity_sort = true,
 		float = {
 			focusable = true,
 			style = "minimal",
 			border = "rounded",
+			source = "always",
 		},
-
-		diagnostic = {
-			-- virtual_text = false,
-			-- virtual_text = { spacing = 4, prefix = "●" },
-			virtual_text = {
-				prefix = "●",
-				severity = {
-					min = vim.diagnostic.severity.WARNING,
-				},
-			},
-			signs = {
-				active = signs,
-			},
-			underline = true,
-			update_in_insert = false,
-			severity_sort = true,
-			float = {
-				focusable = true,
-				style = "minimal",
-				border = "rounded",
-				source = "always",
-				header = "",
-				prefix = "",
-			},
-			virtual_lines = false,
-		},
-	}
-
-	-- Diagnostic configuration
-	vim.diagnostic.config(config.diagnostic)
-
-	-- Hover configuration
-	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, config.float)
-
-	-- Signature help configuration
-	vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, config.float)
-end
-
-function M.setup(_, opts)
-	lsp_utils.on_attach(function(client, buffer)
-		-- require("plugins.lsp.format").on_attach(client, buffer)
-		require("plugins.lsp.keymaps").on_attach(client, buffer)
-	end)
-
-	lsp_init() -- diagnostics, handlers
-
-	local servers = opts.servers
-	local mason_lspconfig = require("mason-lspconfig")
-	mason_lspconfig.setup({ ensure_installed = vim.tbl_keys(servers) })
-	mason_lspconfig.setup_handlers({
-		function(server)
-			local server_opts = servers[server] or {}
-			server_opts.capabilities = lsp_utils.capabilities()
-			if opts.setup[server] then
-				if opts.setup[server](server, server_opts) then
-					return
-				end
-			elseif opts.setup["*"] then
-				if opts.setup["*"](server, server_opts) then
-					return
-				end
-			end
-			local lspserver = require("lspconfig")[server]
-			if lspserver then
-				pcall(lspserver.setup, server_opts)
-			end
-		end,
 	})
+
+	-- Configure LSP hover and signature help
+	local float_config = { focusable = true, style = "minimal", border = "rounded" }
+	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, float_config)
+	vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, float_config)
+
+	-- Get default capabilities
+	local capabilities = lsp_utils.capabilities()
+
+	-- Setup mason-lspconfig to install and configure servers
+	local servers = opts.servers or {}
+	require("mason-lspconfig").setup({
+		ensure_installed = vim.tbl_keys(servers),
+		automatic_enable = false,
+	})
+
+	-- Setup each server with its configuration
+	for server_name, server_config in pairs(servers) do
+		local server_opts = vim.tbl_deep_extend("force", {
+			capabilities = capabilities,
+		}, server_config)
+		
+		require("lspconfig")[server_name].setup(server_opts)
+	end
 end
 
 return M
