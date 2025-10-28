@@ -205,9 +205,6 @@ return {
 		},
 	},
 
-	-- changes the highlghting of the current match
-	{ "PeterRincker/vim-searchlight", event = "VeryLazy" },
-
 	-- Extra search and replace
 	-- {
 	-- 	"dyng/ctrlsf.vim",

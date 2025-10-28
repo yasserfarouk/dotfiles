@@ -14,7 +14,6 @@ vim.api.nvim_create_autocmd("FileType", {
 		"neotest-summary",
 		"qf",
 		"query",
-		"spectre_panel",
 		"startuptime",
 		"toggleterm",
 		"tsplayground",

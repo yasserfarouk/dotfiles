@@ -78,37 +78,11 @@ return {
 		},
 	},
 	{
-		"MeanderingProgrammer/render-markdown.nvim",
-		-- dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.nvim" }, -- if you use the mini.nvim suite
-		dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.icons" }, -- if you use standalone mini plugins
-		-- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-		---@module 'render-markdown'
-		---@type render.md.UserConfig
-		opts = {
-			render_modes = { "n", "c", "t" },
-		},
-	},
-	{
 		"iamcco/markdown-preview.nvim",
 		ft = "markdown",
 		build = "cd app & yarn install",
 		keys = {
 			{ "<leader>mv", "<cmd>MarkdownPreview<cr>", mode = { "n" }, desc = "preview" },
-		},
-	},
-	{
-		-- "iamcco/markdown-preview.nvim",
-		"brianhuster/live-preview.nvim",
-		ft = "markdown",
-		dependencies = {
-			-- You can choose one of the following pickers
-			-- 'nvim-telescope/telescope.nvim',
-			"ibhagwan/fzf-lua",
-			-- 'echasnovski/mini.pick',
-		},
-		-- build = "cd app & yarn install",
-		keys = {
-			{ "<leader>mp", "<cmd>LivePreview start<cr>", mode = { "n" }, desc = "preview" },
 		},
 	},
 	config = function()

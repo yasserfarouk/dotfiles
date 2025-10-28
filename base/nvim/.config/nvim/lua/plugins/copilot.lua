@@ -11,6 +11,12 @@ return {
 	{
 		"zbirenbaum/copilot.lua",
 		cmd = "Copilot",
+		requires = {
+			"copilotlsp-nvim/copilot-lsp",
+			init = function()
+				vim.g.copilot_nes_debounce = 500
+			end,
+		},
 		-- event = "InsertEnter",
 		event = "VeryLazy",
 		config = function()
@@ -31,8 +37,8 @@ return {
 					},
 				},
 				suggestion = {
-					enabled = false,
-					auto_trigger = false,
+					enabled = true,
+					auto_trigger = true,
 					hide_during_completion = true,
 					debounce = 75,
 					trigger_on_accept = true,
@@ -67,7 +73,7 @@ return {
 				},
 				copilot_node_command = "node", -- Node.js version must be > 20
 				workspace_folders = { "/Users/yasser/code" },
-				copilot_model = "", -- Current LSP default is gpt-35-turbo, supports gpt-4o-copilot
+				copilot_model = "claude-sonnet-4.5", -- Current LSP default is gpt-35-turbo, supports gpt-4o-copilot
 				root_dir = function()
 					return vim.fs.dirname(vim.fs.find(".git", { upward = true })[1])
 				end,
@@ -124,7 +130,7 @@ return {
 		},
 		opts = {
 			debug = false,
-			model = "gpt-4",
+			model = "claude-sonnet-4.5",
 			window = {
 				layout = "vertical", -- 'vertical', 'horizontal', 'float', 'replace'
 				width = 0.4, -- relative width
