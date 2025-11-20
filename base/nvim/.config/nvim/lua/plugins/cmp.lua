@@ -10,7 +10,6 @@ return {
 	},
 	config = function()
 		local cmp = require("cmp")
-		local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 
 		-- Icons for completion items
 		local kind_icons = {
