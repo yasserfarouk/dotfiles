@@ -10,6 +10,7 @@ return {
 	},
 	config = function()
 		local cmp = require("cmp")
+		local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 
 		-- Icons for completion items
 		local kind_icons = {
@@ -89,13 +90,10 @@ return {
 				["<C-f>"] = cmp.mapping.scroll_docs(4),
 				["<C-Space>"] = cmp.mapping.complete(),
 				["<C-e>"] = cmp.mapping.abort(),
-				["<CR>"] = cmp.mapping(function(fallback)
-					if cmp.visible() and cmp.get_active_entry() then
-						cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = false })
-					else
-						fallback()
-					end
-				end, { "i", "s" }),
+				["<CR>"] = cmp.mapping.confirm({
+					behavior = cmp.ConfirmBehavior.Replace,
+					select = false,
+				}),
 				["<Tab>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						cmp.select_next_item()
