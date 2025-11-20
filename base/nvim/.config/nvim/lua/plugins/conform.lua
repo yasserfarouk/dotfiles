@@ -34,7 +34,7 @@ return {
 			formatters_by_ft = {
 				lua = { "stylua" },
 				python = { "ruff_fix", "ruff_format" },
-				javascript = { { "prettierd", "prettier" } },
+				javascript = { "prettierd", "prettier", stop_after_first = true },
 			},
 			keys = {
 				{
