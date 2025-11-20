@@ -26,6 +26,8 @@ return {
 						},
 					},
 				},
+				-- JavaScript/TypeScript LSP
+				ts_ls = {},
 				-- Other servers
 				texlab = {},
 				dockerls = {},
