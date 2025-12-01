@@ -685,13 +685,81 @@ return {
 		keys = { { "<leader>pv", "<cmd>VenvSelect<cr>", desc = "Select VirtualEnv" } },
 	},
 
-	-- LaTeX
+	-- LaTeX (Optimized for Speed)
 	{
 		"lervag/vimtex",
 		ft = { "tex", "latex" },
 		config = function()
+			-- Viewer settings
 			vim.g.vimtex_view_method = "skim"
+			vim.g.vimtex_view_skim_sync = 1 -- Forward search after successful compilation
+			vim.g.vimtex_view_skim_activate = 0 -- Don't activate Skim on compilation
+			
+			-- Compiler settings (optimized for speed)
 			vim.g.vimtex_compiler_method = "latexmk"
+			vim.g.vimtex_compiler_latexmk = {
+				build_dir = "build", -- Keep artifacts in separate dir (cleaner)
+				callback = 1,
+				continuous = 1, -- Continuous compilation (faster iterations)
+				executable = "latexmk",
+				options = {
+					"-pdf",
+					"-shell-escape",
+					"-verbose",
+					"-file-line-error",
+					"-synctex=1",
+					"-interaction=nonstopmode",
+				},
+			}
+			
+			-- Performance optimizations
+			vim.g.vimtex_compiler_latexmk_engines = {
+				_ = "-lualatex", -- LuaLaTeX is faster than pdflatex for most cases
+			}
+			vim.g.vimtex_quickfix_mode = 0 -- Don't open quickfix automatically (faster)
+			vim.g.vimtex_log_ignore = { -- Ignore common warnings (less noise)
+				"Underfull",
+				"Overfull",
+				"specifier changed to",
+				"Token not allowed in a PDF string",
+			}
+			
+			-- Disable unused features (speed up)
+			vim.g.vimtex_indent_enabled = 0 -- Use treesitter/LSP for indenting
+			vim.g.vimtex_imaps_enabled = 0 -- Disable insert mode mappings (use snippets instead)
+			vim.g.vimtex_complete_enabled = 0 -- Use LSP (texlab) for completion
+			vim.g.vimtex_syntax_enabled = 1 -- Keep syntax (needed for concealment)
+			
+			-- Concealment (optional, disable if too slow)
+			vim.g.vimtex_syntax_conceal = {
+				accents = 1,
+				ligatures = 1,
+				cites = 1,
+				fancy = 1,
+				spacing = 0, -- Disable spacing concealment (can be slow)
+				greek = 1,
+				math_bounds = 0,
+				math_delimiters = 1,
+				math_fracs = 1,
+				math_super_sub = 1,
+				math_symbols = 1,
+				sections = 0,
+				styles = 0, -- Disable style concealment (can be slow)
+			}
+			
+			-- Table of contents settings
+			vim.g.vimtex_toc_config = {
+				name = "TOC",
+				layers = { "content", "todo", "include" },
+				split_width = 30,
+				todo_sorted = 0,
+				show_help = 0,
+				show_numbers = 1,
+				mode = 2,
+			}
+			
+			-- Disable unused compilation on write (use continuous mode instead)
+			vim.g.vimtex_compiler_progname = "nvr" -- Use neovim-remote for callbacks
 		end,
 	},
 
