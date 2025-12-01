@@ -484,12 +484,12 @@ return {
 				builtin = {
 					ueberzug_scaler = "cover",
 					extensions = {
-						-- Use kitty graphics protocol for best quality in kitty terminal
-						["png"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "{file}" },
-						["jpg"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "{file}" },
-						["jpeg"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "{file}" },
-						["gif"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "{file}" },
-						["webp"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "{file}" },
+						-- Use chafa for terminal image preview (works in tmux)
+						["png"] = { "chafa", "--format=symbols", "--colors=256", "--fill=block", "{file}" },
+						["jpg"] = { "chafa", "--format=symbols", "--colors=256", "--fill=block", "{file}" },
+						["jpeg"] = { "chafa", "--format=symbols", "--colors=256", "--fill=block", "{file}" },
+						["gif"] = { "chafa", "--format=symbols", "--colors=256", "--fill=block", "{file}" },
+						["webp"] = { "chafa", "--format=symbols", "--colors=256", "--fill=block", "{file}" },
 					},
 				},
 				bat = {
