@@ -1098,14 +1098,28 @@ return {
 		end,
 	},
 
-	-- Obsidian
+	-- Obsidian note taking
 	{
 		"epwalsh/obsidian.nvim",
 		ft = "markdown",
 		dependencies = { "nvim-lua/plenary.nvim" },
+		keys = {
+			{ "<leader><leader>", "<cmd>ObsidianQuickSwitch<cr>", desc = "Quick switch notes" },
+			{ "<leader>on", "<cmd>ObsidianNew<cr>", desc = "New note" },
+			{ "<leader>os", "<cmd>ObsidianSearch<cr>", desc = "Search notes" },
+			{ "<leader>oo", "<cmd>ObsidianOpen<cr>", desc = "Open in Obsidian" },
+			{ "<leader>ob", "<cmd>ObsidianBacklinks<cr>", desc = "Backlinks" },
+			{ "<leader>ot", "<cmd>ObsidianTags<cr>", desc = "Tags" },
+			{ "<leader>oc", "<cmd>ObsidianToggleCheckbox<cr>", desc = "Toggle checkbox" },
+			{ "<leader>ol", "<cmd>ObsidianFollowLink<cr>", desc = "Follow link" },
+		},
 		opts = {
 			workspaces = {
 				{ name = "personal", path = "~/Documents/obsidian/personal" },
+			},
+			notes_subdir = "notes",
+			daily_notes = {
+				folder = "daily",
 			},
 		},
 	},
