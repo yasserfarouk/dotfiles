@@ -61,9 +61,11 @@ return {
 				"lua_ls", -- Lua (modern, actively maintained)
 				"jdtls", -- Java (still best option)
 				"ts_ls", -- TypeScript/JavaScript (stable)
+				"html", -- HTML LSP
 				"texlab", -- LaTeX (modern, best option)
 				"marksman", -- Markdown (modern, fast)
 				"intelephense", -- PHP (best PHP LSP)
+				"esbonio", -- reStructuredText LSP
 				"bashls", -- Bash LSP
 			}
 			for _, server in ipairs(servers) do
@@ -276,7 +278,27 @@ return {
 		build = ":TSUpdate",
 		event = "BufReadPost",
 		opts = {
-			ensure_installed = { "python", "lua", "java", "javascript", "php", "latex", "markdown" },
+			ensure_installed = {
+				"python",
+				"lua",
+				"java",
+				"javascript",
+				"typescript",
+				"html",
+				"css",
+				"php",
+				"latex",
+				"markdown",
+				"markdown_inline",
+				"rst",
+				"bash",
+				"json",
+				"yaml",
+				"toml",
+				"vim",
+				"vimdoc",
+				"regex",
+			},
 			highlight = { enable = true },
 			indent = { enable = true, disable = { "python" } },
 			autotag = { enable = true },
@@ -575,6 +597,10 @@ return {
 			{ "<leader>x-", "<cmd>ToggleTerm direction=horizontal size=15<cr>", desc = "Terminal bottom" },
 			{ "<leader>x\\", "<cmd>ToggleTerm direction=vertical size=80<cr>", desc = "Terminal right" },
 			{ "<leader>xg", "<cmd>lua _LAZYGIT_TOGGLE()<cr>", desc = "LazyGit" },
+			{ "<leader>xd", "<cmd>lua _LAZYDOCKER_TOGGLE()<cr>", desc = "LazyDocker" },
+			{ "<leader>xh", "<cmd>lua _HTOP_TOGGLE()<cr>", desc = "Htop" },
+			{ "<leader>xp", "<cmd>lua _PYTHON_TOGGLE()<cr>", desc = "Python REPL" },
+			{ "<leader>xl", "<cmd>lua _LUA_TOGGLE()<cr>", desc = "Lua REPL" },
 		},
 		opts = {
 			size = function(term)
@@ -587,14 +613,98 @@ return {
 			open_mapping = [[<c-\>]],
 			shade_terminals = false,
 			direction = "float",
-			float_opts = { border = "rounded" },
+			float_opts = { border = "rounded", width = 120, height = 30 },
+			-- Better shell integration
+			shell = vim.o.shell,
+			-- Persist size across toggles
+			persist_size = true,
+			persist_mode = true,
+			-- Start in insert mode
+			start_in_insert = true,
+			-- Better terminal colors
+			highlights = {
+				Normal = { link = "Normal" },
+				NormalFloat = { link = "NormalFloat" },
+				FloatBorder = { link = "FloatBorder" },
+			},
 		},
 		config = function(_, opts)
 			require("toggleterm").setup(opts)
 			local Terminal = require("toggleterm.terminal").Terminal
+			
+			-- LazyGit (modern git TUI)
 			_G._LAZYGIT_TOGGLE = function()
-				local lazygit = Terminal:new({ cmd = "lazygit", hidden = true, direction = "float" })
+				local lazygit = Terminal:new({
+					cmd = "lazygit",
+					hidden = true,
+					direction = "float",
+					float_opts = { border = "rounded", width = 150, height = 40 },
+					on_open = function(term)
+						vim.cmd("startinsert!")
+						vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+					end,
+				})
 				lazygit:toggle()
+			end
+			
+			-- LazyDocker (modern docker TUI)
+			_G._LAZYDOCKER_TOGGLE = function()
+				local lazydocker = Terminal:new({
+					cmd = "lazydocker",
+					hidden = true,
+					direction = "float",
+					float_opts = { border = "rounded", width = 150, height = 40 },
+					on_open = function(term)
+						vim.cmd("startinsert!")
+						vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+					end,
+				})
+				lazydocker:toggle()
+			end
+			
+			-- Htop (modern system monitor, or use btop if available)
+			_G._HTOP_TOGGLE = function()
+				local cmd = vim.fn.executable("btop") == 1 and "btop" or "htop"
+				local htop = Terminal:new({
+					cmd = cmd,
+					hidden = true,
+					direction = "float",
+					float_opts = { border = "rounded", width = 150, height = 40 },
+					on_open = function(term)
+						vim.cmd("startinsert!")
+						vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+					end,
+				})
+				htop:toggle()
+			end
+			
+			-- Python REPL (with IPython if available)
+			_G._PYTHON_TOGGLE = function()
+				local cmd = vim.fn.executable("ipython") == 1 and "ipython" or "python3"
+				local python = Terminal:new({
+					cmd = cmd,
+					hidden = true,
+					direction = "float",
+					float_opts = { border = "rounded", width = 120, height = 30 },
+					on_open = function(term)
+						vim.cmd("startinsert!")
+					end,
+				})
+				python:toggle()
+			end
+			
+			-- Lua REPL
+			_G._LUA_TOGGLE = function()
+				local lua_repl = Terminal:new({
+					cmd = "lua",
+					hidden = true,
+					direction = "float",
+					float_opts = { border = "rounded", width = 120, height = 30 },
+					on_open = function(term)
+						vim.cmd("startinsert!")
+					end,
+				})
+				lua_repl:toggle()
 			end
 		end,
 	},
