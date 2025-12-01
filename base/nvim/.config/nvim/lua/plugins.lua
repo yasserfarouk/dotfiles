@@ -70,6 +70,7 @@ return {
 				"yamlls", -- YAML
 				"taplo", -- TOML
 				"clangd", -- C/C++
+				"harper_ls", -- Grammar/spell checker for documents
 			}
 
 			-- Configure each server using modern vim.lsp.config API
@@ -77,12 +78,35 @@ return {
 				local config = lspconfig_configs[server_name]
 				if config and config.default_config then
 					local default = config.default_config
-					vim.lsp.config(server_name, {
+					local server_config = {
 						cmd = default.cmd,
 						filetypes = default.filetypes,
 						root_markers = default.root_dir and vim.fs.root and { ".git" } or nil,
 						capabilities = capabilities,
-					})
+					}
+					
+					-- Harper-ls specific configuration for document filetypes only
+					if server_name == "harper_ls" then
+						server_config.filetypes = { "markdown", "tex", "latex", "rst", "text", "gitcommit" }
+						server_config.settings = {
+							["harper-ls"] = {
+								linters = {
+									spell_check = true,
+									spelled_numbers = false,
+									an_a = true,
+									sentence_capitalization = true,
+									unclosed_quotes = true,
+									wrong_quotes = false,
+									long_sentences = true,
+									repeated_words = true,
+									spaces = true,
+									matcher = true,
+								},
+							},
+						}
+					end
+					
+					vim.lsp.config(server_name, server_config)
 				end
 			end
 
