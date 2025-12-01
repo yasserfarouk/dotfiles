@@ -432,6 +432,21 @@ return {
 				preview = { default = "bat" },
 			},
 			fzf_opts = { ["--layout"] = "reverse" },
+			fzf_colors = {
+				["fg"] = { "fg", "Normal" },
+				["bg"] = { "bg", "Normal" },
+				["hl"] = { "fg", "Comment" },
+				["fg+"] = { "fg", "CursorLine" },
+				["bg+"] = { "bg", "CursorLine" },
+				["hl+"] = { "fg", "Statement" },
+				["info"] = { "fg", "PreProc" },
+				["prompt"] = { "fg", "Conditional" },
+				["pointer"] = { "fg", "Exception" },
+				["marker"] = { "fg", "Keyword" },
+				["spinner"] = { "fg", "Label" },
+				["header"] = { "fg", "Comment" },
+				["gutter"] = { "bg", "Normal" },
+			},
 			-- Quickfix keymaps
 			actions = {
 				files = {
