@@ -22,7 +22,7 @@ return {
 			"SmiteshP/nvim-navic",
 			"echasnovski/mini.icons",
 		},
-		event = { "BufReadPost", "BufNewFile" },
+		event = "LspAttach",
 		opts = {
 			theme = "tokyonight",
 			show_modified = true,
@@ -205,6 +205,9 @@ return {
 				"L3MON4D3/LuaSnip",
 				version = "v2.*",
 				build = "make install_jsregexp",
+				config = function()
+					require("luasnip.loaders.from_vscode").lazy_load()
+				end,
 			},
 			"moyiz/blink-emoji.nvim",
 		},
@@ -330,16 +333,7 @@ return {
 	-- ══════════════════════════════════════════════════════════════════════════
 	-- SECTION: SNIPPETS {{{1
 	-- ══════════════════════════════════════════════════════════════════════════
-	{
-		"L3MON4D3/LuaSnip",
-		version = "v2.*",
-		build = "make install_jsregexp",
-		dependencies = { "rafamadriz/friendly-snippets" },
-		event = "InsertEnter",
-		config = function()
-			require("luasnip.loaders.from_vscode").lazy_load()
-		end,
-	},
+	-- LuaSnip is loaded via blink.cmp dependencies
 
 	-- }}}1
 	-- ══════════════════════════════════════════════════════════════════════════
@@ -640,10 +634,8 @@ return {
 		},
 	},
 
-	{ "wsdjeg/vim-fetch" },
 	{ "tpope/vim-unimpaired", event = "BufReadPost" },
 	{ "michaeljsmith/vim-indent-object", event = "BufReadPost" },
-	{ "tmhedberg/indent-motion", event = "BufReadPost" },
 
 	{
 		"alexghergh/nvim-tmux-navigation",
@@ -1080,6 +1072,30 @@ init = function()
 -- Setup snacks.picker keymaps
 require("yasser.snacks_picker_keys").setup()
 end,	},
+
+	-- Fuzzy finder alternative with <leader>S prefix
+	{
+		"ibhagwan/fzf-lua",
+		dependencies = { "echasnovski/mini.icons" },
+		cmd = "FzfLua",
+		init = function()
+			require("yasser.fzf_lua_keys").setup()
+		end,
+		config = function()
+			require("fzf-lua").setup({
+				winopts = {
+					height = 0.85,
+					width = 0.80,
+					preview = {
+						default = "bat",
+						border = "border",
+						wrap = "nowrap",
+						scrollbar = "float",
+					},
+				},
+			})
+		end,
+	},
 
 	{
 		"echasnovski/mini.icons",
