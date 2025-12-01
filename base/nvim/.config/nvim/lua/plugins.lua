@@ -948,7 +948,7 @@ return {
 	-- SECTION: LANGUAGE-SPECIFIC PLUGINS {{{1
 	-- ══════════════════════════════════════════════════════════════════════════
 	
-	-- Python
+	-- Python venv selector - only searches ~/myvenvs
 	{
 		"linux-cultist/venv-selector.nvim",
 		ft = "python",
@@ -957,12 +957,8 @@ return {
 			auto_refresh = false,
 			search = false,
 			notify_user_on_venv_activation = false,
-			sources = {
-				{ name = "venv", path = "~/myvenvs" },
-				"venv",
-				"poetry",
-				"pipenv",
-			},
+			sources = { "venv" },
+			venvs_path = "~/myvenvs",
 		},
 		keys = { { "<leader>pv", "<cmd>VenvSelect<cr>", desc = "Select VirtualEnv" } },
 	},
