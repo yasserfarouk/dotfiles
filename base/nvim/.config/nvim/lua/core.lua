@@ -140,13 +140,13 @@ function M.setup_lsp_keymaps(client, buffer)
 		map("n", "gu", "<cmd>FzfLua lsp_references<cr>", { desc = "References" })
 		map("n", "gD", "<cmd>FzfLua lsp_declarations<cr>", { desc = "Goto declaration" })
 		map("n", "gI", "<cmd>FzfLua lsp_implementations<cr>", { desc = "Goto implementation" })
-		map("n", "gb", "<cmd>FzfLua lsp_type_definitions<cr>", { desc = "Goto type definition" })
+		map("n", "gy", "<cmd>FzfLua lsp_type_definitions<cr>", { desc = "Goto type definition" })
 	else
 		map("n", "gd", vim.lsp.buf.definition, { desc = "Goto definition" })
 		map("n", "gu", vim.lsp.buf.references, { desc = "References" })
 		map("n", "gD", vim.lsp.buf.declaration, { desc = "Goto declaration" })
 		map("n", "gI", vim.lsp.buf.implementation, { desc = "Goto implementation" })
-		map("n", "gb", vim.lsp.buf.type_definition, { desc = "Goto definition" })
+		map("n", "gy", vim.lsp.buf.type_definition, { desc = "Goto type definition" })
 	end
 
 	-- Code actions
