@@ -15,9 +15,7 @@ return {
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
-			{ "folke/neoconf.nvim", cmd = "Neoconf", config = true },
 			{ "folke/lazydev.nvim", ft = "lua", opts = { integrations = { cmp = false } } },
-			{ "j-hui/fidget.nvim", opts = {} },
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			"saghen/blink.cmp",
@@ -227,7 +225,11 @@ return {
 			{ "<leader>ii", "<cmd>LspInfo<cr>", desc = "LSP Info" },
 			{ "<leader>il", "<cmd>Trouble loclist toggle<cr>", desc = "Location List" },
 			{ "<leader>iq", "<cmd>Trouble qflist toggle<cr>", desc = "Quick Fix" },
+			{ "<leader>vv", "<cmd>Trouble symbols toggle<cr>", desc = "Symbol Sidebar" },
+			{ "<leader>vl", "<cmd>Trouble symbols toggle<cr>", desc = "Outline" },
+			{ "<leader>co", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols sidebar" },
 		},
+		opts = { use_diagnostic_signs = true },
 	},
 
 	-- ============================================================================
@@ -242,27 +244,6 @@ return {
 		config = function()
 			require("luasnip.loaders.from_vscode").lazy_load()
 		end,
-	},
-
-	{
-		"glepnir/lspsaga.nvim",
-		event = "LspAttach",
-		opts = {
-			ui = { border = "rounded", code_action = "💡" },
-			symbol_in_winbar = { enable = true },
-			lightbulb = { enable = false, virtual_text = true },
-		},
-		keys = { { "<leader>vl", "<cmd>Lspsaga outline<cr>", desc = "Outline" } },
-	},
-
-	{
-		"hedyhli/outline.nvim",
-		cmd = "Outline",
-		opts = { outline_window = { border = "rounded" } },
-		keys = {
-			{ "<leader>vv", "<cmd>Outline<cr>", desc = "Symbol Sidebar" },
-			{ "<leader>co", "<cmd>Outline<cr>", desc = "Symbols sidebar" },
-		},
 	},
 
 	-- ============================================================================
@@ -371,6 +352,20 @@ return {
 				preview = { default = "bat" },
 			},
 			fzf_opts = { ["--layout"] = "reverse" },
+			-- Quickfix keymaps
+			keymap = {
+				fzf = {
+					["ctrl-q"] = "select-all+accept",
+					["alt-q"] = "select-all+accept",
+				},
+			},
+			actions = {
+				files = {
+					["default"] = require("fzf-lua").actions.file_edit,
+					["ctrl-q"] = require("fzf-lua").actions.file_sel_to_qf,
+					["alt-q"] = require("fzf-lua").actions.file_sel_to_qf,
+				},
+			},
 		},
 	},
 

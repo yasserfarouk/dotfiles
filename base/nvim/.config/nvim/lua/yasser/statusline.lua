@@ -21,9 +21,10 @@ vim.api.nvim_set_hl(0, "OverLength", {
 	ctermbg = 234,
 	ctermfg = nil,
 })
-vim.api.nvim_set_hl(0, "LspDiagnosticsDefaultError", { link = "DiffDelete" })
-vim.api.nvim_set_hl(0, "LspDiagnosticsDefaultWarning", { link = "DiffChange" })
-vim.api.nvim_set_hl(0, "LspDiagnosticsDefaultHint", { link = "NonText" })
+-- Modern diagnostic highlights
+vim.api.nvim_set_hl(0, "DiagnosticError", { link = "DiffDelete" })
+vim.api.nvim_set_hl(0, "DiagnosticWarn", { link = "DiffChange" })
+vim.api.nvim_set_hl(0, "DiagnosticHint", { link = "NonText" })
 vim.api.nvim_set_hl(0, "User5", {
 	fg = "red",
 	ctermfg = "red",
