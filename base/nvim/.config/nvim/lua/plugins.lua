@@ -176,6 +176,7 @@ return {
 		end,
 	},
 
+	-- Diagnostics and symbols viewer
 	{
 		"folke/trouble.nvim",
 		cmd = "Trouble",
@@ -186,6 +187,7 @@ return {
 			{ "<leader>iq", "<cmd>Trouble qflist toggle<cr>", desc = "Quick Fix" },
 			{ "<leader>vs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols sidebar" },
 			{ "<leader>vl", "<cmd>Trouble symbols toggle<cr>", desc = "Outline" },
+			{ "<leader>co", "<cmd>Trouble symbols toggle focus=true<cr>", desc = "Code outline" },
 		},
 		opts = { use_diagnostic_signs = true },
 	},
