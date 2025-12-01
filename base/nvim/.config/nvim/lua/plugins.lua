@@ -1090,24 +1090,13 @@ return {
 		opts = {},
 	},
 
-	-- Markdown preview and rendering
+	-- Markdown preview in browser
 	{
 		"iamcco/markdown-preview.nvim",
 		ft = "markdown",
 		build = function()
 			vim.fn["mkdp#util#install"]()
 		end,
-	},
-	
-	-- Inline markdown rendering with image support (kitty)
-	{
-		"MeanderingProgrammer/render-markdown.nvim",
-		ft = "markdown",
-		dependencies = { "echasnovski/mini.icons" },
-		opts = {
-			file_types = { "markdown" },
-			render_modes = { "n", "c" },
-		},
 	},
 
 	-- Obsidian note taking
@@ -1177,6 +1166,13 @@ return {
 				scroll = { enabled = false },
 				statuscolumn = { enabled = true },
 				words = { enabled = true },
+				image = {
+					enabled = true,
+					doc = {
+						enabled = true,
+						inline = true,
+					},
+				},
 			}
 		end,
 	},
