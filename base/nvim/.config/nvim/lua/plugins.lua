@@ -474,7 +474,7 @@ return {
 			winopts = {
 				border = "rounded",
 				preview = {
-					default = "bat",
+					default = "builtin",
 					scrollbar = "float",
 				},
 			},
@@ -489,6 +489,13 @@ return {
 						["webp"] = { "chafa", "{file}" },
 					},
 				},
+				bat = {
+					cmd = "bat",
+					args = "--color=always --style=plain",
+				},
+			},
+			files = {
+				previewer = "builtin",
 			},
 			fzf_opts = { ["--layout"] = "reverse" },
 			fzf_colors = {
