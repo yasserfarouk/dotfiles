@@ -176,43 +176,21 @@ return {
 			},
 		},
 		opts = {
-			keymap = {
-				preset = "default",
-				["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
-				["<C-e>"] = { "hide", "fallback" },
-				["<CR>"] = { "accept", "fallback" },
-				["<Tab>"] = { "snippet_forward", "select_next", "fallback" },
-				["<S-Tab>"] = { "snippet_backward", "select_prev", "fallback" },
-				["<C-p>"] = { "select_prev", "fallback" },
-				["<C-n>"] = { "select_next", "fallback" },
-				["<C-b>"] = { "scroll_documentation_up", "fallback" },
-				["<C-f>"] = { "scroll_documentation_down", "fallback" },
-			},
+			keymap = { preset = "default" },
+			
 			appearance = {
 				use_nvim_cmp_as_default = true,
 				nerd_font_variant = "mono",
 			},
+			
 			snippets = {
 				preset = "luasnip",
 			},
+			
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
-				providers = {
-					lsp = {
-						name = "LSP",
-						module = "blink.cmp.sources.lsp",
-						fallbacks = { "buffer" },
-					},
-					path = {
-						name = "Path",
-						module = "blink.cmp.sources.path",
-					},
-					buffer = {
-						name = "Buffer",
-						module = "blink.cmp.sources.buffer",
-					},
-				},
 			},
+			
 			completion = {
 				menu = {
 					border = "rounded",
@@ -226,12 +204,12 @@ return {
 					window = { border = "rounded" },
 				},
 			},
+			
 			signature = {
 				enabled = true,
 				window = { border = "rounded" },
 			},
 		},
-		opts_extend = { "sources.default" },
 	},
 
 	-- }}}1
