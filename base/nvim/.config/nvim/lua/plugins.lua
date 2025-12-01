@@ -1090,12 +1090,24 @@ return {
 		opts = {},
 	},
 
+	-- Markdown preview and rendering
 	{
 		"iamcco/markdown-preview.nvim",
 		ft = "markdown",
 		build = function()
 			vim.fn["mkdp#util#install"]()
 		end,
+	},
+	
+	-- Inline markdown rendering with image support (kitty)
+	{
+		"MeanderingProgrammer/render-markdown.nvim",
+		ft = "markdown",
+		dependencies = { "echasnovski/mini.icons" },
+		opts = {
+			file_types = { "markdown" },
+			render_modes = { "n", "c" },
+		},
 	},
 
 	-- Obsidian note taking
@@ -1143,34 +1155,8 @@ return {
 	-- ══════════════════════════════════════════════════════════════════════════
 	-- SECTION: UI ENHANCEMENTS {{{1
 	-- ══════════════════════════════════════════════════════════════════════════
-	
-	-- Image preview in markdown and other formats (kitty protocol)
-	{
-		"3rd/image.nvim",
-		ft = { "markdown", "norg" },
-		opts = {
-			backend = "kitty",
-			integrations = {
-				markdown = {
-					enabled = true,
-					clear_in_insert_mode = false,
-					download_remote_images = true,
-					only_render_image_at_cursor = false,
-					filetypes = { "markdown", "vimwiki" },
-				},
-			},
-			max_width = 100,
-			max_height = 12,
-			max_width_window_percentage = nil,
-			max_height_window_percentage = 50,
-			window_overlap_clear_enabled = false,
-			window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
-			editor_only_render_when_focused = false,
-			tmux_show_only_in_active_window = false,
-			hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp" },
-		},
-	},
 
+	-- Multi-purpose UI utilities including image preview
 	{
 		"folke/snacks.nvim",
 		priority = 1000,
