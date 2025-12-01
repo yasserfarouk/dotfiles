@@ -1096,17 +1096,24 @@ return {
 		"folke/snacks.nvim",
 		priority = 1000,
 		lazy = false,
-		opts = {
-			bigfile = { enabled = true },
-			dashboard = { enabled = true },
-			indent = { enabled = true },
-			input = { enabled = true },
-			notifier = { enabled = false }, -- Using nvim-notify instead
-			quickfile = { enabled = true },
-			scroll = { enabled = false },
-			statuscolumn = { enabled = true },
-			words = { enabled = true },
-		},
+		opts = function()
+			-- Set vim.ui.input before snacks setup
+			vim.ui.input = function(...)
+				return require("snacks").input(...)
+			end
+			
+			return {
+				bigfile = { enabled = true },
+				dashboard = { enabled = true },
+				indent = { enabled = true },
+				input = { enabled = true },
+				notifier = { enabled = true },
+				quickfile = { enabled = true },
+				scroll = { enabled = false },
+				statuscolumn = { enabled = true },
+				words = { enabled = true },
+			}
+		end,
 	},
 
 	{

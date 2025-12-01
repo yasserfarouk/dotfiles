@@ -17,4 +17,8 @@ vim.opt.rtp:prepend(lazypath)
 vim.keymap.set("n", "<leader>ap", "<cmd>Lazy<cr>", { desc = "Plugins" })
 
 -- Load all plugins from single consolidated file
-require("lazy").setup("plugins")
+require("lazy").setup("plugins", {
+	rocks = {
+		hererocks = false,
+	},
+})

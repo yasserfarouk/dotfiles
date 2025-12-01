@@ -1,6 +1,11 @@
 -- Core configuration - consolidated settings, keymaps, autocommands, LSP
 local M = {}
 
+-- Disable unused providers for faster startup
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_node_provider = 0
+
 -- ============================================================================
 -- SETTINGS
 -- ============================================================================
