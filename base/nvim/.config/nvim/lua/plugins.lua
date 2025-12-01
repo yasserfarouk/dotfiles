@@ -484,12 +484,12 @@ return {
 				builtin = {
 					ueberzug_scaler = "cover",
 					extensions = {
-						-- Use chafa - works reliably in all terminals including tmux
-						["png"] = { "chafa", "--format=symbols", "--symbols=block", "--colors=256", "{file}" },
-						["jpg"] = { "chafa", "--format=symbols", "--symbols=block", "--colors=256", "{file}" },
-						["jpeg"] = { "chafa", "--format=symbols", "--symbols=block", "--colors=256", "{file}" },
-						["gif"] = { "chafa", "--format=symbols", "--symbols=block", "--colors=256", "{file}" },
-						["webp"] = { "chafa", "--format=symbols", "--symbols=block", "--colors=256", "{file}" },
+						-- Use chafa with maximum quality settings
+						["png"] = { "chafa", "--format=symbols", "--symbols=block+border+space+stipple+braille+geometric+ascii", "--colors=full", "--dither=ordered", "--color-space=rgb", "{file}" },
+						["jpg"] = { "chafa", "--format=symbols", "--symbols=block+border+space+stipple+braille+geometric+ascii", "--colors=full", "--dither=ordered", "--color-space=rgb", "{file}" },
+						["jpeg"] = { "chafa", "--format=symbols", "--symbols=block+border+space+stipple+braille+geometric+ascii", "--colors=full", "--dither=ordered", "--color-space=rgb", "{file}" },
+						["gif"] = { "chafa", "--format=symbols", "--symbols=block+border+space+stipple+braille+geometric+ascii", "--colors=full", "--dither=ordered", "--color-space=rgb", "{file}" },
+						["webp"] = { "chafa", "--format=symbols", "--symbols=block+border+space+stipple+braille+geometric+ascii", "--colors=full", "--dither=ordered", "--color-space=rgb", "{file}" },
 					},
 				},
 				bat = {
