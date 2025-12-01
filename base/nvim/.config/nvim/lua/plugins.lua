@@ -47,8 +47,16 @@ return {
 			-- Default server config
 			local default_config = { capabilities = capabilities }
 
-			-- Setup common servers
-			local servers = { "pyright", "lua_ls", "jdtls", "ts_ls", "texlab", "marksman" }
+			-- Setup modern, stable LSP servers
+			local servers = {
+				"basedpyright", -- Modern Python (fork of pyright, better maintained)
+				"lua_ls", -- Lua (modern, actively maintained)
+				"jdtls", -- Java (still best option)
+				"ts_ls", -- TypeScript/JavaScript (stable)
+				"texlab", -- LaTeX (modern, best option)
+				"marksman", -- Markdown (modern, fast)
+				"intelephense", -- PHP (best PHP LSP)
+			}
 			for _, server in ipairs(servers) do
 				lspconfig[server].setup(default_config)
 			end
@@ -92,6 +100,7 @@ return {
 				local name_map = {
 					["typescript-language-server"] = "ts_ls",
 					["python-lsp-server"] = "pylsp",
+					["basedpyright"] = "basedpyright",
 				}
 				server_name = name_map[server_name] or server_name
 				
