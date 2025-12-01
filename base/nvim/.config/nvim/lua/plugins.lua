@@ -1110,7 +1110,11 @@ return {
 	-- Obsidian note taking
 	{
 		"epwalsh/obsidian.nvim",
-		ft = "markdown",
+		lazy = true,
+		event = {
+			"BufReadPre " .. vim.fn.expand("~") .. "/Documents/obsidian/**.md",
+			"BufNewFile " .. vim.fn.expand("~") .. "/Documents/obsidian/**.md",
+		},
 		dependencies = { "nvim-lua/plenary.nvim" },
 		keys = {
 			{ "<leader><leader>", "<cmd>ObsidianQuickSwitch<cr>", desc = "Quick switch notes" },
