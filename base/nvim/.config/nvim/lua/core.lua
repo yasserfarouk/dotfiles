@@ -97,20 +97,11 @@ if vim.env.TERM == "xterm-kitty" then
 		cache_enabled = 1,
 	}
 	
-	-- Better colors in Kitty
-	vim.opt.termguicolors = true
-	
 	-- Enable undercurl support in Kitty
 	vim.cmd([[
 		let &t_Cs = "\e[4:3m"
 		let &t_Ce = "\e[4:0m"
 	]])
-	
-	-- Window navigation with kitty
-	vim.keymap.set("n", "<C-h>", "<cmd>KittyNavigateLeft<cr>", { silent = true, desc = "Navigate Left" })
-	vim.keymap.set("n", "<C-j>", "<cmd>KittyNavigateDown<cr>", { silent = true, desc = "Navigate Down" })
-	vim.keymap.set("n", "<C-k>", "<cmd>KittyNavigateUp<cr>", { silent = true, desc = "Navigate Up" })
-	vim.keymap.set("n", "<C-l>", "<cmd>KittyNavigateRight<cr>", { silent = true, desc = "Navigate Right" })
 end
 
 -- ============================================================================

@@ -566,16 +566,19 @@ return {
 	{
 		"alexghergh/nvim-tmux-navigation",
 		event = "VeryLazy",
+		cond = function()
+			-- Only load if in tmux or not in kitty
+			return vim.env.TMUX ~= nil or vim.env.TERM ~= "xterm-kitty"
+		end,
+		keys = {
+			{ "<C-h>", "<cmd>NvimTmuxNavigateLeft<cr>", desc = "Navigate Left" },
+			{ "<C-j>", "<cmd>NvimTmuxNavigateDown<cr>", desc = "Navigate Down" },
+			{ "<C-k>", "<cmd>NvimTmuxNavigateUp<cr>", desc = "Navigate Up" },
+			{ "<C-l>", "<cmd>NvimTmuxNavigateRight<cr>", desc = "Navigate Right" },
+			{ "<C-\\>", "<cmd>NvimTmuxNavigateLastActive<cr>", desc = "Navigate Last" },
+		},
 		opts = {
 			disable_when_zoomed = true,
-			keybindings = {
-				left = "<C-h>",
-				down = "<C-j>",
-				up = "<C-k>",
-				right = "<C-l>",
-				last_active = "<C-\\>",
-				next = "<C-Space>",
-			},
 		},
 	},
 
@@ -775,8 +778,12 @@ return {
 		keys = {
 			{ "<leader>tt", "<cmd>lua require('neotest').run.run()<cr>", desc = "Test nearest" },
 			{ "<leader>tf", "<cmd>lua require('neotest').run.run(vim.fn.expand('%'))<cr>", desc = "Test file" },
+			{ "<leader>tS", "<cmd>lua require('neotest').run.run(vim.fn.getcwd())<cr>", desc = "Test suite" },
+			{ "<leader>tl", "<cmd>lua require('neotest').run.run_last()<cr>", desc = "Test last" },
 			{ "<leader>ts", "<cmd>lua require('neotest').summary.toggle()<cr>", desc = "Test summary" },
 			{ "<leader>to", "<cmd>lua require('neotest').output.open({ enter = true })<cr>", desc = "Test output" },
+			{ "<leader>tO", "<cmd>lua require('neotest').output_panel.toggle()<cr>", desc = "Test output panel" },
+			{ "<leader>tw", "<cmd>lua require('neotest').watch.toggle()<cr>", desc = "Test watch" },
 		},
 		opts = function()
 			return {
@@ -790,17 +797,7 @@ return {
 		end,
 	},
 
-	{
-		"vim-test/vim-test",
-		cmd = { "TestNearest", "TestFile", "TestSuite", "TestLast", "TestVisit" },
-		keys = {
-			{ "<leader>tn", "<cmd>TestNearest<cr>", desc = "Test nearest" },
-			{ "<leader>tF", "<cmd>TestFile<cr>", desc = "Test file (vim-test)" },
-			{ "<leader>tS", "<cmd>TestSuite<cr>", desc = "Test suite" },
-			{ "<leader>tl", "<cmd>TestLast<cr>", desc = "Test last" },
-			{ "<leader>tv", "<cmd>TestVisit<cr>", desc = "Test visit" },
-		},
-	},
+
 
 	-- }}}1
 	-- ══════════════════════════════════════════════════════════════════════════
