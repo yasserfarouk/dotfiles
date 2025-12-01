@@ -1,5 +1,12 @@
 return {
 	{
+		"sindrets/diffview.nvim",
+		keys = {
+			{ "<leader>gV", "<cmd>DiffviewOpen<cr>", desc = "Diff view" },
+		},
+	},
+	{
+
 		"lewis6991/gitsigns.nvim",
 		event = "BufReadPre",
 		config = function()
@@ -12,7 +19,19 @@ return {
 	},
 	{
 		"tpope/vim-fugitive",
-		cmd = { "Git", "G", "Gdiffsplit", "Gread", "Gwrite", "Ggrep", "GMove", "GDelete", "GBrowse", "GRemove", "GRename" },
+		cmd = {
+			"Git",
+			"G",
+			"Gdiffsplit",
+			"Gread",
+			"Gwrite",
+			"Ggrep",
+			"GMove",
+			"GDelete",
+			"GBrowse",
+			"GRemove",
+			"GRename",
+		},
 		keys = {
 			{ "<leader>ga", "<cmd>Git add .<cr>", desc = "add all" },
 			{ "<leader>gA", "<cmd>Git add %<cr>", desc = "add current" },

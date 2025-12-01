@@ -7,7 +7,7 @@ return {
 	"nvim-lua/plenary.nvim",
 	{
 		"nvim-telescope/telescope.nvim",
-		branch = "0.1.x",
+		branch = "master",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		keys = {
 			{ "<leader>/", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "fuzzy search buffer" },
