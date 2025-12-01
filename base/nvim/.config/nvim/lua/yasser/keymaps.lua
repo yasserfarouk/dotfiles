@@ -20,7 +20,6 @@ keymap("v", ":", ";")
 -- vim.api.nvim_set_keymap("n", "<C-l>", "<C-w>l", { silent = true })
 keymap("n", "==", "ggVG=<C-o>")
 keymap("i", "<C-s>", "<esc>[s1z=`]a")
-keymap("n", "Y", "y$")
 -- keymap("n", "<F2>", ":lua vim.lsp.buf.rename()<cr>")
 
 -- splitting
@@ -196,3 +195,13 @@ keymap(
 	':!tmux popup -E -w 80\\% -h 80\\% "yazi"<CR>',
 	{ noremap = true, silent = true, desc = "Yazi in a tumux float" }
 )
+
+-- Ensure all yanks go to system clipboard
+keymap("n", "y", '"+y', { noremap = true, desc = "Yank to system clipboard" })
+keymap("v", "y", '"+y', { noremap = true, desc = "Yank to system clipboard" })
+keymap("n", "yy", '"+yy', { noremap = true, desc = "Yank line to system clipboard" })
+keymap("n", "Y", '"+y$', { noremap = true, desc = "Yank to end of line to system clipboard" })
+keymap("n", "p", '"+p', { noremap = true, desc = "Paste from system clipboard" })
+keymap("v", "p", '"+p', { noremap = true, desc = "Paste from system clipboard" })
+keymap("n", "P", '"+P', { noremap = true, desc = "Paste before from system clipboard" })
+keymap("v", "P", '"+P', { noremap = true, desc = "Paste before from system clipboard" })

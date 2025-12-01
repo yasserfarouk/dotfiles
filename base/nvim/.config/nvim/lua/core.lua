@@ -110,14 +110,14 @@ if vim.env.TERM == "xterm-kitty" then
 elseif vim.fn.has("mac") == 1 then
 	-- macOS clipboard using pbcopy/pbpaste
 	vim.g.clipboard = {
-		name = "macOS",
+		name = "macOS-clipboard",
 		copy = {
-			["+"] = "pbcopy",
-			["*"] = "pbcopy",
+			["+"] = { "pbcopy" },
+			["*"] = { "pbcopy" },
 		},
 		paste = {
-			["+"] = "pbpaste",
-			["*"] = "pbpaste",
+			["+"] = { "pbpaste" },
+			["*"] = { "pbpaste" },
 		},
 		cache_enabled = 0,
 	}
