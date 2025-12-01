@@ -38,11 +38,11 @@ return {
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
-			{ "folke/lazydev.nvim", ft = "lua", opts = { integrations = { cmp = false } } },
+			{ "folke/lazydev.nvim", ft = "lua", opts = {} },
 			{ "j-hui/fidget.nvim", opts = {} },
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
-			"saghen/blink.cmp",
+			"hrsh7th/cmp-nvim-lsp",
 		},
 		config = function()
 			local icons = require("yasser.icons")
@@ -64,8 +64,8 @@ return {
 				float = { focusable = true, style = "minimal", border = "rounded", source = "always" },
 			})
 
-			-- Get blink.cmp capabilities
-			local capabilities = require("blink.cmp").get_lsp_capabilities()
+			-- Get nvim-cmp capabilities
+			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 			-- Get lspconfig to access default configurations
 			local lspconfig = require("lspconfig")
@@ -193,96 +193,131 @@ return {
 	},
 	-- }}}1
 	-- ══════════════════════════════════════════════════════════════════════════
-	-- SECTION: COMPLETION {{{1
+	-- SECTION: COMPLETION {{{1}
 	-- ══════════════════════════════════════════════════════════════════════════
 	{
-		"saghen/blink.cmp",
-		version = "*",
+		"hrsh7th/nvim-cmp",
 		event = "InsertEnter",
 		dependencies = {
-			"rafamadriz/friendly-snippets",
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-cmdline",
+			"saadparwaiz1/cmp_luasnip",
 			{
 				"L3MON4D3/LuaSnip",
 				version = "v2.*",
 				build = "make install_jsregexp",
+				dependencies = { "rafamadriz/friendly-snippets" },
 				config = function()
 					require("luasnip.loaders.from_vscode").lazy_load()
 				end,
 			},
 		},
-		opts = {
-			keymap = {
-				preset = "default",
-				["<Tab>"] = { "select_next", "fallback" },
-				["<S-Tab>"] = { "select_prev", "fallback" },
-			},
-			
-			appearance = {
-				use_nvim_cmp_as_default = true,
-				nerd_font_variant = "mono",
-				kind_icons = {
-					Text = "",
-					Method = "",
-					Function = "",
-					Constructor = "",
-					Field = "",
-					Variable = "",
-					Class = "ﴯ",
-					Interface = "",
-					Module = "",
-					Property = "ﰠ",
-					Unit = "",
-					Value = "",
-					Enum = "",
-					Keyword = "",
-					Snippet = "",
-					Color = "",
-					File = "",
-					Reference = "",
-					Folder = "",
-					EnumMember = "",
-					Constant = "",
-					Struct = "",
-					Event = "",
-					Operator = "",
-					TypeParameter = "",
+		config = function()
+			local cmp = require("cmp")
+			local luasnip = require("luasnip")
+			local kind_icons = {
+				Text = "󰉿",
+				Method = "󰡱",
+				Function = "󰊕",
+				Constructor = "",
+				Field = "",
+				Variable = "󰆧",
+				Class = "󰌗",
+				Interface = "",
+				Module = "",
+				Property = "",
+				Unit = "",
+				Value = "󰬺",
+				Enum = "",
+				Keyword = "󰌋",
+				Snippet = "",
+				Color = "󰸌",
+				File = "󰈙",
+				Reference = "",
+				Folder = "󰉋",
+				EnumMember = "",
+				Constant = "󰇽",
+				Struct = "",
+				Event = "",
+				Operator = "󰆕",
+				TypeParameter = "󰴑",
+			}
+
+			cmp.setup({
+				snippet = {
+					expand = function(args)
+						luasnip.lsp_expand(args.body)
+					end,
 				},
-			},
-			
-			snippets = {
-				preset = "luasnip",
-			},
-			
-			sources = {
-				default = { "lsp", "path", "snippets", "buffer" },
-				cmdline = { "path", "buffer" },
-			},
-			
-			completion = {
-				list = {
-					max_items = 200,
+				window = {
+					completion = cmp.config.window.bordered({ border = "rounded" }),
+					documentation = cmp.config.window.bordered({ border = "rounded" }),
 				},
-				menu = {
-					border = "rounded",
-					draw = {
-						columns = { { "kind_icon" }, { "label", "label_description", gap = 1 } },
-					},
+				sources = cmp.config.sources({
+					{ name = "lazydev", group_index = 0 },
+					{ name = "nvim_lsp" },
+					{ name = "luasnip" },
+				}, {
+					{ name = "buffer", keyword_length = 3 },
+					{ name = "path" },
+				}),
+				formatting = {
+					fields = { "kind", "abbr", "menu" },
+					format = function(entry, vim_item)
+						vim_item.kind = string.format("%s", kind_icons[vim_item.kind] or "")
+						vim_item.menu = ({
+							buffer = "",
+							nvim_lsp = "",
+							nvim_lua = "",
+							path = "󰇘",
+							lazydev = "",
+						})[entry.source.name]
+						return vim_item
+					end,
 				},
-				documentation = {
-					auto_show = true,
-					auto_show_delay_ms = 500,
-					window = { border = "rounded" },
-				},
-				ghost_text = {
-					enabled = false,
-				},
-			},
-			
-			signature = {
-				enabled = true,
-				window = { border = "rounded" },
-			},
-		},
+				mapping = cmp.mapping.preset.insert({
+					["<C-p>"] = cmp.mapping.select_prev_item(),
+					["<C-n>"] = cmp.mapping.select_next_item(),
+					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-f>"] = cmp.mapping.scroll_docs(4),
+					["<C-Space>"] = cmp.mapping.complete(),
+					["<C-e>"] = cmp.mapping.abort(),
+					["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
+					["<Tab>"] = cmp.mapping(function(fallback)
+						if cmp.visible() then
+							cmp.select_next_item()
+						elseif luasnip.expand_or_jumpable() then
+							luasnip.expand_or_jump()
+						else
+							fallback()
+						end
+					end, { "i", "s" }),
+					["<S-Tab>"] = cmp.mapping(function(fallback)
+						if cmp.visible() then
+							cmp.select_prev_item()
+						elseif luasnip.jumpable(-1) then
+							luasnip.jump(-1)
+						else
+							fallback()
+						end
+					end, { "i", "s" }),
+				}),
+				completion = { completeopt = "menu,menuone,noinsert" },
+				experimental = { ghost_text = false },
+			})
+
+			-- Cmdline completion
+			cmp.setup.cmdline("/", {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = { { name = "buffer" } },
+			})
+			cmp.setup.cmdline(":", {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
+			})
+		end,
 	},
 
 	-- }}}1
@@ -343,7 +378,7 @@ return {
 	-- ══════════════════════════════════════════════════════════════════════════
 	-- SECTION: SNIPPETS {{{1
 	-- ══════════════════════════════════════════════════════════════════════════
-	-- LuaSnip is loaded via blink.cmp dependencies
+	-- LuaSnip is loaded via nvim-cmp dependencies
 
 	-- }}}1
 	-- ══════════════════════════════════════════════════════════════════════════
