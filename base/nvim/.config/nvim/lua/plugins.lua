@@ -256,16 +256,9 @@ return {
 			
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
-				cmdline = {},
 				per_filetype = {
 					markdown = { "lsp", "path", "snippets", "buffer", "emoji" },
 					gitcommit = { "lsp", "path", "snippets", "buffer", "emoji" },
-					text = { "lsp", "path", "snippets", "buffer" },
-					css = { "lsp", "path", "snippets", "buffer" },
-					scss = { "lsp", "path", "snippets", "buffer" },
-					html = { "lsp", "path", "snippets", "buffer" },
-					javascript = { "lsp", "path", "snippets", "buffer" },
-					typescript = { "lsp", "path", "snippets", "buffer" },
 				},
 				providers = {
 					emoji = {
@@ -277,9 +270,6 @@ return {
 			},
 			
 			completion = {
-				trigger = {
-					show_on_insert_on_trigger_character = true,
-				},
 				list = {
 					max_items = 200,
 				},
