@@ -3,7 +3,7 @@ return {
 	-- SECTION: UI & APPEARANCE {{{1
 	-- ══════════════════════════════════════════════════════════════════════════
 	
-	-- Colorscheme
+	-- Colorscheme - tokyonight theme
 	{
 		"folke/tokyonight.nvim",
 		lazy = false,
@@ -11,6 +11,23 @@ return {
 		config = function()
 			vim.cmd.colorscheme("tokyonight")
 		end,
+	},
+
+	-- Breadcrumbs - shows current code context (function, class, etc)
+	{
+		"utilyre/barbecue.nvim",
+		name = "barbecue",
+		version = "*",
+		dependencies = {
+			"SmiteshP/nvim-navic",
+			"echasnovski/mini.icons",
+		},
+		event = { "BufReadPost", "BufNewFile" },
+		opts = {
+			theme = "tokyonight",
+			show_modified = true,
+			exclude_filetypes = { "netrw", "toggleterm", "neo-tree" },
+		},
 	},
 
 	-- }}}1
@@ -159,6 +176,19 @@ return {
 		end,
 	},
 
+	{
+		"folke/trouble.nvim",
+		cmd = "Trouble",
+		keys = {
+			{ "<leader>id", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Document Diagnostics" },
+			{ "<leader>ii", "<cmd>LspInfo<cr>", desc = "LSP Info" },
+			{ "<leader>il", "<cmd>Trouble loclist toggle<cr>", desc = "Location List" },
+			{ "<leader>iq", "<cmd>Trouble qflist toggle<cr>", desc = "Quick Fix" },
+			{ "<leader>vs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols sidebar" },
+			{ "<leader>vl", "<cmd>Trouble symbols toggle<cr>", desc = "Outline" },
+		},
+		opts = { use_diagnostic_signs = true },
+	},
 	-- }}}1
 	-- ══════════════════════════════════════════════════════════════════════════
 	-- SECTION: COMPLETION {{{1
@@ -284,19 +314,15 @@ return {
 		},
 	},
 
-	{
-		"folke/trouble.nvim",
-		cmd = "Trouble",
-		keys = {
-			{ "<leader>id", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Document Diagnostics" },
-			{ "<leader>ii", "<cmd>LspInfo<cr>", desc = "LSP Info" },
-			{ "<leader>il", "<cmd>Trouble loclist toggle<cr>", desc = "Location List" },
-			{ "<leader>iq", "<cmd>Trouble qflist toggle<cr>", desc = "Quick Fix" },
-			{ "<leader>vs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols sidebar" },
-			{ "<leader>vl", "<cmd>Trouble symbols toggle<cr>", desc = "Outline" },
-		},
-		opts = { use_diagnostic_signs = true },
-	},
+   {
+       "CopilotC-Nvim/CopilotChat.nvim",
+       branch = "canary",
+       dependencies = { "zbirenbaum/copilot.lua", "nvim-lua/plenary.nvim" },
+       opts = {},
+       keys = {
+         { "<leader>cc", "<cmd>CopilotChatToggle<cr>", desc = "Copilot Chat" },
+       },
+     },
 
 	-- }}}1
 	-- ══════════════════════════════════════════════════════════════════════════
@@ -447,7 +473,22 @@ return {
 		opts = {
 			winopts = {
 				border = "rounded",
-				preview = { default = "bat" },
+				preview = {
+					default = "bat",
+					scrollbar = "float",
+				},
+			},
+			previewers = {
+				builtin = {
+					ueberzug_scaler = "cover",
+					extensions = {
+						["png"] = { "chafa", "{file}" },
+						["jpg"] = { "chafa", "{file}" },
+						["jpeg"] = { "chafa", "{file}" },
+						["gif"] = { "chafa", "{file}" },
+						["webp"] = { "chafa", "{file}" },
+					},
+				},
 			},
 			fzf_opts = { ["--layout"] = "reverse" },
 			fzf_colors = {
@@ -1088,6 +1129,34 @@ return {
 	-- ══════════════════════════════════════════════════════════════════════════
 	-- SECTION: UI ENHANCEMENTS {{{1
 	-- ══════════════════════════════════════════════════════════════════════════
+	
+	-- Image preview in markdown and other formats (kitty protocol)
+	{
+		"3rd/image.nvim",
+		ft = { "markdown", "norg" },
+		opts = {
+			backend = "kitty",
+			integrations = {
+				markdown = {
+					enabled = true,
+					clear_in_insert_mode = false,
+					download_remote_images = true,
+					only_render_image_at_cursor = false,
+					filetypes = { "markdown", "vimwiki" },
+				},
+			},
+			max_width = 100,
+			max_height = 12,
+			max_width_window_percentage = nil,
+			max_height_window_percentage = 50,
+			window_overlap_clear_enabled = false,
+			window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+			editor_only_render_when_focused = false,
+			tmux_show_only_in_active_window = false,
+			hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp" },
+		},
+	},
+
 	{
 		"folke/snacks.nvim",
 		priority = 1000,
