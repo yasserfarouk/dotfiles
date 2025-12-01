@@ -323,6 +323,13 @@ return {
        "CopilotC-Nvim/CopilotChat.nvim",
        branch = "canary",
        dependencies = { "zbirenbaum/copilot.lua", "nvim-lua/plenary.nvim" },
+       cmd = {
+           "CopilotChat",
+           "CopilotChatOpen",
+           "CopilotChatClose",
+           "CopilotChatToggle",
+           "CopilotChatReset",
+       },
        opts = {},
        keys = {
          { "<leader>cc", "<cmd>CopilotChatToggle<cr>", desc = "Copilot Chat" },
