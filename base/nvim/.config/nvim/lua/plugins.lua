@@ -1,5 +1,6 @@
 -- Consolidated plugins configuration
 -- All plugins in a single file for better maintainability
+-- Optimized for speed with lazy loading
 
 return {
 	-- ============================================================================
@@ -12,7 +13,7 @@ return {
 	-- ============================================================================
 	{
 		"neovim/nvim-lspconfig",
-		event = "BufReadPre",
+		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			{ "folke/neoconf.nvim", cmd = "Neoconf", config = true },
 			{ "folke/lazydev.nvim", ft = "lua", opts = {} },
@@ -121,9 +122,11 @@ return {
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-cmdline",
+			"saadparwaiz1/cmp_luasnip",
 		},
 		config = function()
 			local cmp = require("cmp")
+			local luasnip = require("luasnip")
 			local kind_icons = {
 				Text = "󰉿",
 				Method = "󰡱",
@@ -153,6 +156,11 @@ return {
 			}
 
 			cmp.setup({
+				snippet = {
+					expand = function(args)
+						luasnip.lsp_expand(args.body)
+					end,
+				},
 				window = {
 					completion = cmp.config.window.bordered({ border = "rounded" }),
 					documentation = cmp.config.window.bordered({ border = "rounded" }),
@@ -160,6 +168,7 @@ return {
 				sources = cmp.config.sources({
 					{ name = "lazydev", group_index = 0 },
 					{ name = "nvim_lsp" },
+					{ name = "luasnip" },
 				}, {
 					{ name = "buffer", keyword_length = 3 },
 					{ name = "path" },
@@ -189,6 +198,8 @@ return {
 					["<Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.select_next_item()
+						elseif luasnip.expand_or_jumpable() then
+							luasnip.expand_or_jump()
 						else
 							fallback()
 						end
@@ -196,6 +207,8 @@ return {
 					["<S-Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.select_prev_item()
+						elseif luasnip.jumpable(-1) then
+							luasnip.jump(-1)
 						else
 							fallback()
 						end
@@ -226,6 +239,20 @@ return {
 			{ "<leader>il", "<cmd>Trouble loclist toggle<cr>", desc = "Location List" },
 			{ "<leader>iq", "<cmd>Trouble qflist toggle<cr>", desc = "Quick Fix" },
 		},
+	},
+
+	-- ============================================================================
+	-- SNIPPETS
+	-- ============================================================================
+	{
+		"L3MON4D3/LuaSnip",
+		version = "v2.*",
+		build = "make install_jsregexp",
+		dependencies = { "rafamadriz/friendly-snippets" },
+		event = "InsertEnter",
+		config = function()
+			require("luasnip.loaders.from_vscode").lazy_load()
+		end,
 	},
 
 	{
@@ -603,10 +630,11 @@ return {
 
 	{
 		"vim-test/vim-test",
+		cmd = { "TestNearest", "TestFile", "TestSuite", "TestLast", "TestVisit" },
 		keys = {
 			{ "<leader>tn", "<cmd>TestNearest<cr>", desc = "Test nearest" },
-			{ "<leader>tF", "<cmd>TestFile<cr>", desc = "Test file" },
-			{ "<leader>ts", "<cmd>TestSuite<cr>", desc = "Test suite" },
+			{ "<leader>tF", "<cmd>TestFile<cr>", desc = "Test file (vim-test)" },
+			{ "<leader>tS", "<cmd>TestSuite<cr>", desc = "Test suite" },
 			{ "<leader>tl", "<cmd>TestLast<cr>", desc = "Test last" },
 			{ "<leader>tv", "<cmd>TestVisit<cr>", desc = "Test visit" },
 		},
@@ -789,22 +817,13 @@ return {
 	},
 
 	{
-		"mrjones2014/legendary.nvim",
-		priority = 10000,
-		lazy = false,
-		dependencies = { "folke/which-key.nvim" },
-		opts = {
-			extensions = { which_key = { auto_register = true } },
-		},
-	},
-
-	{
 		"danymat/neogen",
+		cmd = "Neogen",
 		keys = {
 			{ "<leader>nf", "<cmd>Neogen func<cr>", desc = "Function annotation" },
 			{ "<leader>nc", "<cmd>Neogen class<cr>", desc = "Class annotation" },
 		},
-		opts = { snippet_engine = "nvim" },
+		opts = { snippet_engine = "luasnip" },
 	},
 
 	{
@@ -851,27 +870,7 @@ return {
 	},
 
 	{
-		"xvzc/chezmoi.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			require("chezmoi").setup({})
-		end,
-	},
-
-	{
 		"moll/vim-bbye",
 		cmd = { "Bdelete", "Bwipeout" },
-	},
-
-	{
-		"dhruvasagar/vim-zoom",
-		keys = { { "<C-w>m", "<Plug>(zoom-toggle)", desc = "Zoom window" } },
-	},
-
-	-- Transparent background
-	{
-		"xiyaowong/transparent.nvim",
-		lazy = false,
-		opts = {},
 	},
 }
