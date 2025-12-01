@@ -484,12 +484,12 @@ return {
 				builtin = {
 					ueberzug_scaler = "cover",
 					extensions = {
-						-- Use kitty graphics protocol (auto-sizes to fit)
-						["png"] = { "kitty", "icat", "--stdin=no", "{file}" },
-						["jpg"] = { "kitty", "icat", "--stdin=no", "{file}" },
-						["jpeg"] = { "kitty", "icat", "--stdin=no", "{file}" },
-						["gif"] = { "kitty", "icat", "--stdin=no", "{file}" },
-						["webp"] = { "kitty", "icat", "--stdin=no", "{file}" },
+						-- Use chafa - works reliably in all terminals including tmux
+						["png"] = { "chafa", "--format=symbols", "--symbols=block", "--colors=256", "{file}" },
+						["jpg"] = { "chafa", "--format=symbols", "--symbols=block", "--colors=256", "{file}" },
+						["jpeg"] = { "chafa", "--format=symbols", "--symbols=block", "--colors=256", "{file}" },
+						["gif"] = { "chafa", "--format=symbols", "--symbols=block", "--colors=256", "{file}" },
+						["webp"] = { "chafa", "--format=symbols", "--symbols=block", "--colors=256", "{file}" },
 					},
 				},
 				bat = {
