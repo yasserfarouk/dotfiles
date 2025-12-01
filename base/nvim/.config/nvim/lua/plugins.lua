@@ -484,12 +484,12 @@ return {
 				builtin = {
 					ueberzug_scaler = "cover",
 					extensions = {
-						-- Use kitty graphics protocol (works in tmux with passthrough)
-						["png"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--use-window-size", "{file}" },
-						["jpg"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--use-window-size", "{file}" },
-						["jpeg"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--use-window-size", "{file}" },
-						["gif"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--use-window-size", "{file}" },
-						["webp"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--use-window-size", "{file}" },
+						-- Use kitty graphics protocol (auto-sizes to fit)
+						["png"] = { "kitty", "icat", "--stdin=no", "{file}" },
+						["jpg"] = { "kitty", "icat", "--stdin=no", "{file}" },
+						["jpeg"] = { "kitty", "icat", "--stdin=no", "{file}" },
+						["gif"] = { "kitty", "icat", "--stdin=no", "{file}" },
+						["webp"] = { "kitty", "icat", "--stdin=no", "{file}" },
 					},
 				},
 				bat = {
