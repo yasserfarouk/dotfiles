@@ -209,7 +209,6 @@ return {
 					require("luasnip.loaders.from_vscode").lazy_load()
 				end,
 			},
-			"moyiz/blink-emoji.nvim",
 		},
 		opts = {
 			keymap = {
@@ -256,17 +255,7 @@ return {
 			
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
-				per_filetype = {
-					markdown = { "lsp", "path", "snippets", "buffer", "emoji" },
-					gitcommit = { "lsp", "path", "snippets", "buffer", "emoji" },
-				},
-				providers = {
-					emoji = {
-						module = "blink-emoji",
-						name = "Emoji",
-						score_offset = -1,
-					},
-				},
+				cmdline = { "path", "buffer" },
 			},
 			
 			completion = {
