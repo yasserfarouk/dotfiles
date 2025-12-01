@@ -74,15 +74,11 @@ keymap({ "n", "v" }, "<leader>D", [["_d]])
 keymap({ "n", "v" }, "<localleader>d", [["_d]])
 -- TODO fix this
 -- resize with arrows
--- resize windows
+-- resize windows (using Alt+hjkl for vim-style)
 keymap("n", "<Up>", "<C-w>k")
 keymap("n", "<Down>", "<C-w>j")
 keymap("n", "<Left>", "<C-w>h")
 keymap("n", "<Right>", "<C-w>l")
-keymap("n", "<C-Up>", ":resize -2<CR>", { desc = "Decrease height" })
-keymap("n", "<C-Down>", ":resize +2<CR>", { desc = "Increase height" })
-keymap("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease width" })
-keymap("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase width" })
 keymap("n", "<M-k>", ":resize -2<CR>", { desc = "Decrease height" })
 keymap("n", "<M-j>", ":resize +2<CR>", { desc = "Increase height" })
 keymap("n", "<M-h>", ":vertical resize -2<CR>", { desc = "Decrease width" })
