@@ -321,7 +321,7 @@ return {
 
    {
        "CopilotC-Nvim/CopilotChat.nvim",
-       branch = "canary",
+       branch = "main",
        dependencies = { "zbirenbaum/copilot.lua", "nvim-lua/plenary.nvim" },
        cmd = {
            "CopilotChat",
@@ -1067,7 +1067,7 @@ return {
 		priority = 1000,
 		lazy = false,
 		opts = function()
-			-- Set vim.ui.input before snacks setup
+			-- Set vim.ui.input and vim.notify before snacks setup
 			vim.ui.input = function(...)
 				return require("snacks").input(...)
 			end
@@ -1093,6 +1093,11 @@ picker = { enabled = true },				quickfile = { enabled = true },
 					},
 				},
 			}
+		end,
+		config = function(_, opts)
+			require("snacks").setup(opts)
+			-- Set vim.notify to use snacks
+			vim.notify = require("snacks").notifier.notify
 		end,
 init = function()
 -- Setup snacks.picker keymaps
@@ -1157,33 +1162,6 @@ end,	},
 		event = "BufReadPost",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = {},
-	},
-
-	-- Notifications (minimal config)
-	{
-		"rcarriga/nvim-notify",
-		lazy = true,
-		opts = {
-			timeout = 2000,
-			max_height = function()
-				return math.floor(vim.o.lines * 0.5)
-			end,
-			max_width = function()
-				return math.floor(vim.o.columns * 0.5)
-			end,
-			stages = "fade",
-			render = "compact",
-		},
-		config = function(_, opts)
-			local notify = require("notify")
-			notify.setup(opts)
-			-- Use notify only for errors and warnings, not info
-			vim.notify = function(msg, level, notify_opts)
-				if level and level >= vim.log.levels.WARN then
-					notify(msg, level, notify_opts)
-				end
-			end
-		end,
 	},
 
 	-- }}}1
