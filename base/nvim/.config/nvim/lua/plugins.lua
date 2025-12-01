@@ -482,11 +482,12 @@ return {
 				builtin = {
 					ueberzug_scaler = "cover",
 					extensions = {
-						["png"] = { "chafa", "{file}" },
-						["jpg"] = { "chafa", "{file}" },
-						["jpeg"] = { "chafa", "{file}" },
-						["gif"] = { "chafa", "{file}" },
-						["webp"] = { "chafa", "{file}" },
+						-- Use kitty graphics protocol for best quality in kitty terminal
+						["png"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "--place={width}x{height}@0x0", "{file}" },
+						["jpg"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "--place={width}x{height}@0x0", "{file}" },
+						["jpeg"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "--place={width}x{height}@0x0", "{file}" },
+						["gif"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "--place={width}x{height}@0x0", "{file}" },
+						["webp"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "--place={width}x{height}@0x0", "{file}" },
 					},
 				},
 				bat = {
