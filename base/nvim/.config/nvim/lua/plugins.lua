@@ -174,6 +174,7 @@ return {
 				version = "v2.*",
 				build = "make install_jsregexp",
 			},
+			"moyiz/blink-emoji.nvim",
 		},
 		opts = {
 			keymap = { preset = "default" },
@@ -189,6 +190,23 @@ return {
 			
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
+				per_filetype = {
+					markdown = { "lsp", "path", "snippets", "buffer", "emoji", "fontawesome" },
+					gitcommit = { "lsp", "path", "snippets", "buffer", "emoji" },
+					text = { "lsp", "path", "snippets", "buffer", "emoji" },
+				},
+				providers = {
+					emoji = {
+						module = "blink-emoji",
+						name = "Emoji",
+						score_offset = -1,
+					},
+					fontawesome = {
+						module = "blink-sources.fontawesome",
+						name = "FontAwesome",
+						score_offset = -2,
+					},
+				},
 			},
 			
 			completion = {
