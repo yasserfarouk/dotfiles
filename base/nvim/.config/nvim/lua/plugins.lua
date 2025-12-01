@@ -1,18 +1,17 @@
--- ╔════════════════════════════════════════════════════════════════════════════╗
--- ║                     NEOVIM PLUGINS CONFIGURATION                            ║
--- ║                   Organized into collapsible sections                       ║
--- ║                                                                             ║
--- ║  Folding: za=toggle fold, zM=close all, zR=open all, zc=close, zo=open    ║
--- ║  vim:foldmethod=marker:foldlevel=0                                         ║
--- ╚════════════════════════════════════════════════════════════════════════════╝
-
 return {
 	-- ══════════════════════════════════════════════════════════════════════════
 	-- SECTION: UI & APPEARANCE {{{1
 	-- ══════════════════════════════════════════════════════════════════════════
 	
 	-- Colorscheme
-	{ "folke/tokyonight.nvim", lazy = false, priority = 1000 },
+	{
+		"folke/tokyonight.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.cmd.colorscheme("tokyonight")
+		end,
+	},
 
 	-- }}}1
 	-- ══════════════════════════════════════════════════════════════════════════
@@ -23,13 +22,12 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			{ "folke/lazydev.nvim", ft = "lua", opts = { integrations = { cmp = false } } },
-			{ "j-hui/fidget.nvim", opts = {} }, -- LSP progress indicator
+			{ "j-hui/fidget.nvim", opts = {} },
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			"saghen/blink.cmp",
 		},
 		config = function()
-			local lspconfig = require("lspconfig")
 			local icons = require("yasser.icons")
 
 			-- Configure diagnostics
@@ -52,34 +50,46 @@ return {
 			-- Get blink.cmp capabilities
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-			-- Default server config
-			local default_config = { capabilities = capabilities }
+			-- Get lspconfig to access default configurations
+			local lspconfig = require("lspconfig")
+			local lspconfig_configs = require("lspconfig.configs")
 
-			-- Setup modern, stable LSP servers
+			-- Define servers to install and configure
 			local servers = {
-				"basedpyright", -- Modern Python (fork of pyright, better maintained)
-				"lua_ls", -- Lua (modern, actively maintained)
-				"jdtls", -- Java (still best option)
-				"ts_ls", -- TypeScript/JavaScript (stable)
-				"html", -- HTML LSP
-				"texlab", -- LaTeX (modern, best option)
-				"marksman", -- Markdown (modern, fast)
-				"intelephense", -- PHP (best PHP LSP)
-				"esbonio", -- reStructuredText LSP
-				"bashls", -- Bash LSP
+				"basedpyright",
+				"lua_ls",
+				"jdtls",
+				"ts_ls",
+				"html",
+				"texlab",
+				"marksman",
+				"intelephense",
+				"esbonio",
+				"bashls",
+				"jsonls", -- JSON
+				"yamlls", -- YAML
+				"taplo", -- TOML
+				"clangd", -- C/C++
 			}
-			for _, server in ipairs(servers) do
-				lspconfig[server].setup(default_config)
+
+			-- Configure each server using modern vim.lsp.config API
+			for _, server_name in ipairs(servers) do
+				local config = lspconfig_configs[server_name]
+				if config and config.default_config then
+					local default = config.default_config
+					vim.lsp.config(server_name, {
+						cmd = default.cmd,
+						filetypes = default.filetypes,
+						root_markers = default.root_dir and vim.fs.root and { ".git" } or nil,
+						capabilities = capabilities,
+					})
+				end
 			end
 
-			-- Mason auto-setup
+			-- Mason auto-install and auto-enable
 			require("mason-lspconfig").setup({
 				ensure_installed = servers,
-				handlers = {
-					function(server_name)
-						lspconfig[server_name].setup(default_config)
-					end,
-				},
+				automatic_enable = true,
 			})
 		end,
 	},
@@ -164,6 +174,7 @@ return {
 					lsp = {
 						name = "LSP",
 						module = "blink.cmp.sources.lsp",
+						fallbacks = { "buffer" },
 					},
 					path = {
 						name = "Path",
@@ -177,7 +188,6 @@ return {
 					buffer = {
 						name = "Buffer",
 						module = "blink.cmp.sources.buffer",
-						fallback_for = { "lsp" },
 					},
 				},
 			},
@@ -297,6 +307,8 @@ return {
 				"vim",
 				"vimdoc",
 				"regex",
+				"c",
+				"cpp",
 			},
 			highlight = { enable = true },
 			indent = { enable = true, disable = { "python" } },
@@ -804,8 +816,6 @@ return {
 	-- ══════════════════════════════════════════════════════════════════════════
 	
 	-- Python
-
-	-- Python
 	{
 		"linux-cultist/venv-selector.nvim",
 		ft = "python",
@@ -946,7 +956,7 @@ return {
 		lazy = false,
 		opts = {
 			bigfile = { enabled = true },
-			dashboard = { enabled = false }, -- Using custom statusline
+			dashboard = { enabled = true },
 			indent = { enabled = true },
 			input = { enabled = true },
 			notifier = { enabled = false }, -- Using nvim-notify instead
