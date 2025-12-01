@@ -16,6 +16,7 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			{ "folke/lazydev.nvim", ft = "lua", opts = { integrations = { cmp = false } } },
+			{ "j-hui/fidget.nvim", opts = {} }, -- LSP progress indicator
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			"saghen/blink.cmp",
@@ -758,8 +759,8 @@ return {
 				mode = 2,
 			}
 			
-			-- Disable unused compilation on write (use continuous mode instead)
-			vim.g.vimtex_compiler_progname = "nvr" -- Use neovim-remote for callbacks
+			-- neovim-remote for callbacks (use full path)
+			vim.g.vimtex_compiler_progname = "/Users/yasser/.local/bin/nvr"
 		end,
 	},
 
