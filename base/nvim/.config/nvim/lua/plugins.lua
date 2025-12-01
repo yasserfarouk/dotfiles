@@ -957,6 +957,12 @@ return {
 			auto_refresh = false,
 			search = false,
 			notify_user_on_venv_activation = false,
+			sources = {
+				{ name = "venv", path = "~/myvenvs" },
+				"venv",
+				"poetry",
+				"pipenv",
+			},
 		},
 		keys = { { "<leader>pv", "<cmd>VenvSelect<cr>", desc = "Select VirtualEnv" } },
 	},
