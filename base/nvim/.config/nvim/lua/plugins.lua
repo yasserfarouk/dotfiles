@@ -247,9 +247,8 @@ return {
 			{ "<leader>ii", "<cmd>LspInfo<cr>", desc = "LSP Info" },
 			{ "<leader>il", "<cmd>Trouble loclist toggle<cr>", desc = "Location List" },
 			{ "<leader>iq", "<cmd>Trouble qflist toggle<cr>", desc = "Quick Fix" },
-			{ "<leader>vv", "<cmd>Trouble symbols toggle<cr>", desc = "Symbol Sidebar" },
+			{ "<leader>vs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols sidebar" },
 			{ "<leader>vl", "<cmd>Trouble symbols toggle<cr>", desc = "Outline" },
-			{ "<leader>co", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols sidebar" },
 		},
 		opts = { use_diagnostic_signs = true },
 	},
@@ -947,10 +946,10 @@ return {
 		lazy = false,
 		opts = {
 			bigfile = { enabled = true },
-			dashboard = { enabled = true },
+			dashboard = { enabled = false }, -- Using custom statusline
 			indent = { enabled = true },
 			input = { enabled = true },
-			notifier = { enabled = true },
+			notifier = { enabled = false }, -- Using nvim-notify instead
 			quickfile = { enabled = true },
 			scroll = { enabled = false },
 			statuscolumn = { enabled = true },
@@ -994,7 +993,7 @@ return {
 		opts = {},
 	},
 
-	-- Notifications
+	-- Notifications (minimal config)
 	{
 		"rcarriga/nvim-notify",
 		keys = {
@@ -1007,14 +1006,26 @@ return {
 			},
 		},
 		opts = {
-			timeout = 3000,
+			timeout = 2000,
 			max_height = function()
-				return math.floor(vim.o.lines * 0.75)
+				return math.floor(vim.o.lines * 0.5)
 			end,
 			max_width = function()
-				return math.floor(vim.o.columns * 0.75)
+				return math.floor(vim.o.columns * 0.5)
 			end,
+			stages = "fade",
+			render = "compact",
 		},
+		config = function(_, opts)
+			local notify = require("notify")
+			notify.setup(opts)
+			-- Use notify only for errors and warnings, not info
+			vim.notify = function(msg, level, notify_opts)
+				if level and level >= vim.log.levels.WARN then
+					notify(msg, level, notify_opts)
+				end
+			end
+		end,
 	},
 
 	-- }}}1
