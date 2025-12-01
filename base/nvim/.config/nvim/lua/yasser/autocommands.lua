@@ -1,10 +1,7 @@
--- windows to close
+-- Quick close for special windows
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = {
-		"OverseerForm",
-		"OverseerList",
 		"checkhealth",
-		"floggraph",
 		"fugitive",
 		"git",
 		"help",
@@ -16,8 +13,6 @@ vim.api.nvim_create_autocmd("FileType", {
 		"query",
 		"startuptime",
 		"toggleterm",
-		"tsplayground",
-		"vim",
 	},
 	callback = function(event)
 		vim.bo[event.buf].buflisted = false
@@ -25,7 +20,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- go to last loc when opening a buffer
+-- Restore cursor position
 vim.api.nvim_create_autocmd("BufReadPost", {
 	callback = function()
 		local mark = vim.api.nvim_buf_get_mark(0, '"')
@@ -35,14 +30,10 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 		end
 	end,
 })
---
---
--- See `:help vim.highlight.on_yank()`
-local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
+
+-- Highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
-		vim.highlight.on_yank()
+		vim.highlight.on_yank({ timeout = 200 })
 	end,
-	group = highlight_group,
-	pattern = "*",
 })
