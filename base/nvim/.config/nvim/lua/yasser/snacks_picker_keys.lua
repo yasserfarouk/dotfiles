@@ -48,6 +48,10 @@ function M.setup()
 	map("n", "<leader>stl", function() require("snacks").picker.grep({ ft = "lua" }) end, { desc = "Grep Lua files" })
 	map("n", "<leader>stj", function() require("snacks").picker.grep({ ft = {"javascript", "typescript", "javascriptreact", "typescriptreact"} }) end, { desc = "Grep JS/TS files" })
 	map("n", "<leader>stm", function() require("snacks").picker.grep({ ft = "markdown" }) end, { desc = "Grep Markdown files" })
+	
+	-- Notifications
+	map("n", "<leader>un", function() require("snacks").notifier.hide() end, { desc = "Dismiss notifications" })
+	map("n", "<leader>sn", function() require("snacks").notifier.show_history() end, { desc = "Notification history" })
 end
 
 return M

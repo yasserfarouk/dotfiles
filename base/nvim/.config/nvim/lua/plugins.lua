@@ -685,6 +685,7 @@ return {
 			{ "<leader>xh", "<cmd>lua _HTOP_TOGGLE()<cr>", desc = "Htop" },
 			{ "<leader>xp", "<cmd>lua _PYTHON_TOGGLE()<cr>", desc = "Python REPL" },
 			{ "<leader>xl", "<cmd>lua _LUA_TOGGLE()<cr>", desc = "Lua REPL" },
+			{ "<leader>xc", "<cmd>lua _COPILOT_TOGGLE()<cr>", desc = "GitHub Copilot CLI" },
 		},
 		opts = {
 			size = function(term)
@@ -789,6 +790,21 @@ return {
 					end,
 				})
 				lua_repl:toggle()
+			end
+			
+			-- GitHub Copilot CLI
+			_G._COPILOT_TOGGLE = function()
+				local copilot = Terminal:new({
+					cmd = "gh copilot --allow-all-tools",
+					hidden = true,
+					direction = "float",
+					float_opts = { border = "rounded", width = 150, height = 40 },
+					on_open = function(term)
+						vim.cmd("startinsert!")
+						vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+					end,
+				})
+				copilot:toggle()
 			end
 		end,
 	},
@@ -1061,7 +1077,10 @@ return {
 				dashboard = { enabled = true },
 				indent = { enabled = true },
 				input = { enabled = true },
-				notifier = { enabled = true },
+				notifier = { 
+					enabled = true,
+					timeout = 5000,
+				},
 picker = { enabled = true },				quickfile = { enabled = true },
 				scroll = { enabled = false },
 				statuscolumn = { enabled = true },
