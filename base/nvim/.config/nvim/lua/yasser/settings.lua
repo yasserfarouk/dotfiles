@@ -6,7 +6,6 @@ vim.opt.signcolumn = "yes"
 vim.opt.clipboard = "unnamed,unnamedplus"
 vim.opt.confirm = true
 vim.opt.mouse = "a"
--- vim.opt.mousemodel="popup"
 vim.opt.encoding = "utf-8"
 vim.opt.fileencoding = "utf-8"
 vim.opt.fileencodings = "utf-8"
@@ -24,8 +23,6 @@ vim.opt.linebreak = true
 vim.opt.list = false
 vim.opt.updatetime = 200
 vim.opt.cmdheight = 2
--- vim.opt.fillchars+=vert:│
--- vim.opt.bomb=true
 vim.opt.binary = true
 vim.opt.relativenumber = true
 vim.opt.number = true
@@ -36,20 +33,11 @@ vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.shortmess = "filnxtToOF"
--- vim.opt.isfname-==
 vim.opt.timeoutlen = 500
--- vim.opt.guifont="JetBrainsMono Nerd Font Mono":h10
--- vim.opt.colorcolumn=79
 vim.opt.wildmenu = true
 vim.opt.wildmode = "list:longest,list:full"
--- vim.opt.wildignore=vim.opt.wildignore .. ",*/tmp/*,*.so,*.swp,*.pyc,*.db,*.sqlite"
--- vim.opt.wildignore=vim.opt.wildignore .. ",*.o,*.obj,.git,*.rbc,*.pyc,__pycache__,*_build/*,**coverage/*"
--- vim.opt.wildignore=vim.opt.wildignore .. ",**node_modules/*,**android/*,**/.git/*"
--- vim.opt.ttyfast=true
 vim.opt.synmaxcol = 200
 vim.opt.swapfile = false
--- vim.opt.lazyredraw=true
--- vim.opt.redrawtime=500
 vim.opt.title = true
 vim.opt.titleold = "Terminal"
 vim.opt.titlestring = "%F"
@@ -65,18 +53,23 @@ vim.opt.secure = true
 vim.opt.backup = false
 vim.opt.fileformats = "unix,mac,dos"
 vim.opt.autoread = true
--- vim.opt.dictionary=vim.opt.dictionary .. ",/usr/share/dict/words"
--- vim.opt.thesaurus=vim.opt.thesaurus .. ",~/.ysupport/thesaurii.txt"
 vim.opt.cursorline = true
 vim.opt.foldmethod = "indent"
 vim.opt.foldlevel = 99
--- vim.opt.foldcolumn=1
 vim.opt.spell = true
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.python_host_prog = vim.fn.expand("~myvenvs/neovim3/bin/python")
 vim.g.python3_host_prog = vim.fn.expand("~/myvenvs/neovim3/bin/python3")
--- vim.g.markdown_fenced_languages = ['html', 'python', 'ruby', 'vim', 'lua', 'php', 'c', 'go', 'rust']
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
+
+-- Rounded borders for floating windows
+vim.diagnostic.config({ float = { border = "rounded" } })
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+	opts = opts or {}
+	opts.border = opts.border or "rounded"
+	return orig_util_open_floating_preview(contents, syntax, opts, ...)
+end

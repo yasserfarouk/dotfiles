@@ -41,6 +41,10 @@ return {
 		}
 
 		cmp.setup({
+			window = {
+				completion = cmp.config.window.bordered({ border = "rounded" }),
+				documentation = cmp.config.window.bordered({ border = "rounded" }),
+			},
 			sources = cmp.config.sources({
 				{ name = "lazydev", group_index = 0 }, -- Only for Lua files, takes priority
 				{ name = "nvim_lsp" },
