@@ -221,6 +221,33 @@ return {
 			appearance = {
 				use_nvim_cmp_as_default = true,
 				nerd_font_variant = "mono",
+				kind_icons = {
+					Text = "",
+					Method = "",
+					Function = "",
+					Constructor = "",
+					Field = "",
+					Variable = "",
+					Class = "ﴯ",
+					Interface = "",
+					Module = "",
+					Property = "ﰠ",
+					Unit = "",
+					Value = "",
+					Enum = "",
+					Keyword = "",
+					Snippet = "",
+					Color = "",
+					File = "",
+					Reference = "",
+					Folder = "",
+					EnumMember = "",
+					Constant = "",
+					Struct = "",
+					Event = "",
+					Operator = "",
+					TypeParameter = "",
+				},
 			},
 			
 			snippets = {
@@ -262,7 +289,7 @@ return {
 				menu = {
 					border = "rounded",
 					draw = {
-						columns = { { "kind_icon" }, { "label", "label_description", gap = 1 }, { "kind" } },
+						columns = { { "kind_icon" }, { "label", "label_description", gap = 1 } },
 					},
 				},
 				documentation = {
