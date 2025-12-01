@@ -256,15 +256,16 @@ return {
 			
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
+				cmdline = {},
 				per_filetype = {
-					markdown = { "lsp", "path", "snippets", "buffer", "emoji", "fontawesome" },
+					markdown = { "lsp", "path", "snippets", "buffer", "emoji" },
 					gitcommit = { "lsp", "path", "snippets", "buffer", "emoji" },
-					text = { "lsp", "path", "snippets", "buffer", "emoji" },
-					css = { "lsp", "path", "snippets", "buffer", "colors" },
-					scss = { "lsp", "path", "snippets", "buffer", "colors" },
-					html = { "lsp", "path", "snippets", "buffer", "colors" },
-					javascript = { "lsp", "path", "snippets", "buffer", "colors" },
-					typescript = { "lsp", "path", "snippets", "buffer", "colors" },
+					text = { "lsp", "path", "snippets", "buffer" },
+					css = { "lsp", "path", "snippets", "buffer" },
+					scss = { "lsp", "path", "snippets", "buffer" },
+					html = { "lsp", "path", "snippets", "buffer" },
+					javascript = { "lsp", "path", "snippets", "buffer" },
+					typescript = { "lsp", "path", "snippets", "buffer" },
 				},
 				providers = {
 					emoji = {
@@ -272,20 +273,16 @@ return {
 						name = "Emoji",
 						score_offset = -1,
 					},
-					fontawesome = {
-						module = "blink-sources.fontawesome",
-						name = "FontAwesome",
-						score_offset = -2,
-					},
-					colors = {
-						module = "blink-sources.colors",
-						name = "Colors",
-						score_offset = -1,
-					},
 				},
 			},
 			
 			completion = {
+				trigger = {
+					show_on_insert_on_trigger_character = true,
+				},
+				list = {
+					max_items = 200,
+				},
 				menu = {
 					border = "rounded",
 					draw = {
@@ -294,7 +291,7 @@ return {
 				},
 				documentation = {
 					auto_show = true,
-					auto_show_delay_ms = 200,
+					auto_show_delay_ms = 500,
 					window = { border = "rounded" },
 				},
 				ghost_text = {
