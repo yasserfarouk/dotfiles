@@ -484,12 +484,12 @@ return {
 				builtin = {
 					ueberzug_scaler = "cover",
 					extensions = {
-						-- Use kitty graphics protocol with passthrough for tmux
-						["png"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--place=1x1@0x0", "{file}" },
-						["jpg"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--place=1x1@0x0", "{file}" },
-						["jpeg"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--place=1x1@0x0", "{file}" },
-						["gif"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--place=1x1@0x0", "{file}" },
-						["webp"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--place=1x1@0x0", "{file}" },
+						-- Use kitty graphics protocol (works in tmux with passthrough)
+						["png"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--use-window-size", "{file}" },
+						["jpg"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--use-window-size", "{file}" },
+						["jpeg"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--use-window-size", "{file}" },
+						["gif"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--use-window-size", "{file}" },
+						["webp"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--use-window-size", "{file}" },
 					},
 				},
 				bat = {
