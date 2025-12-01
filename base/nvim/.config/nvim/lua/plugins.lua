@@ -578,6 +578,80 @@ return {
 	-- SECTION: NAVIGATION & FILE MANAGEMENT {{{1
 	-- ══════════════════════════════════════════════════════════════════════════
 	{
+		"nvim-neo-tree/neo-tree.nvim",
+		branch = "v3.x",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"echasnovski/mini.icons",
+			"MunifTanjim/nui.nvim",
+		},
+		cmd = "Neotree",
+		keys = {
+			{ "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Toggle file explorer" },
+			{ "<leader>E", "<cmd>Neotree reveal<cr>", desc = "Reveal file in explorer" },
+		},
+		opts = {
+			close_if_last_window = true,
+			popup_border_style = "rounded",
+			enable_git_status = true,
+			enable_diagnostics = true,
+			default_component_configs = {
+				indent = {
+					with_expanders = true,
+					expander_collapsed = "",
+					expander_expanded = "",
+				},
+			},
+			window = {
+				position = "left",
+				width = 35,
+				mappings = {
+					["<space>"] = "none",
+					["<cr>"] = "open",
+					["o"] = "open",
+					["S"] = "open_split",
+					["s"] = "open_vsplit",
+					["t"] = "open_tabnew",
+					["w"] = "open_with_window_picker",
+					["C"] = "close_node",
+					["z"] = "close_all_nodes",
+					["Z"] = "expand_all_nodes",
+					["a"] = {
+						"add",
+						config = {
+							show_path = "relative",
+						},
+					},
+					["d"] = "delete",
+					["r"] = "rename",
+					["y"] = "copy_to_clipboard",
+					["x"] = "cut_to_clipboard",
+					["p"] = "paste_from_clipboard",
+					["c"] = "copy",
+					["m"] = "move",
+					["q"] = "close_window",
+					["R"] = "refresh",
+					["?"] = "show_help",
+					["<"] = "prev_source",
+					[">"] = "next_source",
+				},
+			},
+			filesystem = {
+				filtered_items = {
+					visible = false,
+					hide_dotfiles = false,
+					hide_gitignored = false,
+				},
+				follow_current_file = {
+					enabled = true,
+					leave_dirs_open = false,
+				},
+				use_libuv_file_watcher = true,
+			},
+		},
+	},
+
+	{
 		"stevearc/oil.nvim",
 		lazy = false,
 		opts = {
