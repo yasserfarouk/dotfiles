@@ -421,119 +421,6 @@ return {
 	-- ══════════════════════════════════════════════════════════════════════════
 	-- SECTION: FUZZY FINDER & SEARCH {{{1
 	-- ══════════════════════════════════════════════════════════════════════════
-	{
-		"ibhagwan/fzf-lua",
-		cmd = "FzfLua",
-		dependencies = { "echasnovski/mini.icons" },
-		keys = {
-			-- Main search keymaps
-			{ "<leader>/", "<cmd>FzfLua grep_curbuf<cr>", desc = "Buffer fuzzy find" },
-			{ "<leader>f", "<cmd>FzfLua files<cr>", desc = "Find files" },
-			{ "<leader>;", "<cmd>FzfLua files<cr>", desc = "Find files" },
-
-			-- Search commands
-			{ "<leader>s.", "<cmd>FzfLua files cwd=~/.config/nvim<cr>", desc = "Vim config files" },
-			{ "<leader>sa", "<cmd>FzfLua files<cr>", desc = "Find files" },
-			{ "<leader>sB", "<cmd>FzfLua git_branches<cr>", desc = "Git branches" },
-			{ "<leader>sc", "<cmd>FzfLua colorschemes<cr>", desc = "Colorschemes" },
-			{ "<leader>SC", "<cmd>FzfLua commands<cr>", desc = "Commands" },
-			{ "<leader>sd", "<cmd>FzfLua diagnostics_document<cr>", desc = "Document diagnostics" },
-			{ "<leader>sD", "<cmd>FzfLua diagnostics_workspace<cr>", desc = "Workspace diagnostics" },
-			{ "<leader>sf", "<cmd>FzfLua files<cr>", desc = "Files" },
-			{ "<leader>sg", "<cmd>FzfLua grep_curbuf<cr>", desc = "Buffer fuzzy find" },
-			{ "<leader>sh", "<cmd>FzfLua git_bcommits<cr>", desc = "File history" },
-			{ "<leader>sH", "<cmd>FzfLua help_tags<cr>", desc = "Help" },
-			{ "<leader>sm", "<cmd>FzfLua marks<cr>", desc = "Marks" },
-			{ "<leader>sM", "<cmd>FzfLua man_pages<cr>", desc = "Man pages" },
-			{ "<leader>so", "<cmd>FzfLua vim_options<cr>", desc = "Vim options" },
-			{ "<leader>sp", "<cmd>FzfLua oldfiles<cr>", desc = "Recent files" },
-			{ "<leader>sr", "<cmd>FzfLua registers<cr>", desc = "Registers" },
-			{ "<leader>ss", "<cmd>FzfLua lsp_document_symbols<cr>", desc = "Document symbols" },
-			{ "<leader>st", "<cmd>FzfLua live_grep<cr>", desc = "Live grep" },
-			{ "<leader>sT", "<cmd>FzfLua live_grep<cr>", desc = "Live grep (with filter)" },
-			{ "<leader>sw", "<cmd>FzfLua grep_cword<cr>", desc = "Word under cursor" },
-			{ "<leader>s*", "<cmd>FzfLua grep_cword<cr>", desc = "Word under cursor" },
-			{ "<leader>s;", "<cmd>FzfLua filetypes<cr>", desc = "Filetypes" },
-			{ "<leader>s/", "<cmd>FzfLua command_history<cr>", desc = "Command history" },
-
-			-- Buffer management
-			{ "<leader>bb", "<cmd>FzfLua buffers<cr>", desc = "Buffers" },
-
-			-- LSP
-			{ "<leader>cd", "<cmd>FzfLua diagnostics_document<cr>", desc = "Document diagnostics" },
-			{ "<leader>cD", "<cmd>FzfLua diagnostics_workspace<cr>", desc = "Workspace diagnostics" },
-			{ "<leader>cq", "<cmd>FzfLua quickfix<cr>", desc = "Quickfix" },
-			{ "<leader>cs", "<cmd>FzfLua lsp_document_symbols<cr>", desc = "Document symbols" },
-			{ "<leader>cw", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Workspace symbols" },
-
-			-- Language-specific grep
-			{ "<leader>stp", "<cmd>FzfLua live_grep glob=*.py<cr>", desc = "Grep Python files" },
-			{ "<leader>stl", "<cmd>FzfLua live_grep glob=*.lua<cr>", desc = "Grep Lua files" },
-			{ "<leader>stj", "<cmd>FzfLua live_grep glob=*.{js,jsx,ts,tsx}<cr>", desc = "Grep JS/TS files" },
-			{ "<leader>stm", "<cmd>FzfLua live_grep glob=*.md<cr>", desc = "Grep Markdown files" },
-		},
-		opts = {
-			winopts = {
-				border = "rounded",
-				preview = {
-					default = "builtin",
-					scrollbar = "float",
-				},
-			},
-			previewers = {
-				builtin = {
-					ueberzug_scaler = "cover",
-					extensions = {
-						-- Use chafa with maximum quality settings
-						["png"] = { "chafa", "--format=symbols", "--symbols=block+border+space+stipple+braille+geometric+ascii", "--colors=full", "--dither=ordered", "--color-space=rgb", "{file}" },
-						["jpg"] = { "chafa", "--format=symbols", "--symbols=block+border+space+stipple+braille+geometric+ascii", "--colors=full", "--dither=ordered", "--color-space=rgb", "{file}" },
-						["jpeg"] = { "chafa", "--format=symbols", "--symbols=block+border+space+stipple+braille+geometric+ascii", "--colors=full", "--dither=ordered", "--color-space=rgb", "{file}" },
-						["gif"] = { "chafa", "--format=symbols", "--symbols=block+border+space+stipple+braille+geometric+ascii", "--colors=full", "--dither=ordered", "--color-space=rgb", "{file}" },
-						["webp"] = { "chafa", "--format=symbols", "--symbols=block+border+space+stipple+braille+geometric+ascii", "--colors=full", "--dither=ordered", "--color-space=rgb", "{file}" },
-					},
-				},
-				bat = {
-					cmd = "bat",
-					args = "--color=always --style=plain",
-				},
-			},
-			files = {
-				previewer = "builtin",
-			},
-			fzf_opts = { ["--layout"] = "reverse" },
-			fzf_colors = {
-				["fg"] = { "fg", "Normal" },
-				["bg"] = { "bg", "Normal" },
-				["hl"] = { "fg", "Comment" },
-				["fg+"] = { "fg", "CursorLine" },
-				["bg+"] = { "bg", "CursorLine" },
-				["hl+"] = { "fg", "Statement" },
-				["info"] = { "fg", "PreProc" },
-				["prompt"] = { "fg", "Conditional" },
-				["pointer"] = { "fg", "Exception" },
-				["marker"] = { "fg", "Keyword" },
-				["spinner"] = { "fg", "Label" },
-				["header"] = { "fg", "Comment" },
-				["gutter"] = { "bg", "Normal" },
-			},
-			-- Quickfix keymaps
-			actions = {
-				files = {
-					["default"] = function(...) return require("fzf-lua").actions.file_edit(...) end,
-					["ctrl-q"] = function(...) return require("fzf-lua").actions.file_sel_to_qf(...) end,
-					["alt-q"] = function(...) return require("fzf-lua").actions.file_sel_to_qf(...) end,
-				},
-			},
-			keymap = {
-				fzf = {
-					["ctrl-q"] = "select-all+accept",
-					["alt-q"] = "select-all+accept",
-					["ctrl-u"] = "preview-page-up",
-					["ctrl-d"] = "preview-page-down",
-				},
-			},
-		},
-	},
 
 	-- }}}1
 	-- ══════════════════════════════════════════════════════════════════════════
@@ -1176,7 +1063,7 @@ return {
 				indent = { enabled = true },
 				input = { enabled = true },
 				notifier = { enabled = true },
-				quickfile = { enabled = true },
+picker = { enabled = true },				quickfile = { enabled = true },
 				scroll = { enabled = false },
 				statuscolumn = { enabled = true },
 				words = { enabled = true },
@@ -1189,7 +1076,10 @@ return {
 				},
 			}
 		end,
-	},
+init = function()
+-- Setup snacks.picker keymaps
+require("yasser.snacks_picker_keys").setup()
+end,	},
 
 	{
 		"echasnovski/mini.icons",
