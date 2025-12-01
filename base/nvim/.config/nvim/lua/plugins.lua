@@ -953,7 +953,6 @@ return {
 		"linux-cultist/venv-selector.nvim",
 		ft = "python",
 		dependencies = { "neovim/nvim-lspconfig" },
-		branch = "regexp",
 		opts = {},
 		keys = { { "<leader>pv", "<cmd>VenvSelect<cr>", desc = "Select VirtualEnv" } },
 	},
