@@ -88,18 +88,18 @@ if vim.env.TERM == "xterm-kitty" then
 	vim.g.kitty_fast_forwarding = 1
 	vim.opt.mousemoveevent = true
 	
-	-- Enhanced clipboard for Kitty
+	-- Enhanced clipboard for Kitty with OSC 52 fallback
 	vim.g.clipboard = {
 		name = "kitty",
 		copy = {
-			["+"] = { "kitty", "+kitten", "clipboard" },
-			["*"] = { "kitty", "+kitten", "clipboard" },
+			["+"] = { "kitty", "+kitten", "clipboard", "--use-primary" },
+			["*"] = { "kitty", "+kitten", "clipboard", "--use-primary" },
 		},
 		paste = {
 			["+"] = { "kitty", "+kitten", "clipboard", "--get-clipboard" },
 			["*"] = { "kitty", "+kitten", "clipboard", "--get-clipboard" },
 		},
-		cache_enabled = 1,
+		cache_enabled = 0,
 	}
 	
 	-- Enable undercurl support in Kitty
@@ -107,6 +107,20 @@ if vim.env.TERM == "xterm-kitty" then
 		let &t_Cs = "\e[4:3m"
 		let &t_Ce = "\e[4:0m"
 	]])
+elseif vim.fn.has("mac") == 1 then
+	-- macOS clipboard using pbcopy/pbpaste
+	vim.g.clipboard = {
+		name = "macOS",
+		copy = {
+			["+"] = "pbcopy",
+			["*"] = "pbcopy",
+		},
+		paste = {
+			["+"] = "pbpaste",
+			["*"] = "pbpaste",
+		},
+		cache_enabled = 0,
+	}
 end
 
 -- ============================================================================

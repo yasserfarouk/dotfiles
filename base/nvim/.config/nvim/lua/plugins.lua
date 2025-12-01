@@ -298,7 +298,7 @@ return {
 				keymap = {
 					accept = "<M-CR>",
 					accept_word = "<M-w>",
-					accept_line = "<M-j>",
+					accept_line = "<M-l>",
 					next = "<M-]>",
 					prev = "<M-[>",
 					dismiss = "<C-]>",
@@ -1162,15 +1162,7 @@ end,	},
 	-- Notifications (minimal config)
 	{
 		"rcarriga/nvim-notify",
-		keys = {
-			{
-				"<leader>un",
-				function()
-					require("notify").dismiss({ silent = true, pending = true })
-				end,
-				desc = "Dismiss notifications",
-			},
-		},
+		lazy = true,
 		opts = {
 			timeout = 2000,
 			max_height = function()
