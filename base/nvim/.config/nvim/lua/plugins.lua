@@ -484,12 +484,12 @@ return {
 				builtin = {
 					ueberzug_scaler = "cover",
 					extensions = {
-						-- Use chafa for terminal image preview (works in tmux)
-						["png"] = { "chafa", "--format=symbols", "--colors=256", "--fill=block", "{file}" },
-						["jpg"] = { "chafa", "--format=symbols", "--colors=256", "--fill=block", "{file}" },
-						["jpeg"] = { "chafa", "--format=symbols", "--colors=256", "--fill=block", "{file}" },
-						["gif"] = { "chafa", "--format=symbols", "--colors=256", "--fill=block", "{file}" },
-						["webp"] = { "chafa", "--format=symbols", "--colors=256", "--fill=block", "{file}" },
+						-- Use kitty graphics protocol with passthrough for tmux
+						["png"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--place=1x1@0x0", "{file}" },
+						["jpg"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--place=1x1@0x0", "{file}" },
+						["jpeg"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--place=1x1@0x0", "{file}" },
+						["gif"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--place=1x1@0x0", "{file}" },
+						["webp"] = { "kitty", "icat", "--stdin=no", "--transfer-mode=file", "--place=1x1@0x0", "{file}" },
 					},
 				},
 				bat = {
