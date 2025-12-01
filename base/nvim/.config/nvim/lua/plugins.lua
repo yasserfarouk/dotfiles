@@ -411,6 +411,7 @@ return {
 			{ "<leader>sr", "<cmd>FzfLua registers<cr>", desc = "Registers" },
 			{ "<leader>ss", "<cmd>FzfLua lsp_document_symbols<cr>", desc = "Document symbols" },
 			{ "<leader>st", "<cmd>FzfLua live_grep<cr>", desc = "Live grep" },
+			{ "<leader>sT", "<cmd>FzfLua live_grep<cr>", desc = "Live grep (with filter)" },
 			{ "<leader>sw", "<cmd>FzfLua grep_cword<cr>", desc = "Word under cursor" },
 			{ "<leader>s*", "<cmd>FzfLua grep_cword<cr>", desc = "Word under cursor" },
 			{ "<leader>s;", "<cmd>FzfLua filetypes<cr>", desc = "Filetypes" },
@@ -425,6 +426,12 @@ return {
 			{ "<leader>cq", "<cmd>FzfLua quickfix<cr>", desc = "Quickfix" },
 			{ "<leader>cs", "<cmd>FzfLua lsp_document_symbols<cr>", desc = "Document symbols" },
 			{ "<leader>cw", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Workspace symbols" },
+
+			-- Language-specific grep
+			{ "<leader>stp", "<cmd>FzfLua live_grep glob=*.py<cr>", desc = "Grep Python files" },
+			{ "<leader>stl", "<cmd>FzfLua live_grep glob=*.lua<cr>", desc = "Grep Lua files" },
+			{ "<leader>stj", "<cmd>FzfLua live_grep glob=*.{js,jsx,ts,tsx}<cr>", desc = "Grep JS/TS files" },
+			{ "<leader>stm", "<cmd>FzfLua live_grep glob=*.md<cr>", desc = "Grep Markdown files" },
 		},
 		opts = {
 			winopts = {
