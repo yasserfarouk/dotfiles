@@ -194,6 +194,11 @@ return {
 					markdown = { "lsp", "path", "snippets", "buffer", "emoji", "fontawesome" },
 					gitcommit = { "lsp", "path", "snippets", "buffer", "emoji" },
 					text = { "lsp", "path", "snippets", "buffer", "emoji" },
+					css = { "lsp", "path", "snippets", "buffer", "colors" },
+					scss = { "lsp", "path", "snippets", "buffer", "colors" },
+					html = { "lsp", "path", "snippets", "buffer", "colors" },
+					javascript = { "lsp", "path", "snippets", "buffer", "colors" },
+					typescript = { "lsp", "path", "snippets", "buffer", "colors" },
 				},
 				providers = {
 					emoji = {
@@ -205,6 +210,11 @@ return {
 						module = "blink-sources.fontawesome",
 						name = "FontAwesome",
 						score_offset = -2,
+					},
+					colors = {
+						module = "blink-sources.colors",
+						name = "Colors",
+						score_offset = -1,
 					},
 				},
 			},
