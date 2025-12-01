@@ -16,11 +16,11 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			{ "folke/neoconf.nvim", cmd = "Neoconf", config = true },
-			{ "folke/lazydev.nvim", ft = "lua", opts = {} },
+			{ "folke/lazydev.nvim", ft = "lua", opts = { integrations = { cmp = false } } },
 			{ "j-hui/fidget.nvim", opts = {} },
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
-			"hrsh7th/cmp-nvim-lsp",
+			"saghen/blink.cmp",
 		},
 		opts = {
 			servers = {
@@ -114,120 +114,116 @@ return {
 		},
 	},
 
+	-- ============================================================================
+	-- COMPLETION (BLINK.CMP - Modern, Fast)
+	-- ============================================================================
 	{
-		"hrsh7th/nvim-cmp",
+		"saghen/blink.cmp",
+		version = "*",
 		event = "InsertEnter",
 		dependencies = {
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-path",
-			"hrsh7th/cmp-cmdline",
-			"saadparwaiz1/cmp_luasnip",
+			"rafamadriz/friendly-snippets",
+			{
+				"L3MON4D3/LuaSnip",
+				version = "v2.*",
+				build = "make install_jsregexp",
+			},
 		},
-		config = function()
-			local cmp = require("cmp")
-			local luasnip = require("luasnip")
-			local kind_icons = {
-				Text = "󰉿",
-				Method = "󰡱",
-				Function = "󰊕",
-				Constructor = "",
-				Field = "",
-				Variable = "󰆧",
-				Class = "󰌗",
-				Interface = "",
-				Module = "",
-				Property = "",
-				Unit = "",
-				Value = "󰬺",
-				Enum = "",
-				Keyword = "󰌋",
-				Snippet = "",
-				Color = "󰸌",
-				File = "󰈙",
-				Reference = "",
-				Folder = "󰉋",
-				EnumMember = "",
-				Constant = "󰇽",
-				Struct = "",
-				Event = "",
-				Operator = "󰆕",
-				TypeParameter = "󰴑",
-			}
+		opts = {
+			keymap = {
+				preset = "default",
+				["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+				["<C-e>"] = { "hide", "fallback" },
+				["<CR>"] = { "accept", "fallback" },
+				["<Tab>"] = { "snippet_forward", "select_next", "fallback" },
+				["<S-Tab>"] = { "snippet_backward", "select_prev", "fallback" },
+				["<C-p>"] = { "select_prev", "fallback" },
+				["<C-n>"] = { "select_next", "fallback" },
+				["<C-b>"] = { "scroll_documentation_up", "fallback" },
+				["<C-f>"] = { "scroll_documentation_down", "fallback" },
+			},
+			appearance = {
+				use_nvim_cmp_as_default = true,
+				nerd_font_variant = "mono",
+			},
+			sources = {
+				default = { "lsp", "path", "luasnip", "buffer" },
+				providers = {
+					lsp = {
+						name = "LSP",
+						module = "blink.cmp.sources.lsp",
+					},
+					path = {
+						name = "Path",
+						module = "blink.cmp.sources.path",
+					},
+					luasnip = {
+						name = "Luasnip",
+						module = "blink.cmp.sources.luasnip",
+						score_offset = -3,
+					},
+					buffer = {
+						name = "Buffer",
+						module = "blink.cmp.sources.buffer",
+						fallback_for = { "lsp" },
+					},
+				},
+			},
+			completion = {
+				menu = {
+					border = "rounded",
+					draw = {
+						columns = { { "kind_icon" }, { "label", "label_description", gap = 1 }, { "kind" } },
+					},
+				},
+				documentation = {
+					auto_show = true,
+					auto_show_delay_ms = 200,
+					window = { border = "rounded" },
+				},
+			},
+			signature = {
+				enabled = true,
+				window = { border = "rounded" },
+			},
+		},
+		opts_extend = { "sources.default" },
+	},
 
-			cmp.setup({
-				snippet = {
-					expand = function(args)
-						luasnip.lsp_expand(args.body)
-					end,
+	-- ============================================================================
+	-- COPILOT (Virtual Text Suggestions)
+	-- ============================================================================
+	{
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		opts = {
+			suggestion = {
+				enabled = true,
+				auto_trigger = true,
+				debounce = 75,
+				keymap = {
+					accept = "<M-l>",
+					accept_word = "<M-w>",
+					accept_line = "<M-j>",
+					next = "<M-]>",
+					prev = "<M-[>",
+					dismiss = "<C-]>",
 				},
-				window = {
-					completion = cmp.config.window.bordered({ border = "rounded" }),
-					documentation = cmp.config.window.bordered({ border = "rounded" }),
-				},
-				sources = cmp.config.sources({
-					{ name = "lazydev", group_index = 0 },
-					{ name = "nvim_lsp" },
-					{ name = "luasnip" },
-				}, {
-					{ name = "buffer", keyword_length = 3 },
-					{ name = "path" },
-				}),
-				formatting = {
-					fields = { "kind", "abbr", "menu" },
-					format = function(entry, vim_item)
-						vim_item.kind = string.format("%s", kind_icons[vim_item.kind] or "")
-						vim_item.menu = ({
-							buffer = "",
-							nvim_lsp = "",
-							nvim_lua = "",
-							path = "󰇘",
-							lazydev = "",
-						})[entry.source.name]
-						return vim_item
-					end,
-				},
-				mapping = cmp.mapping.preset.insert({
-					["<C-p>"] = cmp.mapping.select_prev_item(),
-					["<C-n>"] = cmp.mapping.select_next_item(),
-					["<C-b>"] = cmp.mapping.scroll_docs(-4),
-					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<C-Space>"] = cmp.mapping.complete(),
-					["<C-e>"] = cmp.mapping.abort(),
-					["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
-					["<Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_next_item()
-						elseif luasnip.expand_or_jumpable() then
-							luasnip.expand_or_jump()
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-					["<S-Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_prev_item()
-						elseif luasnip.jumpable(-1) then
-							luasnip.jump(-1)
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-				}),
-				completion = { completeopt = "menu,menuone,noinsert" },
-				experimental = { ghost_text = true },
-			})
-
-			-- Cmdline completion
-			cmp.setup.cmdline("/", {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = { { name = "buffer" } },
-			})
-			cmp.setup.cmdline(":", {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
-			})
-		end,
+			},
+			panel = { enabled = false },
+			filetypes = {
+				yaml = false,
+				markdown = false,
+				help = false,
+				gitcommit = false,
+				gitrebase = false,
+				hgcommit = false,
+				svn = false,
+				cvs = false,
+				["."] = false,
+			},
+		},
 	},
 
 	{
