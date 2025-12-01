@@ -38,3 +38,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
+-- Enable spell checking for document filetypes
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "tex", "latex", "rst", "text", "gitcommit" },
+	callback = function()
+		vim.opt_local.spell = true
+		vim.opt_local.spelllang = "en_us"
+	end,
+})
+
