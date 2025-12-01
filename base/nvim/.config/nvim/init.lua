@@ -1,12 +1,17 @@
-require("yasser.settings")
-require("yasser.globals")
-vim.cmd("source ~/.config/nvim/vimscript/functions.vim")
-require("yasser.lazy")
-vim.g.tokyonight_style = "night"
-vim.cmd("colorscheme " .. "tokyonight")
-require("yasser.autocommands")
-if vim.g.started_by_firenvim then
-	vim.cmd("source ~/.config/nvim/vimscript/firenvim.vim")
-end
-require("yasser.statusline")
+-- Neovim Configuration
+-- Simplified and consolidated
+
+-- Load core configuration (settings, keymaps, LSP)
+require("core")
+
+-- Load keymaps (user-defined mappings)
 require("yasser.keymaps")
+
+-- Load statusline
+require("yasser.statusline")
+
+-- Load autocommands
+require("yasser.autocommands")
+
+-- Load lazy.nvim plugin manager
+require("yasser.lazy")

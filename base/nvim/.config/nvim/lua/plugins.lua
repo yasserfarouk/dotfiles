@@ -22,24 +22,9 @@ return {
 			"williamboman/mason-lspconfig.nvim",
 			"saghen/blink.cmp",
 		},
-		opts = {
-			servers = {
-				pyright = {},
-				lua_ls = {},
-				jdtls = {},
-				ts_ls = {},
-				texlab = {},
-				marksman = {},
-			},
-		},
-		config = function(_, opts)
-			local lsp_utils = require("plugins.lsp.utils")
+		config = function()
+			local lspconfig = require("lspconfig")
 			local icons = require("yasser.icons")
-
-			-- Setup keymaps on LSP attach
-			lsp_utils.on_attach(function(client, buffer)
-				require("plugins.lsp.keymaps").on_attach(client, buffer)
-			end)
 
 			-- Configure diagnostics
 			vim.diagnostic.config({
@@ -58,18 +43,27 @@ return {
 				float = { focusable = true, style = "minimal", border = "rounded", source = "always" },
 			})
 
-			-- Get capabilities and setup servers
-			local capabilities = lsp_utils.capabilities()
-			require("mason-lspconfig").setup({
-				ensure_installed = vim.tbl_keys(opts.servers),
-				automatic_enable = false,
-			})
+			-- Get blink.cmp capabilities
+			local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-			for server_name, server_config in pairs(opts.servers) do
-				local config = vim.tbl_deep_extend("force", { capabilities = capabilities }, server_config)
-				vim.lsp.config(server_name, config)
-				vim.lsp.enable(server_name)
+			-- Default server config
+			local default_config = { capabilities = capabilities }
+
+			-- Setup common servers
+			local servers = { "pyright", "lua_ls", "jdtls", "ts_ls", "texlab", "marksman" }
+			for _, server in ipairs(servers) do
+				lspconfig[server].setup(default_config)
 			end
+
+			-- Mason auto-setup
+			require("mason-lspconfig").setup({
+				ensure_installed = servers,
+				handlers = {
+					function(server_name)
+						lspconfig[server_name].setup(default_config)
+					end,
+				},
+			})
 		end,
 	},
 
@@ -77,41 +71,40 @@ return {
 		"williamboman/mason.nvim",
 		cmd = "Mason",
 		keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
-		opts = { ui = { border = "rounded" }, ensure_installed = { "debugpy", "codelldb" } },
+		opts = {
+			ui = { border = "rounded" },
+			ensure_installed = { "debugpy", "codelldb", "stylua", "black", "isort", "prettier" },
+		},
 		config = function(_, opts)
 			require("mason").setup(opts)
 			local mr = require("mason-registry")
+			
+			-- Auto-install tools
 			for _, tool in ipairs(opts.ensure_installed) do
 				local p = mr.get_package(tool)
 				if not p:is_installed() then
 					p:install()
 				end
 			end
+			
+			-- Auto-setup LSP servers installed via Mason
+			mr:on("package:install:success", function(pkg)
+				local server_name = pkg.name
+				-- Map some package names to their LSP names
+				local name_map = {
+					["typescript-language-server"] = "ts_ls",
+					["python-lsp-server"] = "pylsp",
+				}
+				server_name = name_map[server_name] or server_name
+				
+				-- Auto-setup if it's an LSP server
+				if vim.tbl_contains(vim.tbl_keys(require("lspconfig.configs")), server_name) then
+					vim.schedule(function()
+						require("lspconfig")[server_name].setup({})
+					end)
+				end
+			end)
 		end,
-	},
-
-	{
-		"stevearc/conform.nvim",
-		event = "BufWritePre",
-		keys = {
-			{
-				"<leader>cf",
-				function()
-					require("conform").format({ timeout_ms = 3000 })
-				end,
-				desc = "Format",
-			},
-		},
-		opts = {
-			formatters_by_ft = {
-				lua = { "stylua" },
-				python = { "black", "isort" },
-				javascript = { "prettier" },
-				typescript = { "prettier" },
-				json = { "prettier" },
-				markdown = { "prettier" },
-			},
-		},
 	},
 
 	-- ============================================================================
@@ -203,7 +196,7 @@ return {
 				auto_trigger = true,
 				debounce = 75,
 				keymap = {
-					accept = "<M-l>",
+					accept = "<M-CR>",
 					accept_word = "<M-w>",
 					accept_line = "<M-j>",
 					next = "<M-]>",
@@ -483,6 +476,44 @@ return {
 	-- ============================================================================
 	-- NAVIGATION
 	-- ============================================================================
+	{
+		"stevearc/oil.nvim",
+		lazy = false,
+		opts = {
+			default_file_explorer = true,
+			columns = { "icon" },
+			view_options = {
+				show_hidden = true,
+			},
+			float = {
+				padding = 2,
+				max_width = 90,
+				max_height = 0,
+				border = "rounded",
+			},
+			keymaps = {
+				["g?"] = "actions.show_help",
+				["<CR>"] = "actions.select",
+				["<C-s>"] = "actions.select_vsplit",
+				["<C-h>"] = "actions.select_split",
+				["<C-t>"] = "actions.select_tab",
+				["<C-p>"] = "actions.preview",
+				["<C-c>"] = "actions.close",
+				["<C-r>"] = "actions.refresh",
+				["-"] = "actions.parent",
+				["_"] = "actions.open_cwd",
+				["`"] = "actions.cd",
+				["~"] = "actions.tcd",
+				["gs"] = "actions.change_sort",
+				["gx"] = "actions.open_external",
+				["g."] = "actions.toggle_hidden",
+			},
+		},
+		keys = {
+			{ "-", "<cmd>Oil<cr>", desc = "Open parent directory" },
+		},
+	},
+
 	{ "wsdjeg/vim-fetch" },
 	{ "tpope/vim-unimpaired", event = "BufReadPost" },
 	{ "michaeljsmith/vim-indent-object", event = "BufReadPost" },
