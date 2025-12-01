@@ -483,11 +483,11 @@ return {
 					ueberzug_scaler = "cover",
 					extensions = {
 						-- Use kitty graphics protocol for best quality in kitty terminal
-						["png"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "--place={width}x{height}@0x0", "{file}" },
-						["jpg"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "--place={width}x{height}@0x0", "{file}" },
-						["jpeg"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "--place={width}x{height}@0x0", "{file}" },
-						["gif"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "--place={width}x{height}@0x0", "{file}" },
-						["webp"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "--place={width}x{height}@0x0", "{file}" },
+						["png"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "{file}" },
+						["jpg"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "{file}" },
+						["jpeg"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "{file}" },
+						["gif"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "{file}" },
+						["webp"] = { "kitty", "+kitten", "icat", "--transfer-mode=file", "{file}" },
 					},
 				},
 				bat = {
@@ -1112,8 +1112,8 @@ return {
 		"epwalsh/obsidian.nvim",
 		lazy = true,
 		event = {
-			"BufReadPre " .. vim.fn.expand("~") .. "/Documents/obsidian/**.md",
-			"BufNewFile " .. vim.fn.expand("~") .. "/Documents/obsidian/**.md",
+			"BufReadPre " .. vim.fn.expand("~") .. "/Library/Mobile Documents/iCloud~md~obsidian/Documents/yasser/**.md",
+			"BufNewFile " .. vim.fn.expand("~") .. "/Library/Mobile Documents/iCloud~md~obsidian/Documents/yasser/**.md",
 		},
 		dependencies = { "nvim-lua/plenary.nvim" },
 		keys = {
@@ -1128,7 +1128,7 @@ return {
 		},
 		opts = {
 			workspaces = {
-				{ name = "personal", path = "~/Documents/obsidian/personal" },
+				{ name = "yasser", path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/yasser" },
 			},
 			notes_subdir = "notes",
 			daily_notes = {
