@@ -192,8 +192,11 @@ return {
 				use_nvim_cmp_as_default = true,
 				nerd_font_variant = "mono",
 			},
+			snippets = {
+				preset = "luasnip",
+			},
 			sources = {
-				default = { "lsp", "path", "luasnip", "buffer" },
+				default = { "lsp", "path", "snippets", "buffer" },
 				providers = {
 					lsp = {
 						name = "LSP",
@@ -203,11 +206,6 @@ return {
 					path = {
 						name = "Path",
 						module = "blink.cmp.sources.path",
-					},
-					luasnip = {
-						name = "Luasnip",
-						module = "blink.cmp.sources.luasnip",
-						score_offset = -3,
 					},
 					buffer = {
 						name = "Buffer",
