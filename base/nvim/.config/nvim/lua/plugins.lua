@@ -362,17 +362,17 @@ return {
 			},
 			fzf_opts = { ["--layout"] = "reverse" },
 			-- Quickfix keymaps
+			actions = {
+				files = {
+					["default"] = function(...) return require("fzf-lua").actions.file_edit(...) end,
+					["ctrl-q"] = function(...) return require("fzf-lua").actions.file_sel_to_qf(...) end,
+					["alt-q"] = function(...) return require("fzf-lua").actions.file_sel_to_qf(...) end,
+				},
+			},
 			keymap = {
 				fzf = {
 					["ctrl-q"] = "select-all+accept",
 					["alt-q"] = "select-all+accept",
-				},
-			},
-			actions = {
-				files = {
-					["default"] = require("fzf-lua").actions.file_edit,
-					["ctrl-q"] = require("fzf-lua").actions.file_sel_to_qf,
-					["alt-q"] = require("fzf-lua").actions.file_sel_to_qf,
 				},
 			},
 		},

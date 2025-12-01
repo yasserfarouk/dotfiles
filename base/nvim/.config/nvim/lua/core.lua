@@ -156,7 +156,6 @@ M.setup_lsp_keymaps(client, bufnr)
 end,
 })
 
-return M
 
 -- ============================================================================
 -- LSP PROGRESS INDICATOR (Simple Visual Feedback)
