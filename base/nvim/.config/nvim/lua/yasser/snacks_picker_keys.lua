@@ -11,6 +11,8 @@ function M.setup()
 
 	-- Search commands
 	map("n", "<leader>s.", function() require("snacks").picker.files({ cwd = "~/.config/nvim" }) end, { desc = "Vim config files" })
+	map("n", "<leader>sv", function() require("snacks").picker.files({ cwd = "~/.config/nvim" }) end, { desc = "Vim config files" })
+	map("n", "<leader>se", function() require("snacks").picker.files({ cwd = "~/.config" }) end, { desc = "Config files (~/.config)" })
 	map("n", "<leader>sa", function() require("snacks").picker.files() end, { desc = "Find files" })
 	map("n", "<leader>sB", function() require("snacks").picker.git_branches() end, { desc = "Git branches" })
 	map("n", "<leader>sc", function() require("snacks").picker.colorschemes() end, { desc = "Colorschemes" })
