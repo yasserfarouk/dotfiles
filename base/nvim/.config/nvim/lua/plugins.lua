@@ -286,7 +286,11 @@ return {
 					["<C-e>"] = cmp.mapping.abort(),
 					["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
 					["<Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
+						-- Check if copilot has a suggestion
+						local copilot_ok, copilot_suggestion = pcall(require, "copilot.suggestion")
+						if copilot_ok and copilot_suggestion.is_visible() then
+							copilot_suggestion.accept()
+						elseif cmp.visible() then
 							cmp.select_next_item()
 						elseif luasnip.expand_or_jumpable() then
 							luasnip.expand_or_jump()
@@ -334,7 +338,7 @@ return {
 				auto_trigger = true,
 				debounce = 75,
 				keymap = {
-					accept = "<M-CR>",
+					accept = "<S-CR>",
 					accept_word = "<M-w>",
 					accept_line = "<M-L>",
 					next = "<M-]>",
