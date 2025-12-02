@@ -286,16 +286,18 @@ return {
 					["<C-e>"] = cmp.mapping.abort(),
 					["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
 					["<Tab>"] = cmp.mapping(function(fallback)
-						-- Check if copilot has a suggestion
-						local copilot_ok, copilot_suggestion = pcall(require, "copilot.suggestion")
-						if copilot_ok and copilot_suggestion.is_visible() then
-							copilot_suggestion.accept()
-						elseif cmp.visible() then
+						-- Prioritize cmp menu if visible, otherwise check copilot
+						if cmp.visible() then
 							cmp.select_next_item()
-						elseif luasnip.expand_or_jumpable() then
-							luasnip.expand_or_jump()
 						else
-							fallback()
+							local copilot_ok, copilot_suggestion = pcall(require, "copilot.suggestion")
+							if copilot_ok and copilot_suggestion.is_visible() then
+								copilot_suggestion.accept()
+							elseif luasnip.expand_or_jumpable() then
+								luasnip.expand_or_jump()
+							else
+								fallback()
+							end
 						end
 					end, { "i", "s" }),
 					["<S-Tab>"] = cmp.mapping(function(fallback)
