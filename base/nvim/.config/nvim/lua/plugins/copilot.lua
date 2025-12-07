@@ -42,7 +42,7 @@ return {
 					debounce = 75,
 					trigger_on_accept = true,
 					keymap = {
-						accept = "<M-CR>",
+						accept = false, -- Disable default, we'll set custom keymaps
 						accept_word = "<M-w>",
 						accept_line = "M-q",
 						next = "<M-]>",
@@ -95,6 +95,25 @@ return {
 				},
 				server_opts_overrides = {},
 			})
+
+			-- Custom keymaps for Copilot suggestion acceptance
+			-- Map both Ctrl-Enter (CSI u sequence from Kitty) and Alt-Enter
+			vim.keymap.set("i", "<C-CR>", function()
+				if require("copilot.suggestion").is_visible() then
+					require("copilot.suggestion").accept()
+				else
+					return "<C-CR>"
+				end
+			end, { expr = true, silent = true, desc = "Accept Copilot suggestion" })
+
+			-- Also map the CSI u sequence directly in case Neovim receives it
+			vim.keymap.set("i", "<M-CR>", function()
+				if require("copilot.suggestion").is_visible() then
+					require("copilot.suggestion").accept()
+				else
+					return "<M-CR>"
+				end
+			end, { expr = true, silent = true, desc = "Accept Copilot suggestion (Alt)" })
 		end,
 	},
 	{
