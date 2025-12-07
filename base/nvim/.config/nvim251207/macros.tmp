@@ -1,0 +1,5 @@
+-- Macro to convert a whichkey key map to keymap() call (used in keymaps.lua).
+-- Note that this willALWAYS add <leader>s and you have to manually modify the s after leader
+-- ^ikeymaopÄkbÄkbp("n", "<leader>sjkla"jkf=r,f{%2F"i{desc = jk2F{x$a)jkhxj0
+-- Macro to convert a keymap() call to a keys element used in lazy keys list
+-- ^dawcs)}ldf,/deschA,jkj^

@@ -1,7 +1,10 @@
--- Quick close for special windows
+-- windows to close
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = {
+		"OverseerForm",
+		"OverseerList",
 		"checkhealth",
+		"floggraph",
 		"fugitive",
 		"git",
 		"help",
@@ -13,6 +16,8 @@ vim.api.nvim_create_autocmd("FileType", {
 		"query",
 		"startuptime",
 		"toggleterm",
+		"tsplayground",
+		"vim",
 	},
 	callback = function(event)
 		vim.bo[event.buf].buflisted = false
@@ -20,7 +25,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- Restore cursor position
+-- go to last loc when opening a buffer
 vim.api.nvim_create_autocmd("BufReadPost", {
 	callback = function()
 		local mark = vim.api.nvim_buf_get_mark(0, '"')
@@ -30,20 +35,14 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 		end
 	end,
 })
-
--- Highlight on yank
+--
+--
+-- See `:help vim.highlight.on_yank()`
+local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
-		vim.highlight.on_yank({ timeout = 200 })
+		vim.highlight.on_yank()
 	end,
+	group = highlight_group,
+	pattern = "*",
 })
-
--- Enable spell checking for document filetypes
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "markdown", "tex", "latex", "rst", "text", "gitcommit" },
-	callback = function()
-		vim.opt_local.spell = true
-		vim.opt_local.spelllang = "en_us"
-	end,
-})
-

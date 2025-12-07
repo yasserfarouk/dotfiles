@@ -21,10 +21,9 @@ vim.api.nvim_set_hl(0, "OverLength", {
 	ctermbg = 234,
 	ctermfg = nil,
 })
--- Modern diagnostic highlights
-vim.api.nvim_set_hl(0, "DiagnosticError", { link = "DiffDelete" })
-vim.api.nvim_set_hl(0, "DiagnosticWarn", { link = "DiffChange" })
-vim.api.nvim_set_hl(0, "DiagnosticHint", { link = "NonText" })
+vim.api.nvim_set_hl(0, "LspDiagnosticsDefaultError", { link = "DiffDelete" })
+vim.api.nvim_set_hl(0, "LspDiagnosticsDefaultWarning", { link = "DiffChange" })
+vim.api.nvim_set_hl(0, "LspDiagnosticsDefaultHint", { link = "NonText" })
 vim.api.nvim_set_hl(0, "User5", {
 	fg = "red",
 	ctermfg = "red",
@@ -370,6 +369,7 @@ vim.api.nvim_create_autocmd("User", {
 		vim.g.vimtex_is_compiling = 1
 		vim.g.vimtex_is_succeeded = 0
 		vim.cmd("redrawstatus")
+		vim.notify("Vimtex: Compilation started... 🚀", vim.log.levels.INFO)
 	end,
 })
 
@@ -381,6 +381,7 @@ vim.api.nvim_create_autocmd("User", {
 		vim.g.vimtex_is_compiling = 0
 		vim.g.vimtex_is_succeeded = 1
 		vim.cmd("redrawstatus")
+		vim.notify("Vimtex: Compilation succeeded. ✅", vim.log.levels.INFO)
 	end,
 })
 vim.api.nvim_create_autocmd("User", {
@@ -390,6 +391,7 @@ vim.api.nvim_create_autocmd("User", {
 		vim.g.vimtex_is_compiling = 0
 		vim.g.vimtex_is_succeeded = -1
 		vim.cmd("redrawstatus")
+		vim.notify("Vimtex: Compilation failed. 🛑", vim.log.levels.INFO)
 	end,
 })
 

@@ -2,7 +2,7 @@ return {
 	-- ══════════════════════════════════════════════════════════════════════════
 	-- SECTION: UI & APPEARANCE {{{1
 	-- ══════════════════════════════════════════════════════════════════════════
-	
+
 	-- Colorscheme - tokyonight theme
 	{
 		"folke/tokyonight.nvim",
@@ -27,6 +27,13 @@ return {
 			theme = "tokyonight",
 			show_modified = true,
 			exclude_filetypes = { "netrw", "toggleterm", "neo-tree" },
+			attach_navic = function(client, bufnr)
+				-- Only attach to basedpyright for Python, not pyright
+				if client.name == "pyright" then
+					return false
+				end
+				return true
+			end,
 		},
 	},
 
@@ -101,7 +108,20 @@ return {
 						root_markers = default.root_dir and vim.fs.root and { ".git" } or nil,
 						capabilities = capabilities,
 					}
-					
+
+					-- Basedpyright specific configuration
+					if server_name == "basedpyright" then
+						server_config.settings = {
+							basedpyright = {
+								analysis = {
+									diagnosticMode = "openFilesOnly",
+									useLibraryCodeForTypes = true,
+									enableTypeIgnoreComments = true,
+								},
+							},
+						}
+					end
+
 					-- Harper-ls specific configuration for document filetypes only
 					if server_name == "harper_ls" then
 						server_config.filetypes = { "markdown", "tex", "latex", "rst", "text", "gitcommit" }
@@ -122,7 +142,7 @@ return {
 							},
 						}
 					end
-					
+
 					vim.lsp.config(server_name, server_config)
 				end
 			end
@@ -146,7 +166,7 @@ return {
 		config = function(_, opts)
 			require("mason").setup(opts)
 			local mr = require("mason-registry")
-			
+
 			-- Auto-install tools
 			for _, tool in ipairs(opts.ensure_installed) do
 				local p = mr.get_package(tool)
@@ -154,7 +174,7 @@ return {
 					p:install()
 				end
 			end
-			
+
 			-- Auto-setup LSP servers installed via Mason
 			mr:on("package:install:success", function(pkg)
 				local server_name = pkg.name
@@ -165,7 +185,7 @@ return {
 					["basedpyright"] = "basedpyright",
 				}
 				server_name = name_map[server_name] or server_name
-				
+
 				-- Auto-setup if it's an LSP server
 				if vim.tbl_contains(vim.tbl_keys(require("lspconfig.configs")), server_name) then
 					vim.schedule(function()
@@ -186,7 +206,6 @@ return {
 			{ "<leader>il", "<cmd>Trouble loclist toggle<cr>", desc = "Location List" },
 			{ "<leader>iq", "<cmd>Trouble qflist toggle<cr>", desc = "Quick Fix" },
 			{ "<leader>vs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols sidebar" },
-			{ "<leader>vl", "<cmd>Trouble symbols toggle<cr>", desc = "Outline" },
 			{ "<leader>co", "<cmd>Trouble symbols toggle focus=true<cr>", desc = "Code outline" },
 		},
 		opts = { use_diagnostic_signs = true },
@@ -221,8 +240,8 @@ return {
 				Text = "󰉿",
 				Method = "󰡱",
 				Function = "󰊕",
-				Constructor = "",
-				Field = "",
+				Constructor = "C",
+				Field = "f",
 				Variable = "󰆧",
 				Class = "󰌗",
 				Interface = "",
@@ -232,7 +251,7 @@ return {
 				Value = "󰬺",
 				Enum = "",
 				Keyword = "󰌋",
-				Snippet = "",
+				Snippet = "s",
 				Color = "󰸌",
 				File = "󰈙",
 				Reference = "",
@@ -284,7 +303,21 @@ return {
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
 					["<C-Space>"] = cmp.mapping.complete(),
 					["<C-e>"] = cmp.mapping.abort(),
-					["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
+					["<CR>"] = cmp.mapping(function(fallback)
+						if cmp.visible() and cmp.get_selected_entry() then
+							cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+						else
+							fallback()
+						end
+					end, { "i", "s" }),
+					["<C-;>"] = cmp.mapping(function(fallback)
+						local copilot_ok, copilot_suggestion = pcall(require, "copilot.suggestion")
+						if copilot_ok and copilot_suggestion.is_visible() then
+							copilot_suggestion.accept()
+						else
+							fallback()
+						end
+					end, { "i", "s" }),
 					["<Tab>"] = cmp.mapping(function(fallback)
 						-- Prioritize cmp menu if visible, otherwise check copilot
 						if cmp.visible() then
@@ -340,9 +373,9 @@ return {
 				auto_trigger = true,
 				debounce = 75,
 				keymap = {
-					accept = "<S-CR>",
+					accept = "<M-CR>", -- Handled by cmp Tab mapping
 					accept_word = "<M-w>",
-					accept_line = "<M-L>",
+					accept_line = "<M-l>",
 					next = "<M-]>",
 					prev = "<M-[>",
 					dismiss = "<C-]>",
@@ -363,22 +396,22 @@ return {
 		},
 	},
 
-   {
-       "CopilotC-Nvim/CopilotChat.nvim",
-       branch = "main",
-       dependencies = { "zbirenbaum/copilot.lua", "nvim-lua/plenary.nvim" },
-       cmd = {
-           "CopilotChat",
-           "CopilotChatOpen",
-           "CopilotChatClose",
-           "CopilotChatToggle",
-           "CopilotChatReset",
-       },
-       opts = {},
-       keys = {
-         { "<leader>cc", "<cmd>CopilotChatToggle<cr>", desc = "Copilot Chat" },
-       },
-     },
+	{
+		"CopilotC-Nvim/CopilotChat.nvim",
+		branch = "main",
+		dependencies = { "zbirenbaum/copilot.lua", "nvim-lua/plenary.nvim" },
+		cmd = {
+			"CopilotChat",
+			"CopilotChatOpen",
+			"CopilotChatClose",
+			"CopilotChatToggle",
+			"CopilotChatReset",
+		},
+		opts = {},
+		keys = {
+			{ "<leader>cc", "<cmd>CopilotChatToggle<cr>", desc = "Copilot Chat" },
+		},
+	},
 
 	-- }}}1
 	-- ══════════════════════════════════════════════════════════════════════════
@@ -394,6 +427,9 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		event = "BufReadPost",
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter-textobjects",
+		},
 		opts = {
 			ensure_installed = {
 				"python",
@@ -421,45 +457,97 @@ return {
 			highlight = { enable = true },
 			indent = { enable = true, disable = { "python" } },
 			autotag = { enable = true },
-		},
-	},
-
-	{
-		"nvim-treesitter/nvim-treesitter-textobjects",
-		event = "BufReadPost",
-		dependencies = "nvim-treesitter/nvim-treesitter",
-		opts = {
 			textobjects = {
 				select = {
 					enable = true,
 					lookahead = true,
 					keymaps = {
+						-- Functions
 						["af"] = "@function.outer",
 						["if"] = "@function.inner",
+						-- Classes
 						["ac"] = "@class.outer",
 						["ic"] = "@class.inner",
+						-- Blocks
 						["ab"] = "@block.outer",
 						["ib"] = "@block.inner",
+						-- Parameters/arguments
 						["aa"] = "@parameter.outer",
 						["ia"] = "@parameter.inner",
+						-- Conditionals
+						["ai"] = "@conditional.outer",
+						["ii"] = "@conditional.inner",
+						-- Loops
+						["al"] = "@loop.outer",
+						["il"] = "@loop.inner",
+						-- Calls
+						["aF"] = "@call.outer",
+						["iF"] = "@call.inner",
+						-- Comments
+						["a/"] = "@comment.outer",
+						["i/"] = "@comment.inner",
 					},
 				},
 				move = {
 					enable = true,
 					set_jumps = true,
-					goto_next_start = { ["]m"] = "@function.outer", ["]]"] = "@class.outer" },
-					goto_next_end = { ["]M"] = "@function.outer", ["]["] = "@class.outer" },
-					goto_previous_start = { ["[m"] = "@function.outer", ["[["] = "@class.outer" },
-					goto_previous_end = { ["[M"] = "@function.outer", ["[]"] = "@class.outer" },
+					goto_next_start = {
+						["]m"] = "@function.outer",
+						["]c"] = "@class.outer",
+						["]a"] = "@parameter.inner",
+						["]o"] = "@conditional.outer",
+						["]l"] = "@loop.outer",
+					},
+					goto_next_end = {
+						["]M"] = "@function.outer",
+						["]C"] = "@class.outer",
+						["]A"] = "@parameter.inner",
+						["]O"] = "@conditional.outer",
+						["]L"] = "@loop.outer",
+					},
+					goto_previous_start = {
+						["[m"] = "@function.outer",
+						["[c"] = "@class.outer",
+						["[a"] = "@parameter.inner",
+						["[o"] = "@conditional.outer",
+						["[l"] = "@loop.outer",
+					},
+					goto_previous_end = {
+						["[M"] = "@function.outer",
+						["[C"] = "@class.outer",
+						["[A"] = "@parameter.inner",
+						["[O"] = "@conditional.outer",
+						["[L"] = "@loop.outer",
+					},
+				},
+				swap = {
+					enable = true,
+					swap_next = {
+						[">a"] = "@parameter.inner",
+						[">f"] = "@function.outer",
+					},
+					swap_previous = {
+						["<a"] = "@parameter.inner",
+						["<f"] = "@function.outer",
+					},
+				},
+				lsp_interop = {
+					enable = true,
+					border = "rounded",
+					floating_preview_opts = {},
+					peek_definition_code = {
+						["<leader>kf"] = "@function.outer",
+						["<leader>kc"] = "@class.outer",
+					},
 				},
 			},
 		},
-		config = function(_, opts)
-			require("nvim-treesitter.configs").setup(opts)
-		end,
 	},
 
-	{ "windwp/nvim-ts-autotag", ft = { "html", "xml", "javascript", "typescript", "javascriptreact", "typescriptreact" } },
+	{
+		"windwp/nvim-ts-autotag",
+		ft = { "php", "html", "xml", "javascript", "typescript", "javascriptreact", "typescriptreact" },
+	},
 	{ "JoosepAlviste/nvim-ts-context-commentstring", event = "BufReadPost" },
 
 	-- }}}1
@@ -475,7 +563,7 @@ return {
 		"MagicDuck/grug-far.nvim",
 		cmd = "GrugFar",
 		keys = {
-			{ "<leader>sr", "<cmd>GrugFar<cr>", desc = "Search & Replace" },
+			{ "<leader>rr", "<cmd>GrugFar<cr>", desc = "Search & Replace" },
 		},
 		opts = {},
 	},
@@ -524,10 +612,10 @@ return {
 		event = "BufReadPre",
 		opts = { default_mappings = false, disable_diagnostics = true },
 		keys = {
-			{ "<leader>gCo", "<cmd>GitConflictChooseOurs<cr>", desc = "Choose ours" },
-			{ "<leader>gCt", "<cmd>GitConflictChooseTheirs<cr>", desc = "Choose theirs" },
-			{ "<leader>gCb", "<cmd>GitConflictChooseBoth<cr>", desc = "Choose both" },
-			{ "<leader>gC0", "<cmd>GitConflictChooseNone<cr>", desc = "Choose none" },
+			{ "<leader>gro", "<cmd>GitConflictChooseOurs<cr>", desc = "Choose ours" },
+			{ "<leader>grt", "<cmd>GitConflictChooseTheirs<cr>", desc = "Choose theirs" },
+			{ "<leader>grb", "<cmd>GitConflictChooseBoth<cr>", desc = "Choose both" },
+			{ "<leader>gr0", "<cmd>GitConflictChooseNone<cr>", desc = "Choose none" },
 			{ "]x", "<cmd>GitConflictNextConflict<cr>", desc = "Next conflict" },
 			{ "[x", "<cmd>GitConflictPrevConflict<cr>", desc = "Prev conflict" },
 		},
@@ -587,10 +675,70 @@ return {
 			{ "<leader>E", "<cmd>Neotree reveal<cr>", desc = "Reveal file in explorer" },
 		},
 		opts = {
+			use_snacks_image = true,
 			close_if_last_window = true,
 			popup_border_style = "rounded",
 			enable_git_status = true,
 			enable_diagnostics = true,
+			commands = {
+				run_command = function(state)
+					local node = state.tree:get_node()
+					local path = node:get_id()
+					vim.api.nvim_input(": " .. path .. "<Home>")
+				end,
+				diff_files = function(state)
+					local node = state.tree:get_node()
+					local log = require("neo-tree.log")
+					state.clipboard = state.clipboard or {}
+					if diff_Node and diff_Node ~= tostring(node.id) then
+						local current_Diff = node.id
+						require("neo-tree.utils").open_file(state, diff_Node, open)
+						vim.cmd("vert diffs " .. current_Diff)
+						log.info("Diffing " .. diff_Name .. " against " .. node.name)
+						diff_Node = nil
+						current_Diff = nil
+						state.clipboard = {}
+						require("neo-tree.ui.renderer").redraw(state)
+					else
+						local existing = state.clipboard[node.id]
+						if existing and existing.action == "diff" then
+							state.clipboard[node.id] = nil
+							diff_Node = nil
+							require("neo-tree.ui.renderer").redraw(state)
+						else
+							state.clipboard[node.id] = { action = "diff", node = node }
+							diff_Name = state.clipboard[node.id].node.name
+							diff_Node = tostring(state.clipboard[node.id].node.id)
+							log.info("Diff source file " .. diff_Name)
+							require("neo-tree.ui.renderer").redraw(state)
+						end
+					end
+				end,
+				system_open = function(state)
+					local node = state.tree:get_node()
+					local path = node:get_id()
+					vim.fn.jobstart({ "open", path }, { detach = true })
+				end,
+				quick_look = function(state)
+					local node = state.tree:get_node()
+					if node.type == "file" then
+						vim.fn.system(string.format("qlmanage -p %s > /dev/null 2>&1 &", vim.fn.shellescape(node.path)))
+						vim.defer_fn(function()
+							vim.fn.system(
+								[[osascript -e 'tell application "qlmanage" to activate' 2>/dev/null || osascript -e 'tell application "Quick Look" to activate' 2>/dev/null]]
+							)
+						end, 100)
+					end
+				end,
+				open_in_finder = function(state)
+					local node = state.tree:get_node()
+					if node.type == "directory" then
+						vim.fn.jobstart({ "open", node.path }, { detach = true })
+					else
+						vim.fn.jobstart({ "open", "-R", node.path }, { detach = true })
+					end
+				end,
+			},
 			default_component_configs = {
 				indent = {
 					with_expanders = true,
@@ -602,11 +750,20 @@ return {
 				position = "left",
 				width = 35,
 				mappings = {
-					["<space>"] = "none",
+					["e"] = function()
+						vim.api.nvim_exec("Neotree focus filesystem left", true)
+					end,
+					["b"] = function()
+						vim.api.nvim_exec("Neotree focus buffers left", true)
+					end,
+					["D"] = "diff_files",
+					["<space>"] = "quick_look",
 					["<cr>"] = "open",
-					["o"] = "open",
-					["S"] = "open_split",
-					["s"] = "open_vsplit",
+					["o"] = "system_open",
+					["O"] = "open_in_finder",
+					["i"] = "run_command",
+					["s"] = "open_split",
+					["v"] = "open_vsplit",
 					["t"] = "open_tabnew",
 					["w"] = "open_with_window_picker",
 					["C"] = "close_node",
@@ -630,6 +787,15 @@ return {
 					["?"] = "show_help",
 					["<"] = "prev_source",
 					[">"] = "next_source",
+					["P"] = {
+						"toggle_preview",
+						config = {
+							use_float = false,
+							-- use_image_nvim = true,
+							-- use_snacks_image = true,
+							-- title = 'Neo-tree Preview',
+						},
+					},
 				},
 			},
 			filesystem = {
@@ -730,6 +896,7 @@ return {
 			{ "<leader>xp", "<cmd>lua _PYTHON_TOGGLE()<cr>", desc = "Python REPL" },
 			{ "<leader>xl", "<cmd>lua _LUA_TOGGLE()<cr>", desc = "Lua REPL" },
 			{ "<leader>xc", "<cmd>lua _COPILOT_TOGGLE()<cr>", desc = "GitHub Copilot CLI" },
+			{ "<leader>xe", "<cmd>lua _NVIM_TOGGLE()<cr>", desc = "GitHub Copilot CLI" },
 		},
 		opts = {
 			size = function(term)
@@ -760,7 +927,7 @@ return {
 		config = function(_, opts)
 			require("toggleterm").setup(opts)
 			local Terminal = require("toggleterm.terminal").Terminal
-			
+
 			-- LazyGit (modern git TUI)
 			_G._LAZYGIT_TOGGLE = function()
 				local lazygit = Terminal:new({
@@ -770,12 +937,18 @@ return {
 					float_opts = { border = "rounded", width = 150, height = 40 },
 					on_open = function(term)
 						vim.cmd("startinsert!")
-						vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+						vim.api.nvim_buf_set_keymap(
+							term.bufnr,
+							"n",
+							"q",
+							"<cmd>close<CR>",
+							{ noremap = true, silent = true }
+						)
 					end,
 				})
 				lazygit:toggle()
 			end
-			
+
 			-- LazyDocker (modern docker TUI)
 			_G._LAZYDOCKER_TOGGLE = function()
 				local lazydocker = Terminal:new({
@@ -785,12 +958,18 @@ return {
 					float_opts = { border = "rounded", width = 150, height = 40 },
 					on_open = function(term)
 						vim.cmd("startinsert!")
-						vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+						vim.api.nvim_buf_set_keymap(
+							term.bufnr,
+							"n",
+							"q",
+							"<cmd>close<CR>",
+							{ noremap = true, silent = true }
+						)
 					end,
 				})
 				lazydocker:toggle()
 			end
-			
+
 			-- Htop (modern system monitor, or use btop if available)
 			_G._HTOP_TOGGLE = function()
 				local cmd = vim.fn.executable("btop") == 1 and "btop" or "htop"
@@ -801,12 +980,18 @@ return {
 					float_opts = { border = "rounded", width = 150, height = 40 },
 					on_open = function(term)
 						vim.cmd("startinsert!")
-						vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+						vim.api.nvim_buf_set_keymap(
+							term.bufnr,
+							"n",
+							"q",
+							"<cmd>close<CR>",
+							{ noremap = true, silent = true }
+						)
 					end,
 				})
 				htop:toggle()
 			end
-			
+
 			-- Python REPL (with IPython if available)
 			_G._PYTHON_TOGGLE = function()
 				local cmd = vim.fn.executable("ipython") == 1 and "ipython" or "python3"
@@ -821,7 +1006,7 @@ return {
 				})
 				python:toggle()
 			end
-			
+
 			-- Lua REPL
 			_G._LUA_TOGGLE = function()
 				local lua_repl = Terminal:new({
@@ -835,7 +1020,7 @@ return {
 				})
 				lua_repl:toggle()
 			end
-			
+
 			-- GitHub Copilot CLI
 			_G._COPILOT_TOGGLE = function()
 				local copilot = Terminal:new({
@@ -845,7 +1030,33 @@ return {
 					float_opts = { border = "rounded", width = 150, height = 40 },
 					on_open = function(term)
 						vim.cmd("startinsert!")
-						vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+						vim.api.nvim_buf_set_keymap(
+							term.bufnr,
+							"n",
+							"q",
+							"<cmd>close<CR>",
+							{ noremap = true, silent = true }
+						)
+					end,
+				})
+				copilot:toggle()
+			end
+
+			_G._NVIM_TOGGLE = function()
+				local copilot = Terminal:new({
+					cmd = "nvim ~/tmp/tmp.txt",
+					hidden = true,
+					direction = "float",
+					float_opts = { border = "rounded", width = 150, height = 40 },
+					on_open = function(term)
+						vim.cmd("startinsert!")
+						vim.api.nvim_buf_set_keymap(
+							term.bufnr,
+							"n",
+							"q",
+							"<cmd>close<CR>",
+							{ noremap = true, silent = true }
+						)
 					end,
 				})
 				copilot:toggle()
@@ -923,7 +1134,11 @@ return {
 			{ "<leader>tl", "<cmd>lua require('neotest').run.run_last()<cr>", desc = "Test last" },
 			{ "<leader>ts", "<cmd>lua require('neotest').summary.toggle()<cr>", desc = "Test summary" },
 			{ "<leader>to", "<cmd>lua require('neotest').output.open({ enter = true })<cr>", desc = "Test output" },
-			{ "<leader>tO", "<cmd>lua require('neotest').output_panel.toggle()<cr>", desc = "Test output panel" },
+			{
+				"<leader>tO",
+				"<cmd>lua require('neotest').output_panel.toggle()<cr>",
+				desc = "Test output panel",
+			},
 			{ "<leader>tw", "<cmd>lua require('neotest').watch.toggle()<cr>", desc = "Test watch" },
 		},
 		opts = function()
@@ -938,13 +1153,11 @@ return {
 		end,
 	},
 
-
-
 	-- }}}1
 	-- ══════════════════════════════════════════════════════════════════════════
 	-- SECTION: LANGUAGE-SPECIFIC PLUGINS {{{1
 	-- ══════════════════════════════════════════════════════════════════════════
-	
+
 	-- Python venv selector - only searches ~/myvenvs
 	{
 		"linux-cultist/venv-selector.nvim",
@@ -969,7 +1182,7 @@ return {
 			vim.g.vimtex_view_method = "skim"
 			vim.g.vimtex_view_skim_sync = 1 -- Forward search after successful compilation
 			vim.g.vimtex_view_skim_activate = 0 -- Don't activate Skim on compilation
-			
+
 			-- Compiler settings (optimized for speed)
 			vim.g.vimtex_compiler_method = "latexmk"
 			vim.g.vimtex_compiler_latexmk = {
@@ -986,7 +1199,7 @@ return {
 					"-interaction=nonstopmode",
 				},
 			}
-			
+
 			-- Performance optimizations
 			vim.g.vimtex_compiler_latexmk_engines = {
 				_ = "-lualatex", -- LuaLaTeX is faster than pdflatex for most cases
@@ -998,13 +1211,13 @@ return {
 				"specifier changed to",
 				"Token not allowed in a PDF string",
 			}
-			
+
 			-- Disable unused features (speed up)
 			vim.g.vimtex_indent_enabled = 0 -- Use treesitter/LSP for indenting
 			vim.g.vimtex_imaps_enabled = 0 -- Disable insert mode mappings (use snippets instead)
 			vim.g.vimtex_complete_enabled = 0 -- Use LSP (texlab) for completion
 			vim.g.vimtex_syntax_enabled = 1 -- Keep syntax (needed for concealment)
-			
+
 			-- Concealment (optional, disable if too slow)
 			vim.g.vimtex_syntax_conceal = {
 				accents = 1,
@@ -1021,7 +1234,7 @@ return {
 				sections = 0,
 				styles = 0, -- Disable style concealment (can be slow)
 			}
-			
+
 			-- Table of contents settings
 			vim.g.vimtex_toc_config = {
 				name = "TOC",
@@ -1032,7 +1245,7 @@ return {
 				show_numbers = 1,
 				mode = 2,
 			}
-			
+
 			-- neovim-remote for callbacks (use full path)
 			vim.g.vimtex_compiler_progname = "/Users/yasser/.local/bin/nvr"
 		end,
@@ -1060,8 +1273,12 @@ return {
 		"epwalsh/obsidian.nvim",
 		lazy = true,
 		event = {
-			"BufReadPre " .. vim.fn.expand("~") .. "/Library/Mobile Documents/iCloud~md~obsidian/Documents/yasser/**.md",
-			"BufNewFile " .. vim.fn.expand("~") .. "/Library/Mobile Documents/iCloud~md~obsidian/Documents/yasser/**.md",
+			"BufReadPre "
+				.. vim.fn.expand("~")
+				.. "/Library/Mobile Documents/iCloud~md~obsidian/Documents/yasser/**.md",
+			"BufNewFile "
+				.. vim.fn.expand("~")
+				.. "/Library/Mobile Documents/iCloud~md~obsidian/Documents/yasser/**.md",
 		},
 		dependencies = { "nvim-lua/plenary.nvim" },
 		keys = {
@@ -1115,17 +1332,18 @@ return {
 			vim.ui.input = function(...)
 				return require("snacks").input(...)
 			end
-			
+
 			return {
 				bigfile = { enabled = true },
 				dashboard = { enabled = true },
 				indent = { enabled = true },
 				input = { enabled = true },
-				notifier = { 
+				notifier = {
 					enabled = true,
 					timeout = 5000,
 				},
-picker = { enabled = true },				quickfile = { enabled = true },
+				picker = { enabled = true },
+				quickfile = { enabled = true },
 				scroll = { enabled = false },
 				statuscolumn = { enabled = true },
 				words = { enabled = true },
@@ -1143,10 +1361,11 @@ picker = { enabled = true },				quickfile = { enabled = true },
 			-- Set vim.notify to use snacks
 			vim.notify = require("snacks").notifier.notify
 		end,
-init = function()
--- Setup snacks.picker keymaps
-require("yasser.snacks_picker_keys").setup()
-end,	},
+		init = function()
+			-- Setup snacks.picker keymaps
+			require("yasser.snacks_picker_keys").setup()
+		end,
+	},
 
 	-- Fuzzy finder alternative with <leader>S prefix
 	{
