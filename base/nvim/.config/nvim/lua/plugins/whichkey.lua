@@ -1,6 +1,6 @@
 return {
 
-	-- Which Key
+	-- Show available keybindings in a popup as you type
 	{
 		"folke/which-key.nvim",
 		config = function()

@@ -2,7 +2,7 @@ local img_previewer = vim.fn.executable("ueberzug") == 1 and { "ueberzug" } or {
 
 return {
 
-	-- Telescope
+	-- Fuzzy finder for files, buffers, grep, and more
 	"nvim-lua/popup.nvim",
 	"nvim-lua/plenary.nvim",
 	{

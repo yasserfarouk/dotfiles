@@ -80,3 +80,8 @@ vim.g.python3_host_prog = vim.fn.expand("~") .. "/myvenvs/neovim3/bin/python3"
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
+
+-- Add rounded borders to floating windows globally
+vim.diagnostic.config({
+	float = { border = "rounded" },
+})

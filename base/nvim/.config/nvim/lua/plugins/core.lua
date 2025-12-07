@@ -1,5 +1,5 @@
 return {
-	-- Treesitter
+	-- Syntax highlighting and code understanding using tree-sitter
 	{
 		"nvim-treesitter/nvim-treesitter",
 		event = { "BufReadPost", "BufNewFile" },
@@ -31,6 +31,7 @@ return {
 			-- },
 		},
 	},
+	-- Fast and easy commenting with gcc, gc motions
 	{
 		"terrortylor/nvim-comment",
 		keys = {
@@ -45,8 +46,9 @@ return {
 			require("nvim_comment").setup()
 		end,
 	},
-	-- text objects
+	-- Text objects for indentation levels (vii, vai, etc.)
 	{ "michaeljsmith/vim-indent-object", event = "BufReadPost" },
+	-- Advanced text objects using treesitter (functions, classes, etc.)
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
 		event = "BufReadPost",
@@ -123,11 +125,12 @@ return {
 			})
 		end,
 	},
-	-- closes autotags using treesitter
+	-- Automatically close HTML/JSX tags
 	{ "windwp/nvim-ts-autotag", ft = { "html", "xml", "javascript", "typescript", "javascriptreact", "typescriptreact", "svelte", "vue" } },
+	-- Context-aware commenting for embedded languages
 	{ "JoosepAlviste/nvim-ts-context-commentstring", event = "BufReadPost" },
 
-	-- undo tree
+	-- Visual undo history tree browser
 	{
 		"mbbill/undotree",
 		cmd = "UndotreeToggle",

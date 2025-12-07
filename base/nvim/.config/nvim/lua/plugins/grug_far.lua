@@ -1,4 +1,5 @@
 return {
+	-- Modern search and replace across multiple files with live preview
 	"MagicDuck/grug-far.nvim",
 	cmd = "GrugFar",
 	keys = {

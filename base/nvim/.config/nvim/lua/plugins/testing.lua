@@ -1,5 +1,5 @@
 return {
-	-- Testing
+	-- Run tests from within Neovim (pytest, jest, etc.)
 	-- "5long/pytest-vim-compiler",
 	{
 		"janko/vim-test",

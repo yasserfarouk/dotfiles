@@ -1,4 +1,5 @@
 return {
+	-- Fast navigation with enhanced search labels (like easymotion/hop)
 	"folke/flash.nvim",
 	opts = {
 		modes = {

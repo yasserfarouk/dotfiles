@@ -1,4 +1,5 @@
 return {
+	-- Auto-completion engine with LSP, buffer, and path sources
 	"hrsh7th/nvim-cmp",
 	event = "InsertEnter",
 	dependencies = {
@@ -50,6 +51,10 @@ return {
 				{ name = "buffer", keyword_length = 3 },
 				{ name = "path" },
 			}),
+			window = {
+				completion = cmp.config.window.bordered(),
+				documentation = cmp.config.window.bordered(),
+			},
 			formatting = {
 				fields = { "kind", "abbr", "menu" },
 				format = function(entry, vim_item)

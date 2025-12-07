@@ -1,4 +1,5 @@
 return {
+	-- GitHub Copilot completion source for nvim-cmp
 	{
 		"zbirenbaum/copilot-cmp",
 		event = "InsertEnter",
@@ -9,6 +10,7 @@ return {
 			require("copilot_cmp").setup()
 		end,
 	},
+	-- GitHub Copilot AI code suggestions
 	{
 		"zbirenbaum/copilot.lua",
 		cmd = "Copilot",
@@ -117,6 +119,7 @@ return {
 			end, { expr = true, silent = true, desc = "Accept Copilot suggestion (Alt)" })
 		end,
 	},
+	-- GitHub Copilot Chat for AI-assisted coding conversations
 	{
 		"CopilotC-Nvim/CopilotChat.nvim",
 		branch = "main",

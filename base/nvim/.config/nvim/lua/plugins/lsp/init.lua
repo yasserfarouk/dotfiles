@@ -1,4 +1,5 @@
 return {
+	-- LSP configuration and management
 	{
 		"neovim/nvim-lspconfig",
 		event = "BufReadPre",

@@ -1,4 +1,5 @@
 return {
+	-- Obsidian.md integration: note-taking and knowledge management
 	"epwalsh/obsidian.nvim",
 	ui = { enable = false },
 	keys = {

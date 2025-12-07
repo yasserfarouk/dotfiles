@@ -1,4 +1,5 @@
 return {
+	-- Collection of useful utilities: dashboard, file explorer, notifications, and more
 	"folke/snacks.nvim",
 	priority = 1000,
 	lazy = false,

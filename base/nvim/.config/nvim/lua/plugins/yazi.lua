@@ -1,4 +1,5 @@
 return {
+	-- Integration with yazi terminal file manager
 	"mikavilpas/yazi.nvim",
 	keys = {
 		-- 👇 in this section, choose your own keymappings!

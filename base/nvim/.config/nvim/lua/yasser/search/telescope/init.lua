@@ -129,62 +129,58 @@ telescope.setup({
 					return vim.tbl_contains(image_extensions, extension)
 				end
 				if is_image(filepath) then
-					local term = vim.api.nvim_open_term(bufnr, {})
-					local function send_output(_, data, _)
-						for _, d in ipairs(data) do
-							vim.api.nvim_chan_send(term, d .. "\r\n")
-						end
-					end
-
-					-- Try kitty icat first (better quality, native Kitty support)
-					-- Fallback to viu if kitty fails
-					local job_cmd
-					if vim.fn.executable("kitty") == 1 then
-						job_cmd = {
-							"kitty",
-							"+kitten",
-							"icat",
-							"--align=left",
-							"--transfer-mode=file",
-							filepath,
-						}
-					elseif vim.fn.executable("viu") == 1 then
-						job_cmd = {
-							"viu",
-							"-w",
-							"60",
-							"-b",
-							filepath,
-						}
+					-- Use Snacks.nvim for better image preview quality
+					local snacks_ok, snacks = pcall(require, "snacks")
+					if snacks_ok and snacks.image then
+						-- Clear buffer content first
+						vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, {})
+						
+						-- Display image using Snacks.nvim
+						snacks.image.show({
+							file = filepath,
+							buf = bufnr,
+						})
 					else
-						-- Neither available, show message
-						require("telescope.previewers.utils").set_preview_message(
-							bufnr,
-							opts.winid,
-							"No image viewer available (install kitty or viu)"
-						)
-						return
-					end
-
-					vim.fn.jobstart(job_cmd, {
-						on_stdout = send_output,
-						stdout_buffered = true,
-						on_stderr = function(_, data, _)
-							-- If kitty fails and viu is available, try viu as fallback
-							if job_cmd[1] == "kitty" and vim.fn.executable("viu") == 1 then
-								vim.fn.jobstart({
-									"viu",
-									"-w",
-									"60",
-									"-b",
-									filepath,
-								}, {
-									on_stdout = send_output,
-									stdout_buffered = true,
-								})
+						-- Fallback to kitty icat if Snacks is not available
+						local term = vim.api.nvim_open_term(bufnr, {})
+						local function send_output(_, data, _)
+							for _, d in ipairs(data) do
+								vim.api.nvim_chan_send(term, d .. "\r\n")
 							end
-						end,
-					})
+						end
+
+						local job_cmd
+						if vim.fn.executable("kitty") == 1 then
+							job_cmd = {
+								"kitty",
+								"+kitten",
+								"icat",
+								"--align=left",
+								"--transfer-mode=file",
+								filepath,
+							}
+						elseif vim.fn.executable("viu") == 1 then
+							job_cmd = {
+								"viu",
+								"-w",
+								"60",
+								"-b",
+								filepath,
+							}
+						else
+							require("telescope.previewers.utils").set_preview_message(
+								bufnr,
+								opts.winid,
+								"No image viewer available"
+							)
+							return
+						end
+
+						vim.fn.jobstart(job_cmd, {
+							on_stdout = send_output,
+							stdout_buffered = true,
+						})
+					end
 				else
 					require("telescope.previewers.utils").set_preview_message(
 						bufnr,

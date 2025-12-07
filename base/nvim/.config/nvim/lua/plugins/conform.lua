@@ -1,4 +1,5 @@
 return {
+	-- Lightweight formatter with support for multiple formatters per filetype
 	"stevearc/conform.nvim",
 	keys = {
 		{

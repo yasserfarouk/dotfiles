@@ -52,9 +52,12 @@ local function dapuiconfig()
 		dapui.close()
 	end
 end
+
 return {
-	-- Debugging
+	-- Debug Adapter Protocol (DAP) for debugging support
+	-- Lua debugger helper
 	{ "jbyuki/one-small-step-for-vimkind", ft = { "lua" } },
+	-- Core DAP client
 	{
 		"mfussenegger/nvim-dap",
 		ft = dap_types,

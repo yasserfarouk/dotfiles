@@ -1,4 +1,5 @@
 return {
+	-- Automatically close brackets, quotes, and other pairs
 	"windwp/nvim-autopairs",
 	event = "InsertEnter",
 	dependencies = {

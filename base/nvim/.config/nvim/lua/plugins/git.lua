@@ -1,10 +1,12 @@
 return {
+	-- Git diff view and merge tool
 	{
 		"sindrets/diffview.nvim",
 		keys = {
 			{ "<leader>gV", "<cmd>DiffviewOpen<cr>", desc = "Diff view" },
 		},
 	},
+	-- Git signs in gutter: added/modified/deleted lines with hunk preview
 	{
 
 		"lewis6991/gitsigns.nvim",
@@ -17,6 +19,7 @@ return {
 			{ "<leader>gB", "<cmd>Gitsigns toggle_current_lint_blame<cr>", desc = "Line Blame" },
 		},
 	},
+	-- Full-featured Git wrapper for Neovim (:Git commands)
 	{
 		"tpope/vim-fugitive",
 		cmd = {
@@ -50,7 +53,9 @@ return {
 			{ "<leader>gX", "<cmd>!git checkout --conflict=diff3<cr>", desc = "reverse mergetool" },
 		},
 	},
+	-- GitHub integration for vim-fugitive (open files in GitHub, etc.)
 	{ "tpope/vim-rhubarb", dependencies = { "tpope/vim-fugitive" } },
+	-- Visualize and resolve git merge conflicts
 	{
 		"akinsho/git-conflict.nvim",
 		event = "BufReadPre",

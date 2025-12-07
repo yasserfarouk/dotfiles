@@ -1,4 +1,5 @@
 return {
+	-- Highlight and search TODO, FIXME, NOTE comments in code
 	{
 		"folke/todo-comments.nvim",
 		cmd = { "TodoTrouble", "TodoTelescope" },

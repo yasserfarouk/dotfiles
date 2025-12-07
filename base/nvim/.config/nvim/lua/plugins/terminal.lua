@@ -1,6 +1,6 @@
 return {
 
-	-- Floating terminal (may be unnecesasry)
+	-- Floating terminal emulator
 	"voldikss/vim-floaterm",
 	keys = {
 		{ "<leader>xx", "<cmd>FloatermToggle  --width=0.95 --height=0.95<cr>", desc = "toggle" },
