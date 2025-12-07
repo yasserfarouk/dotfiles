@@ -2,6 +2,7 @@ return {
 	-- Treesitter
 	{
 		"nvim-treesitter/nvim-treesitter",
+		event = { "BufReadPost", "BufNewFile" },
 		build = ":TSUpdate",
 		opts = {
 			ensure_installed = { "cpp", "python", "lua", "java", "javascript", "php", "latex" },

@@ -111,37 +111,6 @@ return {
 			{ "<leader>iq", "<cmd>Trouble quickfix<cr>", desc = "Quick Fix" },
 		},
 	},
-	{
-		"glepnir/lspsaga.nvim",
-		dependencies = { "neovim/nvim-lspconfig" },
-		event = "VeryLazy",
-		opts = {
-			symbol_in_winbar = {
-				enable = true,
-			},
-			ui = {
-				code_action = "💡",
-			},
-			lightbulb = {
-				enable = false,
-				sign = false,
-				debounce = 10,
-				sign_priority = 0,
-				virtual_text = true,
-				enable_in_insert = false,
-			},
-		},
-		-- config = true,
-		keys = {
-			{ "<leader>vl", "<cmd>Lspsaga outline<cr>", desc = "Lspsaga Sidebar" },
-			{ "<leader>vW", "<cmd>lua vim.opt.winbar = ''<cr>", desc = "Winbar ON" },
-			{
-				"<leader>vw",
-				"<cmd>lua vim.opt.winbar = require('lspsaga.symbol.winbar'):get_bar()<cr>",
-				desc = "Winbar ON",
-			},
-		},
-	},
 	-- { "ray-x/lsp_signature.nvim", event = "VeryLazy" },
 	-- symbol preview
 	{
