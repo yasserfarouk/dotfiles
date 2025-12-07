@@ -36,7 +36,7 @@ return {
 			{ "<leader>st", "<cmd>Telescope live_grep<cr>", desc = "text" },
 			{ "<leader>sr", "<cmd>Telescope registers<cr>", desc = "registers" },
 			{ "<leader>sc", "<cmd>Telescope colorscheme<cr>", desc = "colors" },
-			{ "<leader>SC", "<cmd>Telescope commands<cr>", desc = "colors" },
+			{ "<leader>SC", "<cmd>Telescope commands<cr>", desc = "commands" },
 			{ "<leader>sa", "<cmd>Telescope find_files<cr>", desc = "find files" },
 			{ "<leader>sP", "<cmd>Telescope project<cr>", desc = "projects" },
 			{ "<leader>sp", "<cmd>Telescope projects<cr>", desc = "recent projects" },
