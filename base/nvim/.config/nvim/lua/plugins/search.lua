@@ -198,16 +198,4 @@ return {
 			{ "<leader>Sq", "<cmd>FzfLua quickfix<cr>", desc = "quickfix" },
 		},
 	},
-
-	-- Extra search and replace
-	-- {
-	-- 	"dyng/ctrlsf.vim",
-	-- 	event = "VeryLazy",
-	-- 	keys = {
-	-- 		{ "<leader>ss", "<cmd>CtrlSF<cr>", desc = "CtrlSF" },
-	-- 		{ "<leader>zs", "<cmd>CtrlSF<cr>", desc = "CtrlSF" },
-	-- 		{ "<leader>sS", ":CtrlSF ", desc = "CtrlSF" },
-	-- 	},
-	-- },
-	-- search and replace in multipole files
 }
