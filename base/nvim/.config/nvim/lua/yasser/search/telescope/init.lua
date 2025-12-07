@@ -109,65 +109,40 @@ telescope.setup({
 		},
 		preview = {
 			mime_hook = function(filepath, bufnr, opts)
-				local is_image = function(filepath)
-					-- All common image formats supported by modern image viewers
-					local image_extensions = {
-						"png",
-						"jpg",
-						"jpeg",
-						"gif",
-						"webp",
-						"avif",
-						"bmp",
-						"tiff",
-						"tif",
-						"ico",
-						"svg",
-					}
-					local split_path = vim.split(filepath:lower(), ".", { plain = true })
+				local is_image = function(fp)
+					local image_extensions = { "png", "jpg", "jpeg", "gif", "webp", "bmp", "tiff", "tif", "svg" }
+					local split_path = vim.split(fp:lower(), ".", { plain = true })
 					local extension = split_path[#split_path]
 					return vim.tbl_contains(image_extensions, extension)
 				end
-			if is_image(filepath) then
-				-- Use kitty icat for image preview in terminal
-				local term = vim.api.nvim_open_term(bufnr, {})
-				local function send_output(_, data, _)
-					for _, d in ipairs(data) do
-						vim.api.nvim_chan_send(term, d .. "\r\n")
+
+				if is_image(filepath) then
+					local term = vim.api.nvim_open_term(bufnr, {})
+					local function send_output(_, data, _)
+						for _, d in ipairs(data) do
+							vim.api.nvim_chan_send(term, d .. "\r\n")
+						end
 					end
-				end
 
-				local job_cmd
-				if vim.fn.executable("kitty") == 1 then
-					job_cmd = {
-						"kitty",
-						"+kitten",
-						"icat",
-						"--align=left",
-						"--transfer-mode=file",
-						filepath,
-					}
-				elseif vim.fn.executable("viu") == 1 then
-					job_cmd = {
-						"viu",
-						"-w",
-						"60",
-						"-b",
-						filepath,
-					}
-				else
-					require("telescope.previewers.utils").set_preview_message(
-						bufnr,
-						opts.winid,
-						"No image viewer available (install kitty or viu)"
-					)
-					return
-				end
+					-- Try image viewers in order of preference
+					local job_cmd
+					if vim.fn.executable("chafa") == 1 then
+						job_cmd = { "chafa", "--format=symbols", "--colors=256", "--size=60x40", filepath }
+					elseif vim.fn.executable("viu") == 1 then
+						job_cmd = { "viu", "-b", "-w", "60", filepath }
+					else
+						require("telescope.previewers.utils").set_preview_message(
+							bufnr,
+							opts.winid,
+							"No image viewer available (install chafa or viu)"
+						)
+						return
+					end
 
-				vim.fn.jobstart(job_cmd, {
-					on_stdout = send_output,
-					stdout_buffered = true,
-				})
+					vim.fn.jobstart(job_cmd, {
+						on_stdout = send_output,
+						stdout_buffered = true,
+					})
 				else
 					require("telescope.previewers.utils").set_preview_message(
 						bufnr,
@@ -190,6 +165,12 @@ telescope.setup({
 				{ "~/storage/gdrive/research", max_depth = 4 },
 			},
 			hidden_files = false, -- default: false
+		},
+		media_files = {
+			-- Defaults to {"png", "jpg", "mp4", "webm", "pdf"}
+			filetypes = { "png", "jpg", "jpeg", "gif", "webp", "svg", "mp4", "webm", "pdf" },
+			-- Find command (defaults to `fd`)
+			find_cmd = "rg",
 		},
 	},
 })
