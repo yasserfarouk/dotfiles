@@ -47,7 +47,10 @@ return {
 		})
 
 		require("conform").setup({
+			-- Enable format on save by default for all configured filetypes
+			-- Use :FormatDisable to disable globally or :FormatDisable! for current buffer
 			format_on_save = function(bufnr)
+				-- Only skip if explicitly disabled
 				if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
 					return
 				end
