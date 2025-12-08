@@ -1,5 +1,13 @@
 command! BufOnly silent! execute "%bd|e#|bd#"
 
+" Strip trailing whitespace
+function! StripWhitespace()
+	let l:save = winsaveview()
+	keeppatterns %s/\s\+$//e
+	call winrestview(l:save)
+endfunction
+command! StripWhitespace call StripWhitespace()
+
 command! -nargs=0 LspVirtualTextEnable lua vim.diagnostic.config({virtual_text=true})
 command! -nargs=0 LspVirtualTextDisable lua vim.diagnostic.config({virtual_text=false})
 
