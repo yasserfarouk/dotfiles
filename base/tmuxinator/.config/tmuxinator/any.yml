@@ -48,8 +48,9 @@ root: <%= path %>
 # on_project_start: source .env
 
 windows:
-  - vim:
-      layout: 3cf4,238x60,0,0[238x52,0,0,17,238x7,0,53,18]]
+  - dev:
+      layout: 9347,177x45,0,0[177x35,0,0{107x35,0,0,24,69x35,108,0,27},177x9,0,36,25]
       panes:
         - v
+        - opencode
         - 

@@ -116,7 +116,11 @@ return {
 			},
 		},
 		input = { enabled = true },
-		picker = { enabled = false },
+		picker = { 
+			enabled = true,
+			-- Image preview is automatically handled by snacks.image
+			-- which uses Kitty graphics protocol for perfect quality
+		},
 		notifier = { enabled = true },
 		quickfile = { enabled = true },
 		scope = { enabled = false },
@@ -129,4 +133,18 @@ return {
 		{ "<leader>E", ":lua Snacks.explorer.reveal()<cr>", desc = "explorer" },
 		{ "<leader>.", ":lua Snacks.dashboard()<cr>", desc = "dashboard" },
 	},
+	init = function()
+		-- Setup snacks.picker keymaps
+		local map = vim.keymap.set
+		
+		-- Image files picker with perfect quality preview
+		map("n", "<leader>si", function() require("snacks").picker.files({ filter = function(file)
+			return file:match("%.png$") or file:match("%.jpg$") or file:match("%.jpeg$") or 
+			       file:match("%.gif$") or file:match("%.webp$") or file:match("%.svg$")
+		end }) end, { desc = "Image files (snacks picker)" })
+		
+		-- Main file picker (can also preview images perfectly)
+		map("n", "<leader>sp", function() require("snacks").picker.files() end, { desc = "Find files (snacks picker)" })
+		map("n", "<leader>sP", function() require("snacks").picker.recent() end, { desc = "Recent files (snacks picker)" })
+	end,
 }

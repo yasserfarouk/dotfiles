@@ -48,12 +48,9 @@ on_project_first_start:
 # on_project_start: source .env
 
 windows:
-  - vim:
-      layout: main-horizontal
-      # Synchronize all panes of this window, can be enabled before or after the pane commands run.
-      # 'before' represents legacy functionality and will be deprecated in a future release, in favour of 'after'
-      # synchronize: after
+  - dev:
+      layout: 9347,177x45,0,0[177x35,0,0{107x35,0,0,24,69x35,108,0,27},177x9,0,36,25]
       panes:
         - v
+        - opencode
         - 
-  - console: 
