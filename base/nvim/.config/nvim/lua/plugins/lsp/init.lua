@@ -6,8 +6,12 @@ return {
 		dependencies = {
 			{
 				"folke/lazydev.nvim",
+				ft = "lua",
 				opts = {
-					library = { plugins = { "neotest", "nvim-dap-ui" }, types = true },
+					library = {
+						{ plugins = { "neotest", "nvim-dap-ui" }, types = true },
+						{ path = "luvit-meta/library", words = { "vim%.uv" } },
+					},
 				},
 			},
 			{ "j-hui/fidget.nvim", config = true },
