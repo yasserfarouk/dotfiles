@@ -30,12 +30,6 @@ function M.on_attach(client, buffer)
 		self:map("<leader>cc", "FzfLua lsp_live_workspace_symbols", { desc = "Workspace symbols" })
 		self:map("<leader>cs", "FzfLua lsp_document_symbols", { desc = "Document Symbols" })
 		self:map("<leader>cw", "FzfLua lsp_workspace_symbols", { desc = "Workspace symbols" })
-	elseif sok then
-		self:map("gd", "Lspsaga goto_definition", { desc = "Goto Definition" })
-		self:map("gu", "Lspsaga lsp_finder", { desc = "References" })
-		self:map("gD", "lua vim.lsp.buf.declaration()", { desc = "Goto Declaration" })
-		self:map("gI", "lua vim.lsp.buf.implementation()", { desc = "Goto Implementation" })
-		self:map("gb", "lua vim.lsp.buf.type_definition()", { desc = "Goto Type Definition" })
 	else
 		self:map("gd", "lua vim.lsp.buf.definition()", { desc = "Goto Definition" })
 		self:map("gu", "lua vim.lsp.buf.references", { desc = "References" })
@@ -47,16 +41,7 @@ function M.on_attach(client, buffer)
 	self:map("<leader>cv", "LspVirtualTextEnable", { desc = "Enable Virtual Text" })
 	self:map("<leader>cV", "LspVirtualTextDisable", { desc = "Disable Virtual Text" })
 	self:map("<leader>cn", "LspInfo", { desc = "lsp info" })
-	self:map("<leader>cB", "lua vim.lsp.buf.blame_line()", { desc = "signature help" })
 	self:map("gK", vim.lsp.buf.signature_help, { desc = "Signature Help", has = "signatureHelp" })
-
-	-- local format = require("plugins.lsp.format").format
-	-- self:map("<leader>cf", function()
-	-- 	format({ timeout = 3000 })
-	-- end, { desc = "Format Document", has = "documentFormatting" })
-	-- self:map("<leader>cF", function()
-	-- 	format({ timeout = 3000 })
-	-- end, { desc = "Format Range", mode = "v", has = "documentRangeFormatting" })
 end
 
 function M.new(client, buffer)
