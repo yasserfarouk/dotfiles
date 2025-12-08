@@ -1,8 +1,8 @@
-return {
-	-- Toggle between inline signature help (cmp) vs native LSP floating window
-	-- Set to true for inline cmp-nvim-lsp-signature-help, false for native float
-	local USE_INLINE_SIGNATURE_HELP = false
+-- Toggle between inline signature help (cmp) vs native LSP floating window
+-- Set to true for inline cmp-nvim-lsp-signature-help, false for native float
+local USE_INLINE_SIGNATURE_HELP = false
 
+return {
 	-- Auto-completion engine with LSP, buffer, and path sources
 	"hrsh7th/nvim-cmp",
 	event = "InsertEnter",
