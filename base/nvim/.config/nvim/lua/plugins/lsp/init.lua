@@ -4,7 +4,6 @@ return {
 		"neovim/nvim-lspconfig",
 		event = "BufReadPre",
 		dependencies = {
-			{ "folke/neoconf.nvim", cmd = "Neoconf", config = true },
 			{
 				"folke/lazydev.nvim",
 				opts = {
