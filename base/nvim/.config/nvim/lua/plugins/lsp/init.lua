@@ -61,46 +61,6 @@ return {
 			end
 		end,
 	},
-	-- {
-	-- 	"jay-babu/mason-null-ls.nvim",
-	-- 	event = { "BufReadPre", "BufNewFile" },
-	-- 	dependencies = {
-	-- 		"williamboman/mason.nvim",
-	-- 		"nvimtools/none-ls.nvim",
-	-- 	},
-	-- 	config = function()
-	-- 		local nls = require("null-ls")
-	-- 		-- {
-	-- 		-- 				sources = {
-	-- 		-- 					nls.builtins.formatting.stylua,
-	-- 		-- 					-- nls.builtins.diagnostics.ruff.with({ extra_args = { "--max-line-length=180" } }),
-	-- 		-- 					nls.builtins.formatting.isort,
-	-- 		-- 					nls.builtins.formatting.black,
-	-- 		-- 					-- nls.builtins.diagnostics.pylint,
-	-- 		-- 				},
-	-- 		-- 			}
-	-- 		nls.setup()
-	-- 		require("mason").setup()
-	-- 		require("mason-null-ls").setup({ handlers = {} })
-	-- 	end,
-	-- },
-	-- {
-	-- 	"nvimtools/none-ls.nvim",
-	-- 	event = "BufReadPre",
-	-- 	dependencies = { "mason.nvim" },
-	-- 	config = function()
-	-- 		local nls = require("null-ls")
-	-- 		nls.setup({
-	-- 			sources = {
-	-- 				-- nls.builtins.formatting.stylua,
-	-- 				-- nls.builtins.diagnostics.ruff.with({ extra_args = { "--max-line-length=180" } }),
-	-- 				nls.builtins.formatting.isort,
-	-- 				nls.builtins.formatting.black,
-	-- 				-- nls.builtins.diagnostics.pylint,
-	-- 			},
-	-- 		})
-	-- 	end,
-	-- },
 	{
 		"folke/trouble.nvim",
 		cmd = { "TroubleToggle", "Trouble" },
@@ -122,40 +82,9 @@ return {
 			{ "<leader>co", "<cmd>Outline<cr>", desc = "Symbols sidebar" },
 		},
 		config = function()
-			-- Example mapping to toggle outline
-			--
 			require("outline").setup({
 				-- Your setup opts here (leave empty to use defaults)
 			})
 		end,
-		{
-			"folke/lazydev.nvim",
-			ft = "lua", -- only load on lua files
-			opts = {
-				library = {
-					-- See the configuration section for more details
-					-- Load luvit types when the `vim.uv` word is found
-					{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
-				},
-			},
-		},
-		-- { -- optional blink completion source for require statements and module annotations
-		-- 	"saghen/blink.cmp",
-		-- 	opts = {
-		-- 		sources = {
-		-- 			-- add lazydev to your completion providers
-		-- 			default = { "lazydev", "lsp", "path", "snippets", "buffer" },
-		-- 			providers = {
-		-- 				lazydev = {
-		-- 					name = "LazyDev",
-		-- 					module = "lazydev.integrations.blink",
-		-- 					-- make lazydev completions top priority (see `:h blink.cmp`)
-		-- 					score_offset = 100,
-		-- 				},
-		-- 			},
-		-- 		},
-		-- 	},
-		-- 	-- { "folke/neodev.nvim", enabled = false }, -- make sure to uninstall or disable neodev.nvim
-		-- },
 	},
 }
