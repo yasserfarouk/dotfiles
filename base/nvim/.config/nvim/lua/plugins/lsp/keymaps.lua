@@ -4,58 +4,10 @@ function M.on_attach(client, buffer)
 	local self = M.new(client, buffer)
 	local tok, _ = pcall(require, "telescope")
 	local lok, _ = pcall(require, "fzf-lua")
-	local sok, _ = pcall(require, "lspsaga")
-	if pcall(require, "inc_rename") then
-		self:map("<F2>", "IncRename " .. vim.fn.expand("<cword>"), { desc = "rename" })
-	elseif sok then
-		self:map("<F2>", "Lspsaga rename", { desc = "rename" })
-	else
-		self:map("<F2>", function()
-			vim.lsp.buf.rename()
-		end, { desc = "Prev Warning" })
-	end
-	if sok then
-		self:map("gp", "Lspsaga peek_definition", { desc = "Goto Definition" })
-		self:map("grf", "Lspsaga finder", { desc = "Goto Definition" })
-		self:map("[d", "Lspsaga diagnostic_jump_prev", { desc = "Next Diagnostic" })
-		self:map("]d", "Lspsaga diagnostic_jump_next", { desc = "Prev Diagnostic" })
-		self:map("]e", function()
-			require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
-		end, { desc = "Next Error" })
-		self:map("[e", function()
-			require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
-		end, { desc = "Prev Error" })
-		self:map("]w", function()
-			require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.WARN })
-		end, { desc = "Next Warning" })
-		self:map("[w", function()
-			require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.WARN })
-		end, { desc = "Prev Warning" })
-
-		self:map("<leader>c>", "Lspsaga outgoing_calls", { desc = "outgoing calls" })
-		self:map("<leader>c<", "Lspsaga incoming_calls", { desc = "incoming calls" })
-		self:map("<leader>ca", "Lspsaga code_action", { desc = "code action" })
-		self:map("<leader>cA", "Lspsaga range_code_action", { desc = "selected action" })
-		self:map("<leader>cl", "Lspsaga show_line_diagnostics", { desc = "line_diagnostics" })
-		-- self:map("<leader>c>", "Lspsaga diagnostics_jump_next", { desc = "next diagnostic" })
-		-- self:map("<leader>c<", "Lspsaga diagnostics_jump_prev", { desc = "previous diagnostic" })
-		self:map("<leader>cp", "Lspsaga peek_definition", { desc = "preview definition" })
-		self:map("<leader>ch", "Lspsaga signature_help", { desc = "signature help" })
-		self:map("K", "Lspsaga hover_doc", { desc = "Hover" })
-		self:map("<leader>ci", "Lspsaga finder", { desc = "lsp finder" })
-	else
-		self:map("[d", M.diagnostic_goto(true), { desc = "Next Diagnostic" })
-		self:map("]d", M.diagnostic_goto(false), { desc = "Prev Diagnostic" })
-		self:map("]e", M.diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
-		self:map("[e", M.diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
-		self:map("]w", M.diagnostic_goto(true, "WARNING"), { desc = "Next Warning" })
-		self:map("[w", M.diagnostic_goto(false, "WARNING"), { desc = "Prev Warning" })
-		self:map("<leader>ca", vim.lsp.buf.code_action, { desc = "code action" })
-		self:map("<leader>cA", vim.lsp.buf.code_action, { desc = "selected action" })
-		self:map("<leader>cl", function() vim.diagnostic.open_float() end, { desc = "line_diagnostics" })
-		self:map("<leader>ch", vim.lsp.buf.signature_help, { desc = "signature help" })
-		self:map("K", vim.lsp.buf.hover, { desc = "Hover" })
-	end
+	
+	-- Use native LSP rename
+	self:map("<F2>", vim.lsp.buf.rename, { desc = "rename" })
+	
 	if tok then
 		self:map("gd", "Telescope lsp_definitions", { desc = "Goto Definition" })
 		self:map("gu", "Telescope lsp_references", { desc = "References" })
@@ -127,14 +79,6 @@ function M:map(lhs, rhs, opts)
 		---@diagnostic disable-next-line: no-unknown
 		{ silent = true, buffer = self.buffer, expr = opts.expr, desc = opts.desc }
 	)
-end
-
-function M.rename()
-	if pcall(require, "inc_rename") then
-		return ":IncRename " .. vim.fn.expand("<cword>")
-	else
-		vim.lsp.buf.rename()
-	end
 end
 
 function M.diagnostic_goto(next, severity)
