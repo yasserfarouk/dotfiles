@@ -46,9 +46,9 @@ command! TelescopeHidden lua require("telescope.builtin").live_grep{ vimgrep_arg
 
 
 function! OrganizeImports()
-  silent exec PyrightOrganizeImports
-	silent exec "!isort %"
-  silent exec "!autoflake --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports --in-place --exclude '__init__.py' %s"
+	:silent exec :PyrightOrganizeImports
+	:silent exec "!isort %"
+	:silent exec "!autoflake --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports --in-place --exclude '__init__.py' %"
 endfunction
 function! ToggleFileFold()
 	if &foldlevel == 0
