@@ -16,9 +16,10 @@ return {
 				{
 					pane = 2,
 					section = "terminal",
-					cmd = "hostname",
-					height = 5,
+					cmd = "hostname; sleep 0.1",
+					height = 1,
 					padding = 1,
+					indent = 2,
 				},
 				{
 					pane = 2,
@@ -35,13 +36,13 @@ return {
 				{ pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
 				{
 					pane = 2,
-					icon = " ",
+					icon = " ",
 					title = "Git Status",
 					section = "terminal",
 					enabled = function()
 						return Snacks.git.get_root() ~= nil
 					end,
-					cmd = "git status --short --branch --renames",
+					cmd = "git status --short --branch --renames; sleep 0.1",
 					height = 5,
 					padding = 1,
 					ttl = 5 * 60,
