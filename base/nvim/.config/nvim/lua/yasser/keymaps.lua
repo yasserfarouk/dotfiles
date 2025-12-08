@@ -162,7 +162,6 @@ keymap("n", "<leader>F6", "<cmd>set foldlevel=6<cr>", { desc = "level6" })
 -- view maps
 keymap("n", "<leader>vw", "<cmd>StripWhitespace<cr>", { desc = "strip whitespace" })
 keymap("n", "<leader>vb", "<cmd>call SetBackground()<cr>", { desc = "background" })
-keymap("n", "<leader>vh", "<cmd>call GoHighlight()<cr>", { desc = "highlight" })
 keymap("n", "<leader>vo", "<c-w>o", { desc = "only window" })
 keymap("n", "<leader>vq", "<c-w>q", { desc = "close window" })
 keymap("n", "<leader>vr", "<cmd>call SetupWrappingSoft()<cr>", { desc = "wrap text (soft)" })
