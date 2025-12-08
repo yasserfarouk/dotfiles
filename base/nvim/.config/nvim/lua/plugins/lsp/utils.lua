@@ -1,8 +1,16 @@
 local M = {}
 
 function M.capabilities()
+	-- Neovim 0.11+ has built-in completion capabilities
+	-- Still use cmp_nvim_lsp for enhanced completion features
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
-	return require("cmp_nvim_lsp").default_capabilities(capabilities)
+	
+	local ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+	if ok then
+		capabilities = cmp_lsp.default_capabilities(capabilities)
+	end
+	
+	return capabilities
 end
 
 function M.on_attach(on_attach)
