@@ -41,8 +41,10 @@ return {
 		keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
 		opts = {
 			ensure_installed = {
-				-- "stylua",
-				-- "ruff",
+				"stylua",      -- Lua formatter
+				"ruff",        -- Python linter/formatter
+				"prettierd",   -- JavaScript/TypeScript formatter (fast)
+				"prettier",    -- JavaScript/TypeScript formatter (fallback)
 				"debugpy",
 				"codelldb",
 			},

@@ -5,7 +5,13 @@ return {
 		{
 			"<leader>cf",
 			function()
-				require("conform").format({ async = true, lsp_fallback = true })
+				local conform = require("conform")
+				local ok, err = pcall(function()
+					conform.format({ async = true, lsp_fallback = true, timeout_ms = 3000 })
+				end)
+				if not ok then
+					vim.notify("Formatting failed", vim.log.levels.WARN)
+				end
 			end,
 			mode = { "n", "v" },
 			desc = "Format buffer",
@@ -36,7 +42,7 @@ return {
 			bang = true,
 		})
 		vim.api.nvim_create_user_command("Format", function()
-			require("conform").format({ async = true, lsp_fallback = true })
+			require("conform").format({ async = true, lsp_fallback = true, timeout_ms = 3000 })
 		end, {
 			desc = "Format buffer",
 		})
@@ -45,6 +51,25 @@ return {
 			vim.g.disable_autoformat = false
 		end, {
 			desc = "Re-enable autoformat-on-save",
+		})
+		vim.api.nvim_create_user_command("FormatHealth", function()
+			local conform = require("conform")
+			local buf = vim.api.nvim_get_current_buf()
+			local ft = vim.bo[buf].filetype
+			
+			local formatters = conform.list_formatters(buf)
+			if #formatters == 0 then
+				vim.notify("No formatters configured for " .. ft, vim.log.levels.WARN)
+				return
+			end
+			
+			local formatter_names = {}
+			for _, f in ipairs(formatters) do
+				table.insert(formatter_names, f.name)
+			end
+			vim.notify("Formatters for " .. ft .. ": " .. table.concat(formatter_names, ", "), vim.log.levels.INFO)
+		end, {
+			desc = "Check available formatters for current buffer",
 		})
 
 		require("conform").setup({
@@ -55,7 +80,7 @@ return {
 				if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
 					return
 				end
-				return { timeout_ms = 1500, lsp_fallback = true }
+				return { timeout_ms = 3000, lsp_fallback = true }
 			end,
 			formatters_by_ft = {
 				lua = { "stylua" },
