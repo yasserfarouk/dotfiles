@@ -1,10 +1,14 @@
 return {
+	-- Toggle between inline signature help (cmp) vs native LSP floating window
+	-- Set to true for inline cmp-nvim-lsp-signature-help, false for native float
+	local USE_INLINE_SIGNATURE_HELP = false
+
 	-- Auto-completion engine with LSP, buffer, and path sources
 	"hrsh7th/nvim-cmp",
 	event = "InsertEnter",
 	dependencies = {
 		"hrsh7th/cmp-nvim-lsp",
-		"hrsh7th/cmp-nvim-lsp-signature-help",
+		USE_INLINE_SIGNATURE_HELP and "hrsh7th/cmp-nvim-lsp-signature-help" or nil,
 		"hrsh7th/cmp-buffer",
 		"hrsh7th/cmp-path",
 		"hrsh7th/cmp-cmdline",
@@ -45,7 +49,7 @@ return {
 			sources = cmp.config.sources({
 				{ name = "lazydev", group_index = 0 }, -- Only for Lua files, takes priority
 				{ name = "nvim_lsp" },
-				{ name = "nvim_lsp_signature_help" },
+				USE_INLINE_SIGNATURE_HELP and { name = "nvim_lsp_signature_help" } or nil,
 				{ name = "copilot", group_index = 2 },
 			}, {
 				{ name = "buffer", keyword_length = 3 },
