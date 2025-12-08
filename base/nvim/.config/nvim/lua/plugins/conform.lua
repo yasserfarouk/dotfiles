@@ -1,6 +1,7 @@
 return {
 	-- Lightweight formatter with support for multiple formatters per filetype
 	"stevearc/conform.nvim",
+	event = { "BufReadPre", "BufNewFile" },
 	keys = {
 		{
 			"<leader>cf",
