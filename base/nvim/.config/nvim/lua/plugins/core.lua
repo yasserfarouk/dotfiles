@@ -129,6 +129,37 @@ return {
 	{ "windwp/nvim-ts-autotag", ft = { "html", "xml", "javascript", "typescript", "javascriptreact", "typescriptreact", "svelte", "vue" } },
 	-- Context-aware commenting for embedded languages
 	{ "JoosepAlviste/nvim-ts-context-commentstring", event = "BufReadPost" },
+	-- Sticky context showing current function/class/if at top of buffer
+	{
+		"nvim-treesitter/nvim-treesitter-context",
+		event = "BufReadPost",
+		config = function()
+			require("treesitter-context").setup({
+				enable = false, -- Disabled by default, toggle with keymap
+				max_lines = 5, -- Max number of context lines
+				min_window_height = 20, -- Only show if window is tall enough
+				multiline_threshold = 1, -- Max lines for a single context node
+				trim_scope = "outer", -- Which scope to trim if max_lines exceeded
+				mode = "cursor", -- Show context based on cursor position
+			})
+		end,
+		keys = {
+			{
+				"<leader>cx",
+				function()
+					require("treesitter-context").toggle()
+				end,
+				desc = "Toggle code context",
+			},
+			{
+				"gC",
+				function()
+					require("treesitter-context").go_to_context(vim.v.count1)
+				end,
+				desc = "Jump to context",
+			},
+		},
+	},
 
 	-- Visual undo history tree browser
 	{
