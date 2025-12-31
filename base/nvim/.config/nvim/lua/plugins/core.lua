@@ -169,4 +169,22 @@ return {
 			{ "<leader>u", "<cmd>UndotreeToggle<cr>", desc = "undo tree" },
 		},
 	},
+	-- Paste/embed images from clipboard or drag-and-drop
+	{
+		"HakonHarnes/img-clip.nvim",
+		event = "VeryLazy",
+		opts = {
+			default = {
+				dir_path = "assets",
+				prompt_for_file_name = true,
+				drag_and_drop = {
+					enabled = true,
+					insert_mode = true,
+				},
+			},
+		},
+		keys = {
+			{ "<leader>P", "<cmd>PasteImage<cr>", desc = "Paste image from clipboard" },
+		},
+	},
 }
