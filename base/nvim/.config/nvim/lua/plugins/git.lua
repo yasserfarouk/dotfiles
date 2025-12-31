@@ -12,11 +12,20 @@ return {
 		"lewis6991/gitsigns.nvim",
 		event = "BufReadPre",
 		config = function()
-			require("gitsigns").setup()
+			require("gitsigns").setup({
+				current_line_blame = true, -- Show blame info at end of line
+				current_line_blame_opts = {
+					virt_text = true,
+					virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
+					delay = 2000, -- 2 seconds delay
+					ignore_whitespace = false,
+				},
+				current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
+			})
 		end,
 		keys = {
 			{ "<leader>gh", "<cmd>Gitsigns preview_hunk<cr>", desc = "Show Hunk" },
-			{ "<leader>gB", "<cmd>Gitsigns toggle_current_lint_blame<cr>", desc = "Line Blame" },
+			{ "<leader>gB", "<cmd>Gitsigns toggle_current_line_blame<cr>", desc = "Toggle Line Blame" },
 		},
 	},
 	-- Full-featured Git wrapper for Neovim (:Git commands)
@@ -59,19 +68,19 @@ return {
 	{
 		"akinsho/git-conflict.nvim",
 		event = "BufReadPre",
-		init = function()
+		config = function()
 			require("git-conflict").setup({
 				default_mappings = false,
 				disable_diagnostics = true,
 			})
 		end,
 		keys = {
-			{ "<leader>gCo", ":GitConflictChooseOurs<cr>" },
-			{ "<leader>gCt", ":GitConflictChooseTheirs<cr>" },
-			{ "<leader>gCb", ":GitConflictChooseBoth<cr>" },
-			{ "<leader>gC0", ":GitConflictChooseNone<cr>" },
-			{ "]x", ":GitConflictNextConflict<cr>" },
-			{ "[x", ":GitConflictPrevConflict<cr>" },
+			{ "<leader>gCo", ":GitConflictChooseOurs<cr>", desc = "Choose Ours" },
+			{ "<leader>gCt", ":GitConflictChooseTheirs<cr>", desc = "Choose Theirs" },
+			{ "<leader>gCb", ":GitConflictChooseBoth<cr>", desc = "Choose Both" },
+			{ "<leader>gC0", ":GitConflictChooseNone<cr>", desc = "Choose None" },
+			{ "]x", ":GitConflictNextConflict<cr>", desc = "Next Conflict" },
+			{ "[x", ":GitConflictPrevConflict<cr>", desc = "Prev Conflict" },
 		},
 	},
 }

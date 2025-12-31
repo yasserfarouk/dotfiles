@@ -33,33 +33,41 @@ case $pyver in
 	"3.13" | "13" | "")
 		uv venv -p 3.13 "$venv" 1>/dev/null || exit
 		;;
+	"3.14" | "14" | "")
+		uv venv -p 3.14 "$venv" 1>/dev/null || exit
+		;;
 	*)
 		uv venv -p "$pyver" "$venv" 1>/dev/null || exit
 		;;
 esac
-source "${venv}/bin/activate" 1>/dev/null
-yes | uv pip install -U pip wheel 1>/dev/null
+rm -rf ${mydir}/.venv 1>/dev/null
+echo "ln -s ${venvbase}/${name} ${mydir}/.venv"
+ln -s ${venvbase}/${name} ${mydir}/.venv
+# source "${venv}/bin/activate" 1>/dev/null
+# yes | uv pip install -U pip wheel 1>/dev/null
+# uv sync --all-extras --dev
 if [ -f "setup.py" ] || [ -f "pyproject.toml" ] || [ -f "setup.cfg" ] ; then
-	uv pip install -e . 1>/dev/null
+	# uv pip install -e . 1>/dev/null
+	uv sync --all-extras --dev  --active
+	# uv pip install -e .
+else
+	for req in requirements*.txt; do
+		if [ -f "${req}" ]; then
+			yes | uv pip install -r "${req}" 1>/dev/null
+		fi
+	done
 fi
-for req in requirements*.txt; do
-	if [ -f "${req}" ]; then
-		yes | uv pip install -r "${req}" 1>/dev/null
-	fi
-done
 base=$HOME/code/projects
 for package in scml negmas; do
 	if [[ $(pip list | grep ${package}) ]]; then
 		echo "------ Replacing ${package} with local version"
-		yes | uv pip uninstall "${package}" 1>/dev/null
-		yes | uv pip install -e "${base}/${package}" 1>/dev/null
+		yes | uv pip uninstall "${package}"
+		yes | uv pip install -e "${base}/${package}"
 	fi
 done
 deactivate 1>/dev/null
 rm -rf ".envrc" 1>/dev/null
 echo  "source ${venv}/bin/activate" > ".envrc"
 cd "${savedwd}" || exit
-
-ln -s ${venvbase}/${name} ${mydir}/.venv
 cd  $mydir
-uv sync
+# uv sync

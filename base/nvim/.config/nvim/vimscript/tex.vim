@@ -55,9 +55,32 @@ let g:use_xelatex = {
 			\}
 let g:vimtex_compiler_latexmk = g:use_pdflatex
 " \   '-interaction=nonstopmode',
-" let g:tex_flavor = "latexmk"
-" let g:tex_flavor = "latex"
+let g:tex_flavor = "latex"
 let g:vimtex_quickfix_open_on_warning = 0
+
+" Main file detection - enable more methods and prompting
+let g:vimtex_main_detection = 1
+" Search methods: 1=\documentclass, 2=.latexmkrc, 4=.latexmain, 8=manual
+let g:vimtex_main_detection_methods = [1, 2, 4, 8]
+" Prompt when multiple main files are found
+let g:vimtex_ui_method = {
+      \ 'confirm': 'nvim',
+      \ 'input': 'nvim',
+      \ 'select': 'nvim',
+      \}
+" Add rounded border to selection box
+let g:vimtex_ui_select_method = {'border': 'rounded'}
+
+" Set vimtex float border colors
+augroup vimtex_highlights
+    autocmd!
+    autocmd ColorScheme * highlight VimtexUIFloatBorder guifg=#ffffff guibg=NONE
+    autocmd ColorScheme * highlight VimtexUIFloatNormal guibg=#1a1b26
+augroup END
+
+" Apply highlights immediately
+highlight VimtexUIFloatBorder guifg=#ffffff guibg=NONE
+highlight VimtexUIFloatNormal guibg=#1a1b26
 
 function! ToggleLatexmkSetting()
   if g:vimtex_compiler_latexmk ==# g:use_pdflatex

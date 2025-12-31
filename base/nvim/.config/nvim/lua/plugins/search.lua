@@ -51,6 +51,7 @@ return {
 			{ "<leader>sH", "<cmd>TelescopeHelp<cr>", desc = "help" },
 			{ "<leader>sw", "<cmd>TelescopeWord<cr>", desc = "word" },
 			{ "<leader>sz", "<cmd>TelescopeHidden<cr>", desc = "test (everywhere)" },
+			{ "<leader>sn", "<cmd>Telescope notify<cr>", desc = "notifications" },
 		},
 		config = function()
 			require("yasser.search.telescope")
@@ -59,7 +60,7 @@ return {
 	{
 		"nvim-telescope/telescope-symbols.nvim",
 		dependencies = { "nvim-telescope/telescope.nvim" },
-		event = "VeryLazy",
+		lazy = true,
 	},
 	-- {
 	-- 	"nvim-telescope/telescope-fzy-native.nvim",
@@ -70,12 +71,17 @@ return {
 	-- },
 	{
 		"nvim-telescope/telescope-ui-select.nvim",
+		lazy = true,
 	},
 	{
 		"nvim-telescope/telescope-fzf-native.nvim",
 		build = "make",
+		lazy = true,
 	},
-	{ "nvim-telescope/telescope-dap.nvim" },
+	{ 
+		"nvim-telescope/telescope-dap.nvim",
+		lazy = true,
+	},
 	-- {
 	-- 	"nvim-telescope/telescope-file-browser.nvim",
 	-- 	dependencies = { "nvim-telescope/telescope.nvim" },
@@ -92,10 +98,18 @@ return {
 	-- 		require("telescope").load_extension("project")
 	-- 	end,
 	-- },
-	{ "tom-anders/telescope-vim-bookmarks.nvim", event = "VeryLazy" },
-	"nvim-telescope/telescope-media-files.nvim",
-	"nvim-telescope/telescope-ui-select.nvim",
-	"nvim-telescope/telescope-file-browser.nvim",
+	{ 
+		"tom-anders/telescope-vim-bookmarks.nvim", 
+		lazy = true,
+	},
+	{
+		"nvim-telescope/telescope-media-files.nvim",
+		lazy = true,
+	},
+	{
+		"nvim-telescope/telescope-file-browser.nvim",
+		lazy = true,
+	},
 	{
 		"ahmedkhalf/project.nvim",
 		event = "VeryLazy",

@@ -41,6 +41,12 @@ function M.on_attach(client, buffer)
 	self:map("<leader>cv", "LspVirtualTextEnable", { desc = "Enable Virtual Text" })
 	self:map("<leader>cV", "LspVirtualTextDisable", { desc = "Disable Virtual Text" })
 	self:map("<leader>cn", "LspInfo", { desc = "lsp info" })
+	self:map("<leader>ci", function()
+		vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text })
+	end, { desc = "Toggle Inline Diagnostics" })
+	self:map("<leader>cl", function()
+		vim.diagnostic.open_float()
+	end, { desc = "Show Line Diagnostics" })
 	self:map("gK", vim.lsp.buf.signature_help, { desc = "Signature Help", has = "signatureHelp" })
 end
 

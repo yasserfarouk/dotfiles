@@ -115,6 +115,11 @@ local function git_info()
 	return string.format("%%6* %s %%*", out)
 end
 
+local function hostname()
+	local host = vim.fn.hostname():gsub("%.local$", "")
+	return string.format("%%7* %s %%*", host)
+end
+
 local function update_filepath_highlights()
 	if vim.bo.modified then
 		hl.group("StatusLineFilePath", { link = "DiffChange" })
@@ -347,6 +352,7 @@ function M.get_active_statusline()
 
 	return table.concat({
 		git_info(),
+		hostname(),
 		"%<",
 		line,
 	})
