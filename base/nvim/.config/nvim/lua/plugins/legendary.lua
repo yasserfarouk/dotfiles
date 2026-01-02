@@ -9,10 +9,11 @@ return {
 		},
 		keys = {
 			{ "<C-S-p>", "<cmd>Legendary<cr>", desc = "Legendary" },
-			{ "<leader>sL", "<cmd>Legendary<cr>", desc = "Legendary" },
+			{ "<leader>sk", "<cmd>Legendary<cr>", desc = "keymaps/commands" },
 		},
 		opts = {
 			which_key = { auto_register = true },
+			lazy_nvim = { auto_register = true },
 		},
 	},
 }
