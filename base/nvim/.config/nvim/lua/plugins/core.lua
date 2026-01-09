@@ -126,7 +126,10 @@ return {
 		end,
 	},
 	-- Automatically close HTML/JSX tags
-	{ "windwp/nvim-ts-autotag", ft = { "html", "xml", "javascript", "typescript", "javascriptreact", "typescriptreact", "svelte", "vue" } },
+	{
+		"windwp/nvim-ts-autotag",
+		ft = { "html", "xml", "javascript", "typescript", "javascriptreact", "typescriptreact", "svelte", "vue" },
+	},
 	-- Context-aware commenting for embedded languages
 	{ "JoosepAlviste/nvim-ts-context-commentstring", event = "BufReadPost" },
 	-- Sticky context showing current function/class/if at top of buffer
@@ -175,7 +178,7 @@ return {
 		event = "VeryLazy",
 		opts = {
 			default = {
-				dir_path = "assets",
+				dir_path = "assets/images",
 				prompt_for_file_name = true,
 				drag_and_drop = {
 					enabled = true,

@@ -426,3 +426,45 @@ alias killdefender="launchctl unload /Library/LaunchAgents/com.microsoft.wdav.tr
 alias zv='NVIM_APPNAME=lazyvim nvim' # LazyVim
 alias l='NVIM_APPNAME=lazyvim nvim' # LazyVim
 alias rm="Yasser: echo Use 'trash', or the full path i.e. '/bin/rm'&& trash"
+
+# create .venvs under ~/myenvs
+# Usage: uv_init [uv venv options...]
+# Example: uv_init --python 3.11
+uv_init() {
+    local project_name=$(basename "$PWD")
+    local venv_parent="$HOME/myvenvs"
+    local target_path="$venv_parent/$project_name"
+
+    # 1. Create the parent directory if it doesn't exist
+    mkdir -p "$venv_parent"
+
+    # 2. Remove existing venv if present (override)
+    if [[ -e "$target_path" ]]; then
+        echo "Removing existing venv at $target_path"
+        rm -rf "$target_path"
+    fi
+    if [[ -e ".venv" || -L ".venv" ]]; then
+        echo "Removing existing .venv in current directory"
+        rm -rf ".venv"
+    fi
+
+    # 3. Create the actual venv in the remote location using uv
+    # Pass all arguments to uv venv (e.g., --python 3.11)
+    uv venv "$target_path" "$@"
+
+    # 4. Create the symlink in the current project folder
+    ln -snf "$target_path" .venv
+
+    # 5. Create .envrc file for direnv
+    echo 'source .venv/bin/activate' > .envrc
+    echo "Created .envrc"
+
+    # 6. If folder is not empty (has pyproject.toml or requirements), run uv sync
+    if [[ -f "pyproject.toml" ]]; then
+        echo "Running uv sync --all-extras --dev"
+        uv sync --all-extras --dev
+    fi
+
+    echo "Venv created at $target_path"
+    echo "Symlink created at ./.venv"
+}
