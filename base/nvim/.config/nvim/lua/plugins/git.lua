@@ -3,7 +3,14 @@ return {
 	{
 		"sindrets/diffview.nvim",
 		keys = {
-			{ "<leader>gV", "<cmd>DiffviewOpen<cr>", desc = "Diff view" },
+			{ "<leader>gv", function()
+				if next(require("diffview.lib").views) == nil then
+					vim.cmd("DiffviewOpen")
+				else
+					vim.cmd("DiffviewClose")
+				end
+			end, desc = "Toggle diff view" },
+			{ "<leader>gf", "<cmd>DiffviewFileHistory %<cr>", desc = "File history" },
 		},
 	},
 	-- Git signs in gutter: added/modified/deleted lines with hunk preview
