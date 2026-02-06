@@ -1,8 +1,11 @@
 return {
+	-- Laravel snippets (lazy loaded for PHP files only)
+	{"rafamadriz/friendly-snippets", ft = "php"},
 	-- Collection of useful utilities: dashboard, file explorer, notifications, and more
-	"folke/snacks.nvim",
-	priority = 1000,
-	lazy = false,
+	{
+		"folke/snacks.nvim",
+		priority = 1000,
+		lazy = false,
 	---@type snacks.Config
 	opts = {
 		-- your configuration comes here
@@ -115,4 +118,5 @@ return {
 		map("n", "<leader>sp", function() require("snacks").picker.files() end, { desc = "Find files (snacks picker)" })
 		map("n", "<leader>sP", function() require("snacks").picker.recent() end, { desc = "Recent files (snacks picker)" })
 	end,
+	},
 }

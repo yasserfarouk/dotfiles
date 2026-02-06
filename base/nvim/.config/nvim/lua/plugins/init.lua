@@ -10,6 +10,9 @@ end
 
 -- local kitty = function() return vim.fn.exists('$KITTY_WINDOW_ID') == 1 end
 return {
+	-- Laravel-specific plugins
+	{"jwalton512/vim-blade", ft = "blade"},
+	{"noahfrederick/vim-laravel", ft = "php"},
 
 	"folke/tokyonight.nvim",
 	-- performance (faster startup)

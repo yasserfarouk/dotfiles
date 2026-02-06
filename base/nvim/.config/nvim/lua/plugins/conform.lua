@@ -87,6 +87,8 @@ return {
 				lua = { "stylua" },
 				python = { "ruff_fix", "ruff_format" },
 				javascript = { "prettierd", "prettier", stop_after_first = true },
+				php = { "pint" },
+				blade = { "blade-formatter" },
 			},
 		})
 	end,

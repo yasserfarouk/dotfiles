@@ -30,6 +30,7 @@ return {
 				},
 				-- JavaScript/TypeScript LSP
 				ts_ls = {},
+				phpactor = {},
 				-- Other servers
 				texlab = {},
 				dockerls = {},
@@ -50,6 +51,7 @@ return {
 				"prettierd",   -- JavaScript/TypeScript formatter (fast)
 				"prettier",    -- JavaScript/TypeScript formatter (fallback)
 				"debugpy",
+				"intelephense",
 				"codelldb",
 			},
 		},
