@@ -40,8 +40,8 @@ vim.opt.shortmess = "filnxtToOF"
 vim.opt.timeoutlen = 500
 -- vim.opt.guifont="JetBrainsMono Nerd Font Mono":h10
 -- vim.opt.colorcolumn=79
-vim.opt.wildmenu = true
-vim.opt.wildmode = "list:longest,list:full"
+vim.opt.wildmenu = false
+vim.opt.wildmode = ""
 -- vim.opt.wildignore=vim.opt.wildignore .. ",*/tmp/*,*.so,*.swp,*.pyc,*.db,*.sqlite"
 -- vim.opt.wildignore=vim.opt.wildignore .. ",*.o,*.obj,.git,*.rbc,*.pyc,__pycache__,*_build/*,**coverage/*"
 -- vim.opt.wildignore=vim.opt.wildignore .. ",**node_modules/*,**android/*,**/.git/*"
@@ -84,4 +84,30 @@ vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
 -- Add rounded borders to floating windows globally
 vim.diagnostic.config({
 	float = { border = "rounded" },
+})
+
+-- Detect filetype from shebang for files without extensions
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+	pattern = "*",
+	callback = function()
+		-- Only check files without a detected filetype
+		if vim.bo.filetype == "" then
+			local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1] or ""
+			if first_line:match("^#!.*bash") or first_line:match("^#!.*sh$") then
+				vim.bo.filetype = "sh"
+			elseif first_line:match("^#!.*python") then
+				vim.bo.filetype = "python"
+			elseif first_line:match("^#!.*node") or first_line:match("^#!.*nodejs") then
+				vim.bo.filetype = "javascript"
+			elseif first_line:match("^#!.*ruby") then
+				vim.bo.filetype = "ruby"
+			elseif first_line:match("^#!.*perl") then
+				vim.bo.filetype = "perl"
+			elseif first_line:match("^#!.*php") then
+				vim.bo.filetype = "php"
+			elseif first_line:match("^#!.*zsh") then
+				vim.bo.filetype = "zsh"
+			end
+		end
+	end,
 })
