@@ -18,6 +18,18 @@ return {
 			desc = "Format buffer",
 		},
 		{
+			"<leader>cfa",
+			"<cmd>FormatAll<cr>",
+			mode = "n",
+			desc = "Format all in project",
+		},
+		{
+			"<leader>cfA",
+			":FormatAll ",
+			mode = "n",
+			desc = "Format all in path...",
+		},
+		{
 			"<leader>cF",
 			"<cmd>FormatEnable<cr>",
 			mode = "n",
@@ -71,6 +83,40 @@ return {
 			vim.notify("Formatters for " .. ft .. ": " .. table.concat(formatter_names, ", "), vim.log.levels.INFO)
 		end, {
 			desc = "Check available formatters for current buffer",
+		})
+
+		-- Format all files of a specific type in a directory
+		vim.api.nvim_create_user_command("FormatAll", function(args)
+			local path = args.args ~= "" and args.args or "."
+			local ft = vim.bo.filetype
+			local ext_map = {
+				php = "php",
+				lua = "lua",
+				python = "py",
+				javascript = "js",
+				typescript = "ts",
+				blade = "blade.php",
+			}
+			local ext = ext_map[ft]
+			if not ext then
+				vim.notify("No extension mapping for filetype: " .. ft, vim.log.levels.WARN)
+				return
+			end
+			local cmd = string.format("find %s -name '*.%s' -exec nvim --headless -c 'lua require(\"conform\").format({ async = false })' -c 'wq' {} \\;", path, ext)
+			vim.notify("Formatting all ." .. ext .. " files in " .. path .. "...", vim.log.levels.INFO)
+			vim.fn.jobstart(cmd, {
+				on_exit = function(_, code)
+					if code == 0 then
+						vim.notify("Formatting complete!", vim.log.levels.INFO)
+					else
+						vim.notify("Formatting failed with code: " .. code, vim.log.levels.ERROR)
+					end
+				end,
+			})
+		end, {
+			desc = "Format all files of current filetype in directory",
+			nargs = "?",
+			complete = "dir",
 		})
 
 		require("conform").setup({
