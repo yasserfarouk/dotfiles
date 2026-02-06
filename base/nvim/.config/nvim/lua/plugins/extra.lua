@@ -2,6 +2,13 @@ return {
 	-- use gF to go to file:line:col
 	{ "wsdjeg/vim-fetch" },
 
+	-- Better quickfix list with editable entries and improved UI
+	{
+		"stevearc/quicker.nvim",
+		event = "FileType qf",
+		opts = {},
+	},
+
 	-- CDing into the project root always
 	-- { "airblade/vim-rooter", event = "VeryLazy" },
 

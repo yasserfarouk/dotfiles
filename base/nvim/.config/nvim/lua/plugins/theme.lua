@@ -54,6 +54,14 @@ function transparentconf()
 		extra_groups = { -- table/string: additional groups that should be clear
 			-- In particular, when you set it to 'all', that means all avaliable groups
 
+			-- Inactive/non-current window backgrounds
+			"NormalNC",
+			"NormalFloat",
+			"FloatBorder",
+			"WinBar",
+			"WinBarNC",
+			"WinSeparator",
+
 			-- example of akinsho/nvim-bufferline.lua
 			"BufferLineTabClose",
 			"BufferlineBufferSelected",
@@ -61,8 +69,18 @@ function transparentconf()
 			"BufferLineBackground",
 			"BufferLineSeparator",
 			"BufferLineIndicatorSelected",
+
+			-- Sidebar/tree backgrounds
+			"NvimTreeNormal",
+			"NvimTreeNormalNC",
+			"NeoTreeNormal",
+			"NeoTreeNormalNC",
+
+			-- Telescope
+			"TelescopeNormal",
+			"TelescopeBorder",
 		},
-		exclude_groups = {}, -- table: groups you don't want to clear
+		exclude_groups = {},
 	})
 
 	local status_ok, notify = pcall(require, "notify")
@@ -82,6 +100,44 @@ return {
 		"xiyaowong/nvim-transparent",
 		dependencies = { "rcarriga/nvim-notify" },
 		config = transparentconf,
+	},
+	-- Dim inactive windows (toggleable with <leader>vd)
+	{
+		"levouh/tint.nvim",
+		event = "VeryLazy",
+		config = function()
+			require("tint").setup({
+				tint = -30, -- Darken inactive windows (negative = darker)
+				saturation = 0.6, -- Reduce saturation slightly
+				tint_background_colors = false, -- Keep transparent backgrounds
+				highlight_ignore_patterns = {
+					"WinSeparator",
+					"Status.*",
+					"EndOfBuffer",
+				},
+			})
+			-- Start with tint disabled
+			require("tint").disable()
+		end,
+		keys = {
+			{
+				"<leader>vd",
+				function()
+					require("tint").toggle()
+					-- Toggle cursorline highlight to make active window clearer
+					local tint = require("tint")
+					if tint.enabled() then
+						vim.opt.cursorline = true
+						vim.api.nvim_set_hl(0, "CursorLine", { bg = "#3a3a3a" })
+					else
+						-- Restore default cursorline (let colorscheme handle it)
+						vim.opt.cursorline = false
+						vim.cmd("hi clear CursorLine")
+					end
+				end,
+				desc = "dim inactive windows",
+			},
+		},
 	},
 	-- UI improvements
 	{

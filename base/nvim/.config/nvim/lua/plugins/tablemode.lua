@@ -9,11 +9,11 @@ return {
 			vim.g.table_mode_delimiter = "|"
 		end,
 		keys = {
-			-- { "<leader>Tm", "<cmd>TableModeToggle<cr>", desc = "toggle" },
-			-- { "<leader>Te", "<cmd>TableModeEnable<cr>", desc = "enable" },
-			-- { "<leader>Td", "<cmd>TableModeDisable<cr>", desc = "disable" },
-			-- { "<leader>Tr", "<cmd>TableModeRealign<cr>", desc = "align" },
-			-- { "<leader>Ta", "<cmd>TableModeRealign<cr>", desc = "align" },
+			{ "<leader>Tm", "<cmd>TableModeToggle<cr>", desc = "toggle" },
+			{ "<leader>Te", "<cmd>TableModeEnable<cr>", desc = "enable" },
+			{ "<leader>Td", "<cmd>TableModeDisable<cr>", desc = "disable" },
+			{ "<leader>Tr", "<cmd>TableModeRealign<cr>", desc = "align" },
+			{ "<leader>Ta", "<cmd>TableModeRealign<cr>", desc = "align" },
 			{ "<leader>TT", "<cmd><Plug>(table-mode-tabelize)<cr>", desc = "make table" },
 			{
 				"<leader>T|",

@@ -177,6 +177,13 @@ keymap("n", "<leader>ay", "<cmd>let @+= expand(' % ')<cr>", { desc = "copy path"
 keymap("n", "<leader>al", "<cmd>%s/^/\\=printf('%-4d', line('.'))<cr>", { desc = "write line numbers" })
 keymap("n", "<leader>ax", "<cmd>cclose<cr>", { desc = "close quickfix" })
 keymap("n", "<leader>aL", "<cmd>g/^$/.,./-j<cr>", { desc = "remove extra empty lines" })
+-- opencode
+keymap("n", "<leader>j", function()
+	require("yasser.utils.functions").opencode_scratchpad()
+end, { desc = "OpenCode scratchpad" })
+keymap("n", "<C-s>", function()
+	require("yasser.utils.functions").opencode_scratchpad()
+end, { desc = "OpenCode scratchpad" })
 
 -- opening yazi
 keymap(
@@ -199,3 +206,19 @@ keymap(
 	':!tmux popup -E -w 80\\% -h 80\\% "yazi"<CR>',
 	{ noremap = true, silent = true, desc = "Yazi in a tumux float" }
 )
+
+-- Open GitHub at current line
+keymap("n", "<leader>go", function()
+	require("yasser.utils.functions").open_github_at_line()
+end, { desc = "Open GitHub at line" })
+
+-- Open GitHub at selected range
+keymap("v", "<leader>go", function()
+	local start_line = vim.fn.line("v")
+	local end_line = vim.fn.line(".")
+	-- Ensure start_line is before end_line
+	if start_line > end_line then
+		start_line, end_line = end_line, start_line
+	end
+	require("yasser.utils.functions").open_github_at_line(start_line, end_line)
+end, { desc = "Open GitHub at range" })

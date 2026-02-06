@@ -87,7 +87,7 @@ return {
 				},
 				suggestion = {
 					enabled = true,
-					auto_trigger = false,
+					auto_trigger = true,
 					hide_during_completion = true,
 					debounce = 75,
 					trigger_on_accept = true,
@@ -147,6 +147,11 @@ return {
 			})
 
 			-- Custom keymaps for Copilot suggestion acceptance
+			-- Manually trigger Copilot suggestion
+			vim.keymap.set("i", "<M-\\>", function()
+				require("copilot.suggestion").next()
+			end, { silent = true, desc = "Trigger Copilot suggestion" })
+
 			-- Map both Ctrl-Enter (CSI u sequence from Kitty) and Alt-Enter
 			vim.keymap.set("i", "<C-CR>", function()
 				if require("copilot.suggestion").is_visible() then

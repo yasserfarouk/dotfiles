@@ -2,6 +2,8 @@ return {
 	-- Git diff view and merge tool
 	{
 		"sindrets/diffview.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory", "DiffviewToggleFiles", "DiffviewFocusFiles", "DiffviewRefresh" },
 		keys = {
 			{ "<leader>gv", function()
 				if next(require("diffview.lib").views) == nil then

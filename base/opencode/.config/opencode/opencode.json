@@ -1,0 +1,57 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "github-copilot/claude-4.5-sonnet",
+  "small_model": "github-copilot/gpt-4o-mini",
+  "autoupdate": false,
+  "agent": {
+    "build": {
+      "mode": "primary",
+      "max_iterations": 10,
+      "max_concurrent_tasks": 2,
+      "max_subagents": 1,
+      "temperature": 0.2
+    },
+    "plan": {
+      "mode": "primary",
+      "max_concurrent_tasks": 1,
+      "temperature": 0.1
+    },
+		"docs": {
+      "mode": "primary",
+      "model": "github-copilot/claude-opus-4.5",
+      "system_prompt": "You are a technical writer. Focus on JSDoc, READMEs, and architecture diagrams. Do not modify source code logic.",
+      "max_iterations": 5
+    },
+    "tasks": {
+      "mode": "primary",
+      "model": "github-copilot/gpt-4o-mini",
+      "system_prompt": "You are a task manager. Your sole job is to read, write, and update TODO.md or tasks.json files. Keep responses extremely concise.",
+      "max_concurrent_tasks": 1
+    }
+  },
+  "compaction": {
+    "enabled": true,
+    "trigger_percent": 0.8,
+    "summary_model": "github-copilot/gpt-4o-mini"
+  },
+  "tui": {
+    "show_detailed_errors": true,
+    "footer_behavior": "scroll"
+  },
+
+  "provider": {
+    "github-copilot": {
+      "models": {
+        "claude-3-7-sonnet": {
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budgetTokens": 4000,
+							"scaling": "dynamic"
+            }
+          }
+        }
+      }
+    }
+  }
+}

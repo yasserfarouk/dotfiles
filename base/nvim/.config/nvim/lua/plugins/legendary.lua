@@ -12,8 +12,10 @@ return {
 			{ "<leader>sk", "<cmd>Legendary<cr>", desc = "keymaps/commands" },
 		},
 		opts = {
-			which_key = { auto_register = true },
-			lazy_nvim = { auto_register = true },
+			extensions = {
+				which_key = { auto_register = true },
+				lazy_nvim = { auto_register = true },
+			},
 		},
 	},
 }

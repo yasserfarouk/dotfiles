@@ -4,17 +4,20 @@ local USE_INLINE_SIGNATURE_HELP = false
 
 return {
 	-- Auto-completion engine with LSP, buffer, and path sources
-	"hrsh7th/nvim-cmp",
-	event = "InsertEnter",
-	dependencies = {
-		"hrsh7th/cmp-nvim-lsp",
-		USE_INLINE_SIGNATURE_HELP and "hrsh7th/cmp-nvim-lsp-signature-help" or nil,
-		"hrsh7th/cmp-buffer",
-		"hrsh7th/cmp-path",
-		"hrsh7th/cmp-cmdline",
-	},
-	config = function()
-		local cmp = require("cmp")
+	{
+		"hrsh7th/nvim-cmp",
+		event = { "InsertEnter", "CmdlineEnter" },
+		dependencies = {
+			-- cmp sources must be dependencies (not separate specs) to prevent
+			-- their after/plugin scripts from loading before nvim-cmp
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-cmdline",
+			USE_INLINE_SIGNATURE_HELP and "hrsh7th/cmp-nvim-lsp-signature-help" or nil,
+		},
+		config = function()
+			local cmp = require("cmp")
 
 		-- Icons for completion items
 		local kind_icons = {
@@ -125,8 +128,8 @@ return {
 			},
 		})
 
-		-- Cmdline completion for '/'
-		cmp.setup.cmdline("/", {
+		-- Cmdline completion for '/' and '?'
+		cmp.setup.cmdline({ "/", "?" }, {
 			mapping = cmp.mapping.preset.cmdline(),
 			sources = {
 				{ name = "buffer" },
@@ -139,8 +142,14 @@ return {
 			sources = cmp.config.sources({
 				{ name = "path" },
 			}, {
-				{ name = "cmdline" },
+				{
+					name = "cmdline",
+					option = {
+						ignore_cmds = { "Man", "!" },
+					},
+				},
 			}),
 		})
-	end,
+		end,
+	},
 }

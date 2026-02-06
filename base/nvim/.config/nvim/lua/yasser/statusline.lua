@@ -5,6 +5,11 @@ local hl = require("yasser.utils.highlight")
 vim.api.nvim_set_hl(0, "TablineSel", { reverse = true })
 vim.api.nvim_set_hl(0, "FloatBorder", { link = "Number" })
 vim.api.nvim_set_hl(0, "Normal", { fg = nil, bg = nil })
+vim.api.nvim_set_hl(0, "NormalNC", { fg = nil, bg = nil })
+vim.api.nvim_set_hl(0, "NormalFloat", { fg = nil, bg = nil })
+
+-- Brighter separator to highlight active window boundaries
+vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#5a5a5a", bg = nil })
 
 if vim.o.background == "dark" then
 	vim.api.nvim_set_hl(0, "VertSplit", {

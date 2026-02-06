@@ -106,3 +106,7 @@ source /Users/yasser/.config/broot/launcher/bash/br
 if command -v starship >/dev/null; then
 	eval "$(starship init zsh)"
 fi
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
+export PATH="/Users/yasser/.config/herd-lite/bin:$PATH"
+export PHP_INI_SCAN_DIR="/Users/yasser/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"

@@ -14,6 +14,7 @@ export mypapers="$HOME/code/papers"
 export pdone="${mypapers}/done"
 export pcurrent="${mypapers}/current"
 export psubmitted="${mypapers}/submitted"
+alias genius="java --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED -jar $HOME/negmas/files/geniusbridge.jar"
 alias kjp="killall java; killall python; killall java; killall python;"
 # spyder
 alias spyder="spyder3 -p \".\"&"
@@ -468,3 +469,6 @@ uv_init() {
     echo "Venv created at $target_path"
     echo "Symlink created at ./.venv"
 }
+
+## REMOVE THIS ON NEW MECHINES it is is intended to keep php version at 8.2 to match brown server
+export PATH="/opt/homebrew/opt/php@8.2/bin:$PATH"
