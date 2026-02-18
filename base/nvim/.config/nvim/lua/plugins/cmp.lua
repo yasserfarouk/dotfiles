@@ -3,6 +3,67 @@
 local USE_INLINE_SIGNATURE_HELP = false
 
 return {
+	-- Snippet engine
+	{
+		"L3MON4D3/LuaSnip",
+		version = "v2.*",
+		build = "make install_jsregexp",
+		dependencies = {
+			"rafamadriz/friendly-snippets", -- Collection of snippets for various languages
+			"molleweide/LuaSnip-snippets.nvim", -- Additional high-quality snippets
+		},
+		config = function()
+			local ls = require("luasnip")
+			
+			-- Load friendly-snippets (VSCode-style snippets)
+			require("luasnip.loaders.from_vscode").lazy_load()
+			
+			-- Load LuaSnip-snippets.nvim (additional snippets)
+			require("luasnip.loaders.from_vscode").lazy_load({ paths = vim.fn.stdpath("data") .. "/lazy/LuaSnip-snippets.nvim" })
+			
+			-- Load custom snippets from lua/yasser/snippets/ if they exist
+			require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/nvim/lua/yasser/snippets" })
+			
+			-- Configure LuaSnip
+			ls.config.set_config({
+				history = true,
+				updateevents = "TextChanged,TextChangedI",
+				enable_autosnippets = true,
+				-- Delete snippet content when you leave the snippet region
+				delete_check_events = "TextChanged",
+			})
+			
+			-- Key mappings for snippet navigation
+			vim.keymap.set({"i", "s"}, "<C-k>", function()
+				if ls.expand_or_jumpable() then
+					ls.expand_or_jump()
+				end
+			end, { silent = true, desc = "Expand or jump to next snippet node" })
+			
+			vim.keymap.set({"i", "s"}, "<C-j>", function()
+				if ls.jumpable(-1) then
+					ls.jump(-1)
+				end
+			end, { silent = true, desc = "Jump to previous snippet node" })
+			
+			vim.keymap.set({"i", "s"}, "<C-l>", function()
+				if ls.choice_active() then
+					ls.change_choice(1)
+				end
+			end, { silent = true, desc = "Change snippet choice" })
+		end,
+	},
+
+	-- LaTeX-specific snippets (Gilles Castel's famous LaTeX snippets)
+	{
+		"iurimateus/luasnip-latex-snippets.nvim",
+		ft = { "tex", "latex" },
+		dependencies = { "L3MON4D3/LuaSnip" },
+		opts = {
+			use_treesitter = true, -- Use treesitter for better context detection
+		},
+	},
+
 	-- Auto-completion engine with LSP, buffer, and path sources
 	{
 		"hrsh7th/nvim-cmp",
@@ -14,6 +75,8 @@ return {
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-cmdline",
+			"saadparwaiz1/cmp_luasnip", -- Snippet source for nvim-cmp
+			"L3MON4D3/LuaSnip", -- Snippet engine
 			USE_INLINE_SIGNATURE_HELP and "hrsh7th/cmp-nvim-lsp-signature-help" or nil,
 		},
 		config = function()
@@ -48,11 +111,22 @@ return {
 			TypeParameter = "󰴑",
 		}
 
+		-- Snippet expansion function
+		local has_luasnip, luasnip = pcall(require, "luasnip")
+
 		cmp.setup({
+			snippet = {
+				expand = function(args)
+					if has_luasnip then
+						luasnip.lsp_expand(args.body)
+					end
+				end,
+			},
 			sources = cmp.config.sources({
 				{ name = "lazydev", group_index = 0 }, -- Only for Lua files, takes priority
 				{ name = "nvim_lsp" },
 				USE_INLINE_SIGNATURE_HELP and { name = "nvim_lsp_signature_help" } or nil,
+				{ name = "luasnip" },
 				{ name = "copilot", group_index = 2 },
 			}, {
 				{ name = "buffer", keyword_length = 3 },
@@ -108,6 +182,8 @@ return {
 				["<Tab>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						cmp.select_next_item()
+					elseif has_luasnip and luasnip.expand_or_jumpable() then
+						luasnip.expand_or_jump()
 					else
 						fallback()
 					end
@@ -115,6 +191,8 @@ return {
 				["<S-Tab>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						cmp.select_prev_item()
+					elseif has_luasnip and luasnip.jumpable(-1) then
+						luasnip.jump(-1)
 					else
 						fallback()
 					end

@@ -18,6 +18,9 @@ if [ -d "$HOME/usr/local/bin" ] ; then
 fi
 export PATH="$HOME/.poetry/bin:$PATH"
 
+# save python cache files to a specific folder
+PYTHONPYCACHEPREFIX="$HOME/.pycode"
+
 # Setting fd as the default source for fzf
 export FZF_DEFAULT_COMMAND='fd --type f'
 

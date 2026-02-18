@@ -1,7 +1,7 @@
 return {
 	"danymat/neogen",
 	opts = {
-		snippet_engine = "snippy",
+		snippet_engine = "luasnip",
 		enabled = true,
 		languages = {
 			lua = {

@@ -23,9 +23,8 @@ setopt HIST_NO_STORE
 setopt NO_HIST_BEEP
 
 fpath=($HOME/.ysupport/zsh-completions $fpath)
-autoload -U compinit && compinit
+# compinit moved to .zshrc to avoid multiple calls
 zmodload -i zsh/complist
-compinit -d ~/.zcompdump_capture
 
 # Disable zsh autocorrect
 zstyle ':completion:*' menu select

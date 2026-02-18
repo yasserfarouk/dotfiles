@@ -19,16 +19,33 @@ unset file
 zle -N edit-command-line
 
 [ -f  ~/antigen.zsh ] && source ~/antigen.zsh
+
+# Use antigen cache for faster loading and less verbose output
+ANTIGEN_CACHE="$HOME/.antigen/init.zsh"
+
 antigen bundle git
 antigen bundle pip
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle mafredri/zsh-async
 # antigen bundle sindresorhus/pure
-antigen apply
 
+# Apply quietly - suppress both stdout and stderr
+antigen apply &> /dev/null
 
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Lazy load NVM to speed up shell startup
+# NVM bash completion - only load if NVM is actually installed
+[ -s "$NVM_DIR/nvm.sh" ] && {
+	# Lazy load nvm - only initialize when called
+	nvm() {
+		unset -f nvm
+		[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+		[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+		nvm "$@"
+	}
+	# Add default node to path without loading full nvm
+	export PATH="$NVM_DIR/versions/node/$(cat $NVM_DIR/alias/default 2>/dev/null || echo 'v20.0.0')/bin:$PATH"
+}
 
 
 if command -v direnv >/dev/null; then
@@ -41,9 +58,17 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
-autoload -Uz compinit
-zstyle ':completion:*' menu select
+
+# Optimize compinit - only run once per day
 fpath+=$HOME/.zfunc
+autoload -Uz compinit
+# Check if compinit cache is older than 24 hours
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+	compinit
+else
+	compinit -C  # Skip security check for speed
+fi
+zstyle ':completion:*' menu select
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -96,6 +121,30 @@ fpath+=$HOME/.zfunc
 # 	fi
 # fi
 [ -f ~/.postzsh ] && source ~/.postzsh
+
+# Tmux floating terminal popup function
+if command -v tmux >/dev/null && [ -n "$TMUX" ]; then
+	# Float a terminal popup in tmux
+	float() {
+		tmux display-popup -E -w 80% -h 80% "$@"
+	}
+	
+	# Quick floating terminal (just opens shell)
+	alias ft='tmux display-popup -E -w 80% -h 80%'
+	
+	# Floating file manager (if you have one installed)
+	if command -v yazi >/dev/null; then
+		alias fy='tmux display-popup -E -w 90% -h 90% yazi'
+	elif command -v ranger >/dev/null; then
+		alias fr='tmux display-popup -E -w 90% -h 90% ranger'
+	elif command -v lf >/dev/null; then
+		alias fl='tmux display-popup -E -w 90% -h 90% lf'
+	fi
+	
+	# Floating git status
+	alias fg='tmux display-popup -E -w 90% -h 90% "git status && echo && git diff --stat && zsh"'
+fi
+
 export PATH="/opt/homebrew/opt/ruby@2.7/bin:$PATH"
 
 source /Users/yasser/.config/broot/launcher/bash/br
@@ -107,6 +156,6 @@ if command -v starship >/dev/null; then
 	eval "$(starship init zsh)"
 fi
 
-fpath+=~/.zfunc; autoload -Uz compinit; compinit
+# Removed duplicate compinit call
 export PATH="/Users/yasser/.config/herd-lite/bin:$PATH"
 export PHP_INI_SCAN_DIR="/Users/yasser/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"

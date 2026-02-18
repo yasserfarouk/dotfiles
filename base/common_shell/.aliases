@@ -426,7 +426,7 @@ alias sshscml="ssh -i $HOME/.ssh/mybrown_rsa -t ymohamm1@ssh.cs.brown.edu host=s
 alias killdefender="launchctl unload /Library/LaunchAgents/com.microsoft.wdav.tray.plist"
 alias zv='NVIM_APPNAME=lazyvim nvim' # LazyVim
 alias l='NVIM_APPNAME=lazyvim nvim' # LazyVim
-alias rm="Yasser: echo Use 'trash', or the full path i.e. '/bin/rm'&& trash"
+alias rm="echo 'Use trash, or the full path i.e. /bin/rm' && false"
 
 # create .venvs under ~/myenvs
 # Usage: uv_init [uv venv options...]
