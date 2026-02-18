@@ -8,6 +8,7 @@ return {
 		"L3MON4D3/LuaSnip",
 		version = "v2.*",
 		build = "make install_jsregexp",
+		event = "InsertEnter", -- Load when entering insert mode
 		dependencies = {
 			"rafamadriz/friendly-snippets", -- Collection of snippets for various languages
 			"molleweide/LuaSnip-snippets.nvim", -- Additional high-quality snippets
@@ -51,6 +52,39 @@ return {
 					ls.change_choice(1)
 				end
 			end, { silent = true, desc = "Change snippet choice" })
+			
+			-- Debug command to check loaded snippets
+			vim.api.nvim_create_user_command("LuaSnipDebug", function()
+				local available = ls.available()
+				local filetype = vim.bo.filetype
+				print("Current filetype: " .. filetype)
+				print("Available snippets for " .. filetype .. ":")
+				if available[filetype] then
+					for _, snip in ipairs(available[filetype]) do
+						print("  - " .. snip.trigger .. " : " .. (snip.name or "unnamed"))
+					end
+				else
+					print("  No snippets found for filetype: " .. filetype)
+				end
+				print("\nAll loaded filetypes:")
+				for ft, _ in pairs(available) do
+					print("  - " .. ft)
+				end
+			end, { desc = "Debug LuaSnip available snippets" })
+			
+			-- Debug command to check cmp sources
+			vim.api.nvim_create_user_command("CmpDebug", function()
+				local cmp_ok, cmp = pcall(require, "cmp")
+				if not cmp_ok then
+					print("nvim-cmp not loaded")
+					return
+				end
+				print("nvim-cmp sources:")
+				local config = cmp.get_config()
+				for _, source_config in ipairs(config.sources) do
+					print("  - " .. source_config.name)
+				end
+			end, { desc = "Debug nvim-cmp sources" })
 		end,
 	},
 
@@ -59,9 +93,13 @@ return {
 		"iurimateus/luasnip-latex-snippets.nvim",
 		ft = { "tex", "latex" },
 		dependencies = { "L3MON4D3/LuaSnip" },
-		opts = {
-			use_treesitter = true, -- Use treesitter for better context detection
-		},
+		config = function()
+			require("luasnip-latex-snippets").setup({
+				use_treesitter = true, -- Use treesitter for better context detection
+			})
+			-- Force reload LuaSnip after adding LaTeX snippets
+			require("luasnip.loaders.from_lua").lazy_load()
+		end,
 	},
 
 	-- Auto-completion engine with LSP, buffer, and path sources
@@ -122,13 +160,13 @@ return {
 					end
 				end,
 			},
-			sources = cmp.config.sources({
-				{ name = "lazydev", group_index = 0 }, -- Only for Lua files, takes priority
-				{ name = "nvim_lsp" },
-				USE_INLINE_SIGNATURE_HELP and { name = "nvim_lsp_signature_help" } or nil,
-				{ name = "luasnip" },
-				{ name = "copilot", group_index = 2 },
-			}, {
+		sources = cmp.config.sources({
+			{ name = "lazydev", group_index = 0 }, -- Only for Lua files, takes priority
+			{ name = "luasnip", priority = 1000 }, -- Prioritize snippets
+			{ name = "nvim_lsp" },
+			USE_INLINE_SIGNATURE_HELP and { name = "nvim_lsp_signature_help" } or nil,
+			{ name = "copilot", group_index = 2 },
+		}, {
 				{ name = "buffer", keyword_length = 3 },
 				{ name = "path" },
 			}),
@@ -141,15 +179,16 @@ return {
 				format = function(entry, vim_item)
 					-- Set icon
 					vim_item.kind = string.format("%s", kind_icons[vim_item.kind] or "")
-					-- Set source name
-					vim_item.menu = ({
-						buffer = "",
-						nvim_lsp = "",
-						nvim_lua = "",
-						path = "󰇘",
-						copilot = "",
-						lazydev = "",
-					})[entry.source.name]
+				-- Set source name
+				vim_item.menu = ({
+					buffer = "",
+					nvim_lsp = "",
+					nvim_lua = "",
+					luasnip = "󰩫",
+					path = "󰇘",
+					copilot = "",
+					lazydev = "",
+				})[entry.source.name]
 					return vim_item
 				end,
 			},
