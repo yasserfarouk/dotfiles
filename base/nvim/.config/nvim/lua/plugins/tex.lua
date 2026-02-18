@@ -30,4 +30,24 @@ return {
 			vim.cmd("source ~/.config/nvim/vimscript/tex.vim")
 		end,
 	},
+	-- Overleaf real-time collaboration
+	{
+		"richwomanbtc/overleaf.nvim",
+		cmd = { "Overleaf" }, -- Lazy-load on command
+		build = "cd node && npm install",
+		opts = {
+			-- Auto-extract cookie from Chrome on macOS
+			-- Or create .env file with OVERLEAF_COOKIE in project root
+			log_level = "info",
+			keys = true, -- Enable default keymaps
+		},
+		keys = {
+			{ "<localleader>oc", "<cmd>Overleaf<cr>", desc = "Overleaf connect" },
+			{ "<localleader>od", "<cmd>Overleaf disconnect<cr>", desc = "Overleaf disconnect" },
+			{ "<localleader>ot", "<cmd>Overleaf tree<cr>", desc = "Overleaf file tree" },
+			{ "<localleader>ob", "<cmd>Overleaf compile<cr>", desc = "Overleaf compile" },
+			{ "<localleader>oo", "<cmd>Overleaf open<cr>", desc = "Overleaf open document" },
+			{ "<localleader>op", "<cmd>Overleaf projects<cr>", desc = "Overleaf switch project" },
+		},
+	},
 }

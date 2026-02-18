@@ -206,6 +206,46 @@ keymap(
 	{ noremap = true, silent = true, desc = "Yazi in a tmux popup" }
 )
 
+-- Kitty integration - shell
+keymap(
+	"n",
+	"<leader>k;",
+	":silent !kitty @ launch --type=window --cwd=current<CR>",
+	{ noremap = true, silent = true, desc = "Kitty split (shell)" }
+)
+keymap(
+	"n",
+	"<leader>kw",
+	":silent !kitty @ launch --type=tab --cwd=current<CR>",
+	{ noremap = true, silent = true, desc = "Kitty tab (shell)" }
+)
+keymap(
+	"n",
+	"<leader>kp",
+	":silent !kitty @ launch --type=os-window --cwd=current<CR>",
+	{ noremap = true, silent = true, desc = "Kitty window (shell)" }
+)
+
+-- Kitty integration - yazi
+keymap(
+	"n",
+	"<leader>ky",
+	":silent !kitty @ launch --type=window --cwd=current yazi<CR>",
+	{ noremap = true, silent = true, desc = "Yazi in kitty split" }
+)
+keymap(
+	"n",
+	"<leader>kY",
+	":silent !kitty @ launch --type=tab --cwd=current yazi<CR>",
+	{ noremap = true, silent = true, desc = "Yazi in kitty tab" }
+)
+keymap(
+	"n",
+	"<leader>kW",
+	":silent !kitty @ launch --type=os-window --cwd=current yazi<CR>",
+	{ noremap = true, silent = true, desc = "Yazi in kitty window" }
+)
+
 -- Open GitHub at current line
 keymap("n", "<leader>go", function()
 	require("yasser.utils.functions").open_github_at_line()
