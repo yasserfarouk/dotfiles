@@ -39,6 +39,16 @@ function M.setup(_, opts)
 	local float_config = { focusable = true, style = "minimal", border = "rounded" }
 	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, float_config)
 	vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, float_config)
+	
+	-- Suppress timeout notifications from LSP servers
+	local notify = vim.notify
+	vim.notify = function(msg, level, opts)
+		-- Filter out timeout messages
+		if type(msg) == "string" and msg:match("timeout") then
+			return
+		end
+		notify(msg, level, opts)
+	end
 
 	-- Get default capabilities
 	local capabilities = lsp_utils.capabilities()
