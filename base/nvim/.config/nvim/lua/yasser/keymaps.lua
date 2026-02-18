@@ -196,15 +196,14 @@ keymap(
 keymap(
 	"n",
 	"<leader>xw",
-	-- ':silent !tmux new-window -d -n yazi -c "#{pane_current_path}" "yazi"<CR><C-w>\\',
-	':silent !tmux new-window -d -n yazi "yazi"<CR><C-w>\\',
-	{ noremap = true, silent = true, desc = "Yazi in a full tmux pane" }
+	':silent !tmux new-window -n yazi "yazi; tmux select-window -t \\$(tmux list-windows | grep \\* | cut -d: -f1)"<CR>',
+	{ noremap = true, silent = true, desc = "Yazi in a new tmux window" }
 )
 keymap(
 	"n",
-	"<leader>xy",
+	"<leader>xp",
 	':!tmux popup -E -w 80\\% -h 80\\% "yazi"<CR>',
-	{ noremap = true, silent = true, desc = "Yazi in a tumux float" }
+	{ noremap = true, silent = true, desc = "Yazi in a tmux popup" }
 )
 
 -- Open GitHub at current line
