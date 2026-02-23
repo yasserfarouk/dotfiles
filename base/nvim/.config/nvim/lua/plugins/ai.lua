@@ -268,7 +268,7 @@ return {
 				},
 				copilot_node_command = "node",
 				workspace_folders = { "/Users/yasser/code" },
-				copilot_model = "gpt-4o-copilot", -- Changed from claude-sonnet-4.5 (no longer valid)
+				copilot_model = "gpt-41-copilot", -- Valid completion model (gpt-4o-copilot was incorrect)
 				root_dir = function()
 					return vim.fs.dirname(vim.fs.find(".git", { upward = true })[1])
 				end,

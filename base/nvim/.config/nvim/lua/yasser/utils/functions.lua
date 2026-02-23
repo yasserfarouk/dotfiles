@@ -5,20 +5,20 @@ local M = {}
 
 -- Zoom toggle: maximize current window or restore to original layout
 function M.zoom_toggle()
-	-- Check if we're in a zoomed state by checking if there's only one window
-	if vim.fn.winnr("$") == 1 then
-		-- If we're zoomed, check if we have stored window info
-		if vim.t.zoom_winrestcmd then
-			-- Restore the original layout
-			vim.cmd(vim.t.zoom_winrestcmd)
-			vim.t.zoom_winrestcmd = nil
-		end
+	-- Check if we have stored zoom state
+	if vim.t.zoom_winrestcmd then
+		-- We're zoomed, restore the original layout
+		vim.cmd(vim.t.zoom_winrestcmd)
+		vim.t.zoom_winrestcmd = nil
 	else
-		-- Store the current window layout
-		vim.t.zoom_winrestcmd = vim.fn.winrestcmd()
-		-- Maximize the current window
-		vim.cmd("resize")
-		vim.cmd("vertical resize")
+		-- Not zoomed, check if there are multiple windows
+		if vim.fn.winnr("$") > 1 then
+			-- Store the current window layout
+			vim.t.zoom_winrestcmd = vim.fn.winrestcmd()
+			-- Maximize the current window
+			vim.cmd("resize")
+			vim.cmd("vertical resize")
+		end
 	end
 end
 

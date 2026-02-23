@@ -138,10 +138,10 @@ keymap("n", "<leader>\\", "<C-W>v", { desc = "split right" })
 keymap("n", "<leader>=", "<C-W>=", { desc = "balance windows" })
 
 -- Zoom toggle - works for any window including terminals
-keymap("n", "<C-z>", function()
+keymap("n", "zm", function()
 	require("yasser.utils.functions").zoom_toggle()
 end, { desc = "zoom/unzoom window" })
-keymap("t", "<C-z>", function()
+keymap("t", "zm", function()
 	require("yasser.utils.functions").zoom_toggle()
 end, { desc = "zoom/unzoom window" })
 
