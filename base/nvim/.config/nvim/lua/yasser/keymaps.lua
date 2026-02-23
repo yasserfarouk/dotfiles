@@ -136,7 +136,15 @@ keymap("n", "<leader>q", "<C-W>c", { desc = "quit window" })
 keymap("n", "<leader>-", "<C-W>s", { desc = "split below" })
 keymap("n", "<leader>\\", "<C-W>v", { desc = "split right" })
 keymap("n", "<leader>=", "<C-W>=", { desc = "balance windows" })
-keymap("n", "<leader>z", "<C-W>m", { desc = "zoom window" })
+
+-- Zoom toggle - works for any window including terminals
+keymap("n", "<C-z>", function()
+	require("yasser.utils.functions").zoom_toggle()
+end, { desc = "zoom/unzoom window" })
+keymap("t", "<C-z>", function()
+	require("yasser.utils.functions").zoom_toggle()
+end, { desc = "zoom/unzoom window" })
+
 -- buffer operations
 keymap("n", "<leader>bo", "<cmd>%bd|e#|bd#<cr>", { desc = "close others" })
 keymap("n", "<leader>bl", "<cmd>bnext<cr>", { desc = "next" })
@@ -177,13 +185,8 @@ keymap("n", "<leader>ay", "<cmd>let @+= expand(' % ')<cr>", { desc = "copy path"
 keymap("n", "<leader>al", "<cmd>%s/^/\\=printf('%-4d', line('.'))<cr>", { desc = "write line numbers" })
 keymap("n", "<leader>ax", "<cmd>cclose<cr>", { desc = "close quickfix" })
 keymap("n", "<leader>aL", "<cmd>g/^$/.,./-j<cr>", { desc = "remove extra empty lines" })
--- opencode
-keymap("n", "<leader>j", function()
-	require("yasser.utils.functions").opencode_scratchpad()
-end, { desc = "OpenCode scratchpad" })
-keymap("n", "<C-s>", function()
-	require("yasser.utils.functions").opencode_scratchpad()
-end, { desc = "OpenCode scratchpad" })
+-- Note: OpenCode keymaps moved to lua/plugins/ai.lua with sidekick.nvim integration
+-- Use <leader>pj for scratchpad, <leader>pp to toggle, and other <leader>p* keymaps
 
 -- opening yazi
 keymap(

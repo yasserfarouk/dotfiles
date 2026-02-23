@@ -1,39 +1,25 @@
 local M = {}
 
-function M.opencode_scratchpad()
-	-- 1. Create the scratch buffer
-	local bufnr = vim.api.nvim_create_buf(false, true)
-	vim.api.nvim_buf_set_option(bufnr, "buftype", "nofile")
-	vim.api.nvim_buf_set_option(bufnr, "filetype", "markdown")
+-- Note: opencode_scratchpad function removed - now using sidekick.nvim integration
+-- See lua/plugins/ai.lua for the new scratchpad implementation with <leader>pj
 
-	-- 2. Open in a bottom split
-	vim.cmd("botright 10split")
-	vim.api.nvim_set_current_buf(bufnr)
-
-	-- 3. The Send Logic
-	local function send_to_opencode()
-		local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-		local text = table.concat(lines, "\n")
-
-		if text ~= "" then
-			-- Target Pane 2 specifically
-			-- We use shellescape to handle special characters and quotes
-			-- Send text, then Enter twice (once to submit, once to trigger opencode)
-			local cmd = string.format("tmux send-keys -t .2 %s Enter Enter", vim.fn.shellescape(text))
-			os.execute(cmd)
+-- Zoom toggle: maximize current window or restore to original layout
+function M.zoom_toggle()
+	-- Check if we're in a zoomed state by checking if there's only one window
+	if vim.fn.winnr("$") == 1 then
+		-- If we're zoomed, check if we have stored window info
+		if vim.t.zoom_winrestcmd then
+			-- Restore the original layout
+			vim.cmd(vim.t.zoom_winrestcmd)
+			vim.t.zoom_winrestcmd = nil
 		end
-
-		-- Close and wipe buffer
-		vim.api.nvim_buf_delete(bufnr, { force = true })
+	else
+		-- Store the current window layout
+		vim.t.zoom_winrestcmd = vim.fn.winrestcmd()
+		-- Maximize the current window
+		vim.cmd("resize")
+		vim.cmd("vertical resize")
 	end
-
-	-- 4. Keymaps for the scratchpad
-	-- Press Enter in Normal Mode to send
-	vim.keymap.set("n", "<CR>", send_to_opencode, { buffer = bufnr, silent = true })
-	-- Press q or Esc to cancel
-	vim.keymap.set("n", "q", ":q<CR>", { buffer = bufnr, silent = true })
-
-	vim.cmd("startinsert")
 end
 
 function M.open_github_at_line(start_line, end_line)

@@ -6,7 +6,7 @@ root: ~/code/projects/<%= project %>
 windows:
   - dev:
       panes:
-        - vim:
+        - nvim:
           - v
         - opencode:
           - opencode
