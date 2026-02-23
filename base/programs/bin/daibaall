@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# 1. Create a new tab and start the first session
+kitty @ launch --type=tab --tab-title "Servers 11-19" --title "Server 11" \
+    ssh -A -J daiba yasser@192.168.101.11
+
+# 2. Force grid layout immediately
+kitty @ goto-layout grid
+
+# 3. Open the rest of the panes
+for server in {12..14} {16..19}
+do
+    kitty @ launch --type=window --location=after --title "Server $server" \
+        ssh -A -J daiba yasser@192.168.101."$server"
+done
+
+# 4. (Optional) Remove the very first blank window if one exists 
+# depending on how you launched the script.
