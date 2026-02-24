@@ -36,25 +36,25 @@ return {
 						nav_left = { "<c-h>", "nav_left", expr = true, desc = "navigate to the left window" },
 					},
 				},
-				-- Tmux integration for session persistence
-				mux = {
-					backend = "tmux",
-					enabled = true,
-					create = "terminal", -- "terminal"|"window"|"split"
-					split = {
-						vertical = true,
-						size = 0.5,
-					},
-				},
-				-- AI CLI tools - Copilot as primary (uses your GitHub subscription)
-				tools = {
-					copilot = { cmd = { "copilot", "--banner" } },
-					opencode = {
-						cmd = { "opencode" },
-						env = { OPENCODE_THEME = "system" },
-					},
-					aider = { cmd = { "aider" } },
-				},
+		-- Tmux integration for session persistence
+		mux = {
+			backend = "tmux",
+			enabled = true,
+			create = "terminal", -- Use terminal mode to detect existing sessions
+			split = {
+				vertical = true,
+				size = 0.5,
+			},
+		},
+		-- AI CLI tools - OpenCode as primary
+		tools = {
+			opencode = {
+				cmd = { "opencode" },
+				env = { OPENCODE_THEME = "system" },
+			},
+			copilot = { cmd = { "copilot", "--banner" } },
+			aider = { cmd = { "aider" } },
+		},
 				-- Custom prompts for common tasks
 				prompts = {
 					-- Pre-defined prompts
@@ -99,9 +99,9 @@ return {
 			{
 				"<leader>pp",
 				function()
-					require("sidekick.cli").toggle({ name = "copilot", focus = true })
+					require("sidekick.cli").toggle({ name = "opencode", focus = true })
 				end,
-				desc = "Toggle Copilot Chat",
+				desc = "Toggle OpenCode",
 				mode = { "n", "t" },
 			},
 			{
@@ -125,83 +125,242 @@ return {
 				end,
 				desc = "Close CLI Session",
 			},
-			{
-				"<leader>pt",
-				function()
-					require("sidekick.cli").send({ msg = "{this}" })
-				end,
-				mode = { "x", "n" },
-				desc = "Send This to AI",
-			},
-			{
-				"<leader>pf",
-				function()
-					require("sidekick.cli").send({ msg = "{file}" })
-				end,
-				desc = "Send File to AI",
-			},
-			{
-				"<leader>pv",
-				function()
-					require("sidekick.cli").send({ msg = "{selection}" })
-				end,
-				mode = { "x" },
-				desc = "Send Visual Selection to AI",
-			},
+		{
+			"<leader>pt",
+			function()
+				require("sidekick.cli").send({ name = "opencode", msg = "{this}", submit = true })
+			end,
+			mode = { "x", "n" },
+			desc = "Send This to AI",
+		},
+		{
+			"<leader>pf",
+			function()
+				require("sidekick.cli").send({ name = "opencode", msg = "{file}", submit = true })
+			end,
+			desc = "Send File to AI",
+		},
+		{
+			"<leader>pv",
+			function()
+				require("sidekick.cli").send({ name = "opencode", msg = "{selection}", submit = true })
+			end,
+			mode = { "x" },
+			desc = "Send Visual Selection to AI",
+		},
 			{
 				"<leader>pm",
 				function()
-					require("sidekick.cli").prompt()
+					require("sidekick.cli").prompt({ name = "opencode", submit = true })
 				end,
 				mode = { "n", "x" },
 				desc = "Select AI Prompt",
 			},
-			{
-				"<leader>pj",
-				function()
-					-- Scratchpad: open input, send to Copilot with auto-Enter
-					vim.ui.input({ prompt = "Message for Copilot: " }, function(input)
-						if input and input ~= "" then
+		{
+			"<leader>pj",
+			function()
+				-- Scratchpad: open buffer for multi-line input
+				local buf = vim.api.nvim_create_buf(false, true)
+				vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
+				vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+				vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
+
+				-- Create bottom split
+				vim.cmd("botright split")
+				local win = vim.api.nvim_get_current_win()
+				vim.api.nvim_win_set_buf(win, buf)
+				vim.api.nvim_win_set_height(win, 15)
+
+				-- Add instructions at the top
+				vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
+					"# OpenCode Scratchpad - <leader><CR> or :w to send | :q to cancel",
+					"",
+				})
+
+				-- Move cursor to line 2 (after instructions)
+				vim.api.nvim_win_set_cursor(win, { 2, 0 })
+				vim.cmd("startinsert")
+
+					-- Keymaps for the scratchpad buffer
+					local function send_and_close()
+						local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+						-- Filter out instruction lines (lines starting with #)
+						local content_lines = {}
+						for _, line in ipairs(lines) do
+							if not line:match("^#") then
+								table.insert(content_lines, line)
+							end
+						end
+						local content = table.concat(content_lines, "\n"):gsub("^%s+", ""):gsub("%s+$", "")
+
+						if content ~= "" then
 							require("sidekick.cli").send({
-								name = "copilot",
-								msg = input,
+								name = "opencode",
+								msg = content,
+								submit = true,
 								focus = false,
 							})
 						end
-					end)
+						vim.api.nvim_win_close(win, true)
+					end
+
+					-- Set up keymaps for sending
+					vim.keymap.set("n", "<leader><CR>", send_and_close, { buffer = buf, nowait = true })
+					vim.keymap.set("n", "<CR><CR>", send_and_close, { buffer = buf, nowait = true })
+					
+					-- Override :w to send instead of save
+					vim.api.nvim_buf_create_user_command(buf, "W", send_and_close, {})
+					vim.api.nvim_create_autocmd("BufWriteCmd", {
+						buffer = buf,
+						callback = send_and_close,
+					})
 				end,
-				desc = "Copilot Scratchpad",
+				desc = "OpenCode Scratchpad",
 				mode = { "n" },
 			},
 
-			-- Quick access keymaps
-			{
-				"ga",
-				function()
-					require("sidekick.cli").send({ msg = "@this: {this}" })
-				end,
-				mode = { "n", "x" },
-				desc = "Add to Copilot",
-			},
-			{
-				"<C-s>",
-				function()
-					-- Quick scratchpad access (alias to <leader>pj)
-					vim.ui.input({ prompt = "Message for Copilot: " }, function(input)
-						if input and input ~= "" then
+		-- Quick access keymaps
+		{
+			"<leader>j",
+			function()
+				-- Scratchpad: open buffer for multi-line input
+				local buf = vim.api.nvim_create_buf(false, true)
+				vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
+				vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+				vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
+
+				-- Create bottom split
+				vim.cmd("botright split")
+				local win = vim.api.nvim_get_current_win()
+				vim.api.nvim_win_set_buf(win, buf)
+				vim.api.nvim_win_set_height(win, 15)
+
+				-- Add single line instruction at the top
+				vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
+					"# OpenCode Scratchpad - <leader><CR> or :w to send | :q to cancel",
+					"",
+				})
+
+				-- Move cursor to line 2 (after instruction)
+				vim.api.nvim_win_set_cursor(win, { 2, 0 })
+				vim.cmd("startinsert")
+
+				-- Keymaps for the scratchpad buffer
+				local function send_and_close()
+					local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+					-- Filter out instruction lines (lines starting with #)
+					local content_lines = {}
+					for _, line in ipairs(lines) do
+						if not line:match("^#") then
+							table.insert(content_lines, line)
+						end
+					end
+					local content = table.concat(content_lines, "\n"):gsub("^%s+", ""):gsub("%s+$", "")
+
+					if content ~= "" then
+						require("sidekick.cli").send({
+							name = "opencode",
+							msg = content,
+							submit = true,
+							focus = false,
+						})
+					end
+					vim.api.nvim_win_close(win, true)
+				end
+
+				-- Set up keymaps for sending
+				vim.keymap.set("n", "<leader><CR>", send_and_close, { buffer = buf, nowait = true })
+				vim.keymap.set("n", "<CR><CR>", send_and_close, { buffer = buf, nowait = true })
+				
+				-- Override :w to send instead of save
+				vim.api.nvim_buf_create_user_command(buf, "W", send_and_close, {})
+				vim.api.nvim_create_autocmd("BufWriteCmd", {
+					buffer = buf,
+					callback = send_and_close,
+				})
+			end,
+			desc = "OpenCode Scratchpad",
+			mode = { "n" },
+		},
+		{
+			"ga",
+			function()
+				require("sidekick.cli").send({ name = "opencode", msg = "@this: {this}" })
+			end,
+			mode = { "n", "x" },
+			desc = "Add to OpenCode (context only)",
+		},
+		{
+			"<C-s>",
+			function()
+				-- Quick scratchpad access (alias to <leader>j)
+				local buf = vim.api.nvim_create_buf(false, true)
+				vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
+				vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+				vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
+
+				-- Create bottom split
+				vim.cmd("botright split")
+				local win = vim.api.nvim_get_current_win()
+				vim.api.nvim_win_set_buf(win, buf)
+				vim.api.nvim_win_set_height(win, 15)
+
+				-- Add instructions at the top
+				vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
+					"# OpenCode Scratchpad - <leader><CR> or :w to send | :q to cancel",
+					"",
+				})
+
+				-- Move cursor to line 2 (after instructions)
+				vim.api.nvim_win_set_cursor(win, { 2, 0 })
+				vim.cmd("startinsert")
+
+					-- Keymaps for the scratchpad buffer
+					local function send_and_close()
+						local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+						-- Filter out instruction lines (lines starting with #)
+						local content_lines = {}
+						for _, line in ipairs(lines) do
+							if not line:match("^#") then
+								table.insert(content_lines, line)
+							end
+						end
+						local content = table.concat(content_lines, "\n"):gsub("^%s+", ""):gsub("%s+$", "")
+
+						if content ~= "" then
 							require("sidekick.cli").send({
-								name = "copilot",
-								msg = input,
+								name = "opencode",
+								msg = content,
+								submit = true,
 								focus = false,
 							})
 						end
-					end)
+						vim.api.nvim_win_close(win, true)
+					end
+
+					-- Set up keymaps for sending
+					vim.keymap.set("n", "<leader><CR>", send_and_close, { buffer = buf, nowait = true })
+					vim.keymap.set("n", "<CR><CR>", send_and_close, { buffer = buf, nowait = true })
+					
+					-- Override :w to send instead of save
+					vim.api.nvim_buf_create_user_command(buf, "W", send_and_close, {})
+					vim.api.nvim_create_autocmd("BufWriteCmd", {
+						buffer = buf,
+						callback = send_and_close,
+					})
 				end,
-				desc = "Copilot Scratchpad",
+				desc = "OpenCode Scratchpad",
 				mode = { "n" },
 			},
 
 			-- Specific tool toggles
+			{
+				"<leader>pc",
+				function()
+					require("sidekick.cli").toggle({ name = "copilot", focus = true })
+				end,
+				desc = "Toggle Copilot",
+			},
 			{
 				"<leader>po",
 				function()
