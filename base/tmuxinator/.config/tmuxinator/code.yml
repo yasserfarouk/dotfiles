@@ -7,7 +7,7 @@ windows:
   - dev:
       panes:
         - nvim:
-          - v
+          - nvim
         - opencode:
           - opencode
         - shell:

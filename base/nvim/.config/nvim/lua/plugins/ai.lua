@@ -2,6 +2,7 @@ return {
 	-- Sidekick.nvim - AI sidekick with NES and multi-tool CLI integration
 	{
 		"folke/sidekick.nvim",
+		enabled = false, -- DISABLED: causing escape sequences in tmux
 		dependencies = {
 			{ "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
 		},
@@ -39,7 +40,7 @@ return {
 		-- Tmux integration for session persistence
 		mux = {
 			backend = "tmux",
-			enabled = true,
+			enabled = false, -- Disabled to prevent escape sequences on startup
 			create = "terminal", -- Use terminal mode to detect existing sessions
 			split = {
 				vertical = true,

@@ -27,7 +27,13 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- go to last loc when opening a buffer
 vim.api.nvim_create_autocmd("BufReadPost", {
-	callback = function()
+	callback = function(event)
+		-- Don't restore position if buffer is empty or is a directory
+		local buftype = vim.bo[event.buf].buftype
+		if buftype ~= "" then
+			return
+		end
+		
 		local mark = vim.api.nvim_buf_get_mark(0, '"')
 		local lcount = vim.api.nvim_buf_line_count(0)
 		if mark[1] > 0 and mark[1] <= lcount then

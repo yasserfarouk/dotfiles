@@ -1,3 +1,7 @@
-
-# [python]
+[python]
+# Disable python version detection if too slow
 # python_binary = ["py"]
+
+[java]
+# Disable java version detection if too slow
+disabled = true
