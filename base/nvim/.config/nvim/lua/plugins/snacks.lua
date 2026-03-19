@@ -87,10 +87,24 @@ return {
 			},
 		},
 		input = { enabled = true },
-		picker = { 
+		picker = {
 			enabled = true,
 			-- Image preview is automatically handled by snacks.image
 			-- which uses Kitty graphics protocol for perfect quality
+			actions = {
+				-- Send selected files to opencode as context
+				opencode_send = function(...)
+					return require("opencode").snacks_picker_send(...)
+				end,
+			},
+			win = {
+				input = {
+					keys = {
+						-- Use Alt+a to send files to opencode from any picker
+						["<a-a>"] = { "opencode_send", mode = { "n", "i" } },
+					},
+				},
+			},
 		},
 		notifier = { enabled = true },
 		quickfile = { enabled = true },
