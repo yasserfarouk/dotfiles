@@ -10,9 +10,13 @@ return {
 
 	-- you can specify also another config if you want
 	config = function()
+		local platform = require("yasser.utils.platform")
+		local open_cmd = platform.open_cmd()
+		local open_args = platform.is_mac and { "--background" } or {}
+
 		require("gx").setup({
-			open_browser_app = "open", -- specify your browser app; default for macOS is "open", Linux "xdg-open" and Windows "powershell.exe"
-			open_browser_args = { "--background" }, -- specify any arguments, such as --background for macOS' "open".
+			open_browser_app = open_cmd, -- specify your browser app; default for macOS is "open", Linux "xdg-open" and Windows "powershell.exe"
+			open_browser_args = open_args, -- specify any arguments, such as --background for macOS' "open".
 			handlers = {
 				plugin = true, -- open plugin links in lua (e.g. packer, lazy, ..)
 				github = true, -- open github issues

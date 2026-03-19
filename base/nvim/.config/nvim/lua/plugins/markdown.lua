@@ -1,35 +1,66 @@
-vim.cmd([[
+local platform = require("yasser.utils.platform")
+
+-- Cross-platform open command for viewing generated files
+local function get_open_cmd()
+	if platform.is_mac then
+		return "open"
+	elseif platform.is_windows then
+		return "start"
+	else
+		return "xdg-open"
+	end
+end
+
+-- Define pandoc functions with cross-platform support
+-- Note: pandoc commands use Unix-style paths which work on all platforms
+-- The open command at the end is platform-specific
+vim.cmd(string.format([[
 function! PandocPDFBib()
-	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable colorlinks=true --resource-path=.  -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -o \"" . expand("%:r") . ".pdf\" " . " && open \"" . expand("%:r") . ".pdf\"&"
+	silent exec "Dispatch pandoc \"" . expand("%%") . "\" -s --pdf-engine=xelatex --variable colorlinks=true --resource-path=.  -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o \"" . expand("%%:r") . ".pdf\" " . " && %s \"" . expand("%%:r") . ".pdf\"&"
 endfunction
 function! PandocPDFBibNoContents()
-	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable colorlinks=true --resource-path=.  -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable fontsize=10pt --variable version=2.0 -V geometry:margin=2cm --bibliography=references.bib -o \"" . expand("%:r") . ".pdf\" " . " && open \"" . expand("%:r") . ".pdf\"&"
+	silent exec "Dispatch pandoc \"" . expand("%%") . "\" -s --pdf-engine=xelatex --variable colorlinks=true --resource-path=.  -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable fontsize=10pt --variable version=2.0 -V geometry:margin=2cm --bibliography=references.bib -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o \"" . expand("%%:r") . ".pdf\" " . " && %s \"" . expand("%%:r") . ".pdf\"&"
 endfunction
 function! PandocWord()
-	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=.  -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -o \"" . expand("%:r") . ".docx\" " . " && open \"" . expand("%:r") . ".docx\"&"
+	silent exec "Dispatch pandoc \"" . expand("%%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=.  -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o \"" . expand("%%:r") . ".docx\" " . " && %s \"" . expand("%%:r") . ".docx\"&"
 endfunction
 function! PandocWordBib()
-	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=.  -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -o \"" . expand("%:r") . ".docx\" " . " && open \"" . expand("%:r") . ".docx\"&"
+	silent exec "Dispatch pandoc \"" . expand("%%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=.  -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -V geometry:margin=2cm -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o \"" . expand("%%:r") . ".docx\" " . " && %s \"" . expand("%%:r") . ".docx\"&"
 endfunction
 function! PandocPDF()
-	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=. -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -o \"" . expand("%:r") . ".pdf\" " . " && open \"" . expand("%:r") . ".pdf\"&"
+	silent exec "Dispatch pandoc \"" . expand("%%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=. -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o \"" . expand("%%:r") . ".pdf\" " . " && %s \"" . expand("%%:r") . ".pdf\"&"
 endfunction
 function! PandocPDFNoContents()
-	silent exec "Dispatch pandoc \"" . expand("%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=. -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 -V geometry:margin=2cm -o \"" . expand("%:r") . ".pdf\" " . " && open \"" . expand("%:r") . ".pdf\"&"
+	silent exec "Dispatch pandoc \"" . expand("%%") . "\" -s --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --resource-path=. -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 -V geometry:margin=2cm -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o \"" . expand("%%:r") . ".pdf\" " . " && %s \"" . expand("%%:r") . ".pdf\"&"
 endfunction
 function! PandocPDFLandscape()
-	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt -F mermaid-filter  --filter pandoc-latex-admonition --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
+	silent exec "Dispatch pandoc --pdf-engine=xelatex --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt -F mermaid-filter  --filter pandoc-latex-admonition --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=1cm -V geometry:landscape -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o " . expand("%%:r"). ".pdf -s " . expand("%%") . " && %s " . expand("%%:r") . ".pdf&"
 endfunction
 function! PandocPDFLandscapeNoContents()
-	silent exec "Dispatch pandoc --pdf-engine=xelatex -F mermaid-filter  --filter pandoc-latex-admonition --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 -V geometry:margin=1cm -V geometry:landscape -o " . expand("%:r"). ".pdf -s " . expand("%") . " && open " . expand("%:r") . ".pdf&"
+	silent exec "Dispatch pandoc --pdf-engine=xelatex -F mermaid-filter  --filter pandoc-latex-admonition --variable mainfont=\"Palatino\" --variable sansfont=\"Helvetica\" --variable monofont=\"Menlo\" --variable fontsize=10pt --variable version=2.0 -V geometry:margin=1cm -V geometry:landscape -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o " . expand("%%:r"). ".pdf -s " . expand("%%") . " && %s " . expand("%%:r") . ".pdf&"
 endfunction
 function! PandocHTML()
-	silent exec "Dispatch pandoc  -o " . expand("%:r"). ".html -s " . expand("%") . "; open " . expand("%:r") . ".html"
+	silent exec "Dispatch pandoc  -o " . expand("%%:r"). ".html -s " . expand("%%") . "; %s " . expand("%%:r") . ".html"
 endfunction
+]], get_open_cmd(), get_open_cmd(), get_open_cmd(), get_open_cmd(), get_open_cmd(), get_open_cmd(), get_open_cmd(), get_open_cmd(), get_open_cmd()))
+
+-- PublishMedium is macOS/Unix-specific due to shell syntax and paths
+-- Only define it on Unix systems
+if not platform.is_windows then
+	vim.cmd([[
 function! PublishMedium()
 	silent exec "Dispatch pandoc  -o " . expand("%:r"). ".html -s " . expand("%") . "; ~/go/bin/md-publisher publish --medium-token `cat $HOME/bin/.medium_token` " . expand("%:r") . ".html"
 endfunction
 ]])
+else
+	-- Windows placeholder - would need PowerShell equivalent
+	vim.cmd([[
+function! PublishMedium()
+	echo "PublishMedium is not supported on Windows"
+endfunction
+]])
+end
+
 return {
 	-- Markdown
 	"tpope/vim-markdown",
@@ -86,6 +117,7 @@ return {
 		},
 	},
 	config = function()
-		vim.cmd("source ~/.config/nvim/vimscript/markdown.vim")
+		-- Source markdown.vim using cross-platform path
+		vim.cmd.source(platform.join(platform.config_dir(), "vimscript", "markdown.vim"))
 	end,
 }

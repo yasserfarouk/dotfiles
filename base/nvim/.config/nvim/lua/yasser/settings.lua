@@ -1,3 +1,5 @@
+local platform = require("yasser.utils.platform")
+
 local indent = 4
 vim.opt.formatoptions = "jcroqlnt"
 vim.opt.breakindent = true
@@ -59,7 +61,14 @@ vim.opt.wrap = false
 vim.opt.modeline = true
 vim.opt.modelines = 10
 vim.opt.undofile = true
-vim.opt.undodir = vim.fn.expand("~/.VIM_UNDO_FILES")
+
+-- Cross-platform undo directory
+if platform.is_windows then
+	vim.opt.undodir = platform.join(platform.temp_dir(), "nvim-undo")
+else
+	vim.opt.undodir = platform.join(platform.home(), ".VIM_UNDO_FILES")
+end
+
 vim.opt.exrc = true
 vim.opt.secure = true
 vim.opt.backup = false
@@ -74,8 +83,20 @@ vim.opt.foldlevel = 99
 vim.opt.spell = true
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
-vim.g.python_host_prog = vim.fn.expand("~") .. "/myvenvs/neovim3/bin/python"
-vim.g.python3_host_prog = vim.fn.expand("~") .. "/myvenvs/neovim3/bin/python3"
+
+-- Cross-platform Python provider paths
+if platform.is_windows then
+	-- Windows: check common venv locations
+	local win_python = platform.python_venv_path("myvenvs\\neovim3", "python")
+	if platform.exists(win_python) then
+		vim.g.python3_host_prog = win_python
+	end
+else
+	-- Unix: use standard venv paths
+	vim.g.python_host_prog = platform.python_venv_path("myvenvs/neovim3", "python")
+	vim.g.python3_host_prog = platform.python_venv_path("myvenvs/neovim3", "python3")
+end
+
 -- vim.g.markdown_fenced_languages = ['html', 'python', 'ruby', 'vim', 'lua', 'php', 'c', 'go', 'rust']
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","

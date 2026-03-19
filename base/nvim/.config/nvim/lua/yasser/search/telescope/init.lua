@@ -1,5 +1,6 @@
 local telescope = require("telescope")
 local actions = require("telescope.actions")
+local platform = require("yasser.utils.platform")
 -- Global remapping
 ------------------------------
 -- '--color=never',
@@ -160,10 +161,7 @@ telescope.setup({
 		},
 		dap = {},
 		project = {
-			base_dirs = {
-				{ "~/code", max_depth = 4 },
-				{ "~/storage/gdrive/research", max_depth = 4 },
-			},
+			base_dirs = platform.code_dirs(),
 			hidden_files = false, -- default: false
 		},
 		media_files = {

@@ -1,8 +1,13 @@
+local platform = require("yasser.utils.platform")
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 local execute = vim.api.nvim_command
 local fn = vim.fn
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+
+-- Cross-platform path for lazy.nvim
+local lazypath = platform.join(vim.fn.stdpath("data"), "lazy", "lazy.nvim")
+
 local keymap = vim.keymap.set
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({

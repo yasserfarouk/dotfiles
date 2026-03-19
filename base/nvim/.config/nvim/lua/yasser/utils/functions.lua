@@ -1,4 +1,5 @@
 local M = {}
+local platform = require("yasser.utils.platform")
 
 -- Note: opencode_scratchpad function removed - now using sidekick.nvim integration
 -- See lua/plugins/ai.lua for the new scratchpad implementation with <leader>pj
@@ -41,7 +42,7 @@ function M.open_github_at_line(start_line, end_line)
 	end
 	
 	-- Get relative path from git root
-	local relative_path = vim.fn.substitute(filepath, git_root .. "/", "", "")
+	local relative_path = vim.fn.substitute(filepath, git_root .. platform.sep, "", "")
 	
 	-- Get remote URL
 	local remote_url = vim.fn.systemlist("git -C " .. vim.fn.shellescape(git_root) .. " config --get remote.origin.url")[1]

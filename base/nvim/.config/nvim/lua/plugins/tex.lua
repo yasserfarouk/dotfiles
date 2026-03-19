@@ -27,7 +27,8 @@ return {
 			{ "<leader>lP", "<cmd>call PresentWithPympress()<cr>", mode = { "n" }, desc = "Present" },
 		},
 		config = function()
-			vim.cmd("source ~/.config/nvim/vimscript/tex.vim")
+			local platform = require("yasser.utils.platform")
+			vim.cmd.source(platform.join(platform.config_dir(), "vimscript", "tex.vim"))
 		end,
 	},
 	-- Overleaf real-time collaboration

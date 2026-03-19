@@ -27,6 +27,7 @@ return {
 		{ "<leader>ol", "<cmd>ObsidianLinkNew<cr>", mode = { "n" }, desc = "New Link" },
 	},
 	config = function()
+		local platform = require("yasser.utils.platform")
 		require("nvim-treesitter.configs").setup({
 			highlight = {
 				enable = true,
@@ -34,7 +35,7 @@ return {
 			},
 		})
 		require("obsidian").setup({
-			dir = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/yasser",
+			dir = platform.obsidian_vault(),
 			completion = {
 				nvim_cmp = true,
 				use_advanced_uri = true,

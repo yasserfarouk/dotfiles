@@ -2,6 +2,9 @@
 -- Set to true for inline cmp-nvim-lsp-signature-help, false for native float
 local USE_INLINE_SIGNATURE_HELP = false
 
+-- Cross-platform path utilities
+local platform = require("yasser.utils.platform")
+
 return {
 	-- Snippet engine
 	{
@@ -20,10 +23,14 @@ return {
 			require("luasnip.loaders.from_vscode").lazy_load()
 			
 			-- Load LuaSnip-snippets.nvim (additional snippets)
-			require("luasnip.loaders.from_vscode").lazy_load({ paths = vim.fn.stdpath("data") .. "/lazy/LuaSnip-snippets.nvim" })
+			require("luasnip.loaders.from_vscode").lazy_load({ 
+				paths = platform.join(vim.fn.stdpath("data"), "lazy", "LuaSnip-snippets.nvim") 
+			})
 			
 			-- Load custom snippets from lua/yasser/snippets/ if they exist
-			require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/nvim/lua/yasser/snippets" })
+			require("luasnip.loaders.from_lua").lazy_load({ 
+				paths = platform.join(vim.fn.stdpath("config"), "lua", "yasser", "snippets") 
+			})
 			
 			-- Configure LuaSnip
 			ls.config.set_config({

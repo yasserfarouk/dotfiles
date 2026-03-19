@@ -1,6 +1,7 @@
 local utils = require("yasser.utils")
 local au = require("yasser.utils.au")
 local hl = require("yasser.utils.highlight")
+local platform = require("yasser.utils.platform")
 
 vim.api.nvim_set_hl(0, "TablineSel", { reverse = true })
 vim.api.nvim_set_hl(0, "FloatBorder", { link = "Number" })
@@ -140,7 +141,7 @@ end
 local function get_filepath_parts()
 	local base = vim.fn.expand("%:~:.:h")
 	local filename = vim.fn.expand("%:~:.:t")
-	local prefix = (vim.fn.empty(base) == 1 or base == ".") and "" or base .. "/"
+	local prefix = (vim.fn.empty(base) == 1 or base == ".") and "" or base .. platform.sep
 
 	return { base, filename, prefix }
 end

@@ -1,6 +1,9 @@
 local windows = function()
 	return vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1 or vim.fn.has("win16") == 1
 end
+
+local platform = require("yasser.utils.platform")
+
 function alphaconf()
 	local status_ok, alpha = pcall(require, "alpha")
 	if not status_ok then
@@ -18,15 +21,15 @@ function alphaconf()
 	}
 	dashboard.section.buttons.val = {
 		dashboard.button("f", "󰈞  Find file", ":Telescope find_files<CR>"),
-		dashboard.button("e", "  New file", ":ene <BAR> startinsert<CR>"),
-		dashboard.button("P", "  Find project", ":Telescope project<CR>"),
-		dashboard.button("p", "  Recent project", ":Telescope projects<CR>"),
+		dashboard.button("e", "  New file", ":ene <BAR> startinsert<CR>"),
+		dashboard.button("P", "  Find project", ":Telescope project<CR>"),
+		dashboard.button("p", "  Recent project", ":Telescope projects<CR>"),
 		dashboard.button("r", "󰄉  Recently used files", ":Telescope oldfiles<CR>"),
 		dashboard.button("t", "󰊄  Find text", ":Telescope live_grep<CR>"),
-		dashboard.button("c", "  Configuration", ":e ~/.config/nvim/init.lua<CR>"),
-		dashboard.button("z", "🛠️ Plugins", "<cmd>Lazy<CR>"),
+		dashboard.button("c", "  Configuration", ":e " .. platform.join(platform.config_dir(), "init.lua") .. "<CR>"),
+		dashboard.button("z", "  Plugins", "<cmd>Lazy<CR>"),
 		dashboard.button("q", "󰅚  Quit Neovim", ":qa<CR>"),
-		dashboard.button("v", "🖊️  Vim File", ":TelescopeVim<CR>"),
+		dashboard.button("v", "  Vim File", ":TelescopeVim<CR>"),
 	}
 	local function footer()
 		-- NOTE: requires the fortune-mod package to work
