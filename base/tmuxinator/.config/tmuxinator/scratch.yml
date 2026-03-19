@@ -52,7 +52,5 @@ windows:
       panes:
         - nvim:
           - nvim
-        - opencode:
-          - opencode
         - shell:
           - 

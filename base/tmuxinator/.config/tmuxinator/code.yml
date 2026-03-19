@@ -8,8 +8,6 @@ windows:
       panes:
         - nvim:
           - nvim
-        - opencode:
-          - opencode
         - shell:
           -
   - console:
@@ -22,6 +20,6 @@ on_project_start: |
   tmux select-window -t :1
   tmux select-pane -t 0
   tmux resize-pane -t 0 -x 66%
-  tmux select-pane -t 2
-  tmux resize-pane -t 2 -y 20%
+  tmux select-pane -t 1
+  tmux resize-pane -t 1 -y 20%
   tmux select-pane -t 0
