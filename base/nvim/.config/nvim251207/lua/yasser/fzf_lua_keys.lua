@@ -37,6 +37,18 @@ function M.setup()
 	-- LSP
 	map("n", "<leader>cS", "<cmd>FzfLua lsp_document_symbols<cr>", { desc = "Document symbols (fzf)" })
 	map("n", "<leader>cW", "<cmd>FzfLua lsp_workspace_symbols<cr>", { desc = "Workspace symbols (fzf)" })
+	
+	-- LSP Symbol type filters (workspace)
+	map("n", "<leader>cC", function() require("fzf-lua").lsp_workspace_symbols({ regex_filter = "Class" }) end, { desc = "Workspace classes" })
+	map("n", "<leader>cF", function() require("fzf-lua").lsp_workspace_symbols({ regex_filter = "Function" }) end, { desc = "Workspace functions" })
+	map("n", "<leader>cM", function() require("fzf-lua").lsp_workspace_symbols({ regex_filter = "Method" }) end, { desc = "Workspace methods" })
+	map("n", "<leader>cV", function() require("fzf-lua").lsp_workspace_symbols({ regex_filter = "Variable" }) end, { desc = "Workspace variables" })
+	
+	-- LSP Symbol type filters (document)
+	map("n", "<leader>sC", function() require("fzf-lua").lsp_document_symbols({ regex_filter = "Class" }) end, { desc = "Document classes" })
+	map("n", "<leader>sF", function() require("fzf-lua").lsp_document_symbols({ regex_filter = "Function" }) end, { desc = "Document functions" })
+	map("n", "<leader>sM", function() require("fzf-lua").lsp_document_symbols({ regex_filter = "Method" }) end, { desc = "Document methods" })
+	map("n", "<leader>sV", function() require("fzf-lua").lsp_document_symbols({ regex_filter = "Variable" }) end, { desc = "Document variables" })
 
 	-- Language-specific grep
 	map("n", "<leader>Stp", function() require("fzf-lua").live_grep({ cmd = "rg --type py" }) end, { desc = "Grep Python files" })
