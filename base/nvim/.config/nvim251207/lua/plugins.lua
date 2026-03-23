@@ -27,13 +27,6 @@ return {
 			theme = "tokyonight",
 			show_modified = true,
 			exclude_filetypes = { "netrw", "toggleterm", "neo-tree" },
-			attach_navic = function(client, bufnr)
-				-- Only attach to basedpyright for Python, not pyright
-				if client.name == "pyright" then
-					return false
-				end
-				return true
-			end,
 		},
 	},
 
@@ -80,7 +73,7 @@ return {
 
 			-- Define servers to install and configure
 			local servers = {
-				"basedpyright",
+				"pyright", -- Python
 				"lua_ls",
 				"jdtls",
 				"ts_ls",
@@ -95,6 +88,10 @@ return {
 				"taplo", -- TOML
 				"clangd", -- C/C++
 				"harper_ls", -- Grammar/spell checker for documents
+				"rust_analyzer", -- Rust
+				"dockerls", -- Dockerfile
+				"vimls", -- Vim
+				"phpactor", -- PHP (alternative)
 			}
 
 			-- Configure each server using modern vim.lsp.config API
@@ -108,19 +105,6 @@ return {
 						root_markers = default.root_dir and vim.fs.root and { ".git" } or nil,
 						capabilities = capabilities,
 					}
-
-					-- Basedpyright specific configuration
-					if server_name == "basedpyright" then
-						server_config.settings = {
-							basedpyright = {
-								analysis = {
-									diagnosticMode = "openFilesOnly",
-									useLibraryCodeForTypes = true,
-									enableTypeIgnoreComments = true,
-								},
-							},
-						}
-					end
 
 					-- Harper-ls specific configuration for document filetypes only
 					if server_name == "harper_ls" then
@@ -161,7 +145,33 @@ return {
 		keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
 		opts = {
 			ui = { border = "rounded" },
-			ensure_installed = { "debugpy", "codelldb", "stylua", "black", "isort", "prettier" },
+			ensure_installed = {
+				-- Debuggers
+				"debugpy",
+				"codelldb",
+				"java-debug-adapter",
+				-- Formatters
+				"stylua",
+				"prettier",
+				"prettierd",
+				"beautysh",
+				"fixjson",
+				"google-java-format",
+				"latexindent",
+				"markdownlint",
+				"phpcbf",
+				"pint",
+				"yamlfmt",
+				-- Linters
+				"alex",
+				"codespell",
+				"jsonlint",
+				"phpstan",
+				"ruff",
+				"shellcheck",
+				-- Utilities
+				"jq",
+			},
 		},
 		config = function(_, opts)
 			require("mason").setup(opts)
@@ -182,7 +192,6 @@ return {
 				local name_map = {
 					["typescript-language-server"] = "ts_ls",
 					["python-lsp-server"] = "pylsp",
-					["basedpyright"] = "basedpyright",
 				}
 				server_name = name_map[server_name] or server_name
 
