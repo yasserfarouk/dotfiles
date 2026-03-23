@@ -97,6 +97,15 @@ else
 	vim.g.python3_host_prog = platform.python_venv_path("myvenvs/neovim3", "python3")
 end
 
+if vim.fn.has("win32") == 1 then
+	local handle = io.open("uv python find")
+	local result = handle:read("*a"):gsub("%s+", "")
+	handle:close()
+	if results ~= "" then
+		vim.g.python3_host_prog = result
+	end
+end
+
 -- vim.g.markdown_fenced_languages = ['html', 'python', 'ruby', 'vim', 'lua', 'php', 'c', 'go', 'rust']
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
