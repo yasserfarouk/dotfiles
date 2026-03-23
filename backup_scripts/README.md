@@ -146,7 +146,56 @@ That's it! The script will:
 
 ## 📜 Scripts
 
-### 1. `update_git_repos.sh` - Main Repository Manager
+### 1. `restore.sh` / `restore.ps1` - Complete System Restoration ⭐ NEW
+
+**Platform:** `restore.sh` for macOS/Linux, `restore.ps1` for Windows
+
+The master restoration script that brings your entire system back from backup.
+
+**What it does:**
+1. Restores SSH keys first (needed for git authentication)
+2. Restores all configuration folders
+3. Installs required tools (Homebrew/winget, git, gh)
+4. Restores all git repositories using generated restore script
+5. Restores non-git code folders
+6. Installs all packages from Brewfile (macOS) or winget (Windows)
+
+**Usage:**
+
+*macOS/Linux:*
+```bash
+./restore.sh ~/Documents/MacBackup
+```
+
+*Windows PowerShell (as Administrator):*
+```powershell
+.\restore.ps1 -BackupPath "D:\MacBackup"
+```
+
+**What gets restored:**
+- SSH keys (~/.ssh)
+- Config folders (.config, .copilot, bin, etc.)
+- All git repositories
+- Non-git code folders
+- Desktop, Downloads
+- All Homebrew packages (macOS) or common dev tools (Windows)
+
+**Features:**
+- ✅ Progress tracking with colored output
+- ✅ Detailed logging to file
+- ✅ Safety confirmations
+- ✅ Backs up existing files before overwriting
+- ✅ Post-restoration checklist
+- ✅ Time tracking
+
+**Requirements:**
+- rsync (macOS/Linux)
+- robocopy (Windows)
+- Internet connection for package installation
+
+---
+
+### 2. `update_git_repos.sh` - Main Repository Manager
 
 The core script that handles all git operations.
 
@@ -176,7 +225,7 @@ The core script that handles all git operations.
 
 ---
 
-### 2. `generate_restore_script.sh` - Restoration Script Generator
+### 3. `generate_restore_script.sh` - Restoration Script Generator
 
 Generates scripts to restore all repositories on a new machine.
 
@@ -211,7 +260,7 @@ restore_git_repos.bat
 
 ---
 
-### 3. `backup.sh` - Master Orchestration Script
+### 4. `backup.sh` - Master Orchestration Script
 
 Runs the complete backup workflow.
 
@@ -242,7 +291,7 @@ Shows elapsed time at the end (HH:MM:SS format)
 
 ---
 
-### 4. `add_to_ignore.sh` - Ignore List Manager
+### 5. `add_to_ignore.sh` - Ignore List Manager
 
 Helper to add repositories to the ignore list.
 
@@ -339,7 +388,33 @@ cd ~/code/personal/dotfiles/backup_scripts
 ./generate_restore_script.sh
 ```
 
-### Scenario 4: Ignore Problematic Repos
+### Scenario 4: Complete System Restoration (New Machine) ⭐
+```bash
+# On your new macOS/Linux machine:
+# 1. Copy backup directory from iCloud/USB/Network
+# 2. Copy restore.sh to the new machine
+# 3. Run restoration
+./restore.sh ~/Documents/MacBackup
+
+# Follow post-restoration steps:
+# - Authenticate with GitHub: gh auth login
+# - Test SSH: ssh -T git@github.com
+# - Configure git user
+# - Reboot
+```
+
+**Windows:**
+```powershell
+# Open PowerShell as Administrator
+# 1. Copy backup from USB/Network to D:\MacBackup
+# 2. Copy restore.ps1 to your machine
+# 3. Run restoration
+.\restore.ps1 -BackupPath "D:\MacBackup"
+
+# Follow post-restoration steps
+```
+
+### Scenario 5: Ignore Problematic Repos
 ```bash
 # Repo is thousands of commits behind upstream
 ./add_to_ignore.sh learning/pytorch-tutorial
@@ -348,7 +423,7 @@ cd ~/code/personal/dotfiles/backup_scripts
 ./backup.sh
 ```
 
-### Scenario 5: Restore on New Machine
+### Scenario 6: Manual Restore on New Machine (Old Method)
 ```bash
 # Copy restore script to new machine
 scp restore_git_repos.sh newmachine:~
@@ -359,7 +434,7 @@ chmod +x restore_git_repos.sh
 ./restore_git_repos.sh
 ```
 
-### Scenario 6: Setup Cron Job (Automated Daily Backup)
+### Scenario 7: Setup Cron Job (Automated Daily Backup)
 ```bash
 # Edit crontab
 crontab -e
@@ -526,9 +601,132 @@ Overall counts and recommendations
 
 ### Monthly (Maintenance)
 1. Verify iCloud backup is syncing
-2. Test restore script on a test machine
+2. **Test restore script on a test VM or machine**
 3. Review and clean up old repos
 4. Check GitHub storage usage
+
+### When Getting New Machine
+1. **Copy backup from iCloud/USB to new machine**
+2. **Run `restore.sh` (or `restore.ps1` on Windows)**
+3. **Follow post-restoration checklist**
+4. **Verify all repos and tools work**
+5. **Setup automated backups with cron/Task Scheduler**
+
+---
+
+## 🔄 Complete Restoration Workflow
+
+### For macOS/Linux
+
+**Step-by-step process when restoring to a new machine:**
+
+1. **Prepare the backup**
+   ```bash
+   # Backup should be available in one of these locations:
+   # - iCloud: ~/Documents/MacBackup
+   # - USB drive: /Volumes/Backup/MacBackup
+   # - Network: /mnt/nas/backups/MacBackup
+   ```
+
+2. **Copy restore script**
+   ```bash
+   # The restore.sh script should be in the backup
+   cp ~/Documents/MacBackup/git_management_scripts/restore.sh ~/
+   chmod +x ~/restore.sh
+   ```
+
+3. **Run restoration**
+   ```bash
+   ./restore.sh ~/Documents/MacBackup
+   
+   # The script will:
+   # ✓ Restore SSH keys
+   # ✓ Restore config folders
+   # ✓ Install Homebrew & tools
+   # ✓ Restore all git repos
+   # ✓ Restore non-git folders
+   # ✓ Install all Brewfile packages
+   ```
+
+4. **Post-restoration**
+   ```bash
+   # Authenticate with GitHub
+   gh auth login
+   
+   # Test SSH connection
+   ssh -T git@github.com
+   
+   # Configure git if needed
+   git config --global user.name "Your Name"
+   git config --global user.email "your@email.com"
+   
+   # Reboot
+   sudo reboot
+   ```
+
+### For Windows
+
+**Step-by-step process when restoring to a new Windows machine:**
+
+1. **Prepare the backup**
+   ```powershell
+   # Copy backup to Windows machine
+   # - USB: D:\MacBackup
+   # - Network: \\NAS\backups\MacBackup
+   ```
+
+2. **Copy restore script**
+   ```powershell
+   # The restore.ps1 script should be in the backup
+   Copy-Item "D:\MacBackup\git_management_scripts\restore.ps1" "$env:USERPROFILE\"
+   ```
+
+3. **Run PowerShell as Administrator**
+   ```powershell
+   # Right-click PowerShell → Run as Administrator
+   ```
+
+4. **Run restoration**
+   ```powershell
+   cd $env:USERPROFILE
+   .\restore.ps1 -BackupPath "D:\MacBackup"
+   
+   # The script will:
+   # ✓ Restore SSH keys
+   # ✓ Restore config folders
+   # ✓ Install Git & GitHub CLI via winget
+   # ✓ Restore all git repos
+   # ✓ Restore non-git folders
+   # ✓ Install common dev packages
+   ```
+
+5. **Post-restoration**
+   ```powershell
+   # Authenticate with GitHub
+   gh auth login
+   
+   # Test SSH connection
+   ssh -T git@github.com
+   
+   # Configure git if needed
+   git config --global user.name "Your Name"
+   git config --global user.email "your@email.com"
+   
+   # Restart computer
+   Restart-Computer
+   ```
+
+### What Gets Restored
+
+| Item | Source | Destination | Notes |
+|------|--------|-------------|-------|
+| SSH Keys | `.ssh/` | `~/.ssh/` | Permissions fixed automatically |
+| Config | `.config/` | `~/.config/` | All application configs |
+| Git Repos | `code/` | `~/code/` | Only repos with git remotes |
+| Non-Git Folders | `code/` | `~/code/` | Folders without .git |
+| Scripts | `bin/` | `~/bin/` | Custom scripts |
+| Desktop/Downloads | Desktop/, Downloads/ | ~/Desktop/, ~/Downloads/ | All files |
+| Packages | Brewfile | System | All Homebrew packages |
 
 ---
 
@@ -563,6 +761,7 @@ Date: 2026-03-23
 ## 🎯 Quick Reference Card
 
 ```bash
+# BACKUP
 # Full backup (everything)
 ./backup.sh
 
@@ -572,6 +771,14 @@ Date: 2026-03-23
 # Just generate restore scripts
 ./generate_restore_script.sh
 
+# RESTORE
+# Complete system restore (macOS/Linux)
+./restore.sh ~/Documents/MacBackup
+
+# Complete system restore (Windows PowerShell as Admin)
+.\restore.ps1 -BackupPath "D:\MacBackup"
+
+# MANAGEMENT
 # Add repo to ignore list
 ./add_to_ignore.sh <path>
 
@@ -583,4 +790,15 @@ ssh -T git@github.com
 
 # Check git status in all repos
 find ~/code -name .git -type d -execdir pwd \; -execdir git status -s \;
+
+# TROUBLESHOOTING
+# Authenticate with GitHub
+gh auth login
+
+# View backup log
+tail -f ~/backup.log
+
+# View restore log
+tail -f ~/restore_*.log
 ```
+
