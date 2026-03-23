@@ -97,8 +97,8 @@ else
 	vim.g.python3_host_prog = platform.python_venv_path("myvenvs/neovim3", "python3")
 end
 
-if vim.fn.has("win32") == 1 then
-	local handle = io.open("uv python find")
+if platform.is_windows then
+	local handle = io.popen("uv python find")
 	local result = handle:read("*a"):gsub("%s+", "")
 	handle:close()
 	if results ~= "" then
