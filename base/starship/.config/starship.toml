@@ -1,3 +1,7 @@
+# Increase scan timeout for large directories (default is 30ms)
+# WSL filesystems can be slow, especially on Windows-mounted paths
+scan_timeout = 250
+
 [python]
 # Disable python version detection if too slow
 # python_binary = ["py"]

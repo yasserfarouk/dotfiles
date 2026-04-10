@@ -1,3 +1,2 @@
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
+# uv manages Python - ensure it's in PATH
+export PATH="$HOME/.local/bin:$PATH"

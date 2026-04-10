@@ -1,6 +1,5 @@
 #! /bin/bash
 
 NAME=$(basename $(pwd))
-yes | conda create -n $NAME python=3.11
-pyenv activate miniforge3/envs/$NAME
-pyenv local miniforge3/envs/$NAME
+uv venv .venv --python 3.12
+source .venv/bin/activate

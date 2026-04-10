@@ -45,6 +45,24 @@ if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
 Write-Host "Updating Scoop..." -ForegroundColor Yellow
 scoop update
 
+# ========================================
+# PRIORITY 1: Essential tools (uv, neovim)
+# ========================================
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "Installing Priority Tools (uv, neovim)" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+
+# Install uv (Python package manager) - FIRST
+Write-Host "Installing uv (Python package manager)..." -ForegroundColor Yellow
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+$env:Path = "$env:USERPROFILE\.local\bin;$env:Path"
+
+# Install neovim - SECOND
+Write-Host "Installing neovim..." -ForegroundColor Yellow
+scoop install neovim
+
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "Installing Development Tools via Scoop" -ForegroundColor Cyan
@@ -52,6 +70,7 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Core development tools (available in Scoop)
+# Note: uv and neovim already installed above as priority
 $scoopPackages = @(
     # Version Control & Git Tools
     "git",
@@ -96,7 +115,6 @@ $scoopPackages = @(
     "perl",
     
     # Language Version Managers
-    "pyenv",
     "nvm",
     
     # Build Tools
@@ -111,7 +129,7 @@ $scoopPackages = @(
     "mariadb",
     
     # Editors & IDEs
-    "neovim",
+    # "neovim",  # Already installed as priority above
     "vim",
     
     # File Viewers & Processors
@@ -162,7 +180,10 @@ $scoopPackages = @(
     "glances",
     
     # Benchmarking
-    "speedtest-cli"
+    "speedtest-cli",
+    
+    # Tree-sitter CLI (required for nvim-treesitter in Neovim 0.12+)
+    "tree-sitter"
 )
 
 foreach ($package in $scoopPackages) {
@@ -228,33 +249,54 @@ if (Get-Command winget -ErrorAction SilentlyContinue) {
     Write-Host "Note: winget is included in Windows 10 (1809+) and Windows 11" -ForegroundColor Yellow
 }
 
-# Install Python packages via pip
+# Install Python packages via uv
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "Installing Python Packages" -ForegroundColor Cyan
+Write-Host "Installing Python Packages via uv" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-$pythonPackages = @(
-    "pip",
-    "pipx",
-    "virtualenv",
-    "neovim",          # For Neovim Python support
-    "pygments",
-    "rich-cli",
+# Install Python via uv
+Write-Host "Installing Python 3.12 via uv..." -ForegroundColor Yellow
+uv python install 3.12
+
+# Install global tools using uv tool
+$uvTools = @(
+    "neovim-remote",
     "pre-commit",
     "black",
     "isort",
     "ruff",
+    "rich-cli",
+    "glances",
+    "bpytop",
+    "pygments",
     "jupyterlab",
-    "sphinx",
-    "bpytop"
+    "sphinx"
 )
 
-foreach ($package in $pythonPackages) {
-    Write-Host "Installing Python package: $package..." -ForegroundColor Yellow
-    python -m pip install --user $package
+foreach ($tool in $uvTools) {
+    Write-Host "Installing uv tool: $tool..." -ForegroundColor Yellow
+    uv tool install $tool
 }
+
+# Setup Neovim Python environments
+Write-Host ""
+Write-Host "Setting up Neovim Python Environments..." -ForegroundColor Cyan
+$neovimVenvPath = "$env:USERPROFILE\.local\share\uv\venvs"
+New-Item -ItemType Directory -Force -Path $neovimVenvPath | Out-Null
+
+uv venv "$neovimVenvPath\neovim2" --python 3.12
+uv venv "$neovimVenvPath\neovim3" --python 3.12
+
+# Install neovim packages in both venvs
+& "$neovimVenvPath\neovim3\Scripts\Activate.ps1"
+uv pip install neovim flake8 neovim-remote
+deactivate
+
+& "$neovimVenvPath\neovim2\Scripts\Activate.ps1"
+uv pip install neovim flake8
+deactivate
 
 # Install Node.js global packages
 Write-Host ""
@@ -303,6 +345,23 @@ Write-Host ""
 Write-Host "Installing md-publisher..." -ForegroundColor Yellow
 go install github.com/andremueller/md-publisher@latest
 
+# ========================================
+# AI Coding Assistants (OpenCode, Claude Code)
+# ========================================
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "Installing AI Coding Assistants" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+
+# Install OpenCode CLI
+Write-Host "Installing OpenCode..." -ForegroundColor Yellow
+npm install -g @anthropic/opencode
+
+# Install Claude Code CLI
+Write-Host "Installing Claude Code..." -ForegroundColor Yellow
+npm install -g @anthropic/claude-code
+
 # Final setup steps
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
@@ -324,6 +383,22 @@ Write-Host "2. Configure your shell (PowerShell profile or install zsh)" -Foregr
 Write-Host "3. Set up your dotfiles using stow" -ForegroundColor White
 Write-Host "4. Configure Neovim by running: nvim and letting plugins install" -ForegroundColor White
 Write-Host "5. Install tmux alternative or use Windows Terminal panes" -ForegroundColor White
+Write-Host ""
+Write-Host "AI Coding Assistants:" -ForegroundColor Cyan
+Write-Host "  opencode    # OpenCode CLI" -ForegroundColor White
+Write-Host "  claude      # Claude Code CLI" -ForegroundColor White
+Write-Host ""
+Write-Host "IMPORTANT - Fonts:" -ForegroundColor Yellow
+Write-Host "  Nerd Fonts have been installed via Scoop." -ForegroundColor White
+Write-Host "  Configure your terminal to use 'JetBrainsMono Nerd Font'" -ForegroundColor White
+Write-Host "  for proper icon display in starship prompt and Neovim." -ForegroundColor White
+Write-Host ""
+Write-Host "  Windows Terminal: Settings > Profiles > Defaults > Appearance" -ForegroundColor Gray
+Write-Host "                    > Font face > 'JetBrainsMono Nerd Font'" -ForegroundColor Gray
+Write-Host ""
+Write-Host "  Verify fonts work by running in PowerShell:" -ForegroundColor White
+Write-Host "    Write-Host `"`u{f015} `u{f07c} `u{e606}`"" -ForegroundColor Gray
+Write-Host "  You should see a house, folder, and Node.js icon." -ForegroundColor White
 Write-Host ""
 Write-Host "Note: Some macOS-specific tools don't have Windows equivalents:" -ForegroundColor Yellow
 Write-Host "  - mas (Mac App Store CLI)" -ForegroundColor Gray

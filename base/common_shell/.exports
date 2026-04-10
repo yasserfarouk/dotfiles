@@ -46,8 +46,8 @@ fi
 if [ -d /opt/homebrew/bin ] ; then
     export PATH="/opt/homebrew/sbin:$PATH"
 fi
-# add pyenv path
-export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+# add uv path
+export PATH="$HOME/.local/bin:$PATH"
 
 
 export _Z_DATA="$HOME/.z-data"
@@ -116,10 +116,11 @@ export SAVEHIST=100000
 # typically the same as SAVEHIST.
 export HISTSIZE=100000
 
-export PYENV_ROOT=$HOME/.pyenv
+# uv manages Python versions and virtual environments
+# No PYENV_ROOT needed with uv
 
 
-export ENABLE_PYENV=false
+export ENABLE_UV=true
 export ENABLE_CONDA=false
 
 # set python cache folder for .pyc files:

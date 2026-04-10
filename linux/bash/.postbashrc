@@ -19,5 +19,7 @@ if [ -f $HOME/anaconda3/bin/conda ] ; then
 	unset __conda_setup
 	# <<< conda initialize <<<
 fi
-eval "$(pyenv init -)"
-eval "$(starship init bash)"
+# uv manages Python - ensure it's in PATH
+export PATH="$HOME/.local/bin:$PATH"
+
+# Note: starship init is handled in base .bashrc

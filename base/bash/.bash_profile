@@ -22,3 +22,4 @@ export PATH="$HOME/.poetry/bin:$PATH"
 
 source /Users/yasser/.config/broot/launcher/bash/br
 . "$HOME/.cargo/env"
+eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)

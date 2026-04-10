@@ -1,14 +1,37 @@
-tap "adoptopenjdk/openjdk"
-tap "dwarvesf/tap"
+# Homebrew Bundle - Cross-platform package definitions
+# Works on macOS, Linux, and WSL (via Linuxbrew)
+
+# Platform detection
+IS_MAC = OS.mac?
+IS_LINUX = OS.linux?
+
+# Taps (macOS-specific taps are conditional)
 tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/cask-fonts"
-tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "homebrew/services"
-tap "nikitabobko/tap"
-tap "productdevbook/tap"
 
+if IS_MAC
+  tap "adoptopenjdk/openjdk"
+  tap "dwarvesf/tap"
+  tap "homebrew/cask"
+  tap "homebrew/cask-fonts"
+  tap "homebrew/cask-versions"
+  tap "nikitabobko/tap"
+  tap "productdevbook/tap"
+end
+
+# ============================================
+# PRIORITY: Install these first on all platforms
+# ============================================
+brew "uv"
+brew "neovim"
+brew "tmux"
+brew "stow"
+brew "git"
+
+# ============================================
+# Core CLI tools (all platforms)
+# ============================================
 brew "ack"
 brew "act"
 brew "gettext"
@@ -146,6 +169,7 @@ brew "ollama"
 brew "open-mpi"
 brew "ripgrep"
 brew "opencode"
+brew "claude-code"
 brew "pandoc-plot"
 brew "tree"
 brew "pass"
@@ -155,8 +179,7 @@ brew "pngpaste"
 brew "podman"
 brew "poppler"
 brew "pre-commit", link: false
-brew "pyenv"
-brew "pyenv-virtualenv"
+brew "uv"
 brew "pygments", link: false
 brew "pympress"
 brew "qt"
@@ -193,6 +216,7 @@ brew "tig"
 brew "tldr"
 brew "tmux"
 brew "tmux-mem-cpu-load"
+brew "tree-sitter"
 brew "tmuxinator"
 brew "trash", link: true
 brew "vifm"
@@ -238,6 +262,7 @@ cask "tap-forms"
 cask "trex"
 cask "vlc"
 cask "wezterm"
+cask "visual-studio-code"
 cask "wkhtmltopdf"
 
 mas "AllMyBatteries", id: 1621263412

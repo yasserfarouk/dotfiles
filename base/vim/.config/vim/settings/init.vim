@@ -1595,8 +1595,8 @@ if !exists('g:vscode')
 	" }}}
 
 	" Python --------------------------------------------------------------------{{{
-		let g:python_host_prog = '/Users/yasser/.pyenv/versions/neovim2/bin/python'
-		let g:python3_host_prog = '/Users/yasser/.pyenv/versions/neovim3/bin/python'
+		let g:python_host_prog = expand('~/.local/share/uv/venvs/neovim2/bin/python')
+		let g:python3_host_prog = expand('~/.local/share/uv/venvs/neovim3/bin/python')
 		" let $NVIM_PYTHON_LOG_FILE='nvim-python.log'
    " }}}
 

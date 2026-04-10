@@ -28,11 +28,13 @@ return {
 	},
 	config = function()
 		local platform = require("yasser.utils.platform")
-		require("nvim-treesitter.configs").setup({
-			highlight = {
-				enable = true,
-				additional_vim_regex_highlighting = { "markdown" },
-			},
+		-- NOTE: For Neovim 0.12+, highlighting is enabled via FileType autocmd in core.lua
+		-- Enable additional regex highlighting for markdown (for concealment features)
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = "markdown",
+			callback = function()
+				vim.opt_local.conceallevel = 2
+			end,
 		})
 		require("obsidian").setup({
 			dir = platform.obsidian_vault(),

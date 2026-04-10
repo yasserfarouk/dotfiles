@@ -20,18 +20,21 @@ zle -N edit-command-line
 
 [ -f  ~/antigen.zsh ] && source ~/antigen.zsh
 
-# Use antigen cache for faster loading and less verbose output
-ANTIGEN_CACHE="$HOME/.antigen/init.zsh"
+# Only configure antigen if it was loaded
+if type antigen &>/dev/null; then
+	# Use antigen cache for faster loading and less verbose output
+	ANTIGEN_CACHE="$HOME/.antigen/init.zsh"
 
-antigen bundle git
-antigen bundle pip
-antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle mafredri/zsh-async
-# antigen bundle sindresorhus/pure
+	antigen bundle git
+	antigen bundle pip
+	antigen bundle zsh-users/zsh-syntax-highlighting
+	antigen bundle zsh-users/zsh-autosuggestions
+	antigen bundle mafredri/zsh-async
+	# antigen bundle sindresorhus/pure
 
-# Apply quietly - suppress both stdout and stderr
-antigen apply &> /dev/null
+	# Apply quietly - suppress both stdout and stderr
+	antigen apply &> /dev/null
+fi
 
 # Lazy load NVM to speed up shell startup
 # NVM bash completion - only load if NVM is actually installed
@@ -147,15 +150,16 @@ fi
 
 export PATH="/opt/homebrew/opt/ruby@2.7/bin:$PATH"
 
-source /Users/yasser/.config/broot/launcher/bash/br
+# broot launcher (if it exists)
+[ -f ~/.config/broot/launcher/bash/br ] && source ~/.config/broot/launcher/bash/br
 
 [ -f ~/.secrets ] && source ~/.secrets
-. "$HOME/.cargo/env"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 if command -v starship >/dev/null; then
 	eval "$(starship init zsh)"
 fi
 
 # Removed duplicate compinit call
-export PATH="/Users/yasser/.config/herd-lite/bin:$PATH"
-export PHP_INI_SCAN_DIR="/Users/yasser/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
+export PATH="$HOME/.config/herd-lite/bin:$PATH"
+export PHP_INI_SCAN_DIR="$HOME/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"

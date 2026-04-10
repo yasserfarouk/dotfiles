@@ -5,13 +5,11 @@ MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 function replace_tag_in_file(){
   python -c "s=open('$3', 'r').read().replace('$1','$2'); open('$3', 'w').write(s)" 2>&1 >/dev/null
 }
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-pyenv activate neovim2
-neovim2_py=`pyenv which python`  # Note the path
-pyenv activate neovim3
-neovim3_py=`pyenv which python`  # Note the path
+export PATH="$HOME/.local/bin:$PATH"
+
+# Get neovim python paths from uv venvs
+neovim2_py="$HOME/.local/share/uv/venvs/neovim2/bin/python"
+neovim3_py="$HOME/.local/share/uv/venvs/neovim3/bin/python"
 
 replace_tag_in_file '<<nvimpy2>>' $neovim2_py "$HOME/.config/nvim/init.vim"
 replace_tag_in_file '<<nvimpy3>>' $neovim3_py "$HOME/.config/nvim/init.vim"

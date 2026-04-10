@@ -24,19 +24,21 @@ while true; do
 done
 
 packages=(
+	# PRIORITY: Install these first
+	"uv"
+	"neovim"
+	"tmux"
+	# Core tools
 	"stow"
 	"ccls"
 	"gdb"
 	"git"
 	"node"
-	# "neovim"
 	"zsh"
 	"fzf"
 	"fd"
 	"vifm"
 	"tree"
-	"pyenv"
-	"pyenv-virtualenv"
 	"ag"
 	"ripgrep"
 	"rg"
@@ -71,7 +73,6 @@ packages=(
 	"shellcheck"
 	"tig"
 	"tldr"
-	"tmux"
 	"trash"
 	"tree"
 	"vim"
@@ -88,7 +89,8 @@ packages=(
 	"starship"
 	"glances"
 )
-pipx_packages=(
+# Tools to install via uv tool (replaces pipx)
+uv_tool_packages=(
 	"asciinema"
 	"autoflake"
 	"black"
@@ -100,18 +102,16 @@ pipx_packages=(
 	"pre-commit"
 	"proselint"
 	"tiptop"
-	"spyder"
-	"python-language-server"
 	"typer"
 	"tox"
 	"removestar"
-	"pygemnts"
+	"pygments"
 	"typer-cli"
-	"wisdom-tree"
+	"ruff"
+	"neovim-remote"
 )
 pip_packages=(
 	"msgpack"
-	"pipx"
 )
 linux_packages=(
 	"terminal-notifier"
@@ -275,53 +275,46 @@ do
 	pip3 install --upgrade $i
 done
 
-echo "Installing pipx packages assuming that pipx is available"
-echo "------------------------------------------------------"
-for i in "${pipx_packages[@]}"
+echo "Installing uv tool packages (replaces pipx)"
+echo "--------------------------------------------"
+for i in "${uv_tool_packages[@]}"
 do
-	pipx install $i
+	uv tool install $i || echo "Warning: Failed to install $i"
 done
-echo "Installing neovim2/3 python envs"
-echo "--------------------------------"
-# curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
-export PATH="~/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-
-# I am using python3 for both py and p3 in vim
-# pyenv install 2.7.17
-# pyenv install 3.7.6
-# pyenv install 3.8.6
-pyenv install 3.9.0
+echo "Installing neovim2/3 python envs using uv"
+echo "-----------------------------------------"
+# Install Python using uv
+uv python install 3.12
 
 # remove existing neovim envs
-unlink ~/.pyenv/versions/neovim2 2>&1 >/dev/null
-unlink ~/.pyenv/versions/neovim3 2>&1 >/dev/null
+rm -rf ~/.local/share/uv/venvs/neovim2 2>&1 >/dev/null
+rm -rf ~/.local/share/uv/venvs/neovim3 2>&1 >/dev/null
 
-# pyenv virtualenv 2.7.17 neovim2 2>&1 >/dev/null
-pyenv virtualenv 3.9.0 neovim3 2>&1 >/dev/null
-pyenv virtualenv 3.9.0 neovim2 2>&1 >/dev/null
+# Create virtual environments for neovim
+uv venv ~/.local/share/uv/venvs/neovim2 --python 3.12
+uv venv ~/.local/share/uv/venvs/neovim3 --python 3.12
 
-# echo "Installing neovim for python, and node"
-# echo "--------------------------------------------"
-# pyenv activate neovim2
-# pip install --upgrade pip
-# for i in "${neovim_python_packages[@]}"
-# do
-# 	pip install $i
-# done
+# Install packages in neovim2 venv
+source ~/.local/share/uv/venvs/neovim2/bin/activate
+uv pip install --upgrade pip
+for i in "${neovim_python_packages[@]}"
+do
+	uv pip install $i
+done
+neovim2_py="$HOME/.local/share/uv/venvs/neovim2/bin/python"
+deactivate
 
-neovim2_py=`pyenv which python`  # Note the path
-
-pyenv activate neovim3
-pip install --upgrade pip
-pip install neovim-remote
+# Install packages in neovim3 venv
+source ~/.local/share/uv/venvs/neovim3/bin/activate
+uv pip install --upgrade pip
+uv pip install neovim-remote
 
 for i in "${neovim_python_packages[@]}"
 do
-	pip install -U $i
+	uv pip install -U $i
 done
-neovim3_py=`pyenv which python`  # Note the path
+neovim3_py="$HOME/.local/share/uv/venvs/neovim3/bin/python"
+deactivate
 
 gem install neovim
 npm install -g neovim
@@ -379,6 +372,13 @@ echo "Installing starship theme"
 echo "--------------------------"
 # npm install --global pure-prompt
 sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+
+echo "Installing AI Coding Assistants"
+echo "--------------------------------"
+# Install OpenCode CLI
+npm install -g @anthropic/opencode || echo "Warning: Failed to install OpenCode"
+# Install Claude Code CLI
+npm install -g @anthropic/claude-code || echo "Warning: Failed to install Claude Code"
 
 echo "Updating npm"
 echo "------------"
