@@ -191,11 +191,39 @@ foreach ($package in $scoopPackages) {
     scoop install $package
 }
 
-# Install Nerd Fonts
+# Install Nerd Fonts via Scoop
 Write-Host ""
-Write-Host "Installing Nerd Fonts..." -ForegroundColor Cyan
+Write-Host "Installing Nerd Fonts via Scoop..." -ForegroundColor Cyan
 scoop install JetBrains-Mono-NF
 scoop install Hack-NF
+
+# Install JetBrains Mono Nerd Font (fallback method - direct download)
+Write-Host ""
+Write-Host "Installing JetBrains Mono Nerd Font (direct download)..." -ForegroundColor Cyan
+$fontUrl = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
+$dest = "$env:TEMP\JetBrainsMono.zip"
+$fontDir = "$env:TEMP\JetBrainsMono"
+
+try {
+    Invoke-WebRequest -Uri $fontUrl -OutFile $dest
+    Expand-Archive -Path $dest -DestinationPath $fontDir -Force
+
+    # Install all .ttf files
+    $fonts = Get-ChildItem -Path $fontDir -Filter "*.ttf" -Recurse
+    $objShell = New-Object -ComObject Shell.Application
+    $objFolder = $objShell.Namespace(0x14) # Windows Fonts folder
+    foreach ($font in $fonts) {
+        $objFolder.CopyHere($font.FullName, 0x10) # 0x10 = overwrite silently
+    }
+    Write-Host "JetBrains Mono Nerd Font installed successfully." -ForegroundColor Green
+
+    # Cleanup
+    Remove-Item -Path $dest -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path $fontDir -Recurse -Force -ErrorAction SilentlyContinue
+} catch {
+    Write-Host "Failed to install JetBrains Mono Nerd Font via direct download: $_" -ForegroundColor Yellow
+    Write-Host "The Scoop installation should still work." -ForegroundColor Yellow
+}
 
 # Terminal Emulators (Scoop)
 Write-Host ""

@@ -41,6 +41,34 @@ detect_package_manager() {
 
 detect_package_manager
 
+# ========================================
+# Fix locale settings (prevents "cannot set locale" errors)
+# ========================================
+echo ""
+echo "========================================"
+echo "Configuring Locale Settings"
+echo "========================================"
+echo ""
+
+case $PKG_MANAGER in
+    apt)
+        sudo apt install -y locales
+        sudo sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+        sudo locale-gen
+        sudo update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+        ;;
+    dnf)
+        sudo dnf install -y glibc-langpack-en
+        ;;
+    pacman)
+        sudo sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+        sudo locale-gen
+        ;;
+esac
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
 # Update system
 echo ""
 echo "Updating system packages..."
@@ -81,15 +109,7 @@ esac
 echo "Installing tmux..."
 $PKG_INSTALL tmux
 
-# Install tree-sitter CLI (required for nvim-treesitter in Neovim 0.12+)
-echo "Installing tree-sitter CLI..."
-if command -v cargo &> /dev/null; then
-    cargo install tree-sitter-cli || echo "  Warning: Failed to install tree-sitter-cli via cargo"
-elif command -v npm &> /dev/null; then
-    sudo npm install -g tree-sitter-cli || echo "  Warning: Failed to install tree-sitter-cli via npm"
-else
-    echo "  Note: Install Rust or npm first for tree-sitter-cli"
-fi
+# Note: tree-sitter CLI installed later after npm is available
 
 # ========================================
 # Core CLI Tools
@@ -444,6 +464,21 @@ esac
 echo "Installing vifm..."
 $PKG_INSTALL vifm || true
 
+# Create fd symlink (Debian/Ubuntu installs fd-find as fdfind)
+if command -v fdfind &> /dev/null && ! command -v fd &> /dev/null; then
+    echo "Creating fd symlink for fdfind..."
+    mkdir -p ~/.local/bin
+    ln -sf "$(which fdfind)" ~/.local/bin/fd
+fi
+
+# Install tmuxinator (tmux session manager)
+echo "Installing tmuxinator..."
+if command -v gem &> /dev/null; then
+    sudo gem install tmuxinator || echo "  Warning: Failed to install tmuxinator via gem"
+else
+    echo "  Note: Ruby/gem not available, skipping tmuxinator"
+fi
+
 # ========================================
 # Install Rust and Cargo packages
 # ========================================
@@ -682,16 +717,23 @@ echo ""
 mkdir -p ~/.local/share/fonts
 cd ~/.local/share/fonts
 
-# JetBrains Mono Nerd Font
-curl -fLo "JetBrains Mono Nerd Font.zip" https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip
-unzip -o "JetBrains Mono Nerd Font.zip" -d JetBrainsMono
-rm "JetBrains Mono Nerd Font.zip"
+# JetBrains Mono Nerd Font (using latest release)
+echo "Downloading JetBrains Mono Nerd Font..."
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz
+if [ -f "JetBrainsMono.tar.xz" ]; then
+    tar -xvf JetBrainsMono.tar.xz
+    rm JetBrainsMono.tar.xz
+fi
 
-# Hack Nerd Font
-curl -fLo "Hack Nerd Font.zip" https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Hack.zip
-unzip -o "Hack Nerd Font.zip" -d Hack
-rm "Hack Nerd Font.zip"
+# Hack Nerd Font (using latest release)
+echo "Downloading Hack Nerd Font..."
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.tar.xz
+if [ -f "Hack.tar.xz" ]; then
+    tar -xvf Hack.tar.xz
+    rm Hack.tar.xz
+fi
 
+# Update font cache
 fc-cache -fv
 
 cd -

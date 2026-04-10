@@ -329,28 +329,48 @@ mkdir ~/bin 2>&1 >/dev/null
 curl https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party/build_fatpack/diff-so-fancy >~/bin/diff-so-fancy
 chmod +x ~/bin/diff-so-fancy
 
-echo "Installing source code nerd font"
+echo "Installing Nerd Fonts"
 echo "--------------------------------"
-$current_dir=`pwd`
-mkdir $HOME/fonts 2>&1 >/dev/null
+current_dir=`pwd`
+mkdir -p $HOME/fonts 2>&1 >/dev/null
 cd $HOME/fonts
-curl -OJL https://github.com/ryanoasis/nerd-fonts/releases/download/v1.2.0/SourceCodePro.zip
-unzip SourceCodePro.zip
 
-curl -OJL https://github.com/ryanoasis/nerd-fonts/releases/download/v1.2.0/FiraCode.zip
-unzip FiraCode.zip
+# JetBrains Mono Nerd Font (latest release)
+echo "Downloading JetBrains Mono Nerd Font..."
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz
+if [ -f "JetBrainsMono.tar.xz" ]; then
+    tar -xvf JetBrainsMono.tar.xz
+    rm JetBrainsMono.tar.xz
+fi
 
-rm "*windows*" 2>&1 >/dev/null
-rm "*Windows*" 2>&1 >/dev/null
+# FiraCode Nerd Font
+echo "Downloading FiraCode Nerd Font..."
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.tar.xz
+if [ -f "FiraCode.tar.xz" ]; then
+    tar -xvf FiraCode.tar.xz
+    rm FiraCode.tar.xz
+fi
+
+# SourceCodePro Nerd Font
+echo "Downloading SourceCodePro Nerd Font..."
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/SourceCodePro.tar.xz
+if [ -f "SourceCodePro.tar.xz" ]; then
+    tar -xvf SourceCodePro.tar.xz
+    rm SourceCodePro.tar.xz
+fi
+
+rm -f *windows* 2>&1 >/dev/null
+rm -f *Windows* 2>&1 >/dev/null
 case "$(uname -s)" in
 	Darwin)
-		mkdir $HOME/Library/Fonts 2>&1 >/dev/null
-		mv *.ttf $HOME/Library/Fonts
+		mkdir -p $HOME/Library/Fonts 2>&1 >/dev/null
+		mv *.ttf $HOME/Library/Fonts 2>&1 >/dev/null
 		;;
 
 	Linux)
-		mkdir $HOME/.fonts 2>&1 >/dev/null
-		mv *.ttf $HOME/.fonts
+		mkdir -p $HOME/.local/share/fonts 2>&1 >/dev/null
+		mv *.ttf $HOME/.local/share/fonts 2>&1 >/dev/null
+		fc-cache -fv
 		;;
 esac
 cd $current_dir

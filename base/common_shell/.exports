@@ -18,6 +18,14 @@ if [ -d "$HOME/usr/local/bin" ] ; then
 fi
 export PATH="$HOME/.poetry/bin:$PATH"
 
+# NVM (Node Version Manager)
+export NVM_DIR="$HOME/.nvm"
+
+# OpenCode CLI
+if [ -d "$HOME/.opencode/bin" ] ; then
+    export PATH="$HOME/.opencode/bin:$PATH"
+fi
+
 # save python cache files to a specific folder
 PYTHONPYCACHEPREFIX="$HOME/.pycode"
 
@@ -36,15 +44,25 @@ export TERMINAL_DARK=1
 export _Z_DATA="$HOME/.z-data"
 
 
+# Linuxbrew (user install)
 if [ -d "$HOME/.linuxbrew/bin" ] ; then
     export PATH="$HOME/.linuxbrew/bin:$PATH"
 fi
-if [ -d /opt/homebrew/bin ] ; then
-    export PATH="/opt/homebrew/bin:$PATH"
+
+# Linuxbrew (system install - common on WSL/Linux)
+if [ -d "/home/linuxbrew/.linuxbrew/bin" ] ; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
+# Homebrew on macOS (Apple Silicon)
 if [ -d /opt/homebrew/bin ] ; then
+    export PATH="/opt/homebrew/bin:$PATH"
     export PATH="/opt/homebrew/sbin:$PATH"
+fi
+
+# Ensure $HOME/bin is in PATH (should be early for user overrides)
+if [ -d "$HOME/bin" ] ; then
+    export PATH="$HOME/bin:$PATH"
 fi
 # add uv path
 export PATH="$HOME/.local/bin:$PATH"
