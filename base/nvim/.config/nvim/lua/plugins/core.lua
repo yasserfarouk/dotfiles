@@ -6,12 +6,10 @@ return {
 		branch = "main", -- Required for Neovim 0.12+
 		event = { "BufReadPost", "BufNewFile" },
 		build = ":TSUpdate",
-		main = "nvim-treesitter", -- New module path for 0.12+
-		opts = {
-			-- NOTE: ensure_installed is no longer a config option in the new API
-			-- Parsers are installed via init callback below
-		},
-		init = function()
+		config = function()
+			-- Setup nvim-treesitter to register commands
+			require("nvim-treesitter").setup()
+
 			-- Parsers to ensure are installed
 			local ensure_installed = {
 				"cpp", "python", "lua", "java", "javascript", "php", "latex",
@@ -19,15 +17,16 @@ return {
 				"markdown", "markdown_inline", "vim", "vimdoc", "query",
 			}
 
-			-- Install missing parsers
-			local installed = require("nvim-treesitter.config").get_installed()
-			local to_install = vim.iter(ensure_installed)
-				:filter(function(parser)
-					return not vim.tbl_contains(installed, parser)
-				end)
-				:totable()
+			-- Install missing parsers using the new API
+			local parsers = require("nvim-treesitter.parsers")
+			local to_install = {}
+			for _, parser in ipairs(ensure_installed) do
+				if not parsers.has_parser(parser) then
+					table.insert(to_install, parser)
+				end
+			end
 			if #to_install > 0 then
-				require("nvim-treesitter").install(to_install)
+				vim.cmd("TSInstall " .. table.concat(to_install, " "))
 			end
 
 			-- Enable treesitter highlighting and indentation via FileType autocmd
