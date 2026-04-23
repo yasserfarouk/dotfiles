@@ -36,11 +36,8 @@ export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export TERMINAL_DARK=1
-# [[ $TMUX = "" ]] && export TERM="xterm-kitty"
-[[ $TMUX = "" ]] && export TERM="xterm-kitty"
-[[ $TMUX != "" ]] && export TERM="xterm-kitty" # I set this to screen instead of tmux to keep colors in vifm.
-# [[ $TMUX = "" ]] && export TERM="screen-256color"
-# [[ $TMUX != "" ]] && export TERM="screen-256color" # I set this to screen instead of tmux to keep colors in vifm.
+# Only set xterm-kitty when actually running inside kitty
+[[ "$TERM_PROGRAM" == "kitty" ]] && export TERM="xterm-kitty"
 export _Z_DATA="$HOME/.z-data"
 
 
