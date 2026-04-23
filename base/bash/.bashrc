@@ -33,3 +33,5 @@ fi
 
 # broot launcher (if it exists)
 [ -f ~/.config/broot/launcher/bash/br ] && source ~/.config/broot/launcher/bash/br
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
