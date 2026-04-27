@@ -306,6 +306,13 @@ local function lsp()
 	return string.format("%s %s %s %s%%*", errors, warnings, hints, info)
 end
 ---------------------------------------------------------------------------------
+-- Background jobs
+---------------------------------------------------------------------------------
+local function bg_jobs()
+	return require("yasser.utils.job").statusline()
+end
+
+---------------------------------------------------------------------------------
 -- Latex
 ---------------------------------------------------------------------------------
 -- 1. Define the global Lua function that the statusline can call.
@@ -340,6 +347,7 @@ function M.get_active_statusline()
 		mode(),
 		" %*",
 		vimtex(),
+		bg_jobs(),
 		paste(),
 		-- orgmode(),
 		lsp(),

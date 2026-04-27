@@ -18,10 +18,9 @@ return {
 			}
 
 			-- Install missing parsers using the new API
-			local parsers = require("nvim-treesitter.parsers")
 			local to_install = {}
 			for _, parser in ipairs(ensure_installed) do
-				if not parsers.has_parser(parser) then
+				if not pcall(vim.treesitter.language.inspect, parser) then
 					table.insert(to_install, parser)
 				end
 			end
@@ -153,8 +152,9 @@ return {
 			end, { desc = "Swap previous parameter" })
 
 			-- Make moves repeatable with ; and ,
-			vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
-			vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
+			-- NOTE: intentionally not mapping ; and , here — ; is already
+			-- globally mapped to : (command mode) in keymaps.lua and must
+			-- not be overridden.
 		end,
 	},
 	-- Automatically close HTML/JSX tags

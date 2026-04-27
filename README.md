@@ -203,6 +203,90 @@ The setup scripts install these AI coding CLI tools:
 
 These require API keys to be configured. See their respective documentation for setup.
 
+## Neovim Utilities
+
+Custom Lua utilities live in `base/nvim/.config/nvim/lua/yasser/utils/`.
+
+### `utils/job.lua` — Background job runner with statusline feedback
+
+Runs any shell command asynchronously without blocking Neovim, tracks running
+and failed jobs, and exposes a statusline segment that reflects the current
+state. Optionally collects stdout/stderr and shows it in a scratch buffer when
+the job completes.
+
+#### Basic usage
+
+```lua
+local job = require("yasser.utils.job")
+
+-- Fire-and-forget: run silently, statusline indicator only
+job.run("pandoc input.md -o output.pdf && open output.pdf")
+
+-- Show stdout/stderr in a bottom split when done
+job.run("make test", { show_output = true })
+
+-- React to success or failure
+job.run("npm run build", {
+  on_success = function()
+    vim.notify("Build succeeded", vim.log.levels.INFO)
+  end,
+  on_failure = function(exit_code)
+    vim.notify("Build failed (exit " .. exit_code .. ")", vim.log.levels.ERROR)
+  end,
+})
+
+-- Combine options
+job.run("pytest --tb=short", {
+  show_output = true,
+  on_failure  = function() vim.notify("Tests failed", vim.log.levels.WARN) end,
+})
+```
+
+#### Statusline integration
+
+Add the segment to your statusline builder function:
+
+```lua
+-- in lua/yasser/statusline.lua (or equivalent)
+local function my_statusline()
+  return table.concat({
+    -- ... other segments ...
+    require("yasser.utils.job").statusline(),
+  })
+end
+```
+
+| State | Display |
+|-------|---------|
+| One job running | `⚙ ` |
+| Three concurrent jobs | `⚙ 3 ` |
+| One or more jobs failed | `❌ ` |
+| Idle / all succeeded | _(empty)_ |
+
+The failure indicator persists until the next `job.run()` call. To dismiss it
+manually (e.g. bound to a key):
+
+```lua
+vim.keymap.set("n", "<leader>jc", require("yasser.utils.job").clear,
+  { desc = "clear job failure indicator" })
+```
+
+#### Real-world example — Pandoc compilation
+
+```lua
+-- lua/plugins/markdown.lua
+local job = require("yasser.utils.job")
+
+local function pandoc_pdf()
+  local f = vim.fn.shellescape(vim.fn.expand("%"))
+  local o = vim.fn.shellescape(vim.fn.expand("%:r") .. ".pdf")
+  job.run(string.format(
+    "pandoc %s -s --pdf-engine=xelatex -o %s && open %s",
+    f, o, o
+  ))
+end
+```
+
 ## Troubleshooting
 
 ### Stow Conflicts

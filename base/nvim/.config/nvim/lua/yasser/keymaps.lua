@@ -133,6 +133,7 @@ keymap("n", "<esc><esc>", "<cmd>let @/ = ''<cr>", { desc = "no highlight" })
 -- no hl
 keymap("n", "<leader>w", "<cmd>wa<cr>", { desc = "save all" })
 keymap("n", "<leader>q", "<C-W>c", { desc = "quit window" })
+keymap("n", "<leader>QQ", "<cmd>qa!<cr>", { desc = "force quit all" })
 keymap("n", "<leader>-", "<C-W>s", { desc = "split below" })
 keymap("n", "<leader>\\", "<C-W>v", { desc = "split right" })
 keymap("n", "<leader>=", "<C-W>=", { desc = "balance windows" })
@@ -175,18 +176,14 @@ keymap("n", "<leader>vR", "<cmd>call SetupWrappingHard()<cr>", { desc = "wrap te
 keymap("n", "<leader>vs", "<cmd>set spell!<cr>", { desc = "spell checker" })
 keymap("n", "<leader>vt", "<cmd>TransparentToggle<cr>", { desc = "Toggle transparency" })
 keymap("n", "<leader>vS", "<cmd>set scrollbind!<cr>", { desc = "bind scrolling" })
--- general actions
-keymap("n", "<leader>ah", "<cmd>let @/ = ''<cr>", { desc = "remove search highlight" })
-keymap("n", "<leader>an", "<cmd>set nonumber!<cr>", { desc = "line-numbers" })
-keymap("n", "<leader>ar", "<cmd>set norelativenumber!<cr>", { desc = "relative line nums" })
-keymap("n", "<leader>aw", "<cmd>StripWhitespace<cr>", { desc = "strip whitespace" })
-keymap("n", "<leader>as", "<cmd>Ds1z=`]<cr>", { desc = "correct spelling" })
-keymap("n", "<leader>ay", "<cmd>let @+= expand(' % ')<cr>", { desc = "copy path" })
-keymap("n", "<leader>al", "<cmd>%s/^/\\=printf('%-4d', line('.'))<cr>", { desc = "write line numbers" })
-keymap("n", "<leader>ax", "<cmd>cclose<cr>", { desc = "close quickfix" })
-keymap("n", "<leader>aL", "<cmd>g/^$/.,./-j<cr>", { desc = "remove extra empty lines" })
--- Note: OpenCode keymaps moved to lua/plugins/ai.lua with sidekick.nvim integration
--- Use <leader>pj for scratchpad, <leader>pp to toggle, and other <leader>p* keymaps
+keymap("n", "<leader>vh", "<cmd>let @/ = ''<cr>", { desc = "no search highlight" })
+keymap("n", "<leader>vn", "<cmd>set nonumber!<cr>", { desc = "line numbers" })
+keymap("n", "<leader>vN", "<cmd>set norelativenumber!<cr>", { desc = "relative line numbers" })
+keymap("n", "<leader>vc", "<cmd>Ds1z=`]<cr>", { desc = "correct spelling" })
+keymap("n", "<leader>vy", "<cmd>let @+= expand(' % ')<cr>", { desc = "copy path" })
+keymap("n", "<leader>vl", "<cmd>%s/^/\\=printf('%-4d', line('.'))<cr>", { desc = "write line numbers" })
+keymap("n", "<leader>vx", "<cmd>cclose<cr>", { desc = "close quickfix" })
+keymap("n", "<leader>vL", "<cmd>g/^$/.,./-j<cr>", { desc = "remove extra empty lines" })
 
 -- opening yazi
 keymap(

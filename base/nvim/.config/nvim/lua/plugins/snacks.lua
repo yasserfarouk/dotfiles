@@ -13,8 +13,17 @@ return {
 		-- refer to the configuration section below
 		bigfile = { enabled = true },
 		dashboard = {
+			preset = {
+				header = [[
+███╗   ██╗ ███████╗  ██████╗
+████╗  ██║ ██╔════╝ ██╔════╝
+██╔██╗ ██║ █████╗   ██║     
+██║╚██╗██║ ██╔══╝   ██║     
+██║ ╚████║ ███████╗ ╚██████╗
+╚═╝  ╚═══╝ ╚══════╝  ╚═════╝]],
+			},
 			sections = {
-				{ section = "header" },
+				{ section = "header", hl = "Include" },
 				{ section = "keys", gap = 1, padding = 1 },
 				{ pane = 2, icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
 				{ pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
@@ -45,7 +54,7 @@ return {
 		indent = { enabled = true },
 		image = {
 			enabled = true,
-			doc = { inline = true },
+			doc = { inline = false },
 			-- Other image-related options from snacks.nvim documentation
 			max_width = 100, -- Example max width in columns
 			max_height_percent = 0.6, -- Example max height as 60% of window height
