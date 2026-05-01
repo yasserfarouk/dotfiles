@@ -6,6 +6,14 @@ vim.opt.breakindent = true
 vim.opt.termguicolors = true
 vim.opt.signcolumn = "yes"
 vim.opt.clipboard = "unnamed,unnamedplus"
+if os.getenv("SSH_TTY") then
+	local osc52 = require("vim.ui.clipboard.osc52")
+	vim.g.clipboard = {
+		name = "OSC 52",
+		copy = { ["+"] = osc52.copy("+"), ["*"] = osc52.copy("*") },
+		paste = { ["+"] = osc52.paste("+"), ["*"] = osc52.paste("*") },
+	}
+end
 vim.opt.confirm = true
 vim.opt.mouse = "a"
 -- vim.opt.mousemodel="popup"

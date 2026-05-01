@@ -385,6 +385,23 @@ alias gobrownnew="ssh -i ~/.ssh/mybrown_rsa -t ymohamm1@ssh.cs.brown.edu host=an
 # kitty
 alias kitty='kitty --single-instance --start-as=maximized --listen-on=unix:/tmp/mykitty --single-instance '
 
+# When running inside kitty, route ssh through `kitten ssh` so xterm-kitty
+# terminfo and shell integration are available on the remote side. Falls back
+# to plain ssh outside kitty, and bypasses the wrapper for port-forward-only
+# invocations (-N, -W, -L, -R, -D, -J) which kitten ssh does not support.
+ssh() {
+	if [[ "$TERM_PROGRAM" != "kitty" && -z "$KITTY_WINDOW_ID" ]] || ! command -v kitten >/dev/null 2>&1; then
+		command ssh "$@"
+		return
+	fi
+	for arg in "$@"; do
+		case "$arg" in
+			-N|-W|-L|-R|-D|-J) command ssh "$@"; return ;;
+		esac
+	done
+	kitten ssh "$@"
+}
+
 # kill tmux session
 alias tkill="for s in \$(tmux list-sessions | awk '{print \$1}' | rg ':' -r '' | fzf); do tmux kill-session -t \$s; done;"
 

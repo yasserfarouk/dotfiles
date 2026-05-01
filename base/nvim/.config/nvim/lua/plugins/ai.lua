@@ -180,7 +180,48 @@ return {
 				},
 			}
 		end,
-		keys = {
+		keys = (function()
+			-- Multi-line scratchpad shared by <leader>a. and <leader>a<CR>
+			local function ai_scratchpad()
+				local buf = vim.api.nvim_create_buf(false, true)
+				vim.api.nvim_set_option_value("buftype", "nofile", { buf = buf })
+				vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = buf })
+				vim.api.nvim_set_option_value("filetype", "markdown", { buf = buf })
+
+				vim.cmd("botright split")
+				local win = vim.api.nvim_get_current_win()
+				vim.api.nvim_win_set_buf(win, buf)
+				vim.api.nvim_win_set_height(win, 15)
+
+				vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
+					"<!-- AI Scratchpad: <leader><CR> or :w to send, :q to cancel -->",
+					"",
+				})
+				vim.api.nvim_win_set_cursor(win, { 2, 0 })
+				vim.cmd("startinsert")
+
+				local function send_and_close()
+					local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+					local content_lines = {}
+					for _, line in ipairs(lines) do
+						if not line:match("^<!%-%-") then
+							table.insert(content_lines, line)
+						end
+					end
+					local content = table.concat(content_lines, "\n"):gsub("^%s+", ""):gsub("%s+$", "")
+					if content ~= "" then
+						require("sidekick.cli").send({ msg = content, submit = true })
+					end
+					vim.api.nvim_win_close(win, true)
+				end
+
+				vim.keymap.set("n", "<leader><CR>", send_and_close, { buffer = buf, nowait = true })
+				vim.keymap.set("n", "<CR><CR>",     send_and_close, { buffer = buf, nowait = true })
+				vim.api.nvim_buf_create_user_command(buf, "W", send_and_close, {})
+				vim.api.nvim_create_autocmd("BufWriteCmd", { buffer = buf, callback = send_and_close })
+			end
+
+			return {
 			-- Tool management
 			{ "<leader>ac", function() require("sidekick.cli").toggle({ name = "claude",   focus = true }) end,                     desc = "Toggle Claude Code" },
 			{ "<leader>ao", function() require("sidekick.cli").toggle({ name = "opencode", focus = true }) end,                     desc = "Toggle OpenCode (sidekick)" },
@@ -215,6 +256,10 @@ return {
 				end)
 			end, desc = "AI: ask (free input)" },
 
+			-- Multi-line scratchpad — write freely, <leader><CR> or :w sends to active AI CLI
+			{ "<leader>a.",    ai_scratchpad, desc = "AI: scratchpad (multi-line)" },
+			{ "<leader>a<CR>", ai_scratchpad, desc = "AI: scratchpad (multi-line)" },
+
 			-- Quick action prompts — send + auto-submit immediately
 			{ "<leader>ae", function() require("sidekick.cli").send({ msg = "Explain {this}",                                        submit = true }) end, mode = { "n", "x" }, desc = "AI: explain" },
 			{ "<leader>aR", function() require("sidekick.cli").send({ msg = "Review {file} for any issues or improvements",          submit = true }) end,                      desc = "AI: review file" },
@@ -223,7 +268,8 @@ return {
 			{ "<leader>ai", function() require("sidekick.cli").send({ msg = "Implement {this}",                                      submit = true }) end, mode = { "n", "x" }, desc = "AI: implement" },
 			{ "<leader>aO", function() require("sidekick.cli").send({ msg = "Optimize {this} for performance and readability",       submit = true }) end, mode = { "n", "x" }, desc = "AI: optimize" },
 			{ "<leader>aG", function() require("sidekick.cli").send({ msg = "Add documentation comments to {this}",                 submit = true }) end, mode = { "n", "x" }, desc = "AI: document" },
-		},
+		}
+		end)(),
 	},
 
 	-- GitHub Copilot for inline ghost text completions

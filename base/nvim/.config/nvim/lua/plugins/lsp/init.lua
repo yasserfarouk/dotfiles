@@ -17,6 +17,7 @@ return {
 			{ "j-hui/fidget.nvim", config = true },
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
+			"b0o/schemastore.nvim", -- JSON/YAML schema catalog
 		},
 		opts = {
 			servers = {
@@ -32,11 +33,63 @@ return {
 				ts_ls = {},
 				phpactor = {},
 				-- Other servers
-				texlab = {},
+				texlab = {
+					settings = {
+						texlab = {
+							build = {
+								onSave = false,
+							},
+							chktex = {
+								onOpenAndSave = true,
+								onEdit = false,
+							},
+						},
+					},
+				},
 				dockerls = {},
+				-- YAML LSP (schema-aware via SchemaStore)
+				yamlls = {
+					settings = {
+						yaml = {
+							keyOrdering = false,
+							format = { enable = false }, -- use prettier via conform
+							validate = true,
+							schemaStore = {
+								-- disable built-in store; use schemastore.nvim instead
+								enable = false,
+								url = "",
+							},
+						},
+					},
+				},
+				-- JSON LSP (schema-aware via SchemaStore)
+				jsonls = {
+					settings = {
+						json = {
+							format = { enable = false }, -- use prettier via conform
+							validate = { enable = true },
+						},
+					},
+				},
+				-- Markdown LSP
+				marksman = {},
 			},
 		},
 		config = function(plugin, opts)
+			-- Inject schemastore catalogs at config time (lazy-loaded)
+			local ok, schemastore = pcall(require, "schemastore")
+			if ok then
+				if opts.servers.jsonls then
+					opts.servers.jsonls.settings = opts.servers.jsonls.settings or {}
+					opts.servers.jsonls.settings.json = opts.servers.jsonls.settings.json or {}
+					opts.servers.jsonls.settings.json.schemas = schemastore.json.schemas()
+				end
+				if opts.servers.yamlls then
+					opts.servers.yamlls.settings = opts.servers.yamlls.settings or {}
+					opts.servers.yamlls.settings.yaml = opts.servers.yamlls.settings.yaml or {}
+					opts.servers.yamlls.settings.yaml.schemas = schemastore.yaml.schemas()
+				end
+			end
 			require("plugins.lsp.servers").setup(plugin, opts)
 		end,
 	},
@@ -48,11 +101,22 @@ return {
 			ensure_installed = {
 				"stylua",      -- Lua formatter
 				"ruff",        -- Python linter/formatter
-				"prettierd",   -- JavaScript/TypeScript formatter (fast)
-				"prettier",    -- JavaScript/TypeScript formatter (fallback)
+				"prettierd",   -- JS/TS/YAML/JSON/Markdown formatter (fast)
+				"prettier",    -- Fallback formatter
 				"debugpy",
 				"intelephense",
 				"codelldb",
+				-- YAML
+				"yaml-language-server",
+				"yamllint",
+				-- JSON
+				"json-lsp",
+				"jsonlint",
+				-- Markdown
+				"marksman",
+				"markdownlint-cli2",
+				-- LaTeX
+				"latexindent",
 			},
 		},
 		config = function(_, opts)

@@ -14,7 +14,8 @@ return {
 			local ensure_installed = {
 				"cpp", "python", "lua", "java", "javascript", "php", "latex",
 				"typescript", "html", "css", "json", "yaml", "toml", "bash",
-				"markdown", "markdown_inline", "vim", "vimdoc", "query",
+				"markdown", "markdown_inline", "vim", "vimdoc", "query", "xml",
+				"rust", "rst",
 			}
 
 			-- Install missing parsers using the new API

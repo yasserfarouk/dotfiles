@@ -8,4 +8,8 @@ base/vifm/.config/vifm/vifminfo
 base/nvim/.config/nvim/plugin/packer_compiled.lua
 base/nvim/.config/nvim/plugin/packer_compiled.vim
 */vifminfo
+**/vifminfo.json*
+base/programs/bin/bw
+base/yazi/.config/yazi/bookmark
+.claude/settings.local.json
 
