@@ -1,11 +1,12 @@
-const config: Finicky.Config = {
+// ~/.finicky.js
+export default {
   defaultBrowser: "Safari",
-  rules: [
+  handlers: [
     {
       match: [
         "scholar.google.com/*",
-        "localhost:*",
         "localhost",
+        "localhost:*/*",
       ],
       browser: "Microsoft Edge",
     },
