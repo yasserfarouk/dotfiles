@@ -49,7 +49,5 @@
 ; 	helper = store
 [init]
 	defaultBranch = main
-[commit]
-	template = /Users/yasser/.stCommitMsg
 [push]
 	followTags = true
