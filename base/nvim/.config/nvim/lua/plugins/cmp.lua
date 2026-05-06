@@ -17,8 +17,12 @@ return {
 			"molleweide/LuaSnip-snippets.nvim", -- Additional high-quality snippets
 		},
 		config = function()
+			-- Bridge tex/latex filetype mismatch: friendly-snippets registers under "latex"
+			-- but Neovim sets filetype "tex" for .tex files
 			local ls = require("luasnip")
-			
+			ls.filetype_extend("tex", { "latex" })
+			ls.filetype_extend("latex", { "tex" })
+
 			-- Load friendly-snippets (VSCode-style snippets)
 			require("luasnip.loaders.from_vscode").lazy_load()
 			

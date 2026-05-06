@@ -118,19 +118,6 @@ let g:tex_superscripts = "[0-9a-zA-W.,:;+-<>/()=]"
 let g:tex_subscripts = "[0-9aehijklmnoprstuvx,+-/().]"
 
 " let g:vimtex_compiler_latexmk_engines = { '_': '-xelatex' }
-" to enable back sync. See https://jdhao.github.io/2021/02/20/inverse_search_setup_neovim_vimtex/
-function! SetServerName()
-  if has('win32')
-    let nvim_server_file = $TEMP . "/curnvimserver.txt"
-  else
-    let nvim_server_file = "/tmp/curnvimserver.txt"
-  endif
-  let cmd = printf("echo %s > %s", v:servername, nvim_server_file)
-  call system(cmd)
-endfunction
-
-call SetServerName()
-
 augroup tex_settings
     autocmd!
 	autocmd BufEnter *.tex set conceallevel=0
