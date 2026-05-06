@@ -15,6 +15,7 @@ return {
 		dependencies = {
 			"rafamadriz/friendly-snippets", -- Collection of snippets for various languages
 			"molleweide/LuaSnip-snippets.nvim", -- Additional high-quality snippets
+			"honza/vim-snippets", -- Comprehensive SnipMate snippets (includes Beamer: frame, block, col2, it...)
 		},
 		config = function()
 			-- Bridge tex/latex filetype mismatch: friendly-snippets registers under "latex"
@@ -25,6 +26,9 @@ return {
 
 			-- Load friendly-snippets (VSCode-style snippets)
 			require("luasnip.loaders.from_vscode").lazy_load()
+
+			-- Load honza/vim-snippets (SnipMate format — includes Beamer: frame, block, col2, it...)
+			require("luasnip.loaders.from_snipmate").lazy_load()
 			
 			-- Load LuaSnip-snippets.nvim (additional snippets)
 			require("luasnip.loaders.from_vscode").lazy_load({ 
