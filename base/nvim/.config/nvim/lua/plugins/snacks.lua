@@ -54,7 +54,7 @@ return {
 		indent = { enabled = true },
 		image = {
 			enabled = true,
-			doc = { inline = false },
+			doc = { inline = true },
 			-- Other image-related options from snacks.nvim documentation
 			max_width = 100, -- Example max width in columns
 			max_height_percent = 0.6, -- Example max height as 60% of window height
