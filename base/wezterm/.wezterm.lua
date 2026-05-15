@@ -10,7 +10,6 @@ wezterm.on("gui-attached", function(domain)
 		if window:get_workspace() == workspace then
 			window:set_position(0, 0)
 			window:set_inner_size(wezterm.screen.get_width(), wezterm.screen.get_height())
-			-- window:gui_window():maximize()
 		end
 	end
 end)
@@ -108,67 +107,92 @@ config.front_end = "WebGpu"
 config.window_close_confirmation = "NeverPrompt"
 
 -- =============================================================================
--- KEYBINDINGS (Windows equivalents for Kitty's Cmd-based Mac shortcuts)
--- On Windows, we use Ctrl+Shift as the leader (similar to kitty_mod = cmd on Mac)
+-- KEYBINDINGS
+-- On Windows/Linux, CTRL|SHIFT acts as kitty_mod (which is cmd on macOS).
+-- Mapping reference: kitty_mod → CTRL|SHIFT, cmd → CTRL|SHIFT
 -- =============================================================================
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
 
 config.keys = {
-	-- Splits (matching Kitty: cmd+shift+- for hsplit, cmd+\ for vsplit)
+	-- ---------------------------------------------------------------------------
+	-- CLIPBOARD (matching Kitty: kitty_mod+c copy, kitty_mod+v paste)
+	-- ---------------------------------------------------------------------------
+	{ key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
+	{ key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
+
+	-- ---------------------------------------------------------------------------
+	-- SPLITS (matching Kitty: kitty_mod+shift+- hsplit, kitty_mod+\ vsplit)
+	-- ---------------------------------------------------------------------------
 	{ key = "_", mods = "CTRL|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
 	{ key = "\\", mods = "CTRL", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
 
-	-- New tab (matching Kitty: cmd+shift+= for new tab)
+	-- ---------------------------------------------------------------------------
+	-- TABS (matching Kitty: kitty_mod+t / kitty_mod+n new tab, kitty_mod+enter new window)
+	-- ---------------------------------------------------------------------------
 	{ key = "+", mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
+	{ key = "n", mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
+	{ key = "Enter", mods = "CTRL|SHIFT", action = act.SpawnWindow },
 
-	-- Close pane (matching Kitty: cmd+x)
+	-- Close tab (matching Kitty: kitty_mod+alt+x close_tab)
+	{ key = "x", mods = "CTRL|ALT", action = act.CloseCurrentTab({ confirm = false }) },
+
+	-- Tab navigation (matching Kitty: cmd+, / cmd+. previous/next tab)
+	{ key = ",", mods = "CTRL", action = act.ActivateTabRelative(-1) },
+	{ key = ".", mods = "CTRL", action = act.ActivateTabRelative(1) },
+	-- ctrl+tab / ctrl+shift+tab (matching Kitty: ctrl+tab next_tab)
+	{ key = "Tab", mods = "CTRL", action = act.ActivateTabRelative(1) },
+	{ key = "Tab", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
+
+	-- Tab switch by number: ALT+1-9 (standard Windows/Linux convention)
+	{ key = "1", mods = "ALT", action = act.ActivateTab(0) },
+	{ key = "2", mods = "ALT", action = act.ActivateTab(1) },
+	{ key = "3", mods = "ALT", action = act.ActivateTab(2) },
+	{ key = "4", mods = "ALT", action = act.ActivateTab(3) },
+	{ key = "5", mods = "ALT", action = act.ActivateTab(4) },
+	{ key = "6", mods = "ALT", action = act.ActivateTab(5) },
+	{ key = "7", mods = "ALT", action = act.ActivateTab(6) },
+	{ key = "8", mods = "ALT", action = act.ActivateTab(7) },
+	{ key = "9", mods = "ALT", action = act.ActivateTab(8) },
+
+	-- Rename tab title (matching Kitty: kitty_mod+shift+t set_tab_title)
+	{
+		key = "t",
+		mods = "CTRL|SHIFT",
+		action = act.PromptInputLine({
+			description = "Enter new tab title:",
+			action = wezterm.action_callback(function(window, pane, line)
+				if line then
+					window:active_tab():set_title(line)
+				end
+			end),
+		}),
+	},
+
+	-- Rename window/pane title (matching Kitty: kitty_mod+alt+t set_window_title)
+	{
+		key = "t",
+		mods = "CTRL|ALT",
+		action = act.PromptInputLine({
+			description = "Enter new pane title:",
+			action = wezterm.action_callback(function(window, pane, line)
+				if line then
+					pane:set_title(line)
+				end
+			end),
+		}),
+	},
+
+	-- ---------------------------------------------------------------------------
+	-- PANE MANAGEMENT (matching Kitty window management)
+	-- ---------------------------------------------------------------------------
+	-- Close pane (matching Kitty: kitty_mod+x close_window)
 	{ key = "x", mods = "CTRL|SHIFT", action = act.CloseCurrentPane({ confirm = false }) },
 
-	-- Navigate panes (matching Kitty: cmd+] and cmd+[ for next/prev window)
+	-- Navigate panes (matching Kitty: kitty_mod+] next_window, kitty_mod+[ previous_window)
 	{ key = "]", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Next") },
 	{ key = "[", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Prev") },
 
-	-- Tab navigation (matching Kitty: cmd+, and cmd+. for prev/next tab)
-	{ key = ",", mods = "CTRL", action = act.ActivateTabRelative(-1) },
-	{ key = ".", mods = "CTRL", action = act.ActivateTabRelative(1) },
-
-	-- New tab (matching Kitty: cmd+n for new_tab_with_cwd)
-	{ key = "n", mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
-
-	-- New window (matching Kitty: cmd+enter for new_window_with_cwd)
-	{ key = "Enter", mods = "CTRL|SHIFT", action = act.SpawnWindow },
-
-	-- Close tab (matching Kitty: cmd+alt+x for close_tab)
-	{ key = "x", mods = "CTRL|ALT", action = act.CloseCurrentTab({ confirm = false }) },
-
-	-- Scrolling (matching Kitty: cmd+k/j for scroll up/down)
-	{ key = "k", mods = "CTRL|SHIFT", action = act.ScrollByLine(-1) },
-	{ key = "j", mods = "CTRL|SHIFT", action = act.ScrollByLine(1) },
-	{ key = "UpArrow", mods = "CTRL|SHIFT", action = act.ScrollByLine(-1) },
-	{ key = "DownArrow", mods = "CTRL|SHIFT", action = act.ScrollByLine(1) },
-
-	-- Show scrollback (matching Kitty: cmd+h for show_scrollback)
-	{ key = "h", mods = "CTRL|SHIFT", action = act.ActivateCopyMode },
-
-	-- Font size (matching Kitty: cmd+equal/minus/0)
-	{ key = "=", mods = "CTRL", action = act.IncreaseFontSize },
-	{ key = "-", mods = "CTRL", action = act.DecreaseFontSize },
-	{ key = "0", mods = "CTRL", action = act.ResetFontSize },
-
-	-- Fullscreen (matching Kitty: cmd+shift+f for toggle_fullscreen)
-	{ key = "f", mods = "CTRL|SHIFT|ALT", action = act.ToggleFullScreen },
-
-	-- Pane resizing (matching Kitty: alt+arrow keys)
-	{ key = "LeftArrow", mods = "ALT", action = act.AdjustPaneSize({ "Left", 1 }) },
-	{ key = "RightArrow", mods = "ALT", action = act.AdjustPaneSize({ "Right", 1 }) },
-	{ key = "UpArrow", mods = "ALT", action = act.AdjustPaneSize({ "Up", 1 }) },
-	{ key = "DownArrow", mods = "ALT", action = act.AdjustPaneSize({ "Down", 1 }) },
-
-	-- Move panes (matching Kitty: cmd+alt+arrow for move_window)
-	{ key = "LeftArrow", mods = "CTRL|ALT", action = act.RotatePanes("CounterClockwise") },
-	{ key = "RightArrow", mods = "CTRL|ALT", action = act.RotatePanes("Clockwise") },
-
-	-- Pane selection by number (matching Kitty: cmd+1-9 for window selection)
+	-- Select pane by number (matching Kitty: kitty_mod+1-9 first/second.../ninth_window)
 	{ key = "1", mods = "CTRL|SHIFT", action = act.ActivatePaneByIndex(0) },
 	{ key = "2", mods = "CTRL|SHIFT", action = act.ActivatePaneByIndex(1) },
 	{ key = "3", mods = "CTRL|SHIFT", action = act.ActivatePaneByIndex(2) },
@@ -180,13 +204,96 @@ config.keys = {
 	{ key = "9", mods = "CTRL|SHIFT", action = act.ActivatePaneByIndex(8) },
 	{ key = "0", mods = "CTRL|SHIFT", action = act.ActivatePaneByIndex(9) },
 
-	-- Clear terminal (matching Kitty: cmd+delete for clear_terminal reset)
+	-- Move pane forward/backward in stack (matching Kitty: kitty_mod+f/b move_window_forward/backward)
+	{ key = "f", mods = "CTRL|SHIFT", action = act.RotatePanes("Clockwise") },
+	{ key = "b", mods = "CTRL|SHIFT", action = act.RotatePanes("CounterClockwise") },
+
+	-- Move panes directionally (matching Kitty: kitty_mod+alt+arrow move_window direction)
+	{ key = "LeftArrow", mods = "CTRL|ALT", action = act.RotatePanes("CounterClockwise") },
+	{ key = "RightArrow", mods = "CTRL|ALT", action = act.RotatePanes("Clockwise") },
+
+	-- Detach pane to new tab (matching Kitty: kitty_mod+d detach_window new-tab)
+	{
+		key = "d",
+		mods = "CTRL|SHIFT",
+		action = wezterm.action_callback(function(_, pane)
+			pane:move_to_new_tab()
+		end),
+	},
+
+	-- Toggle pane zoom / full-screen pane (matching Kitty: kitty_mod+f goto_layout stack)
+	{ key = "z", mods = "CTRL|SHIFT", action = act.TogglePaneZoomState },
+
+	-- ---------------------------------------------------------------------------
+	-- SCROLLING (matching Kitty: kitty_mod+k/j scroll_line_up/down)
+	-- ---------------------------------------------------------------------------
+	{ key = "k", mods = "CTRL|SHIFT", action = act.ScrollByLine(-1) },
+	{ key = "j", mods = "CTRL|SHIFT", action = act.ScrollByLine(1) },
+	{ key = "UpArrow", mods = "CTRL|SHIFT", action = act.ScrollByLine(-1) },
+	{ key = "DownArrow", mods = "CTRL|SHIFT", action = act.ScrollByLine(1) },
+	{ key = "PageUp", mods = "CTRL|SHIFT", action = act.ScrollByPage(-1) },
+	{ key = "PageDown", mods = "CTRL|SHIFT", action = act.ScrollByPage(1) },
+	{ key = "Home", mods = "CTRL|SHIFT", action = act.ScrollToTop },
+	{ key = "End", mods = "CTRL|SHIFT", action = act.ScrollToBottom },
+
+	-- Show scrollback / copy mode (matching Kitty: kitty_mod+h show_scrollback)
+	{ key = "h", mods = "CTRL|SHIFT", action = act.ActivateCopyMode },
+
+	-- ---------------------------------------------------------------------------
+	-- FONT SIZE (matching Kitty: cmd+equal/minus/0)
+	-- ---------------------------------------------------------------------------
+	{ key = "=", mods = "CTRL", action = act.IncreaseFontSize },
+	{ key = "-", mods = "CTRL", action = act.DecreaseFontSize },
+	{ key = "0", mods = "CTRL", action = act.ResetFontSize },
+
+	-- ---------------------------------------------------------------------------
+	-- WINDOW DECORATIONS
+	-- ---------------------------------------------------------------------------
+	-- Fullscreen (matching Kitty: kitty_mod+f11 toggle_fullscreen)
+	{ key = "F11", mods = "CTRL|SHIFT", action = act.ToggleFullScreen },
+	{ key = "f", mods = "CTRL|SHIFT|ALT", action = act.ToggleFullScreen },
+
+	-- Pane resizing (matching Kitty: alt+shift+arrow resize_window wider/taller/etc.)
+	{ key = "LeftArrow", mods = "ALT|SHIFT", action = act.AdjustPaneSize({ "Left", 5 }) },
+	{ key = "RightArrow", mods = "ALT|SHIFT", action = act.AdjustPaneSize({ "Right", 5 }) },
+	{ key = "UpArrow", mods = "ALT|SHIFT", action = act.AdjustPaneSize({ "Up", 5 }) },
+	{ key = "DownArrow", mods = "ALT|SHIFT", action = act.AdjustPaneSize({ "Down", 5 }) },
+	-- Fine-grained resize with alt+arrow (1 cell at a time)
+	{ key = "LeftArrow", mods = "ALT", action = act.AdjustPaneSize({ "Left", 1 }) },
+	{ key = "RightArrow", mods = "ALT", action = act.AdjustPaneSize({ "Right", 1 }) },
+	{ key = "UpArrow", mods = "ALT", action = act.AdjustPaneSize({ "Up", 1 }) },
+	{ key = "DownArrow", mods = "ALT", action = act.AdjustPaneSize({ "Down", 1 }) },
+
+	-- ---------------------------------------------------------------------------
+	-- HINTS / QUICK SELECT (matching Kitty: kitty_mod+shift+e kitten hints)
+	-- ---------------------------------------------------------------------------
+	{
+		key = "e",
+		mods = "CTRL|SHIFT",
+		action = act.QuickSelectArgs({
+			label = "open url",
+			patterns = {
+				"https?://[\\w@:%./+~#?=&\\-]+",
+			},
+			action = wezterm.action_callback(function(window, pane)
+				local url = window:get_selection_text_for_pane(pane)
+				if url then
+					wezterm.open_with(url)
+				end
+			end),
+		}),
+	},
+
+	-- ---------------------------------------------------------------------------
+	-- MISC
+	-- ---------------------------------------------------------------------------
+	-- Clear terminal scrollback (matching Kitty: kitty_mod+delete clear_terminal reset)
 	{ key = "Delete", mods = "CTRL|SHIFT", action = act.ClearScrollback("ScrollbackAndViewport") },
 
-	-- Unicode input (matching Kitty: cmd+u for unicode_input)
+	-- Unicode input (matching Kitty: kitty_mod+u unicode_input)
 	{ key = "u", mods = "CTRL|SHIFT", action = act.CharSelect },
 
-	-- Launch lazygit (matching Kitty: cmd+g)
+	-- Launch lazygit in new tab (matching Kitty: cmd+g / kitty_mod+g)
 	{
 		key = "g",
 		mods = "CTRL|SHIFT",
@@ -195,13 +302,13 @@ config.keys = {
 		}),
 	},
 
-	-- Ctrl+Enter for neovim (matching Kitty: send_text all \x1b[13;5u)
+	-- Ctrl+Enter for neovim CSI-u sequence (matching Kitty: send_text all \x1b[13;5u)
 	{ key = "Enter", mods = "CTRL", action = act.SendString("\x1b[13;5u") },
 
-	-- Ctrl+; for neovim copilot (matching Kitty: send_text all \x1b[59;5u)
+	-- Ctrl+; for neovim copilot accept (matching Kitty: send_text all \x1b[59;5u)
 	{ key = ";", mods = "CTRL", action = act.SendString("\x1b[59;5u") },
 
-	-- Pass through ctrl+j/k/h/l for neovim navigation (matching Kitty: no_op)
+	-- Pass through ctrl+j/k/h/l for neovim navigation (matching Kitty: no_op passthrough)
 	{ key = "j", mods = "CTRL", action = act.SendKey({ key = "j", mods = "CTRL" }) },
 	{ key = "k", mods = "CTRL", action = act.SendKey({ key = "k", mods = "CTRL" }) },
 	{ key = "h", mods = "CTRL", action = act.SendKey({ key = "h", mods = "CTRL" }) },

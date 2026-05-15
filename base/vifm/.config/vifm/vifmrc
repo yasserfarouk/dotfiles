@@ -87,12 +87,15 @@ set smartcase
 
 set nohlsearch
 
+" Show dotfiles by default (matching yazi: show_hidden = true)
+set dotfiles
+
 " Use increment searching (search while typing)
 set incsearch
 
 " Try to leave some space from cursor to upper/lower border in lists
 
-set scrolloff=4
+set scrolloff=5
 
 " Don't do too many requests to slow file systems
 
@@ -401,7 +404,7 @@ nnoremap ; :
 vnoremap ; :
 
 "Open selected images in gimp
-nnoremap gp :!gimp %f & <cr>
+" nnoremap gp :!gimp %f & <cr>
 
 " Start shell in current directory
 nnoremap x :shell<cr>
@@ -413,8 +416,9 @@ nnoremap s :sort<cr>
 nnoremap w :if layoutis('only') | vsplit | endif | view!<cr>
 vnoremap w :view<cr>gv
 
-" Toggle miller-view (like ranger)
-set milleroptions=lsize:1,csize:2
+" Toggle miller-view (like yazi's 3-column layout: parent | files | preview)
+" Ratio approximates yazi's 1:4:3
+set milleroptions=lsize:1,csize:4,rsize:3
 nnoremap <space>m :set millerview!<cr>
 vnoremap <space>m :set millerview!<cr>gv
 
@@ -508,3 +512,71 @@ nnoremap <space>/ :FZFfind<cr>
 "
 " let $VIFM_SERVER_NAME = v:servername
 nnoremap <silent> <C-o> :!kitten icat --clear --silent<cr>:wincmd o<cr>
+
+" ==============================================================================
+" YAZI-STYLE KEYBINDINGS
+" Goal: make vifm navigation muscle-memory compatible with yazi
+" ==============================================================================
+
+" Toggle hidden/dotfiles (yazi: .)
+nnoremap . :set dotfiles!<cr>
+
+" Rename selected file, cursor before extension (yazi: r rename --cursor=before_ext)
+nnoremap r cw
+
+" Create a new file (yazi: a create; use trailing / for directory)
+nnoremap a :touch<space>
+
+" Permanent delete without trash (yazi: D remove --permanently)
+nnoremap D :delete!<cr>
+
+" Filter files by name (yazi: f filter --smart)
+nnoremap f :filter<space>
+
+" FZF jump - search and cd (yazi: Z plugin fzf / z plugin zoxide)
+nnoremap z :FZFfind<cr>
+nnoremap Z :FZFfind<cr>
+
+" Toggle max-preview / restore split (yazi: T plugin max-preview)
+nnoremap T :if layoutis('only') | vsplit | endif | view!<cr>
+
+" ---------------------------------------------------------------------------
+" Copy shortcuts (yazi: cc=copy path, cd=copy dirname, cf=copy filename, cn=copy stem)
+" ---------------------------------------------------------------------------
+" Note: overrides the rename-clear shortcut (cc cw<c-u>); use I / A / cw instead
+nnoremap cc :!printf %c:p | pbcopy<cr>
+nnoremap cd :!printf %d | pbcopy<cr>
+nnoremap cf :!printf %c | pbcopy<cr>
+nnoremap cn :!printf %c:r | pbcopy<cr>
+
+" ---------------------------------------------------------------------------
+" Sort shortcuts (yazi: ,X prefix)
+" ---------------------------------------------------------------------------
+nnoremap ,m :sort time<cr>
+nnoremap ,M :sort -time<cr>
+nnoremap ,a :sort name<cr>
+nnoremap ,A :sort -name<cr>
+nnoremap ,s :sort size<cr>
+nnoremap ,S :sort -size<cr>
+nnoremap ,e :sort ext<cr>
+nnoremap ,E :sort -ext<cr>
+nnoremap ,r :sort rand<cr>
+
+" ---------------------------------------------------------------------------
+" Goto shortcuts (yazi: g prefix for cd shortcuts)
+" ---------------------------------------------------------------------------
+" Go to git root (yazi: gr cd --git-root)
+command! GitRoot cd `git rev-parse --show-toplevel 2>/dev/null`
+nnoremap gr :GitRoot<cr>
+
+" Directory bookmarks via g prefix (mirrors yazi keymap.toml goto section)
+nnoremap gh :cd ~<cr>
+nnoremap gC :cd ~/.config<cr>
+nnoremap gd :cd ~/Downloads<cr>
+nnoremap gD :cd ~/Desktop<cr>
+nnoremap gc :cd ~/code<cr>
+nnoremap gp :cd ~/code/projects<cr>
+nnoremap gP :cd ~/code/papers<cr>
+nnoremap gu :cd ~/code/papers/current<cr>
+nnoremap gl :cd ~/code/presentations<cr>
+
