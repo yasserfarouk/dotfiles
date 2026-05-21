@@ -82,3 +82,4 @@ bindkey -e
 
 # prevents .zshrc from sourcing this file again
 export ZSHENVCALLED=1
+. "$HOME/.cargo/env"

@@ -6,7 +6,9 @@
 [ -f ~/.exports ] && source ~/.exports
 [ -f ~/.aliases ] && source ~/.aliases
 [ -f ~/.zfolder/z.sh ] && source ~/.zfolder/z.sh
-[ -f $HOME/fzf.bash ] && source $HOME/.fzf.bash
+[ -f ~/fzf.bash ] && source ~/.fzf.bash
+[ -f ~/.bashrc.local ] && source ~/.bashrc.local
+[ -f ~/.exports.local ] && source ~/.exports.local
 
 # NVM (Node Version Manager)
 export NVM_DIR="$HOME/.nvm"
@@ -35,3 +37,4 @@ fi
 [ -f ~/.config/broot/launcher/bash/br ] && source ~/.config/broot/launcher/bash/br
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+. "$HOME/.cargo/env"

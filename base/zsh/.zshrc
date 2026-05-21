@@ -7,6 +7,8 @@
 [ -f ~/.zfolder/z.sh ] && source ~/.zfolder/z.sh
 [ -f ~/.exports ] && source ~/.exports
 [ -f ~/.keys ] && source ~/.keys
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
+[ -f ~/.exports.local ] && source ~/.exports.local
 
 if ! [ -z $ZPROFILE_EXPORTED ]; then
 	[ -f  ~/.zprofile ] && source ~/.zprofile
@@ -163,3 +165,6 @@ fi
 # Removed duplicate compinit call
 export PATH="$HOME/.config/herd-lite/bin:$PATH"
 export PHP_INI_SCAN_DIR="$HOME/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
+
+# opencode
+export PATH=/home/yasser/.opencode/bin:$PATH
