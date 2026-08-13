@@ -197,3 +197,37 @@ mdpdf() {
         -V toccolor=blue \
         -o "$output"
 }
+
+# Python TLS: trust the macOS System keychain, not just certifi
+#
+# The corporate root CA on this machine lives in the macOS System keychain, and
+# Python ships its own trust store, so Python could not verify ANY certificate
+# ("CERTIFICATE_VERIFY_FAILED: unable to get local issuer certificate") while
+# curl worked fine. That is what broke every live-LLM path -- and it surfaces
+# unhelpfully: litellm reports it as a bare "InternalServerError: Connection
+# error", with nothing about certificates in the message.
+#
+# The bundle is the OS's own public roots (/etc/ssl/cert.pem) plus the System
+# keychain's certs. Deliberately NOT SystemRootCertificates.keychain: one cert
+# in it has Basic Constraints not marked critical, and OpenSSL then rejects the
+# whole bundle ("Basic Constraints of CA cert not marked critical").
+#
+# Built on first use and cached. To refresh after a corporate root rotates:
+#   rm ~/.config/ca/macos-system-roots.pem
+if [ "$(uname -s)" = "Darwin" ]; then
+  MACOS_CA_BUNDLE="$HOME/.config/ca/macos-system-roots.pem"
+  if [ ! -s "$MACOS_CA_BUNDLE" ] && [ -f /etc/ssl/cert.pem ] && command -v security >/dev/null 2>&1; then
+    mkdir -p "$(dirname "$MACOS_CA_BUNDLE")"
+    # Write via a temp file and only publish a complete bundle: a partial one
+    # (public roots missing) would break TLS harder than the default store.
+    if { cat /etc/ssl/cert.pem && security find-certificate -a -p /Library/Keychains/System.keychain; } > "$MACOS_CA_BUNDLE.tmp" 2>/dev/null; then
+      mv "$MACOS_CA_BUNDLE.tmp" "$MACOS_CA_BUNDLE"
+    else
+      rm -f "$MACOS_CA_BUNDLE.tmp"
+    fi
+  fi
+  if [ -s "$MACOS_CA_BUNDLE" ]; then
+    export SSL_CERT_FILE="$MACOS_CA_BUNDLE"
+    export REQUESTS_CA_BUNDLE="$MACOS_CA_BUNDLE"
+  fi
+fi
