@@ -216,59 +216,193 @@ return {
 				end
 
 				vim.keymap.set("n", "<leader><CR>", send_and_close, { buffer = buf, nowait = true })
-				vim.keymap.set("n", "<CR><CR>",     send_and_close, { buffer = buf, nowait = true })
+				vim.keymap.set("n", "<CR><CR>", send_and_close, { buffer = buf, nowait = true })
 				vim.api.nvim_buf_create_user_command(buf, "W", send_and_close, {})
 				vim.api.nvim_create_autocmd("BufWriteCmd", { buffer = buf, callback = send_and_close })
 			end
 
 			return {
-			-- Tool management
-			{ "<leader>ac", function() require("sidekick.cli").toggle({ name = "claude",   focus = true }) end,                     desc = "Toggle Claude Code" },
-			{ "<leader>ao", function() require("sidekick.cli").toggle({ name = "opencode", focus = true }) end,                     desc = "Toggle OpenCode (sidekick)" },
-			{ "<leader>aa", function() require("sidekick.cli").toggle() end,                                                         desc = "Toggle last AI CLI" },
-			{ "<leader>aA", function() require("sidekick.cli").select() end,                                                         desc = "Select AI CLI tool" },
-			{ "<leader>ad", function() require("sidekick.cli").close() end,                                                          desc = "Detach AI CLI session" },
-			{ "<c-.>",      function() require("sidekick.cli").focus() end,                              mode = { "n", "t", "i", "x" }, desc = "Focus AI CLI" },
-
-			-- Context senders — append to CLI input without submitting (build up context first)
-			{ "<leader>at", function() require("sidekick.cli").send({ msg = "{this}" })      end, mode = { "n", "x" }, desc = "AI: send this (context)" },
-			{ "<leader>af", function() require("sidekick.cli").send({ msg = "{file}" })      end,                      desc = "AI: send file (context)" },
-			{ "<leader>av", function() require("sidekick.cli").send({ msg = "{selection}" }) end, mode = "x",          desc = "AI: send selection (context)" },
-
-			-- Prompt library — pick a prompt and auto-submit
-			-- submit=true sends tmux Enter / nvim terminal \r after the message
-			{ "<leader>aP", function()
-				require("sidekick.cli").prompt({
-					cb = function(_, text)
-						if text then
-							require("sidekick.cli").send({ text = text, submit = true })
-						end
+				-- Tool management
+				{
+					"<leader>ac",
+					function()
+						require("sidekick.cli").toggle({ name = "claude", focus = true })
 					end,
-				})
-			end, mode = { "n", "x" }, desc = "AI: prompt library (auto-submit)" },
+					desc = "Toggle Claude Code",
+				},
+				{
+					"<leader>ao",
+					function()
+						require("sidekick.cli").toggle({ name = "opencode", focus = true })
+					end,
+					desc = "Toggle OpenCode (sidekick)",
+				},
+				{
+					"<leader>aa",
+					function()
+						require("sidekick.cli").toggle()
+					end,
+					desc = "Toggle last AI CLI",
+				},
+				{
+					"<leader>aA",
+					function()
+						require("sidekick.cli").select()
+					end,
+					desc = "Select AI CLI tool",
+				},
+				{
+					"<leader>ad",
+					function()
+						require("sidekick.cli").close()
+					end,
+					desc = "Detach AI CLI session",
+				},
+				{
+					"<c-.>",
+					function()
+						require("sidekick.cli").focus()
+					end,
+					mode = { "n", "t", "i", "x" },
+					desc = "Focus AI CLI",
+				},
 
-			-- Free-text ask — vim.ui.input (snacks) → active CLI → auto-submit
-			{ "<leader>aq", function()
-				vim.ui.input({ prompt = "Ask AI: " }, function(input)
-					if input and input ~= "" then
-						require("sidekick.cli").send({ msg = input, submit = true })
-					end
-				end)
-			end, desc = "AI: ask (free input)" },
+				-- Context senders — append to CLI input without submitting (build up context first)
+				{
+					"<leader>at",
+					function()
+						require("sidekick.cli").send({ msg = "{this}" })
+					end,
+					mode = { "n", "x" },
+					desc = "AI: send this (context)",
+				},
+				{
+					"<leader>af",
+					function()
+						require("sidekick.cli").send({ msg = "{file}" })
+					end,
+					desc = "AI: send file (context)",
+				},
+				{
+					"<leader>av",
+					function()
+						require("sidekick.cli").send({ msg = "{selection}" })
+					end,
+					mode = "x",
+					desc = "AI: send selection (context)",
+				},
 
-			-- Multi-line scratchpad — write freely, <leader><CR> or :w sends to active AI CLI
-			{ "<leader>a.",    ai_scratchpad, desc = "AI: scratchpad (multi-line)" },
-			{ "<leader>a<CR>", ai_scratchpad, desc = "AI: scratchpad (multi-line)" },
+				-- Prompt library — pick a prompt and auto-submit
+				-- submit=true sends tmux Enter / nvim terminal \r after the message
+				{
+					"<leader>aP",
+					function()
+						require("sidekick.cli").prompt({
+							cb = function(_, text)
+								if text then
+									require("sidekick.cli").send({ text = text, submit = true })
+								end
+							end,
+						})
+					end,
+					mode = { "n", "x" },
+					desc = "AI: prompt library (auto-submit)",
+				},
 
-			-- Quick action prompts — send + auto-submit immediately
-			{ "<leader>ae", function() require("sidekick.cli").send({ msg = "Explain {this}",                                        submit = true }) end, mode = { "n", "x" }, desc = "AI: explain" },
-			{ "<leader>aR", function() require("sidekick.cli").send({ msg = "Review {file} for any issues or improvements",          submit = true }) end,                      desc = "AI: review file" },
-			{ "<leader>aX", function() require("sidekick.cli").send({ msg = "Fix the diagnostics in {file}\n{diagnostics}",          submit = true }) end,                      desc = "AI: fix diagnostics" },
-			{ "<leader>aT", function() require("sidekick.cli").send({ msg = "Write tests for {this}",                                submit = true }) end, mode = { "n", "x" }, desc = "AI: write tests" },
-			{ "<leader>ai", function() require("sidekick.cli").send({ msg = "Implement {this}",                                      submit = true }) end, mode = { "n", "x" }, desc = "AI: implement" },
-			{ "<leader>aO", function() require("sidekick.cli").send({ msg = "Optimize {this} for performance and readability",       submit = true }) end, mode = { "n", "x" }, desc = "AI: optimize" },
-			{ "<leader>aG", function() require("sidekick.cli").send({ msg = "Add documentation comments to {this}",                 submit = true }) end, mode = { "n", "x" }, desc = "AI: document" },
-		}
+				-- Free-text ask — vim.ui.input (snacks) → active CLI → auto-submit
+				{
+					"<leader>aq",
+					function()
+						vim.ui.input({ prompt = "Ask AI: " }, function(input)
+							if input and input ~= "" then
+								require("sidekick.cli").send({ msg = input, submit = true })
+							end
+						end)
+					end,
+					desc = "AI: ask (free input)",
+				},
+
+				-- Multi-line scratchpad — write freely, <leader><CR> or :w sends to active AI CLI
+				{ "<leader>a.", ai_scratchpad, desc = "AI: scratchpad (multi-line)" },
+				{ "<leader>a<CR>", ai_scratchpad, desc = "AI: scratchpad (multi-line)" },
+
+				-- Quick action prompts — send + auto-submit immediately
+				{
+					"<leader>ae",
+					function()
+						require("sidekick.cli").send({
+							msg = "Explain {this}",
+							submit = true,
+						})
+					end,
+					mode = { "n", "x" },
+					desc = "AI: explain",
+				},
+				{
+					"<leader>aR",
+					function()
+						require("sidekick.cli").send({
+							msg = "Review {file} for any issues or improvements",
+							submit = true,
+						})
+					end,
+					desc = "AI: review file",
+				},
+				{
+					"<leader>aX",
+					function()
+						require("sidekick.cli").send({
+							msg = "Fix the diagnostics in {file}\n{diagnostics}",
+							submit = true,
+						})
+					end,
+					desc = "AI: fix diagnostics",
+				},
+				{
+					"<leader>aT",
+					function()
+						require("sidekick.cli").send({
+							msg = "Write tests for {this}",
+							submit = true,
+						})
+					end,
+					mode = { "n", "x" },
+					desc = "AI: write tests",
+				},
+				{
+					"<leader>ai",
+					function()
+						require("sidekick.cli").send({
+							msg = "Implement {this}",
+							submit = true,
+						})
+					end,
+					mode = { "n", "x" },
+					desc = "AI: implement",
+				},
+				{
+					"<leader>aO",
+					function()
+						require("sidekick.cli").send({
+							msg = "Optimize {this} for performance and readability",
+							submit = true,
+						})
+					end,
+					mode = { "n", "x" },
+					desc = "AI: optimize",
+				},
+				{
+					"<leader>aG",
+					function()
+						require("sidekick.cli").send({
+							msg = "Add documentation comments to {this}",
+							submit = true,
+						})
+					end,
+					mode = { "n", "x" },
+					desc = "AI: document",
+				},
+			}
 		end)(),
 	},
 
@@ -366,15 +500,49 @@ return {
 		dependencies = { "nvim-lua/plenary.nvim" },
 		cmd = { "Ollama", "OllamaModel", "OllamaServe", "OllamaServeStop" },
 		keys = {
-			{ "<localleader>oo", ":<c-u>lua require('ollama').prompt()<cr>",                desc = "Ollama prompt",        mode = { "n", "v" } },
-			{ "<localleader>og", ":<c-u>lua require('ollama').prompt('Generate_Code')<cr>", desc = "Ollama generate code", mode = { "n", "v" } },
-			{ "<localleader>om", "<cmd>OllamaModel<cr>",                                    desc = "Ollama pick model",    mode = "n" },
-			{ "<localleader>os", "<cmd>OllamaServe<cr>",                                    desc = "Ollama serve",         mode = "n" },
-			{ "<localleader>oS", "<cmd>OllamaServeStop<cr>",                                desc = "Ollama serve stop",    mode = "n" },
+			{
+				"<localleader>oo",
+				":<c-u>lua require('ollama').prompt()<cr>",
+				desc = "Ollama prompt",
+				mode = { "n", "v" },
+			},
+			{
+				"<localleader>og",
+				":<c-u>lua require('ollama').prompt('Generate_Code')<cr>",
+				desc = "Ollama generate code",
+				mode = { "n", "v" },
+			},
+			{
+				"<localleader>om",
+				"<cmd>OllamaModel<cr>",
+				desc = "Ollama pick model",
+				mode = "n",
+			},
+			{
+				"<localleader>os",
+				"<cmd>OllamaServe<cr>",
+				desc = "Ollama serve",
+				mode = "n",
+			},
+			{
+				"<localleader>oS",
+				"<cmd>OllamaServeStop<cr>",
+				desc = "Ollama serve stop",
+				mode = "n",
+			},
 		},
 		opts = {
 			model = "deepseek-coder-v2:16b",
 			url = "http://127.0.0.1:11434",
+		},
+	},
+	-- File mention: type `@` in insert mode to fuzzy-pick a file path.
+	-- Restricted to prose-ish filetypes so it doesn't pop up in code buffers.
+	{
+		"not-manu/filemention.nvim",
+		event = "InsertEnter",
+		opts = {
+			filetypes = { "markdown", "text", "gitcommit" },
 		},
 	},
 }

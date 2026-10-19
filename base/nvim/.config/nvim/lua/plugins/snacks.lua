@@ -54,10 +54,17 @@ return {
 		indent = { enabled = true },
 		image = {
 			enabled = true,
-			doc = { inline = true },
+			doc = {
+				enabled = true,
+				inline = false,
+				float = true,
+				max_width = 80,
+				max_height = 30,
+			},
+			math = { enabled = true, latex = { font_size = "normalsize" } },
 			-- Other image-related options from snacks.nvim documentation
-			max_width = 100, -- Example max width in columns
-			max_height_percent = 0.6, -- Example max height as 60% of window height
+			max_width = 100,
+			max_height_percent = 0.6,
 			-- Add RST specific configuration here
 			filetypes = {
 				"markdown", -- Keep default ones if you use them
@@ -126,6 +133,40 @@ return {
 		{ "<leader>e", ":lua Snacks.explorer()<cr>", desc = "explorer on root" },
 		{ "<leader>E", ":lua Snacks.explorer.reveal()<cr>", desc = "explorer" },
 		{ "<leader>.", ":lua Snacks.dashboard()<cr>", desc = "dashboard" },
+		{
+			"<leader>vi",
+			function()
+				local buf = vim.api.nvim_get_current_buf()
+				local cfg = Snacks.image.config
+				cfg.doc.enabled = not cfg.doc.enabled
+				if not cfg.doc.enabled then
+					Snacks.image.doc.hover_close()
+					Snacks.image.placement.clean(buf)
+					pcall(vim.api.nvim_del_augroup_by_name, "snacks.image.doc." .. buf)
+				else
+					vim.b[buf].snacks_image_attached = false
+					Snacks.image.doc._attach(buf)
+				end
+			end,
+			desc = "toggle image preview",
+		},
+		{
+			"<leader>vI",
+			function()
+				local buf = vim.api.nvim_get_current_buf()
+				local cfg = Snacks.image.config.doc
+				-- Clean current state
+				Snacks.image.doc.hover_close()
+				Snacks.image.placement.clean(buf)
+				pcall(vim.api.nvim_del_augroup_by_name, "snacks.image.doc." .. buf)
+				-- Toggle between inline and float
+				cfg.inline = not cfg.inline
+				-- Re-attach buffer with new mode
+				vim.b[buf].snacks_image_attached = false
+				Snacks.image.doc._attach(buf)
+			end,
+			desc = "toggle inline/float preview",
+		},
 	},
 	init = function()
 		-- Setup snacks.picker keymaps

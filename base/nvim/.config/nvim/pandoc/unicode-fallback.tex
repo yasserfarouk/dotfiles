@@ -1,0 +1,104 @@
+% Unicode symbol fallback for the XeLaTeX pandoc pipeline.
+%
+% XeLaTeX does not fall back automatically: any glyph missing from the main
+% (Palatino) or mono (Menlo) font is silently dropped and shows up as an empty
+% box / U+FFFD in the PDF. The document text uses a handful of symbols that
+% those fonts lack -- circled digits (①②③…), arrows (→ ↔ ⇕…) and geometric
+% marks (◎ ○ △ ▼ ✓ …). We route just those code points to Hiragino Sans, a
+% system font on macOS that covers all of them, leaving every other character
+% (and the body typeface) untouched.
+\usepackage{fontspec}
+\usepackage{newunicodechar}
+\newfontfamily\symbolfallback{Arial Unicode MS}[Scale=MatchLowercase]
+\newcommand{\uf}[1]{{\symbolfallback #1}}
+
+% CJK support: Palatino/Menlo have no Japanese glyphs, so without this any
+% Japanese text is silently dropped from the PDF. xeCJK routes CJK code points
+% to a dedicated font while leaving Latin text in the body typeface. Fonts are
+% picked per platform: Hiragino (macOS), Noto CJK (Linux), Yu Mincho (Windows).
+\usepackage{xeCJK}
+\IfFontExistsTF{Hiragino Mincho ProN}{%
+  \setCJKmainfont{Hiragino Mincho ProN}%
+  \setCJKsansfont{Hiragino Sans}%
+  \setCJKmonofont{Hiragino Sans}%
+}{%
+  \IfFontExistsTF{Noto Serif CJK JP}{%
+    \setCJKmainfont{Noto Serif CJK JP}%
+    \setCJKsansfont{Noto Sans CJK JP}%
+    \setCJKmonofont{Noto Sans Mono CJK JP}%
+  }{%
+    \IfFontExistsTF{Yu Mincho}{%
+      \setCJKmainfont{Yu Mincho}%
+      \setCJKsansfont{Yu Gothic}%
+      \setCJKmonofont{Yu Gothic}%
+    }{}%
+  }%
+}
+
+% Enclosed alphanumerics -- circled digits
+\newunicodechar{⓪}{\uf{⓪}}
+\newunicodechar{①}{\uf{①}}
+\newunicodechar{②}{\uf{②}}
+\newunicodechar{③}{\uf{③}}
+\newunicodechar{④}{\uf{④}}
+\newunicodechar{⑤}{\uf{⑤}}
+\newunicodechar{⑥}{\uf{⑥}}
+\newunicodechar{⑦}{\uf{⑦}}
+\newunicodechar{⑧}{\uf{⑧}}
+\newunicodechar{⑨}{\uf{⑨}}
+\newunicodechar{⑩}{\uf{⑩}}
+\newunicodechar{⑪}{\uf{⑪}}
+\newunicodechar{⑫}{\uf{⑫}}
+\newunicodechar{⑬}{\uf{⑬}}
+\newunicodechar{⑭}{\uf{⑭}}
+\newunicodechar{⑮}{\uf{⑮}}
+\newunicodechar{⑯}{\uf{⑯}}
+\newunicodechar{⑰}{\uf{⑰}}
+\newunicodechar{⑱}{\uf{⑱}}
+\newunicodechar{⑲}{\uf{⑲}}
+\newunicodechar{⑳}{\uf{⑳}}
+
+% Arrows
+\newunicodechar{←}{\uf{←}}
+\newunicodechar{↑}{\uf{↑}}
+\newunicodechar{→}{\uf{→}}
+\newunicodechar{↓}{\uf{↓}}
+\newunicodechar{↔}{\uf{↔}}
+\newunicodechar{↕}{\uf{↕}}
+\newunicodechar{⇐}{\uf{⇐}}
+\newunicodechar{⇒}{\uf{⇒}}
+\newunicodechar{⇔}{\uf{⇔}}
+\newunicodechar{⇕}{\uf{⇕}}
+
+% Geometric shapes & marks
+\newunicodechar{●}{\uf{●}}
+\newunicodechar{○}{\uf{○}}
+\newunicodechar{◎}{\uf{◎}}
+\newunicodechar{◇}{\uf{◇}}
+\newunicodechar{◆}{\uf{◆}}
+\newunicodechar{△}{\uf{△}}
+\newunicodechar{▲}{\uf{▲}}
+\newunicodechar{▽}{\uf{▽}}
+\newunicodechar{▼}{\uf{▼}}
+\newunicodechar{■}{\uf{■}}
+\newunicodechar{□}{\uf{□}}
+\newunicodechar{▶}{\uf{▶}}
+\newunicodechar{◀}{\uf{◀}}
+\newunicodechar{✓}{\uf{✓}}
+\newunicodechar{✔}{\uf{✔}}
+\newunicodechar{✕}{\uf{✕}}
+\newunicodechar{✗}{\uf{✗}}
+\newunicodechar{・}{\uf{・}}
+\newunicodechar{◐}{\uf{◐}}
+\newunicodechar{◑}{\uf{◑}}
+
+% Emoji fallbacks: macOS ships no monochrome emoji font and Apple Color Emoji
+% does not work under XeLaTeX, so common status emoji are mapped to monochrome
+% equivalents instead of being silently dropped.
+\newunicodechar{✅}{\uf{✔}}
+\newunicodechar{☑}{\uf{✔}}
+\newunicodechar{❌}{\uf{✗}}
+\newunicodechar{✖}{\uf{✗}}
+\newunicodechar{⭕}{\uf{○}}
+\newunicodechar{⚠}{\uf{△}}
+\newunicodechar{️}{}% U+FE0F variation selector -- render as nothing

@@ -51,3 +51,13 @@
 	defaultBranch = main
 [push]
 	followTags = true
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[url "ssh://git@yf/autoneg/"]
+	insteadOf = ssh://git@github.com/autoneg/
+[url "ssh://git@yf/yasserfarouk/"]
+	insteadOf = ssh://git@github.com/yasserfarouk/

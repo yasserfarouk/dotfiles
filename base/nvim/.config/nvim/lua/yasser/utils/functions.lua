@@ -58,10 +58,29 @@ function M.open_github_at_line(start_line, end_line)
 		branch = vim.fn.systemlist("git -C " .. vim.fn.shellescape(git_root) .. " rev-parse HEAD")[1]
 	end
 	
-	-- Convert SSH URL to HTTPS if needed
-	local github_url = remote_url
-	github_url = github_url:gsub("^git@github%.com:", "https://github.com/")
-	github_url = github_url:gsub("%.git$", "")
+	-- Convert remote URL to HTTPS, resolving SSH config aliases
+	local remote = vim.fn.trim(remote_url)
+	local github_url
+	local ssh_host, repo_path = remote:match("^git@([^:]+):(.+)$")
+	if ssh_host then
+		-- Resolve SSH config alias (e.g. "yf", "nec") to the real HostName
+		local real_host = ssh_host
+		local ssh_config = vim.fn.systemlist("ssh -G " .. vim.fn.shellescape(ssh_host))
+		for _, line in ipairs(ssh_config) do
+			local hn = line:match("^hostname%s+(.+)$")
+			if hn then
+				real_host = vim.fn.trim(hn)
+				break
+			end
+		end
+		repo_path = repo_path:gsub("%.git$", "")
+		github_url = "https://" .. real_host .. "/" .. repo_path
+	elseif remote:match("^ssh://") then
+		github_url = remote:gsub("^ssh://[^@]+@([^/]+)/", "https://%1/"):gsub("%.git$", "")
+	else
+		-- Already HTTPS
+		github_url = remote:gsub("%.git$", "")
+	end
 	
 	-- Construct the full URL with line number or range
 	local full_url
@@ -72,19 +91,11 @@ function M.open_github_at_line(start_line, end_line)
 	end
 	
 	-- Open URL in browser
-	local open_cmd
-	if vim.fn.has("mac") == 1 then
-		open_cmd = "open"
-	elseif vim.fn.has("unix") == 1 then
-		open_cmd = "xdg-open"
-	elseif vim.fn.has("win32") == 1 then
-		open_cmd = "start"
-	else
-		vim.notify("Unsupported operating system", vim.log.levels.ERROR)
+	local _, err = vim.ui.open(full_url)
+	if err then
+		vim.notify("Failed to open URL: " .. err, vim.log.levels.ERROR)
 		return
 	end
-	
-	vim.fn.system(open_cmd .. " " .. vim.fn.shellescape(full_url))
 	vim.notify("Opening: " .. full_url, vim.log.levels.INFO)
 end
 

@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "github-copilot/claude-4.5-sonnet",
+  "model": "github-copilot/claude-opus-4.8",
   "small_model": "github-copilot/gpt-4o-mini",
   "autoupdate": false,
   "agent": {
@@ -16,7 +16,7 @@
       "max_concurrent_tasks": 1,
       "temperature": 0.1
     },
-		"docs": {
+    "docs": {
       "mode": "primary",
       "model": "github-copilot/claude-opus-4.5",
       "system_prompt": "You are a technical writer. Focus on JSDoc, READMEs, and architecture diagrams. Do not modify source code logic.",
@@ -38,16 +38,47 @@
     "show_detailed_errors": true,
     "footer_behavior": "scroll"
   },
-
   "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "deepseek-v4-pro:cloud": {
+          "name": "deepseek-v4-pro:cloud"
+        },
+        "glm-5.2:cloud": {
+          "name": "glm-5.2:cloud",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "max": {
+              "reasoningEffort": "max"
+            }
+          }
+        }
+      }
+    },
     "github-copilot": {
       "models": {
+        "claude-opus-4.8": {
+          "name": "claude-opus-4.8"
+        },
+        "gpt-4o-mini": {
+          "name": "gpt-4o-mini"
+        },
+        "claude-sonnet-4.5": {
+          "name": "claude-sonnet-4.5"
+        },
         "claude-3-7-sonnet": {
           "options": {
             "thinking": {
               "type": "enabled",
               "budgetTokens": 4000,
-							"scaling": "dynamic"
+              "scaling": "dynamic"
             }
           }
         }

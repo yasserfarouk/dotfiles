@@ -29,6 +29,8 @@ return {
 		config = function()
 			local platform = require("yasser.utils.platform")
 			vim.cmd.source(platform.join(platform.config_dir(), "vimscript", "tex.vim"))
+			-- Write immediately for the first tex buffer (FileType already fired before this runs)
+			vim.fn.writefile({ vim.v.servername }, "/tmp/vimtexserver.txt")
 		end,
 	},
 	-- Overleaf real-time collaboration
