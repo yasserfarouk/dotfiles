@@ -29,17 +29,17 @@ return {
 
 			-- Load honza/vim-snippets (SnipMate format — includes Beamer: frame, block, col2, it...)
 			require("luasnip.loaders.from_snipmate").lazy_load()
-			
+
 			-- Load LuaSnip-snippets.nvim (additional snippets)
-			require("luasnip.loaders.from_vscode").lazy_load({ 
-				paths = platform.join(vim.fn.stdpath("data"), "lazy", "LuaSnip-snippets.nvim") 
+			require("luasnip.loaders.from_vscode").lazy_load({
+				paths = platform.join(vim.fn.stdpath("data"), "lazy", "LuaSnip-snippets.nvim"),
 			})
-			
+
 			-- Load custom snippets from lua/yasser/snippets/ if they exist
-			require("luasnip.loaders.from_lua").lazy_load({ 
-				paths = platform.join(vim.fn.stdpath("config"), "lua", "yasser", "snippets") 
+			require("luasnip.loaders.from_lua").lazy_load({
+				paths = platform.join(vim.fn.stdpath("config"), "lua", "yasser", "snippets"),
 			})
-			
+
 			-- Configure LuaSnip
 			ls.config.set_config({
 				history = true,
@@ -48,26 +48,26 @@ return {
 				-- Delete snippet content when you leave the snippet region
 				delete_check_events = "TextChanged",
 			})
-			
+
 			-- Key mappings for snippet navigation
-			vim.keymap.set({"i", "s"}, "<C-k>", function()
+			vim.keymap.set({ "i", "s" }, "<C-k>", function()
 				if ls.expand_or_jumpable() then
 					ls.expand_or_jump()
 				end
 			end, { silent = true, desc = "Expand or jump to next snippet node" })
-			
-			vim.keymap.set({"i", "s"}, "<C-j>", function()
+
+			vim.keymap.set({ "i", "s" }, "<C-j>", function()
 				if ls.jumpable(-1) then
 					ls.jump(-1)
 				end
 			end, { silent = true, desc = "Jump to previous snippet node" })
-			
-			vim.keymap.set({"i", "s"}, "<C-l>", function()
+
+			vim.keymap.set({ "i", "s" }, "<C-l>", function()
 				if ls.choice_active() then
 					ls.change_choice(1)
 				end
 			end, { silent = true, desc = "Change snippet choice" })
-			
+
 			-- Debug command to check loaded snippets
 			vim.api.nvim_create_user_command("LuaSnipDebug", function()
 				local available = ls.available()
@@ -86,7 +86,7 @@ return {
 					print("  - " .. ft)
 				end
 			end, { desc = "Debug LuaSnip available snippets" })
-			
+
 			-- Debug command to check cmp sources
 			vim.api.nvim_create_user_command("CmpDebug", function()
 				local cmp_ok, cmp = pcall(require, "cmp")
@@ -131,157 +131,165 @@ return {
 			"saadparwaiz1/cmp_luasnip", -- Snippet source for nvim-cmp
 			"L3MON4D3/LuaSnip", -- Snippet engine
 			USE_INLINE_SIGNATURE_HELP and "hrsh7th/cmp-nvim-lsp-signature-help" or nil,
+			-- "not-manu/filemention.nvim",
 		},
 		config = function()
 			local cmp = require("cmp")
 
-		-- Icons for completion items
-		local kind_icons = {
-			Text = "󰉿",
-			Method = "󰡱",
-			Function = "󰊕",
-			Constructor = "",
-			Field = "",
-			Variable = "󰆧",
-			Class = "󰌗",
-			Interface = "",
-			Module = "",
-			Property = "",
-			Unit = "",
-			Value = "󰬺",
-			Enum = "",
-			Keyword = "󰌋",
-			Snippet = "",
-			Color = "󰸌",
-			File = "󰈙",
-			Reference = "",
-			Folder = "󰉋",
-			EnumMember = "",
-			Constant = "󰇽",
-			Struct = "",
-			Event = "",
-			Operator = "󰆕",
-			TypeParameter = "󰴑",
-		}
+			-- Icons for completion items
+			local kind_icons = {
+				Text = "󰉿",
+				Method = "󰡱",
+				Function = "󰊕",
+				Constructor = "",
+				Field = "",
+				Variable = "󰆧",
+				Class = "󰌗",
+				Interface = "",
+				Module = "",
+				Property = "",
+				Unit = "",
+				Value = "󰬺",
+				Enum = "",
+				Keyword = "󰌋",
+				Snippet = "",
+				Color = "󰸌",
+				File = "󰈙",
+				Reference = "",
+				Folder = "󰉋",
+				EnumMember = "",
+				Constant = "󰇽",
+				Struct = "",
+				Event = "",
+				Operator = "󰆕",
+				TypeParameter = "󰴑",
+			}
 
-		-- Snippet expansion function
-		local has_luasnip, luasnip = pcall(require, "luasnip")
+			-- Snippet expansion function
+			local has_luasnip, luasnip = pcall(require, "luasnip")
 
-		cmp.setup({
-			snippet = {
-				expand = function(args)
-					if has_luasnip then
-						luasnip.lsp_expand(args.body)
-					end
-				end,
-			},
-		sources = cmp.config.sources({
-			{ name = "lazydev", group_index = 0 }, -- Only for Lua files, takes priority
-			{ name = "luasnip", priority = 1000 }, -- Prioritize snippets
-			{ name = "nvim_lsp" },
-			USE_INLINE_SIGNATURE_HELP and { name = "nvim_lsp_signature_help" } or nil,
-			{ name = "copilot", group_index = 2 },
-		}, {
-				{ name = "buffer", keyword_length = 3 },
-				{ name = "path" },
-			}),
-			window = {
-				completion = cmp.config.window.bordered(),
-				documentation = cmp.config.window.bordered(),
-			},
-			formatting = {
-				fields = { "kind", "abbr", "menu" },
-				format = function(entry, vim_item)
-					-- Set icon
-					vim_item.kind = string.format("%s", kind_icons[vim_item.kind] or "")
-				-- Set source name
-				vim_item.menu = ({
-					buffer = "",
-					nvim_lsp = "",
-					nvim_lua = "",
-					luasnip = "󰩫",
-					path = "󰇘",
-					copilot = "",
-					lazydev = "",
-				})[entry.source.name]
-					return vim_item
-				end,
-			},
-			sorting = {
-				priority_weight = 2,
-				comparators = {
-					require("copilot_cmp.comparators").prioritize,
-					cmp.config.compare.offset,
-					cmp.config.compare.exact,
-					cmp.config.compare.score,
-					cmp.config.compare.recently_used,
-					cmp.config.compare.locality,
-					cmp.config.compare.kind,
-					cmp.config.compare.sort_text,
-					cmp.config.compare.length,
-					cmp.config.compare.order,
+			cmp.setup({
+				snippet = {
+					expand = function(args)
+						if has_luasnip then
+							luasnip.lsp_expand(args.body)
+						end
+					end,
 				},
-			},
-			mapping = cmp.mapping.preset.insert({
-				["<C-p>"] = cmp.mapping.select_prev_item(),
-				["<C-n>"] = cmp.mapping.select_next_item(),
-				["<C-b>"] = cmp.mapping.scroll_docs(-4),
-				["<C-f>"] = cmp.mapping.scroll_docs(4),
-				["<C-Space>"] = cmp.mapping.complete(),
-				["<C-e>"] = cmp.mapping.abort(),
-				["<CR>"] = cmp.mapping.confirm({
-					behavior = cmp.ConfirmBehavior.Replace,
-					select = false,
+				sources = cmp.config.sources({
+					{ name = "lazydev", group_index = 0 }, -- Only for Lua files, takes priority
+					{ name = "filemention" }, -- `@` mentions; respects its own filetypes list
+					{ name = "luasnip", priority = 1000 }, -- Prioritize snippets
+					{ name = "nvim_lsp" },
+					USE_INLINE_SIGNATURE_HELP and { name = "nvim_lsp_signature_help" } or nil,
+					{ name = "copilot", group_index = 2 },
+				}, {
+					{ name = "buffer", keyword_length = 3 },
+					{ name = "path" },
 				}),
-				["<Tab>"] = cmp.mapping(function(fallback)
-					if cmp.visible() then
-						cmp.select_next_item()
-					elseif has_luasnip and luasnip.expand_or_jumpable() then
-						luasnip.expand_or_jump()
-					else
-						fallback()
-					end
-				end, { "i", "s" }),
-				["<S-Tab>"] = cmp.mapping(function(fallback)
-					if cmp.visible() then
-						cmp.select_prev_item()
-					elseif has_luasnip and luasnip.jumpable(-1) then
-						luasnip.jump(-1)
-					else
-						fallback()
-					end
-				end, { "i", "s" }),
-			}),
-			completion = {
-				completeopt = "menu,menuone,noinsert",
-			},
-			experimental = {
-				ghost_text = true,
-			},
-		})
-
-		-- Cmdline completion for '/' and '?'
-		cmp.setup.cmdline({ "/", "?" }, {
-			mapping = cmp.mapping.preset.cmdline(),
-			sources = {
-				{ name = "buffer" },
-			},
-		})
-
-		-- Cmdline completion for ':'
-		cmp.setup.cmdline(":", {
-			mapping = cmp.mapping.preset.cmdline(),
-			sources = cmp.config.sources({
-				{ name = "path" },
-			}, {
-				{
-					name = "cmdline",
-					option = {
-						ignore_cmds = { "Man", "!" },
+				window = {
+					completion = cmp.config.window.bordered(),
+					documentation = cmp.config.window.bordered(),
+				},
+				formatting = {
+					fields = { "kind", "abbr", "menu" },
+					format = function(entry, vim_item)
+						-- Set icon
+						vim_item.kind = string.format("%s", kind_icons[vim_item.kind] or "")
+						-- Set source name
+						vim_item.menu = ({
+							buffer = "",
+							nvim_lsp = "",
+							nvim_lua = "",
+							luasnip = "󰩫",
+							path = "󰇘",
+							copilot = "",
+							lazydev = "",
+						})[entry.source.name]
+						return vim_item
+					end,
+				},
+				sorting = {
+					priority_weight = 2,
+					comparators = {
+						require("copilot_cmp.comparators").prioritize,
+						cmp.config.compare.offset,
+						cmp.config.compare.exact,
+						cmp.config.compare.score,
+						cmp.config.compare.recently_used,
+						cmp.config.compare.locality,
+						cmp.config.compare.kind,
+						cmp.config.compare.sort_text,
+						cmp.config.compare.length,
+						cmp.config.compare.order,
 					},
 				},
-			}),
-		})
+				mapping = cmp.mapping.preset.insert({
+					["<C-p>"] = cmp.mapping.select_prev_item(),
+					["<C-n>"] = cmp.mapping.select_next_item(),
+					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-f>"] = cmp.mapping.scroll_docs(4),
+					-- toggle: open completion, or abort if already open
+					["<C-e>"] = cmp.mapping(function()
+						if cmp.visible() then
+							cmp.abort()
+						else
+							cmp.complete()
+						end
+					end, { "i", "c" }),
+					["<CR>"] = cmp.mapping.confirm({
+						behavior = cmp.ConfirmBehavior.Replace,
+						select = false,
+					}),
+					["<Tab>"] = cmp.mapping(function(fallback)
+						if cmp.visible() then
+							cmp.select_next_item()
+						elseif has_luasnip and luasnip.expand_or_jumpable() then
+							luasnip.expand_or_jump()
+						else
+							fallback()
+						end
+					end, { "i", "s" }),
+					["<S-Tab>"] = cmp.mapping(function(fallback)
+						if cmp.visible() then
+							cmp.select_prev_item()
+						elseif has_luasnip and luasnip.jumpable(-1) then
+							luasnip.jump(-1)
+						else
+							fallback()
+						end
+					end, { "i", "s" }),
+				}),
+				completion = {
+					completeopt = "menu,menuone,noinsert",
+				},
+				experimental = {
+					ghost_text = true,
+				},
+			})
+
+			-- Cmdline completion for '/' and '?'
+			cmp.setup.cmdline({ "/", "?" }, {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = {
+					{ name = "buffer" },
+				},
+			})
+
+			-- Cmdline completion for ':'
+			cmp.setup.cmdline(":", {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = cmp.config.sources({
+					{ name = "path" },
+				}, {
+					{
+						name = "cmdline",
+						option = {
+							ignore_cmds = { "Man", "!" },
+						},
+					},
+				}),
+			})
 		end,
 	},
 }
