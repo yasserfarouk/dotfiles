@@ -7,7 +7,8 @@ return {
 	config = function()
 		require("jupynvim").setup({
 			log_level = "info",
-			image_renderer = "kitty", -- "placeholder", "kitty", or "chafa"
+			-- "placeholder", "kitty", or "chafa"; kitty direct mode is unreliable inside tmux
+			image_renderer = (vim.env.TMUX or "") ~= "" and "placeholder" or "kitty",
 		})
 	end,
 }
