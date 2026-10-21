@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# New workmux worktree + agent for the current repo, from a tmux popup (Alt-a; prefix-A picks the agent).
+# Type "name" (default agent from ~/.config/workmux/config.yaml) or "name codex"; spaces become dashes. An existing name is reopened.
+# Usage: wm-new <parent-session> [agent|pick]
+session=${1:-$(tmux display-message -p '#S')} agent=${2:-}
+agents='claude codex opencode pi gemini'
+fail() { printf '\n%s\n[enter to close]' "$*"; read -r _; exit 1; }
+
+root=$(git rev-parse --show-toplevel 2>/dev/null) || fail "Not in a git repo: $PWD"
+if [ "$agent" = pick ]; then
+  agent=$(for a in $agents; do command -v "$a" >/dev/null && echo "$a"; done |
+    fzf --reverse --height=100% --prompt 'agent> ') || exit 0
+fi
+
+printf 'New worktree in %s%s\n' "${root/#$HOME/~}" "${agent:+  [$agent]}"
+read -r -e -p 'name [agent]: ' name || exit 0
+last=${name##* }
+case " $agents " in *" $last "*) [ "$last" != "$name" ] && agent=$last name=${name% *} ;; esac
+# kebab-case, keep "/" so feature/x style branches still work
+slug=$(printf %s "$name" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9._/-]+/-/g; s/^-+|-+$//g')
+[ -n "$slug" ] || exit 0
+
+workmux add "$slug" --open-if-exists --parent-session "$session" ${agent:+--agent "$agent"} || fail "workmux add $slug failed"

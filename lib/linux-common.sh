@@ -412,6 +412,7 @@ install_user_cli_tools() {
     install_gh_release jesseduffield/lazygit "lazygit_[0-9.]+_[Ll]inux_${CAP_ARCH}\\.tar\\.gz\$" lazygit
     install_gh_release jesseduffield/lazydocker "lazydocker_[0-9.]+_[Ll]inux_${CAP_ARCH}\\.tar\\.gz\$" lazydocker
     install_gh_release joshmedeski/sesh "sesh_[Ll]inux_${CAP_ARCH}\\.tar\\.gz\$" sesh
+    install_gh_release raine/workmux "workmux-linux-${GOARCH}\\.tar\\.gz\$" workmux
     install_gh_release sxyazi/yazi "yazi-${ARCH}-unknown-linux-(musl|gnu)\\.zip\$" "yazi ya"
     if ! have broot; then
         install_gh_release Canop/broot "broot_[0-9.]+\\.zip\$" broot "${ARCH}-unknown-linux-musl/" \
@@ -501,6 +502,7 @@ install_ai_assistants() {
     # Correct npm package names (the old @anthropic/opencode and @anthropic/claude-code do not exist)
     have opencode || npm_global opencode-ai
     have claude || npm_global @anthropic-ai/claude-code
+    have pi || npm_global @earendil-works/pi-coding-agent
 }
 
 install_nerd_fonts() {

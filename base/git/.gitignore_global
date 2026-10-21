@@ -7,3 +7,6 @@ venv
 
 
 **/.claude/settings.local.json
+
+# workmux worktrees live inside the main checkout
+.worktrees/

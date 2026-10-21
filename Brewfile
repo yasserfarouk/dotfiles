@@ -170,6 +170,7 @@ brew "open-mpi"
 brew "ripgrep"
 brew "opencode"
 brew "claude-code"
+brew "pi-coding-agent"   # pi agent (workmux-aware)
 brew "pandoc-plot"
 brew "tree"
 brew "pass"
@@ -231,6 +232,7 @@ brew "yq"
 brew "yt-dlp"
 brew "zoxide"
 brew "sesh"
+brew "workmux"           # git worktrees + tmux windows for agents (tmux M-a)
 brew "btop"             # referenced by nvim (terminal monitor)
 
 # Referenced by mac/* and base/* configs (aerospace, hammerspoon, karabiner, espanso, alacritty)

@@ -1,0 +1,18 @@
+# Global workmux config (stowed from dotfiles: base/workmux).
+# Per-project overrides go in <repo>/.workmux.yaml.
+nerdfont: true
+
+# Worktrees live inside the main checkout: <repo>/.worktrees/<name>
+# (`.worktrees/` is ignored by base/git/.gitignore_global).
+worktree_dir: .worktrees
+
+# Default agent for <agent>; override per worktree with `workmux add -a codex`.
+agent: claude
+
+# Explicit panes so the agent starts in every repo (workmux's defaults only
+# start it when the repo has a CLAUDE.md).
+panes:
+  - command: <agent>
+    focus: true
+  - split: vertical
+    percentage: 25
