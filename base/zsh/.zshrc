@@ -4,7 +4,8 @@
 [ -f ~/.prezshrc ] && source ~/.prezshrc
 [ -f  ~/.aliases ] && source ~/.aliases
 [ -f  ~/.zshenv ] && source ~/.zshenv
-[ -f ~/.zfolder/z.sh ] && source ~/.zfolder/z.sh
+# z: zoxide (initialized below after the prompt); fall back to z.sh if zoxide is missing
+command -v zoxide >/dev/null || { [ -f ~/.zfolder/z.sh ] && source ~/.zfolder/z.sh; }
 [ -f ~/.exports ] && source ~/.exports
 [ -f ~/.keys ] && source ~/.keys
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
@@ -160,6 +161,11 @@ export PATH="/opt/homebrew/opt/ruby@2.7/bin:$PATH"
 
 if command -v starship >/dev/null; then
 	eval "$(starship init zsh)"
+fi
+
+# zoxide provides z / zi
+if command -v zoxide >/dev/null; then
+	eval "$(zoxide init zsh)"
 fi
 
 # Removed duplicate compinit call

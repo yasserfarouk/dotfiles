@@ -5,7 +5,8 @@
 [ -f ~/.prebashrc ] && source ~/.prebashrc
 [ -f ~/.exports ] && source ~/.exports
 [ -f ~/.aliases ] && source ~/.aliases
-[ -f ~/.zfolder/z.sh ] && source ~/.zfolder/z.sh
+# z: zoxide (initialized below after the prompt); fall back to z.sh if zoxide is missing
+command -v zoxide >/dev/null || { [ -f ~/.zfolder/z.sh ] && source ~/.zfolder/z.sh; }
 [ -f ~/fzf.bash ] && source ~/.fzf.bash
 [ -f ~/.bashrc.local ] && source ~/.bashrc.local
 [ -f ~/.exports.local ] && source ~/.exports.local
@@ -31,6 +32,11 @@ export NVM_DIR="$HOME/.nvm"
 # Starship prompt
 if command -v starship >/dev/null; then
 	eval "$(starship init bash)"
+fi
+
+# zoxide provides z / zi
+if command -v zoxide >/dev/null; then
+	eval "$(zoxide init bash)"
 fi
 
 # broot launcher (if it exists)
