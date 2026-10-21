@@ -231,6 +231,14 @@ brew "yq"
 brew "yt-dlp"
 brew "zoxide"
 brew "sesh"
+brew "btop"             # referenced by nvim (terminal monitor)
+
+# Referenced by mac/* and base/* configs (aerospace, hammerspoon, karabiner, espanso, alacritty)
+cask "nikitabobko/tap/aerospace"
+cask "hammerspoon"
+cask "karabiner-elements"
+cask "espanso"
+cask "alacritty"
 
 cask "db-browser-for-sqlite"
 cask "dbeaver-community"

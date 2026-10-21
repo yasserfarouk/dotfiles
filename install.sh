@@ -1,94 +1,42 @@
 #!/usr/bin/env bash
-function install_or_upgrade {
-	if brew ls --versions "$1" >/dev/null; then
-		HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$1"
-	else
-		HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
-	fi
-}
-function install_if_not_installed {
-	if brew ls --versions "$1" >/dev/null; then
-		:
-	else
-		HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
-	fi
-}
+# macOS setup. The Brewfile is the source of truth for packages.
+# No sudo is used here. The only unavoidable root prompt is the Homebrew
+# installer itself (it creates /opt/homebrew) when brew is not installed yet.
+# Idempotent: safe to re-run. Does NOT remove packages that are not in the Brewfile.
 
-while true; do
-	read -p "Do you have root access to this machine? [yn] " has_root
-	case $has_root in
-		[Yy]* ) echo "May be prompted for your password later"; break;;
-		[Nn]* ) echo "Will not be prompted for a sudo password"; break;;
-		* ) echo "Please answer yes or no.";;
-	esac
-done
+set -e
 
-packages=(
-	# PRIORITY: Install these first
-	"uv"
-	"neovim"
-	"tmux"
-	# Core tools
-	"stow"
-	"ccls"
-	"gdb"
-	"git"
-	"node"
-	"zsh"
-	"fzf"
-	"fd"
-	"vifm"
-	"tree"
-	"ag"
-	"ripgrep"
-	"rg"
-	"languagetool"
-	"antiword"
-	"docx2txt"
-	"poppler"
-	"mutt"
-	"yarn"
-	"ack"
-	"bat"
-	"cloc"
-	"diff-so-fancy"
-	"entr"
-	"exa"
-	"gh"
-	"gnupg"
-	"grep"
-	"highlight"
-	"htop"
-	"hub"
-	"jq"
-	"lazydocker"
-	"lazygit"
-	"markdown"
-	"mas"
-	# "neofetch"
-	"nmap"
-	"noti"
-	"reattach-to-user-namespace"
-	"schniz/tap/fnm"
-	"shellcheck"
-	"tig"
-	"tldr"
-	"trash"
-	"tree"
-	"vim"
-	"wdiff"
-	"wget"
-	"youtube-dl"
-	"z"
-	"zsh"
-	"neofetch"
-	"zathura"
-	"zathura-pdf-poppler"
-	"transmission"
-	"javac"
-	"starship"
-	"glances"
-)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [ "$(uname -s)" != "Darwin" ]; then
+	echo "install.sh is the macOS installer. Use setup.sh (or linux-setup.sh / wsl-setup.sh) on this platform."
+	exit 1
+fi
+
+# ----------------------------------------
+# Homebrew
+# ----------------------------------------
+if ! command -v brew >/dev/null 2>&1; then
+	for b in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+		[ -x "$b" ] && eval "$("$b" shellenv)" && break
+	done
+fi
+if ! command -v brew >/dev/null 2>&1; then
+	echo "Installing Homebrew (this is the one step that asks for your password)..."
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	for b in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+		[ -x "$b" ] && eval "$("$b" shellenv)" && break
+	done
+fi
+
+echo "Installing packages from Brewfile (no cleanup: packages not in the Brewfile are left alone)..."
+brew bundle --file="$SCRIPT_DIR/Brewfile" || echo "Warning: some Brewfile entries failed (re-run to retry)"
+
+# ----------------------------------------
+# Python tooling via uv (user level)
+# ----------------------------------------
+export PATH="$HOME/.local/bin:$PATH"
+
 # Tools to install via uv tool (replaces pipx)
 uv_tool_packages=(
 	"asciinema"
@@ -110,317 +58,81 @@ uv_tool_packages=(
 	"ruff"
 	"neovim-remote"
 )
-pip_packages=(
-	"msgpack"
-)
-linux_packages=(
-	"terminal-notifier"
-)
-
-mac_packages=(
-	"alacritty"
-	"macvim"
-	"terminal-notifier"
-	"mackup"
-)
-
 neovim_python_packages=(
 	"neovim"
 	"flake8"
 )
-case "$(uname -s)" in
-	Darwin)
-		brew="/usr/local/bin/brew"
-		if [ -f "$brew" ]
-		then
-			echo "Homebrew is installed, nothing to do here"
-		else
-			echo "Homebrew is not installed, installing now"
-			echo "This may take a while"
-			echo "Homebrew requires osx command lines tools, please download xcode first"
-			ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-		fi
-
-		# installing nvim nightly correctly with lua support
-		brew tap jason0x43/homebrew-neovim-nightly
-		brew install neovim-nightly
-		;;
-
-	Linux)
-		[[ -e "$HOME/bin" ]] || mkdir "$HOME/bin"
-        test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
-        test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-        test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >>~/.bash_profile
-        echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >>~/.profile
-		# curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage ~/bin
-		# chmod u+x ~/bin/nvim.appimage
-		# echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-		# echo "neovim is installed in ~/bin/nvim.appimage. alias it to vim after installation"
-		# echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-		case $has_root in
-			[Yy]* ) sudo apt install make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2;;
-			[Nn]* ) echo "You should have make lib64readline7 lib64readline7-dev sqlite sqlite3 zlib1g-dev zlibig bzip2 installed. Proceeding assuming you do";;
-			* ) echo "Should not be here";;
-		esac
-		command -v brew 2>&1 >/dev/null # improvement by tripleee
-		BREW_IS_AVAILABLE=$?
-		if [ $BREW_IS_AVAILABLE ]
-		then
-			echo "Homebrew is installed, nothing to do here"
-		else
-			echo "Installing Linuxbrew"
-			echo "---------------------"
-            sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
-            test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
-            test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-            test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.bash_profile
-            echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.profile
-			echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bashrc
-		fi
-		install_or_upgrade gcc
-		# brew install gcc
-		# brew upgrade gcc
-		# brew unlink gcc && brew link gcc
-
-		# installing nvim nightly correctly with lua support
-		brew install --HEAD luajit
-		brew install --fetch-HEAD --HREAD neovim
-		;;
-
-esac
-
-
-brew tap "homebrew/bundle"
-brew tap "homebrew/cask"
-brew tap "homebrew/core"
-brew tap "homebrew/cask-fonts"
-brew tap "schniz/tap"
-
-for i in "${packages[@]}"
-do
-	#brew unlink $i
-	#brew uninstall $i
-	install_if_not_installed $i
-	# brew install $i
-	# brew upgrade $i
-	# brew unlink $i && brew link $i
-	echo "---------------------------------------------------------"
+echo "Installing uv tool packages"
+echo "---------------------------"
+installed_uv_tools="$(uv tool list 2>/dev/null || true)"
+for i in "${uv_tool_packages[@]}"; do
+	if printf '%s\n' "$installed_uv_tools" | grep -q "^$i "; then
+		echo "  $i already installed"
+	else
+		uv tool install "$i" || echo "Warning: Failed to install $i"
+	fi
 done
 
-case "$(uname -s)" in
-	Darwin)
-		for i in "${mac_packages[@]}"
-		do
-			#brew unlink $i
-			#brew uninstall $i
-			install_if_not_installed $i
-			# brew install $i
-			# brew upgrade $i
-			# brew unlink $i && brew link $i
-			echo "---------------------------------------------------------"
-		done
-
-		;;
-
-	Linux)
-		for i in "${linux_packages[@]}"
-		do
-			#brew unlink $i
-			#brew uninstall $i
-			install_if_not_installed $i
-			# brew install $i
-			# brew upgrade $i
-			# brew unlink $i && brew link $i
-			echo "---------------------------------------------------------"
-		done
-		brew install vim --HEAD --without-python --with-python3
-		brew unlink vim
-		brew link vim
-		;;
-esac
-
-
-# installing fzf shortcuts
-yes | $(brew --prefix)/opt/fzf/install --all
-
-# installing programs that require special care (e.g. tmux from HEAD and devicons usin npm)
-brew install tmux --HEAD
-brew link tmux
-brew tap homebrew/cask-fonts
-brew cask install font-hack-nerd-font
-brew cask link font-hack-nerd-font
-current_dir=`pwd`
-cd $HOME
-npm install -g devicons
-npm install -g write-good
-cd $current_dir
-
-command -v git 2>&1 >/dev/null # improvement by tripleee
-GIT_IS_AVAILABLE=$?
-
-if [ $GIT_IS_AVAILABLE ]
-then
-	echo "git is all good"
-else
-	install_or_upgrade git
-fi
-# Okay so everything should be good
-# Now lets clone my dotfiles repo into .dotfiles/
-
-echo "Installing pip packages assuming that pip is available"
-echo "------------------------------------------------------"
-for i in "${pip_packages[@]}"
-do
-	pip3 install --upgrade $i
-done
-
-echo "Installing uv tool packages (replaces pipx)"
-echo "--------------------------------------------"
-for i in "${uv_tool_packages[@]}"
-do
-	uv tool install $i || echo "Warning: Failed to install $i"
-done
-echo "Installing neovim2/3 python envs using uv"
+echo "Setting up neovim2/3 python envs using uv"
 echo "-----------------------------------------"
-# Install Python using uv
 uv python install 3.12
-
-# remove existing neovim envs
-rm -rf ~/.local/share/uv/venvs/neovim2 2>&1 >/dev/null
-rm -rf ~/.local/share/uv/venvs/neovim3 2>&1 >/dev/null
-
-# Create virtual environments for neovim
-uv venv ~/.local/share/uv/venvs/neovim2 --python 3.12
-uv venv ~/.local/share/uv/venvs/neovim3 --python 3.12
-
-# Install packages in neovim2 venv
-source ~/.local/share/uv/venvs/neovim2/bin/activate
-uv pip install --upgrade pip
-for i in "${neovim_python_packages[@]}"
-do
-	uv pip install $i
+for venv in neovim2 neovim3; do
+	dir="$HOME/.local/share/uv/venvs/$venv"
+	[ -x "$dir/bin/python" ] || uv venv "$dir" --python 3.12
+	uv pip install --python "$dir/bin/python" -U "${neovim_python_packages[@]}"
 done
-neovim2_py="$HOME/.local/share/uv/venvs/neovim2/bin/python"
-deactivate
+uv pip install --python "$HOME/.local/share/uv/venvs/neovim3/bin/python" -U neovim-remote
 
-# Install packages in neovim3 venv
-source ~/.local/share/uv/venvs/neovim3/bin/activate
-uv pip install --upgrade pip
-uv pip install neovim-remote
-
-for i in "${neovim_python_packages[@]}"
-do
-	uv pip install -U $i
+# ----------------------------------------
+# Node globals (node comes from brew, so the prefix is user-writable)
+# ----------------------------------------
+echo "Installing npm global packages"
+echo "------------------------------"
+# NOTE: real package names. (@anthropic/opencode does not exist; opencode is also in the Brewfile.)
+npm_packages=(
+	"neovim"
+	"write-good"
+	"tree-sitter-cli"
+	"@anthropic-ai/claude-code"
+)
+for p in "${npm_packages[@]}"; do
+	npm ls -g --depth=0 "$p" >/dev/null 2>&1 || npm install -g "$p" || echo "Warning: Failed to install $p"
 done
-neovim3_py="$HOME/.local/share/uv/venvs/neovim3/bin/python"
-deactivate
+command -v opencode >/dev/null 2>&1 || npm install -g opencode-ai || echo "Warning: Failed to install opencode"
 
-gem install neovim
-npm install -g neovim
+echo "Installing neovim ruby provider"
+gem list -i neovim >/dev/null 2>&1 || gem install --user-install neovim || echo "Warning: Failed to install neovim gem"
 
-echo "Installing CTAGS"
-echo "----------------"
-brew install --HEAD universal-ctags/universal-ctags/universal-ctags
-
-echo "Installing diff-so-fancy"
-echo "------------------------"
-mkdir ~/bin 2>&1 >/dev/null
-curl https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party/build_fatpack/diff-so-fancy >~/bin/diff-so-fancy
-chmod +x ~/bin/diff-so-fancy
-
-echo "Installing Nerd Fonts"
-echo "--------------------------------"
-current_dir=`pwd`
-mkdir -p $HOME/fonts 2>&1 >/dev/null
-cd $HOME/fonts
-
-# JetBrains Mono Nerd Font (latest release)
-echo "Downloading JetBrains Mono Nerd Font..."
-curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz
-if [ -f "JetBrainsMono.tar.xz" ]; then
-    tar -xvf JetBrainsMono.tar.xz
-    rm JetBrainsMono.tar.xz
+# ----------------------------------------
+# Shell / tmux extras
+# ----------------------------------------
+echo "Installing tmux plugin manager (tpm)"
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+	git clone --depth 1 https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+else
+	echo "  tpm already installed"
 fi
+# Plugins listed in ~/.tmux.conf are fetched once the config is stowed:
+#   ~/.tmux/plugins/tpm/bin/install_plugins   (or prefix + I inside tmux)
 
-# FiraCode Nerd Font
-echo "Downloading FiraCode Nerd Font..."
-curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.tar.xz
-if [ -f "FiraCode.tar.xz" ]; then
-    tar -xvf FiraCode.tar.xz
-    rm FiraCode.tar.xz
-fi
-
-# SourceCodePro Nerd Font
-echo "Downloading SourceCodePro Nerd Font..."
-curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/SourceCodePro.tar.xz
-if [ -f "SourceCodePro.tar.xz" ]; then
-    tar -xvf SourceCodePro.tar.xz
-    rm SourceCodePro.tar.xz
-fi
-
-rm -f *windows* 2>&1 >/dev/null
-rm -f *Windows* 2>&1 >/dev/null
-case "$(uname -s)" in
-	Darwin)
-		mkdir -p $HOME/Library/Fonts 2>&1 >/dev/null
-		mv *.ttf $HOME/Library/Fonts 2>&1 >/dev/null
-		;;
-
-	Linux)
-		mkdir -p $HOME/.local/share/fonts 2>&1 >/dev/null
-		mv *.ttf $HOME/.local/share/fonts 2>&1 >/dev/null
-		fc-cache -fv
-		;;
-esac
-cd $current_dir
-
-echo "Linking Zathura PDF"
-mkdir -p $(brew --prefix zathura)/lib/zathura
-ln -s $(brew --prefix zathura-pdf-poppler)/libpdf-poppler.dylib $(brew --prefix zathura)/lib/zathura/libpdf-poppler.dylib
-
-echo "Installing Plug for NVIM"
-echo "-------------------------"
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+echo "Installing fzf key bindings / completion (does not touch your rc files)"
+yes | "$(brew --prefix)/opt/fzf/install" --key-bindings --completion --no-update-rc >/dev/null 2>&1 || true
 
 echo "Installing antigen for zsh"
-echo "--------------------------"
-mkdir ~/antigen 2>&1 >/dev/null
-curl -L git.io/antigen > ~/antigen/antigen.zsh
+if [ ! -f "$HOME/antigen.zsh" ]; then
+	curl -fsSL https://raw.githubusercontent.com/zsh-users/antigen/master/bin/antigen.zsh -o "$HOME/antigen.zsh" \
+		|| echo "Warning: Failed to download antigen"
+fi
 
-echo "Installing starship theme"
-echo "--------------------------"
-# npm install --global pure-prompt
-sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+echo "Installing vim-plug for vim"
+[ -f "$HOME/.vim/autoload/plug.vim" ] || curl -fsSLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
+	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim || true
 
-echo "Installing AI Coding Assistants"
-echo "--------------------------------"
-# Install OpenCode CLI
-npm install -g @anthropic/opencode || echo "Warning: Failed to install OpenCode"
-# Install Claude Code CLI
-npm install -g @anthropic/claude-code || echo "Warning: Failed to install Claude Code"
-
-echo "Updating npm"
-echo "------------"
-npm install -g npm
+# Fonts come from the Brewfile casks (font-hack-nerd-font, font-jetbrains-mono-nerd-font, ...)
 
 echo "----------------------"
-echo "Installed prerequisits"
+echo "Installed prerequisites"
 echo "----------------------"
-./quick-install.sh
-
-
-case "$(uname -s)" in
-	Darwin)
-		echo "-----------------------------"
-		echo "           Manual Installs   "
-		echo "-----------------------------"
-		echo "- Install MacVim latest release"
-		;;
-
-	Linux)
-		echo "=============="
-		echo "   ALL DONE   "
-		echo "=============="
-		;;
-esac
+echo "Next: run ./setup.sh (stow + git hooks) or ./quick-install.sh"
+echo "Manual: install a LaTeX distribution (e.g. brew install --cask basictex) if you need latexmk."

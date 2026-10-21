@@ -101,21 +101,13 @@ case $PLATFORM in
         echo "This will use Homebrew and the Brewfile"
         echo ""
         
-        # Check if Homebrew is installed
-        if ! command -v brew &> /dev/null; then
-            echo "Installing Homebrew..."
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        fi
-        
-        # Install from Brewfile
-        echo "Installing packages from Brewfile..."
-        brew bundle --file="$SCRIPT_DIR/Brewfile"
-        
-        # Run additional setup
+        # install.sh bootstraps Homebrew, runs `brew bundle` (no cleanup) and
+        # the user-level post-install steps. No sudo except the Homebrew bootstrap.
         if [ -f "$SCRIPT_DIR/install.sh" ]; then
-            echo ""
-            echo "Running additional macOS setup..."
             bash "$SCRIPT_DIR/install.sh"
+        else
+            echo "ERROR: install.sh not found"
+            exit 1
         fi
         ;;
         
@@ -161,6 +153,12 @@ stow_dotfiles
 
 # Enable versioned git hooks (gitleaks secret scanning)
 git -C "$SCRIPT_DIR" config core.hooksPath .githooks
+
+# Fetch tmux plugins listed in ~/.tmux.conf (tpm itself is cloned by the platform installers)
+if [ -x "$HOME/.tmux/plugins/tpm/bin/install_plugins" ] && command -v tmux >/dev/null 2>&1; then
+    echo "Installing tmux plugins..."
+    "$HOME/.tmux/plugins/tpm/bin/install_plugins" || echo "Warning: tpm plugin install failed (press prefix + I inside tmux)"
+fi
 
 # Run quick-install for final setup (vim plugins, etc.)
 echo ""

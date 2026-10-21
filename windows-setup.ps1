@@ -1,8 +1,8 @@
 # Windows Setup Script
 # This script installs applications equivalent to the macOS Brewfile
-# Prefers Scoop when possible, falls back to winget or chocolatey
-
-# Requires PowerShell to be run as Administrator for some installations
+# Scoop is the primary installer: everything installs per-user, NO administrator rights needed.
+# Steps that truly need admin (system-wide fonts, winget machine installs) are gated behind an
+# admin check and skipped otherwise. Safe to re-run (installed packages are skipped).
 
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "Windows Development Environment Setup" -ForegroundColor Cyan
@@ -15,15 +15,13 @@ function Test-Administrator {
     return $currentUser.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
-if (-not (Test-Administrator)) {
-    Write-Host "WARNING: Not running as Administrator. Some installations may fail." -ForegroundColor Yellow
-    Write-Host "Consider running PowerShell as Administrator for best results." -ForegroundColor Yellow
-    Write-Host ""
-    $continue = Read-Host "Continue anyway? (y/n)"
-    if ($continue -ne 'y') {
-        exit
-    }
+$IsAdmin = Test-Administrator
+if ($IsAdmin) {
+    Write-Host "Running as Administrator (not required; only used for optional system-wide steps)." -ForegroundColor Yellow
+} else {
+    Write-Host "Running without Administrator rights: user-level (Scoop) installs only." -ForegroundColor Green
 }
+Write-Host ""
 
 # Install Scoop if not already installed
 Write-Host "Checking for Scoop..." -ForegroundColor Green
@@ -31,14 +29,28 @@ if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
     Write-Host "Installing Scoop..." -ForegroundColor Yellow
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
     Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
-    
-    # Add extra buckets
-    scoop bucket add extras
-    scoop bucket add versions
-    scoop bucket add nerd-fonts
-    scoop bucket add java
 } else {
     Write-Host "Scoop is already installed." -ForegroundColor Green
+}
+
+# Add extra buckets (git is needed to add buckets)
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) { scoop install git }
+$existingBuckets = @(scoop bucket list 6>$null | ForEach-Object { $_.Name })
+foreach ($bucket in @("extras", "versions", "nerd-fonts", "java")) {
+    if ($existingBuckets -notcontains $bucket) { scoop bucket add $bucket }
+}
+
+# Install a Scoop package unless it is already installed
+function Install-ScoopPackage {
+    param([string]$Name)
+    $installedApps = @(scoop list 6>$null | ForEach-Object { $_.Name })
+    $short = ($Name -split '/')[-1]
+    if ($installedApps -contains $short) {
+        Write-Host "  $Name already installed" -ForegroundColor Gray
+    } else {
+        Write-Host "Installing $Name..." -ForegroundColor Yellow
+        scoop install $Name
+    }
 }
 
 # Update Scoop
@@ -55,13 +67,11 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Install uv (Python package manager) - FIRST
-Write-Host "Installing uv (Python package manager)..." -ForegroundColor Yellow
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+Install-ScoopPackage "uv"
 $env:Path = "$env:USERPROFILE\.local\bin;$env:Path"
 
 # Install neovim - SECOND
-Write-Host "Installing neovim..." -ForegroundColor Yellow
-scoop install neovim
+Install-ScoopPackage "neovim"
 
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
@@ -87,6 +97,7 @@ $scoopPackages = @(
     "bat",
     "eza",             # Modern ls replacement
     "zoxide",
+    "broot",
     "the_silver_searcher", # ag
     "grep",
     
@@ -102,7 +113,6 @@ $scoopPackages = @(
     "curl",
     "which",
     "7zip",
-    "stow",
     
     # Terminal & Shell
     "starship",
@@ -188,49 +198,55 @@ $scoopPackages = @(
 )
 
 foreach ($package in $scoopPackages) {
-    Write-Host "Installing $package..." -ForegroundColor Yellow
-    scoop install $package
+    Install-ScoopPackage $package
 }
 
 # Install Nerd Fonts via Scoop
 Write-Host ""
 Write-Host "Installing Nerd Fonts via Scoop..." -ForegroundColor Cyan
-scoop install JetBrains-Mono-NF
-scoop install Hack-NF
+Install-ScoopPackage "JetBrains-Mono-NF"
+Install-ScoopPackage "Hack-NF"
 
-# Install JetBrains Mono Nerd Font (fallback method - direct download)
-Write-Host ""
-Write-Host "Installing JetBrains Mono Nerd Font (direct download)..." -ForegroundColor Cyan
-$fontUrl = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
-$dest = "$env:TEMP\JetBrainsMono.zip"
-$fontDir = "$env:TEMP\JetBrainsMono"
+# System-wide JetBrains Mono Nerd Font (direct download) - needs Administrator, skipped otherwise.
+# The Scoop font packages above already install the fonts per-user.
+if ($IsAdmin) {
+    # Install JetBrains Mono Nerd Font (fallback method - direct download)
+    Write-Host ""
+    Write-Host "Installing JetBrains Mono Nerd Font (direct download)..." -ForegroundColor Cyan
+    $fontUrl = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
+    $dest = "$env:TEMP\JetBrainsMono.zip"
+    $fontDir = "$env:TEMP\JetBrainsMono"
 
-try {
-    Invoke-WebRequest -Uri $fontUrl -OutFile $dest
-    Expand-Archive -Path $dest -DestinationPath $fontDir -Force
+    try {
+        Invoke-WebRequest -Uri $fontUrl -OutFile $dest
+        Expand-Archive -Path $dest -DestinationPath $fontDir -Force
 
-    # Install all .ttf files
-    $fonts = Get-ChildItem -Path $fontDir -Filter "*.ttf" -Recurse
-    $objShell = New-Object -ComObject Shell.Application
-    $objFolder = $objShell.Namespace(0x14) # Windows Fonts folder
-    foreach ($font in $fonts) {
-        $objFolder.CopyHere($font.FullName, 0x10) # 0x10 = overwrite silently
+        # Install all .ttf files
+        $fonts = Get-ChildItem -Path $fontDir -Filter "*.ttf" -Recurse
+        $objShell = New-Object -ComObject Shell.Application
+        $objFolder = $objShell.Namespace(0x14) # Windows Fonts folder
+        foreach ($font in $fonts) {
+            $objFolder.CopyHere($font.FullName, 0x10) # 0x10 = overwrite silently
+        }
+        Write-Host "JetBrains Mono Nerd Font installed successfully." -ForegroundColor Green
+
+        # Cleanup
+        Remove-Item -Path $dest -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path $fontDir -Recurse -Force -ErrorAction SilentlyContinue
+    } catch {
+        Write-Host "Failed to install JetBrains Mono Nerd Font via direct download: $_" -ForegroundColor Yellow
+        Write-Host "The Scoop installation should still work." -ForegroundColor Yellow
     }
-    Write-Host "JetBrains Mono Nerd Font installed successfully." -ForegroundColor Green
-
-    # Cleanup
-    Remove-Item -Path $dest -Force -ErrorAction SilentlyContinue
-    Remove-Item -Path $fontDir -Recurse -Force -ErrorAction SilentlyContinue
-} catch {
-    Write-Host "Failed to install JetBrains Mono Nerd Font via direct download: $_" -ForegroundColor Yellow
-    Write-Host "The Scoop installation should still work." -ForegroundColor Yellow
+} else {
+    Write-Host ""
+    Write-Host "Skipping system-wide font install (needs Administrator). Scoop fonts are installed per-user." -ForegroundColor Yellow
 }
 
 # Terminal Emulators (Scoop)
 Write-Host ""
 Write-Host "Installing Terminal Emulators..." -ForegroundColor Cyan
-scoop install kitty
-scoop install wezterm
+Install-ScoopPackage "wezterm"
+Write-Host "  Note: kitty has no Windows build, skipping (wezterm is used instead)." -ForegroundColor Yellow
 
 # Additional GUI applications via Scoop
 Write-Host ""
@@ -243,39 +259,35 @@ $scoopGuiApps = @(
 )
 
 foreach ($app in $scoopGuiApps) {
-    Write-Host "Installing $app..." -ForegroundColor Yellow
-    scoop install $app
+    Install-ScoopPackage $app
 }
 
-# Check if winget is available for packages not in Scoop
+# winget is only used for GUI apps that are not in Scoop. Machine-wide installs may need
+# Administrator/UAC, so this block is skipped unless running elevated.
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "Installing Additional Tools via winget" -ForegroundColor Cyan
+Write-Host "Installing Additional Apps via winget (admin only)" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-if (Get-Command winget -ErrorAction SilentlyContinue) {
+if (-not $IsAdmin) {
+    Write-Host "Not running as Administrator: skipping winget apps (Windows Terminal, PowerShell, Bitwarden, Slack, Java runtime)." -ForegroundColor Yellow
+} elseif (Get-Command winget -ErrorAction SilentlyContinue) {
     $wingetPackages = @(
-        # These packages are better installed via winget
-        "OpenJS.NodeJS.LTS",
+        # Everything CLI-ish (git, gh, node, git-lfs, vlc, ...) already comes from Scoop above
         "Microsoft.PowerShell",
         "Microsoft.WindowsTerminal",
-        "Git.Git",
-        "GitHub.GitLFS",
-        "GitHub.cli",
         "Bitwarden.Bitwarden",
         "SlackTechnologies.Slack",
-        "VideoLAN.VLC",
         "Oracle.JavaRuntimeEnvironment"
     )
-    
+
     foreach ($package in $wingetPackages) {
         Write-Host "Installing $package..." -ForegroundColor Yellow
         winget install --id $package --silent --accept-package-agreements --accept-source-agreements
     }
 } else {
     Write-Host "winget not found. Skipping winget installations." -ForegroundColor Yellow
-    Write-Host "Note: winget is included in Windows 10 (1809+) and Windows 11" -ForegroundColor Yellow
 }
 
 # Install Python packages via uv
@@ -315,17 +327,14 @@ Write-Host "Setting up Neovim Python Environments..." -ForegroundColor Cyan
 $neovimVenvPath = "$env:USERPROFILE\.local\share\uv\venvs"
 New-Item -ItemType Directory -Force -Path $neovimVenvPath | Out-Null
 
-uv venv "$neovimVenvPath\neovim2" --python 3.12
-uv venv "$neovimVenvPath\neovim3" --python 3.12
-
-# Install neovim packages in both venvs
-& "$neovimVenvPath\neovim3\Scripts\Activate.ps1"
-uv pip install neovim flake8 neovim-remote
-deactivate
-
-& "$neovimVenvPath\neovim2\Scripts\Activate.ps1"
-uv pip install neovim flake8
-deactivate
+foreach ($venv in @("neovim2", "neovim3")) {
+    $venvDir = "$neovimVenvPath\$venv"
+    if (-not (Test-Path "$venvDir\Scripts\python.exe")) {
+        uv venv $venvDir --python 3.12
+    }
+    uv pip install --python "$venvDir\Scripts\python.exe" -U neovim flake8
+}
+uv pip install --python "$neovimVenvPath\neovim3\Scripts\python.exe" -U neovim-remote
 
 # Install Node.js global packages
 Write-Host ""
@@ -338,7 +347,9 @@ $nodePackages = @(
     "yarn",
     "prettier",
     "eslint",
-    "typescript"
+    "typescript",
+    "neovim",
+    "write-good"
 )
 
 foreach ($package in $nodePackages) {
@@ -385,11 +396,12 @@ Write-Host ""
 
 # Install OpenCode CLI
 Write-Host "Installing OpenCode..." -ForegroundColor Yellow
-npm install -g @anthropic/opencode
+# (the real npm package is opencode-ai; opencode is also available via scoop/winget)
+npm install -g opencode-ai
 
 # Install Claude Code CLI
 Write-Host "Installing Claude Code..." -ForegroundColor Yellow
-npm install -g @anthropic/claude-code
+npm install -g @anthropic-ai/claude-code
 
 # Final setup steps
 Write-Host ""
@@ -401,6 +413,18 @@ Write-Host ""
 Write-Host "Setting up fzf key bindings..." -ForegroundColor Yellow
 # Note: User will need to configure this in their shell profile
 
+# Enable versioned git hooks (gitleaks secret scanning)
+if (Get-Command git -ErrorAction SilentlyContinue) {
+    git -C $PSScriptRoot config core.hooksPath .githooks
+}
+
+Write-Host ""
+Write-Host "Skipped (Unix/macOS only, no Windows build):" -ForegroundColor Yellow
+Write-Host "  - tmux, tpm, tmuxinator, sesh  (use WSL for the tmux workflow, or Windows Terminal/wezterm panes)" -ForegroundColor Gray
+Write-Host "  - stow                         (link configs manually or use WSL)" -ForegroundColor Gray
+Write-Host "  - aerospace, hammerspoon, karabiner, espanso-mac, finicky" -ForegroundColor Gray
+Write-Host "  - kitty                        (no Windows build; wezterm installed instead)" -ForegroundColor Gray
+
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Green
 Write-Host "Installation Complete!" -ForegroundColor Green
@@ -411,7 +435,7 @@ Write-Host "1. Close and reopen your terminal to refresh PATH" -ForegroundColor 
 Write-Host "2. Configure your shell (PowerShell profile or install zsh)" -ForegroundColor White
 Write-Host "3. Set up your dotfiles using stow" -ForegroundColor White
 Write-Host "4. Configure Neovim by running: nvim and letting plugins install" -ForegroundColor White
-Write-Host "5. Install tmux alternative or use Windows Terminal panes" -ForegroundColor White
+Write-Host "5. tmux/sesh/tmuxinator/stow are Unix-only: use WSL (wsl-setup.sh) or Windows Terminal panes" -ForegroundColor White
 Write-Host ""
 Write-Host "AI Coding Assistants:" -ForegroundColor Cyan
 Write-Host "  opencode    # OpenCode CLI" -ForegroundColor White
