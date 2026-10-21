@@ -1,0 +1,5 @@
+# sesh: smart tmux session manager (picker on Alt-s in tmux, see ~/bin/sesh-pick)
+sort_order = ["tmux", "tmuxinator", "config", "zoxide"]
+
+[default_session]
+preview_command = "eza --all --git --icons --color=always --group-directories-first {}"

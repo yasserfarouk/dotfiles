@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Fuzzy picker over every window in every tmux session, with a live preview (prefix-s / Alt-f).
+# enter: switch   ctrl-x: kill window
+if [ "${1:-}" = --list ]; then
+  tmux list-windows -a -F '#{session_name}:#{window_index}	#{session_name} › #{window_index}: #{window_name}#{?window_active, *,}  [#{pane_current_command}]  #{pane_current_path}' |
+    sed "s|$HOME|~|"
+  exit
+fi
+sel=$("$0" --list | fzf --delimiter='\t' --with-nth=2 --reverse --height=100% \
+  --border-label ' windows ' --prompt '🪟  ' --header 'enter: switch  ^x: kill window' \
+  --preview 'tmux capture-pane -ep -t {1}' --preview-window 'right:55%' \
+  --bind "ctrl-x:execute-silent(tmux kill-window -t {1})+reload($0 --list)" |
+  cut -f1)
+[ -n "$sel" ] && tmux switch-client -t "$sel"

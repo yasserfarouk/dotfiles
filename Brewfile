@@ -230,6 +230,7 @@ brew "yazi"
 brew "yq"
 brew "yt-dlp"
 brew "zoxide"
+brew "sesh"
 
 cask "db-browser-for-sqlite"
 cask "dbeaver-community"

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# sesh session picker for tmux popups (Alt-s): tmux sessions, tmuxinator projects, zoxide dirs.
+# ^a all  ^t tmux  ^r tmuxinator  ^x zoxide  ^f find dirs  ^d kill session
+list='sesh list --icons --hide-duplicates'
+sel=$($list | fzf --no-sort --ansi --reverse --height=100% \
+  --border-label ' sesh ' --prompt '⚡  ' \
+  --header '^a all ^t tmux ^r tmuxinator ^x zoxide ^f find ^d kill' \
+  --bind 'tab:down,btab:up' \
+  --bind "ctrl-a:change-prompt(⚡  )+reload($list)" \
+  --bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list --tmux --icons)' \
+  --bind 'ctrl-r:change-prompt(🚀  )+reload(sesh list --tmuxinator --icons)' \
+  --bind 'ctrl-x:change-prompt(📁  )+reload(sesh list --zoxide --icons)' \
+  --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+  --bind "ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload($list)" \
+  --preview-window 'right:55%' --preview 'sesh preview {}')
+[ -n "$sel" ] && sesh connect "$sel"

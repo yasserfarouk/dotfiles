@@ -1,17 +1,22 @@
 #!/bin/bash
+# Usage: uvenv.sh [project-dir] [python-version]
+# Creates a venv at ~/myvenvs/<project-name>, symlinks it to <project-dir>/.venv,
+# installs the project into it and writes an .envrc that activates it.
 curdir="$(pwd)"
 curdir="$(basename "${curdir}")"
 mydir="${1:-$curdir}"
-mydir="${mydir%/}" # remove trailing dash if any
+mydir="${mydir%/}" # remove trailing slash if any
 pyver="${2:-12}"
 savedwd="$(pwd)"
-if [[  $curdir != $mydir ]]; then
-  cd "${mydir}"
+if [[ $curdir != "$mydir" ]]; then
+	cd "${mydir}" || exit
 fi
-name=$(basename "${mydir}")
+# Absolute project path, valid whether mydir was relative, absolute, or the cwd's own name.
+projdir="$(pwd)"
+name=$(basename "${projdir}")
 venvbase="$HOME/myvenvs"
 venv="$venvbase/${name:?}"
-echo "Creating ${mydir} venv at ${venv}"
+echo "Creating ${projdir} venv at ${venv}"
 mkdir -p "$venvbase"
 rm -rf "$venv" 1>/dev/null
 case $pyver in
@@ -30,44 +35,37 @@ case $pyver in
 	"3.12" | "12" | "")
 		uv venv -p 3.12 "$venv" 1>/dev/null || exit
 		;;
-	"3.13" | "13" | "")
+	"3.13" | "13")
 		uv venv -p 3.13 "$venv" 1>/dev/null || exit
 		;;
-	"3.14" | "14" | "")
+	"3.14" | "14")
 		uv venv -p 3.14 "$venv" 1>/dev/null || exit
 		;;
 	*)
 		uv venv -p "$pyver" "$venv" 1>/dev/null || exit
 		;;
 esac
-rm -rf ${mydir}/.venv 1>/dev/null
-echo "ln -s ${venvbase}/${name} ${mydir}/.venv"
-ln -s ${venvbase}/${name} ${mydir}/.venv
-# source "${venv}/bin/activate" 1>/dev/null
-# yes | uv pip install -U pip wheel 1>/dev/null
-# uv sync --all-extras --dev
-if [ -f "setup.py" ] || [ -f "pyproject.toml" ] || [ -f "setup.cfg" ] ; then
-	# uv pip install -e . 1>/dev/null
-	uv sync --all-extras --dev  --active
-	# uv pip install -e .
+rm -rf "${projdir}/.venv" 1>/dev/null
+echo "ln -s ${venv} ${projdir}/.venv"
+ln -s "${venv}" "${projdir}/.venv" || exit
+export VIRTUAL_ENV="$venv"
+if [ -f "setup.py" ] || [ -f "pyproject.toml" ] || [ -f "setup.cfg" ]; then
+	uv sync --all-extras --dev --active
 else
 	for req in requirements*.txt; do
 		if [ -f "${req}" ]; then
-			yes | uv pip install -r "${req}" 1>/dev/null
+			uv pip install --python "$venv" -r "${req}" 1>/dev/null
 		fi
 	done
 fi
 base=$HOME/code/projects
 for package in scml negmas; do
-	if [[ $(pip list | grep ${package}) ]]; then
+	if uv pip list --python "$venv" 2>/dev/null | grep -qi "^${package} "; then
 		echo "------ Replacing ${package} with local version"
-		yes | uv pip uninstall "${package}"
-		yes | uv pip install -e "${base}/${package}"
+		uv pip uninstall --python "$venv" "${package}"
+		uv pip install --python "$venv" -e "${base}/${package}"
 	fi
 done
-deactivate 1>/dev/null
-rm -rf ".envrc" 1>/dev/null
-echo  "source ${venv}/bin/activate" > ".envrc"
+rm -rf "${projdir}/.envrc" 1>/dev/null
+echo "source ${venv}/bin/activate" >"${projdir}/.envrc"
 cd "${savedwd}" || exit
-cd  $mydir
-# uv sync

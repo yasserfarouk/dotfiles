@@ -1,0 +1,8 @@
+# Extend gitleaks defaults with path-based rules for secret-bearing files.
+[extend]
+useDefault = true
+
+[[rules]]
+id = "token-or-secret-file"
+description = "File whose name marks it as a token/secret store"
+path = '''(?i)(^|/)\.?[^/.]*(token|secret|credential)s?(\.(txt|json|env|conf|cfg|ini|ya?ml))?$'''
