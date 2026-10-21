@@ -1,23 +1,40 @@
 #!/usr/bin/env bash
-# New workmux worktree + agent for the current repo, from a tmux popup (Alt-a; prefix-A picks the agent).
-# Type "name" (default agent from ~/.config/workmux/config.yaml) or "name codex"; spaces become dashes. An existing name is reopened.
-# Usage: wm-new <parent-session> [agent|pick]
-session=${1:-$(tmux display-message -p '#S')} agent=${2:-}
-agents='claude codex opencode pi gemini'
+# New workmux worktree (own tmux session + default agent) for the current repo, from a tmux popup (Alt-a).
+#   name            create it (or reopen an existing one) and switch to its session
+#   name prompt...  create it in the background with the agent started on "prompt..." (stay here);
+#                   if it already runs, the prompt is sent to its agent instead
+# Usage: wm-new [agent|pick]   (prefix-A passes "pick" to choose a non-default agent)
+agent=${1:-}
 fail() { printf '\n%s\n[enter to close]' "$*"; read -r _; exit 1; }
+# workmux's own switch-client has no -c and can move another attached client, so it always runs with
+# --background and we switch the popup's client ($WM_CLIENT, set by the tmux binding) ourselves.
+goto() {
+  local p s
+  p=$(workmux path "$1") || return 1
+  s=$(tmux list-sessions -F '#{session_path}	#{session_name}' | awk -F'\t' -v p="$p" '$1 == p {print $2; exit}')
+  [ -n "$s" ] && tmux switch-client ${WM_CLIENT:+-c "$WM_CLIENT"} -t "=$s"
+}
 
 root=$(git rev-parse --show-toplevel 2>/dev/null) || fail "Not in a git repo: $PWD"
 if [ "$agent" = pick ]; then
-  agent=$(for a in $agents; do command -v "$a" >/dev/null && echo "$a"; done |
+  agent=$(for a in claude codex opencode pi gemini; do command -v "$a" >/dev/null && echo "$a"; done |
     fzf --reverse --height=100% --prompt 'agent> ') || exit 0
 fi
 
 printf 'New worktree in %s%s\n' "${root/#$HOME/~}" "${agent:+  [$agent]}"
-read -r -e -p 'name [agent]: ' name || exit 0
-last=${name##* }
-case " $agents " in *" $last "*) [ "$last" != "$name" ] && agent=$last name=${name% *} ;; esac
+read -r -e -p 'name [prompt]: ' name prompt || exit 0
 # kebab-case, keep "/" so feature/x style branches still work
 slug=$(printf %s "$name" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9._/-]+/-/g; s/^-+|-+$//g')
 [ -n "$slug" ] || exit 0
+add=(workmux add "$slug" --open-if-exists --background --session ${agent:+--agent "$agent"})
 
-workmux add "$slug" --open-if-exists --parent-session "$session" ${agent:+--agent "$agent"} || fail "workmux add $slug failed"
+if [ -z "$prompt" ]; then
+  "${add[@]}" >/dev/null || fail "workmux add $slug failed"
+  goto "$slug"
+elif workmux list --json | jq -e --arg h "$slug" '.[] | select(.handle == $h and .is_open)' >/dev/null; then
+  workmux send "$slug" "$prompt" || fail "workmux send $slug failed"
+  tmux display-message "sent prompt to $slug"
+else
+  "${add[@]}" --prompt "$prompt" >/dev/null || fail "workmux add $slug failed"
+  tmux display-message "started $slug in the background"
+fi

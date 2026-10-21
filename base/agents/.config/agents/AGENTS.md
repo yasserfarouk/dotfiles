@@ -13,7 +13,7 @@ the source is `base/agents/.config/agents/AGENTS.md` in the dotfiles repo.
   worktrees with random names.
 - Worktrees live inside the main checkout at `<repo>/.worktrees/<name>`
   (`worktree_dir` in `~/.config/workmux/config.yaml`; ignored globally), each
-  in its own tmux window running the default agent. `workmux add <name> -a codex`
+  in its own tmux session (`<project>-<name>`) running the default agent. `workmux add <name> -a codex`
   (or `opencode`, `pi`) picks another agent. When working inside
   `.worktrees/<name>`, stay in that worktree; don't edit the main checkout.
 - **Name every worktree for what it does**: a short kebab-case description of

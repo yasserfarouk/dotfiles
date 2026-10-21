@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# fzf picker over the current repo's workmux worktrees, for tmux popups (Alt-o).
+# enter open/switch (own session)  ^x remove worktree+branch  ^r reload
+rows() {
+  workmux list --json | jq -r '.[] | [.handle, .branch,
+    (if .is_main then "main" elif .is_open then "open" else "closed" end),
+    ((.agent_statuses // []) | join(",") | if . == "" then "-" else . end),
+    (if .has_uncommitted_changes then "dirty" else "clean" end), .path] | @tsv' | column -t -s $'\t'
+}
+[ "$1" = --rows ] && { rows; exit; }
+# switch the popup's client ($WM_CLIENT, from the tmux binding), never whichever client tmux guesses,
+# to the session rooted at $1 (else, for the main checkout, any session with a pane there)
+goto() {
+  local s
+  s=$(tmux list-sessions -F '#{session_path}	#{session_name}' | awk -F'\t' -v p="$1" '$1 == p {print $2; exit}')
+  [ -n "$s" ] || [ -z "$2" ] || s=$(tmux list-panes -a -F '#{pane_current_path}	#{session_name}' | awk -F'\t' -v p="$1" '$1 == p {print $2; exit}')
+  [ -n "$s" ] && tmux switch-client ${WM_CLIENT:+-c "$WM_CLIENT"} -t "=$s"
+}
+git rev-parse --show-toplevel >/dev/null 2>&1 || { printf 'Not in a git repo: %s\n[enter to close]' "$PWD"; read -r _; exit 1; }
+
+self=$(realpath "$0")
+sel=$(rows | fzf --reverse --height=100% --no-sort --nth 1,2 \
+  --border-label " worktrees: $(workmux list --json | jq -r '.[0].project') " \
+  --header 'enter open  ^x remove  ^r reload' \
+  --bind "ctrl-r:reload:$self --rows" \
+  --bind "ctrl-x:execute(workmux remove {1})+reload:$self --rows" \
+  --preview-window 'right:50%' \
+  --preview 'git -C {6} -c color.ui=always status -sb; echo; git -C {6} log --color=always --oneline -15')
+[ -n "$sel" ] || exit 0
+read -r handle branch state _ _ path <<<"$sel"
+if [ "$state" = main ]; then
+  goto "$path" any-pane
+else
+  [ "$state" = open ] || workmux add "$branch" --name "$handle" --open-if-exists --background --session >/dev/null
+  goto "$path"
+fi

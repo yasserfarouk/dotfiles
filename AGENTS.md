@@ -61,5 +61,5 @@ let g:python3_host_prog = expand('~/.local/share/uv/venvs/neovim3/bin/python')
 | Vim | `base/vim/.config/vim/` |
 | Tmux | `base/tmux/.tmux.conf` |
 | Starship | `base/starship/.config/starship.toml` |
-| workmux | `base/workmux/.config/workmux/config.yaml` (worktrees in `<repo>/.worktrees/`; tmux `M-a` → `base/programs/bin/wm-new`) |
+| workmux | `base/workmux/.config/workmux/config.yaml` (session per worktree in `<repo>/.worktrees/`; tmux `M-a` new → `base/programs/bin/wm-new`, `M-o` list → `wm-list`) |
 | Agent global instructions | `base/agents/.config/agents/AGENTS.md` (symlinked as Claude/Codex/pi/opencode global instructions) |
