@@ -398,6 +398,13 @@ esac
 echo "Installing starship..."
 curl -sS https://starship.rs/install.sh | sh -s -- -y
 
+# Install gitleaks (secret scanner used by .githooks)
+echo "Installing gitleaks..."
+GL_VER=$(curl -sSL https://api.github.com/repos/gitleaks/gitleaks/releases/latest | grep -oP '"tag_name": "v\K[^"]+')
+GL_ARCH=$(uname -m | sed 's/x86_64/x64/; s/aarch64/arm64/')
+mkdir -p ~/.local/bin
+curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${GL_VER}/gitleaks_${GL_VER}_linux_${GL_ARCH}.tar.gz" | tar -xz -C ~/.local/bin gitleaks || echo "  Warning: gitleaks install failed"
+
 # Install zoxide
 echo "Installing zoxide..."
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash

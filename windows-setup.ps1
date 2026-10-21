@@ -76,6 +76,7 @@ $scoopPackages = @(
     "git",
     "gh",              # GitHub CLI
     "git-lfs",
+    "gitleaks",
     "tig",
     "lazygit",
     

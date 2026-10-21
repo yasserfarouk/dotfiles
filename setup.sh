@@ -159,6 +159,9 @@ esac
 # Stow dotfiles after packages are installed
 stow_dotfiles
 
+# Enable versioned git hooks (gitleaks secret scanning)
+git -C "$SCRIPT_DIR" config core.hooksPath .githooks
+
 # Run quick-install for final setup (vim plugins, etc.)
 echo ""
 echo "========================================"

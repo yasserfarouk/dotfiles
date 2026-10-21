@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Block commits containing secrets. Enabled via: git config core.hooksPath .githooks
+# Uses gitleaks when installed; always also checks for sensitive filenames.
+set -uo pipefail
+fail=0
+
+while IFS= read -r f; do
+  case "$f" in
+    *.pem|*.key|*id_rsa*|*id_ed25519*|.env|*/.env|.env.*|*/.env.*|*service.json|*credentials*)
+      echo "pre-commit: refusing sensitive-looking file: $f"; fail=1 ;;
+  esac
+done < <(git diff --cached --name-only --diff-filter=ACM)
+
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks git --pre-commit --staged --redact --no-banner -v || fail=1
+else
+  echo "pre-commit: gitleaks not installed, using basic pattern check"
+  pattern='-----BEGIN [A-Z ]*PRIVATE KEY-----|AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{30,}|xox[abpr]-[A-Za-z0-9-]{10,}|AIza[0-9A-Za-z_-]{35}|("?(api[_-]?key|secret|token|password|passwd)"?[[:space:]]*[:=][[:space:]]*"?[A-Za-z0-9_/+=-]{16,})'
+  if git diff --cached -U0 --diff-filter=ACM | grep -E '^\+[^+]' | grep -qiE -- "$pattern"; then
+    echo "pre-commit: possible secret in staged changes (run: git diff --cached)"; fail=1
+  fi
+fi
+
+[ $fail -eq 0 ] || { echo "Commit blocked. Remove secrets, or use --no-verify only for a confirmed false positive."; exit 1; }

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Scan every commit about to be pushed for secrets (catches --no-verify commits).
+set -uo pipefail
+command -v gitleaks >/dev/null 2>&1 || { echo "pre-push: gitleaks not installed; push blocked. Install it or use --no-verify."; exit 1; }
+zero=0000000000000000000000000000000000000000
+while read -r _ local_sha _ remote_sha; do
+  [ "$local_sha" = "$zero" ] && continue
+  if [ "$remote_sha" = "$zero" ]; then range="$local_sha --not --remotes"; else range="$remote_sha..$local_sha"; fi
+  gitleaks git --log-opts="$range" --redact --no-banner -v || { echo "Push blocked: secrets found in commits being pushed."; exit 1; }
+done
