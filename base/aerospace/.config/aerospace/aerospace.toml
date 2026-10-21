@@ -50,7 +50,8 @@ automatically-unhide-macos-hidden-apps = false
 # even when they are invisible.
 # This config option is only available since 'config-version = 2'
 # Fallback value (if you omit the key): persistent-workspaces = []
-persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9",
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
 # A callback that runs every time binding mode changes
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -111,16 +112,17 @@ gaps.outer.right =      0
     alt-slash = 'layout tiles horizontal vertical'
     alt-comma = 'layout accordion horizontal vertical'
 	alt-shift-m = 'move-node-to-monitor --wrap-around --focus-follows-window next'
+    alt-m = 'focus-monitor --wrap-around next'   # jump focus to the other screen
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#fullscreen
     alt-cmd-enter = 'fullscreen'     # toggle: maximize focused window / restore it to its previous place
     alt-w = 'exec-and-forget ~/.config/aerospace/workspace-picker.sh'   # list workspaces + apps, pick one
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-    alt-h = 'focus left'
-    alt-j = 'focus down'
-    alt-k = 'focus up'
-    alt-l = 'focus right'
+    alt-h = 'focus --boundaries all-monitors-outer-frame left'
+    alt-j = 'focus --boundaries all-monitors-outer-frame down'
+    alt-k = 'focus --boundaries all-monitors-outer-frame up'
+    alt-l = 'focus --boundaries all-monitors-outer-frame right'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move
     alt-shift-h = 'move left'
@@ -161,6 +163,7 @@ gaps.outer.right =      0
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#mode
     alt-shift-semicolon = 'mode service'
+    alt-shift-space = 'mode workspace'   # then a-z: go to workspace A-Z, shift-a..z: move window there
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -177,3 +180,161 @@ gaps.outer.right =      0
     alt-shift-j = ['join-with down', 'mode main']
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
+
+# 'workspace' binding mode: letter workspaces A-Z (plain alt-letters clash with focus/move bindings).
+# Enter with alt-shift-space, then press a letter to switch, or shift-letter to move the focused window there.
+[mode.workspace.binding]
+    esc = 'mode main'
+    alt-shift-space = 'mode main'
+    a = ['workspace A', 'mode main']
+    b = ['workspace B', 'mode main']
+    c = ['workspace C', 'mode main']
+    d = ['workspace D', 'mode main']
+    e = ['workspace E', 'mode main']
+    f = ['workspace F', 'mode main']
+    g = ['workspace G', 'mode main']
+    h = ['workspace H', 'mode main']
+    i = ['workspace I', 'mode main']
+    j = ['workspace J', 'mode main']
+    k = ['workspace K', 'mode main']
+    l = ['workspace L', 'mode main']
+    m = ['workspace M', 'mode main']
+    n = ['workspace N', 'mode main']
+    o = ['workspace O', 'mode main']
+    p = ['workspace P', 'mode main']
+    q = ['workspace Q', 'mode main']
+    r = ['workspace R', 'mode main']
+    s = ['workspace S', 'mode main']
+    t = ['workspace T', 'mode main']
+    u = ['workspace U', 'mode main']
+    v = ['workspace V', 'mode main']
+    w = ['workspace W', 'mode main']
+    x = ['workspace X', 'mode main']
+    y = ['workspace Y', 'mode main']
+    z = ['workspace Z', 'mode main']
+
+    shift-a = ['move-node-to-workspace A', 'workspace A', 'mode main']
+    shift-b = ['move-node-to-workspace B', 'workspace B', 'mode main']
+    shift-c = ['move-node-to-workspace C', 'workspace C', 'mode main']
+    shift-d = ['move-node-to-workspace D', 'workspace D', 'mode main']
+    shift-e = ['move-node-to-workspace E', 'workspace E', 'mode main']
+    shift-f = ['move-node-to-workspace F', 'workspace F', 'mode main']
+    shift-g = ['move-node-to-workspace G', 'workspace G', 'mode main']
+    shift-h = ['move-node-to-workspace H', 'workspace H', 'mode main']
+    shift-i = ['move-node-to-workspace I', 'workspace I', 'mode main']
+    shift-j = ['move-node-to-workspace J', 'workspace J', 'mode main']
+    shift-k = ['move-node-to-workspace K', 'workspace K', 'mode main']
+    shift-l = ['move-node-to-workspace L', 'workspace L', 'mode main']
+    shift-m = ['move-node-to-workspace M', 'workspace M', 'mode main']
+    shift-n = ['move-node-to-workspace N', 'workspace N', 'mode main']
+    shift-o = ['move-node-to-workspace O', 'workspace O', 'mode main']
+    shift-p = ['move-node-to-workspace P', 'workspace P', 'mode main']
+    shift-q = ['move-node-to-workspace Q', 'workspace Q', 'mode main']
+    shift-r = ['move-node-to-workspace R', 'workspace R', 'mode main']
+    shift-s = ['move-node-to-workspace S', 'workspace S', 'mode main']
+    shift-t = ['move-node-to-workspace T', 'workspace T', 'mode main']
+    shift-u = ['move-node-to-workspace U', 'workspace U', 'mode main']
+    shift-v = ['move-node-to-workspace V', 'workspace V', 'mode main']
+    shift-w = ['move-node-to-workspace W', 'workspace W', 'mode main']
+    shift-x = ['move-node-to-workspace X', 'workspace X', 'mode main']
+    shift-y = ['move-node-to-workspace Y', 'workspace Y', 'mode main']
+    shift-z = ['move-node-to-workspace Z', 'workspace Z', 'mode main']
+
+# Menu bar (LSUIElement) apps: float their windows so popovers/settings show up normally
+# instead of being tiled into (possibly hidden) workspaces.
+[[on-window-detected]]
+    if.app-id = 'com.runningwithcrayons.Alfred'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.lwouis.alt-tab-macos'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.if.Amphetamine'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.box.desktop'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.box.desktop.ui'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'pl.maketheweb.cleanshotx'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.contextsformac.Contexts'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'org.dmarcotte.Easy-Move-Resize'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.crowdstrike.falcon.App'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'se.johnste.finicky'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'org.hammerspoon.Hammerspoon'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.pointum.hazeover'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.brnbw.Leader-Key'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'org.p0deje.Maccy'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.crowdcafe.windowmagnet'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'leits.MeetingBar'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.electron.ollama'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.sindresorhus.One-Thing'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.microsoft.OneDrive'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'io.appmakes.Paletro'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.superhighfives.Pika'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.portkiller.app'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.rampatra.presentify'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'net.matthewpalmer.Rocket'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'eu.exelban.Stats'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.knollsoft.Superkey'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'onebadidea.Swift-Quit'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.stonerl.Thaw'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.ameba.TRex'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.unsplash.Wallpapers'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.zscaler.zscaler'
+    run = 'layout floating'
+[[on-window-detected]]
+    if.app-id = 'com.epson.edca'
+    run = 'layout floating'
