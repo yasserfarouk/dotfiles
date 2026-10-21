@@ -215,7 +215,7 @@ mdpdf() {
 }
 source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-# Python TLS: trust the macOS System keychain, not just certifi
+# TLS: trust the macOS System keychain, not just bundled stores (Python, Node)
 #
 # The corporate root CA on this machine lives in the macOS System keychain, and
 # Python ships its own trust store, so Python could not verify ANY certificate
@@ -246,5 +246,9 @@ if [ "$(uname -s)" = "Darwin" ]; then
   if [ -s "$MACOS_CA_BUNDLE" ]; then
     export SSL_CERT_FILE="$MACOS_CA_BUNDLE"
     export REQUESTS_CA_BUNDLE="$MACOS_CA_BUNDLE"
+    # Node ignores SSL_CERT_FILE. Without this, Node tools that ship their own
+    # runtime (e.g. copilot.lua's copilot-language-server binary) fail behind
+    # Zscaler with "unable to get local issuer certificate".
+    export NODE_EXTRA_CA_CERTS="$MACOS_CA_BUNDLE"
   fi
 fi
