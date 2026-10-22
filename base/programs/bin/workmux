@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# workmux wrapper: `workmux add NAME` creates the worktree as <repo>-<name> next to the repo
+# (worktree_dir: .. in ~/.config/workmux/config.yaml), so `../sibling` paths keep resolving and
+# worktrees sort beside their repo in file explorers. workmux's worktree_prefix cannot hold the
+# repo name, hence this. Everything else (and add with --pr/-A/-n/--foreach/several -a, which
+# name worktrees themselves) passes through unchanged.
+self=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)/$(basename "${BASH_SOURCE[0]}")
+real=
+IFS=: read -ra dirs <<<"$PATH"
+for d in "${dirs[@]}"; do
+  c=$d/workmux
+  [ -x "$c" ] && [ "$(cd "$(dirname "$c")" && pwd -P)/workmux" != "$self" ] && { real=$c; break; }
+done
+[ -n "$real" ] || { echo "workmux: real binary not found on PATH" >&2; exit 127; }
+
+[ "${1:-}" = add ] || exec "$real" "$@"
+
+# Find the branch argument and any --name; bail out for modes where workmux picks the names.
+args=("${@:2}") branch= name= name_i= agents=0
+takes_value=' --pr --forge --base --name --target-name --parent-session -p --prompt -P --prompt-file -a --agent -n --count --foreach --branch-template --max-concurrent -l --layout '
+for ((i = 0; i < ${#args[@]}; i++)); do
+  a=${args[i]}
+  case $a in
+  --pr | --pr=* | -A | --auto-name | -n | --count | --count=* | --foreach | --foreach=*) exec "$real" "$@" ;;
+  -a | --agent) agents=$((agents + 1)) ;;
+  --agent=*) agents=$((agents + 1)); continue ;;
+  --name=*) name=${a#--name=} name_i=$i; continue ;;
+  --name) name=${args[i + 1]:-} name_i=$((i + 1)) ;;
+  --) branch=${args[i + 1]:-}; break ;;
+  -*) ;;
+  *) [ -z "$branch" ] && branch=$a; continue ;;
+  esac
+  [[ $a != *=* && $takes_value == *" $a "* ]] && i=$((i + 1))
+done
+[ "$agents" -gt 1 ] && exec "$real" "$@"
+
+common=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null) || exec "$real" "$@"
+project=$(basename "$(dirname "$common")")
+base=${name:-$branch}
+[ -n "$base" ] || exec "$real" "$@"
+base=${base//\//-}
+[[ $base == "$project"-* ]] || base=$project-$base
+
+if [ -n "$name_i" ]; then
+  [[ ${args[name_i]} == --name=* ]] && args[name_i]=--name=$base || args[name_i]=$base
+  exec "$real" add "${args[@]}"
+fi
+exec "$real" add "${args[@]}" --name "$base"

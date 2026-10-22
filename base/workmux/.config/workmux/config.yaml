@@ -2,14 +2,34 @@
 # Per-project overrides go in <repo>/.workmux.yaml.
 nerdfont: true
 
-# Worktrees live inside the main checkout: <repo>/.worktrees/<name>
-# (`.worktrees/` is ignored by base/git/.gitignore_global).
-worktree_dir: .worktrees
+# Worktrees live next to the repo as <repo>-<name> (the ~/bin/workmux wrapper adds
+# the <repo>- part on `add`), so relative paths like `../kodolib` in pyproject.toml
+# resolve the same as in the main checkout. Older ones in <repo>/.worktrees/ keep
+# working (`.worktrees/` is ignored by base/git/.gitignore_global).
+worktree_dir: ..
 
-# Each worktree gets its own tmux session (named <project>-<name>), so killing
-# it never takes the session you launched it from down with it.
+# Each worktree gets its own tmux session, named like its folder (<repo>-<name>),
+# so killing it never takes the session you launched it from down with it. The
+# repo is already in the name, so no prefix. Worktrees made under the old
+# '{project}-' prefix have their session pinned in the repo's git config
+# (workmux.worktree.<name>.target-session).
 mode: session
-window_prefix: '{project}-'
+window_prefix: ''
+
+# uv projects get their own .venv in each new worktree (cheap: uv hard-links
+# from its cache). Not a symlink to the main checkout's venv: its editable
+# installs point at the main checkout, so the worktree would import the wrong
+# code, and a `uv sync` there would repoint the main checkout at the worktree.
+# If the sync fails the worktree still opens with an empty .venv to `uv sync` into.
+post_create:
+  - |
+    if [ -f uv.lock ] && command -v uv >/dev/null; then
+      env -u VIRTUAL_ENV uv sync --quiet || {
+        uv venv --quiet --allow-existing
+        echo "workmux: uv sync failed, created an empty .venv; run uv sync in the worktree" >&2
+      }
+    fi
+    true
 
 # Default agent for <agent>; override per worktree with `workmux add -a codex`.
 agent: claude

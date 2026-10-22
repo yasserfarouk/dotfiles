@@ -26,15 +26,21 @@ read -r -e -p 'name [prompt]: ' name prompt || exit 0
 # kebab-case, keep "/" so feature/x style branches still work
 slug=$(printf %s "$name" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9._/-]+/-/g; s/^-+|-+$//g')
 [ -n "$slug" ] || exit 0
-add=(workmux add "$slug" --open-if-exists --background --session ${agent:+--agent "$agent"})
+# The worktree (folder, handle and session) is <repo>-<name>, as the workmux wrapper names it;
+# a worktree from the old <repo>/.worktrees/<name> layout keeps its bare name.
+project=$(basename "$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")")
+handle=${slug//\//-}
+[[ $handle == "$project"-* ]] || handle=$project-$handle
+workmux list --json | jq -e --arg h "$slug" '.[] | select(.handle == $h)' >/dev/null && handle=$slug
+add=(workmux add "$slug" --name "$handle" --open-if-exists --background --session ${agent:+--agent "$agent"})
 
 if [ -z "$prompt" ]; then
   "${add[@]}" >/dev/null || fail "workmux add $slug failed"
-  goto "$slug"
-elif workmux list --json | jq -e --arg h "$slug" '.[] | select(.handle == $h and .is_open)' >/dev/null; then
-  workmux send "$slug" "$prompt" || fail "workmux send $slug failed"
-  tmux display-message "sent prompt to $slug"
+  goto "$handle"
+elif workmux list --json | jq -e --arg h "$handle" '.[] | select(.handle == $h and .is_open)' >/dev/null; then
+  workmux send "$handle" "$prompt" || fail "workmux send $handle failed"
+  tmux display-message "sent prompt to $handle"
 else
   "${add[@]}" --prompt "$prompt" >/dev/null || fail "workmux add $slug failed"
-  tmux display-message "started $slug in the background"
+  tmux display-message "started $handle in the background"
 fi

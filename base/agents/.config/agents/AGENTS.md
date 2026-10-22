@@ -11,11 +11,15 @@ the source is `base/agents/.config/agents/AGENTS.md` in the dotfiles repo.
   an agent's built-in worktree feature (Claude Code's `EnterWorktree` tool or
   `Agent(isolation: "worktree")`, `claude -w`, etc.), which produce unmanaged
   worktrees with random names.
-- Worktrees live inside the main checkout at `<repo>/.worktrees/<name>`
-  (`worktree_dir` in `~/.config/workmux/config.yaml`; ignored globally), each
-  in its own tmux session (`<project>-<name>`) running the default agent. `workmux add <name> -a codex`
-  (or `opencode`, `pi`) picks another agent. When working inside
-  `.worktrees/<name>`, stay in that worktree; don't edit the main checkout.
+- Worktrees live next to the main checkout as `<repo>-<name>` (e.g.
+  `~/code/projects/catenax-fix-login`; `worktree_dir: ..` in
+  `~/.config/workmux/config.yaml`, and the `~/bin/workmux` wrapper adds the
+  `<repo>-` prefix, so pass just `<name>`), so relative paths like `../lib`
+  resolve as in the main checkout. Each has its own tmux session of the same
+  name running the default agent and, for uv projects, its own `.venv`.
+  Older worktrees may still be at `<repo>/.worktrees/<name>`.
+  `workmux add <name> -a codex` (or `opencode`, `pi`) picks another agent.
+  When working inside a worktree, stay in it; don't edit the main checkout.
 - **Name every worktree for what it does**: a short kebab-case description of
   the task, e.g. `workmux add fix-login-timeout` or
   `workmux add feature/nested-protocols --name nested-protocols`. Never an
