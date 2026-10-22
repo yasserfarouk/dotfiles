@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Directory picker for tmux popups (prefix-g, Alt-g): folder shortcuts (~/bin/shortcut), zoxide and
+# project dirs under ~/code, ~/code/papers, ~/koshodojo; opens each selection with `tmuxinator any`.
+{
+  ~/bin/shortcut paths 2>/dev/null
+  zoxide query -l 2>/dev/null
+  fd . --type d --full-path "$HOME/code" --max-depth 2 &
+  fd . --type d --full-path "$HOME/code/papers" --max-depth 4 &
+  fd . --type d --full-path "$HOME/koshodojo" --max-depth 2 &
+  wait
+} | sed 's:/$::' | awk '!seen[$0]++' |
+  fzf --multi --height=100% --preview-window=right:50% --preview 'ls -A --color=always {} 2>/dev/null || ls -AG {}' |
+  xargs -I {} tmuxinator any {}

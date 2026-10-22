@@ -27,6 +27,7 @@ echo "------------------"
 CURRENT = `pwd`
 cd $MYDIR/base
 ./stowall
+~/bin/shortcut sync  # folder shortcuts -> zoxide, sesh
 cd $CURRENT
 
 case "$(uname -s)" in

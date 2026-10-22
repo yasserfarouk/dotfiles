@@ -1,0 +1,17 @@
+# Folder shortcuts: name key path   (managed by ~/bin/shortcut; edit by hand or `shortcut add`)
+#   name  -> $NAME in ~/.exports (uppercased), sesh session, yazi bookmark tag
+#   key   -> yazi bookmark key (g; in yazi), "-" for none
+#   path  -> rest of the line (spaces allowed), ~ expands to $HOME
+# Every path is also added to zoxide and listed first in tmux Alt-g.
+home            h  ~
+downloads       d  ~/Downloads
+desktop         D  ~/Desktop
+config          C  ~/.config
+code            c  ~/code
+projects        p  ~/code/projects
+papers          P  ~/code/papers
+papers_current  u  ~/code/papers/current
+presentations   l  ~/code/presentations
+dotfiles        f  ~/code/personal/dotfiles
+icloud          i  ~/Library/Mobile Documents/com~apple~CloudDocs
+nec             n  ~/Library/Mobile Documents/com~apple~CloudDocs/yasser/business/NEC

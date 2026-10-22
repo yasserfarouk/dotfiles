@@ -1,5 +1,11 @@
-# NEC work directory
-export NEC="$HOME/Library/Mobile Documents/com~apple~CloudDocs/yasser/business/NEC"
+# Folder shortcuts from ~/.config/shortcuts/dirs (manage with ~/bin/shortcut): $NEC, $PAPERS, $DOTFILES, ...
+if [ -r "$HOME/.config/shortcuts/dirs" ]; then
+	eval "$(awk -v home="$HOME" -v q="'" '!/^[[:space:]]*(#|$)/ {
+		n = toupper($1); if (n == "HOME") next
+		p = $0; sub(/^[[:space:]]*[^[:space:]]+[[:space:]]+[^[:space:]]+[[:space:]]+/, "", p)
+		sub(/[[:space:]]+$/, "", p); sub(/^~/, home, p); gsub(q, q "\\" q q, p)
+		print "export " n "=" q p q }' "$HOME/.config/shortcuts/dirs")"
+fi
 
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$HOME/.poetry/bin:$PATH"
