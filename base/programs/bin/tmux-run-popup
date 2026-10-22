@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+# Run-a-command popup for tmux (Alt-r, prefix-R): opened in the current pane's folder, prompts for a
+# command (zsh line editor, Up/Down = shell history from $HISTFILE), runs it in an interactive zsh so
+# aliases/functions work, then waits: Enter/r = run another, any other key (q, Esc, Space…) = close.
+# `tmux-run-popup CMD…` runs CMD first. Ctrl-C or an empty line at the prompt closes too.
+zmodload zsh/datetime
+HISTFILE=${HISTFILE:-~/.z_history}
+HISTSIZE=10000
+fc -R "$HISTFILE" 2>/dev/null
+
+cmd="$*"
+while true; do
+  if [[ -z $cmd ]]; then
+    print -P "%F{blue}%~%f"
+    vared -h -p '%F{green}❯%f ' cmd || exit 0
+    [[ -z ${cmd// /} ]] && exit 0
+    print -s -- "$cmd"
+    print -r -- ": $EPOCHSECONDS:0;$cmd" >>"$HISTFILE"
+  fi
+  zsh -ic "$cmd"
+  rc=$?
+  cmd=
+  if (( rc == 0 )); then print -nP "\n%F{green}✔ done%f"; else print -nP "\n%F{red}✘ exit $rc%f"; fi
+  print -nP "  %F{8}Enter: run another · any other key: close%f"
+  read -rsk1 key || exit 0
+  [[ $key == $'\n' || $key == r ]] || exit 0
+  print
+done

@@ -59,7 +59,7 @@ let g:python3_host_prog = expand('~/.local/share/uv/venvs/neovim3/bin/python')
 | Shell exports | `base/common_shell/.exports` |
 | Neovim | `base/nvim/.config/nvim/` (uses lazy.nvim) |
 | Vim | `base/vim/.config/vim/` |
-| Tmux | `base/tmux/.tmux.conf` |
+| Tmux | `base/tmux/.tmux.conf` (`M-r`/prefix-`R` → `base/programs/bin/tmux-run-popup`: run a command in a popup in the pane's folder, Enter = another, any key = close) |
 | direnv | `base/direnv/.config/direnv/direnvrc` (`source …/bin/activate` of a missing venv is a silent no-op + `watch_file`, so venv-less worktrees don't error; `use venv [DIR]`) |
 | Starship | `base/starship/.config/starship.toml` |
 | workmux | `base/workmux/.config/workmux/config.yaml` (worktrees next to the repo as `<repo>-<name>`, session of the same name; the `base/programs/bin/workmux` wrapper adds the `<repo>-` on `add`; older ones in `<repo>/.worktrees/` keep their pinned `target-session`; `post_create` gives uv projects a fresh `.venv` per worktree, never a link; tmux `M-a` new → `base/programs/bin/wm-new`, `M-o` list → `wm-list`, `M-c`/prefix `C-c` switch to any running agent in sidebar order → `wm-agents`) |
