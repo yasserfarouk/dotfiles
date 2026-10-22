@@ -132,6 +132,11 @@ echo "Installing vim-plug for vim"
 echo "Making nvim-in-kitty the default app for Markdown / text files"
 "$(dirname "$0")/base/programs/bin/nvimkitty" install || echo "Warning: nvimkitty install failed"
 
+if [ -d "$HOME/Library/Application Support/Alfred/Alfred.alfredpreferences" ]; then
+	echo "Alfred: yazi / tmux file actions, kitty as terminal"
+	"$(dirname "$0")/base/programs/bin/alfred-kitty" install || echo "Warning: alfred-kitty install failed"
+fi
+
 # Fonts come from the Brewfile casks (font-hack-nerd-font, font-jetbrains-mono-nerd-font, ...)
 
 echo "----------------------"

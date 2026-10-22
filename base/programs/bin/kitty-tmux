@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Open a path in a tmux session shown in kitty: a folder gets yazi (the `y` wrapper, so quitting it leaves a shell
+# in the last folder), a file gets a shell in its folder. The session is named after the folder and reused.
+# A running, attached tmux client is switched to the session (and kitty raised); otherwise a new kitty window
+# attaches to it, starting the tmux server if needed.
+# Usage: kitty-tmux [PATH]      (no path: $HOME)
+set -euo pipefail
+kitty_bin=/Applications/kitty.app/Contents/MacOS/kitty
+
+# GUI launches (Alfred, Finder) get a bare PATH, so look in the usual places
+find_bin() {
+  local b
+  for b in "/opt/homebrew/bin/$1" "/usr/local/bin/$1" "$HOME/.local/bin/$1"; do [ -x "$b" ] && { echo "$b"; return; }; done
+  command -v "$1" 2>/dev/null || true
+}
+
+path=${1:-$HOME}
+path=${path%/}
+[ -n "$path" ] || path=/
+if [ -d "$path" ]; then dir=$path; folder=1; else dir=$(dirname "$path"); folder=; fi
+tmux=$(find_bin tmux)
+[ -n "$tmux" ] || { echo "kitty-tmux: tmux not found" >&2; exit 1; }
+# tmux turns . and : in session names into _
+name=$(basename "$dir" | tr '.:' '__')
+
+if "$tmux" has-session -t "=$name" 2>/dev/null; then
+  # a folder gets its own yazi window in the existing session
+  [ -n "$folder" ] && "$tmux" new-window -t "=$name:" -c "$dir"
+else
+  "$tmux" new-session -d -s "$name" -c "$dir"
+fi
+[ -n "$folder" ] && "$tmux" send-keys -t "=$name:" "y" Enter
+
+client=$("$tmux" list-clients -F '#{client_activity} #{client_name}' 2>/dev/null | sort -rn | awk 'NR==1 {print $2}')
+if [ -n "$client" ]; then
+  "$tmux" switch-client -c "$client" -t "=$name"
+  open -a kitty
+else
+  nohup "$kitty_bin" --single-instance --directory "$dir" "$tmux" attach -t "=$name" >/dev/null 2>&1 &
+fi
