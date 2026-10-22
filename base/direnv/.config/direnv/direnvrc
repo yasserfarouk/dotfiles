@@ -1,0 +1,22 @@
+# Global direnv library (stowed from dotfiles: base/direnv), loaded before every .envrc.
+
+# Most .envrc files here are just `source .venv/bin/activate` (written by
+# uvenv/makevenv/mkvenv). In a fresh worktree or clone the venv does not exist
+# yet, so make sourcing a missing virtualenv activate script a silent no-op and
+# watch it, so direnv reloads by itself once the venv is created (`uv sync`).
+source() {
+	if [[ $1 == */bin/activate && ! -e $1 ]]; then
+		watch_file "$1"
+		return 0
+	fi
+	builtin source "$@"
+}
+.() { source "$@"; }
+
+# `use venv [DIR]`: activate DIR (default .venv) if it exists.
+use_venv() {
+	local activate=${1:-.venv}/bin/activate
+	watch_file "$activate"
+	[[ -e $activate ]] || return 0
+	builtin source "$activate"
+}

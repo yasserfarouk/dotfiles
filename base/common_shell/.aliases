@@ -488,7 +488,15 @@ uv_init() {
     ln -snf "$target_path" .venv
 
     # 5. Create .envrc file for direnv
-    echo 'source .venv/bin/activate' > .envrc
+    # Uses use_venv from the global direnvrc when present, else checks itself.
+    cat >.envrc <<'EOF'
+if type use_venv >/dev/null 2>&1; then
+	use_venv .venv
+else
+	watch_file .venv/bin/activate
+	if [ -f .venv/bin/activate ]; then source .venv/bin/activate; fi
+fi
+EOF
     echo "Created .envrc"
 
     # 6. If folder is not empty (has pyproject.toml or requirements), run uv sync

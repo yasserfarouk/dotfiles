@@ -67,5 +67,13 @@ for package in scml negmas; do
 	fi
 done
 rm -rf "${projdir}/.envrc" 1>/dev/null
-echo "source ${venv}/bin/activate" >"${projdir}/.envrc"
+# Uses use_venv from the global direnvrc when present, else checks itself.
+cat >"${projdir}/.envrc" <<EOF
+if type use_venv >/dev/null 2>&1; then
+	use_venv ${venv}
+else
+	watch_file ${venv}/bin/activate
+	if [ -f ${venv}/bin/activate ]; then source ${venv}/bin/activate; fi
+fi
+EOF
 cd "${savedwd}" || exit

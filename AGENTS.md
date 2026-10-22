@@ -60,6 +60,7 @@ let g:python3_host_prog = expand('~/.local/share/uv/venvs/neovim3/bin/python')
 | Neovim | `base/nvim/.config/nvim/` (uses lazy.nvim) |
 | Vim | `base/vim/.config/vim/` |
 | Tmux | `base/tmux/.tmux.conf` |
+| direnv | `base/direnv/.config/direnv/direnvrc` (`source …/bin/activate` of a missing venv is a silent no-op + `watch_file`, so venv-less worktrees don't error; `use venv [DIR]`) |
 | Starship | `base/starship/.config/starship.toml` |
 | workmux | `base/workmux/.config/workmux/config.yaml` (session per worktree in `<repo>/.worktrees/`; tmux `M-a` new → `base/programs/bin/wm-new`, `M-o` list → `wm-list`) |
 | Folder shortcuts | `base/shortcuts/.config/shortcuts/dirs` (`name key path`; `~/bin/shortcut add/rm/ls/sync` → `$NAME` in `.exports`, yazi yamb bookmarks, zoxide, sesh `shortcuts.toml`, tmux `M-g` via `tmux-dir-pick`) |
