@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+# One-way mirror of the Box storage folder into a local folder (Box -> local, never back).
+# Local changes in the mirror are overwritten/deleted on the next run.
+# Usage: box-sync [run] [-n]          sync now (-n: dry run)
+#        box-sync install [HH:MM]     run daily via launchd (default 13:00)
+#        box-sync uninstall | status
+# Env:   BOX_SYNC_SRC  (default ~/Library/CloudStorage/Box-Box/Yasser/storage)
+#        BOX_SYNC_DEST (default ~/code/storage)
+set -euo pipefail
+src=${BOX_SYNC_SRC:-$HOME/Library/CloudStorage/Box-Box/Yasser/storage}
+dest=${BOX_SYNC_DEST:-$HOME/code/storage}
+label=com.yasser.box-sync
+plist=$HOME/Library/LaunchAgents/$label.plist
+log=$HOME/Library/Logs/box-sync.log
+marker=.box-sync-mirror
+lock=${TMPDIR:-/tmp}/box-sync.lock
+die() { echo "box-sync: $*" >&2; exit 1; }
+
+# prefer homebrew rsync 3.x; launchd's PATH only has Apple's openrsync
+rsync_bin() {
+  local r
+  for r in /opt/homebrew/bin/rsync /usr/local/bin/rsync; do [ -x "$r" ] && { echo "$r"; return; }; done
+  command -v rsync || die "rsync not found"
+}
+
+run() {
+  local dry=()
+  [ "${1:-}" = -n ] && dry=(-n)
+  # an empty/missing source (Box signed out, not mounted) would wipe the mirror via --delete
+  [ -d "$src" ] || die "source missing: $src"
+  [ -n "$(ls -A "$src" 2>/dev/null)" ] || die "source is empty, refusing to sync: $src"
+  if [ -d "$dest" ] && [ ! -e "$dest/$marker" ] && [ -n "$(ls -A "$dest")" ]; then
+    die "$dest is not empty and is not a box-sync mirror; refusing to overwrite it"
+  fi
+  mkdir "$lock" 2>/dev/null || die "another sync is running (lock $lock)"
+  trap 'rmdir "$lock"' EXIT
+  if [ ${#dry[@]} -eq 0 ]; then
+    mkdir -p "$dest" && touch "$dest/$marker"
+  fi
+  echo "== $(date '+%F %T') box-sync $src -> $dest ${dry[*]:-}"
+  local rc=0
+  "$(rsync_bin)" -a --delete --stats "${dry[@]}" \
+    --exclude="/$marker" --exclude=.DS_Store --exclude='~$*' --exclude='.~lock.*#' \
+    "$src/" "$dest/" || rc=$?
+  # 24 = files vanished during transfer (normal with Box); 23 skips deletions, so it's safe to report
+  [ $rc -eq 0 ] || [ $rc -eq 24 ] || die "rsync failed (exit $rc)"
+}
+
+install() {
+  local t=${1:-13:00} h m
+  [[ $t =~ ^([0-9]{1,2}):([0-9]{2})$ ]] || die "time must be HH:MM"
+  h=$((10#${BASH_REMATCH[1]})) m=$((10#${BASH_REMATCH[2]}))
+  mkdir -p "${plist%/*}" "${log%/*}"
+  cat >"$plist" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>$label</string>
+  <key>ProgramArguments</key><array><string>/bin/bash</string><string>$HOME/bin/box-sync</string><string>run</string></array>
+  <key>EnvironmentVariables</key><dict>
+    <key>BOX_SYNC_SRC</key><string>$src</string>
+    <key>BOX_SYNC_DEST</key><string>$dest</string>
+  </dict>
+  <key>StartCalendarInterval</key><dict><key>Hour</key><integer>$h</integer><key>Minute</key><integer>$m</integer></dict>
+  <key>StandardOutPath</key><string>$log</string>
+  <key>StandardErrorPath</key><string>$log</string>
+</dict></plist>
+EOF
+  launchctl bootout "gui/$(id -u)/$label" 2>/dev/null || true
+  launchctl bootstrap "gui/$(id -u)" "$plist"
+  printf 'box-sync: daily at %02d:%02d, %s -> %s (log %s)\n' "$h" "$m" "$src" "$dest" "$log"
+}
+
+uninstall() {
+  launchctl bootout "gui/$(id -u)/$label" 2>/dev/null || true
+  rm -f "$plist"
+  echo "box-sync: daily sync removed"
+}
+
+status() {
+  echo "source: $src"
+  echo "mirror: $dest"
+  if [ -f "$plist" ]; then
+    echo "schedule: $plist"
+    launchctl print "gui/$(id -u)/$label" 2>/dev/null | grep -E '^\s*(state|last exit code) ' || echo "  (not loaded)"
+  else
+    echo "schedule: not installed (box-sync install [HH:MM])"
+  fi
+  [ -f "$log" ] && { echo "last log lines ($log):"; tail -n 5 "$log"; }
+  return 0
+}
+
+case ${1:-run} in
+  run) shift || true; run "$@" ;;
+  -n) run -n ;;
+  install) shift; install "$@" ;;
+  uninstall) uninstall ;;
+  status) status ;;
+  -h|--help|help) sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *) die "unknown command: $1 (run|install|uninstall|status)" ;;
+esac

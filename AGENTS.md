@@ -63,4 +63,5 @@ let g:python3_host_prog = expand('~/.local/share/uv/venvs/neovim3/bin/python')
 | Starship | `base/starship/.config/starship.toml` |
 | workmux | `base/workmux/.config/workmux/config.yaml` (session per worktree in `<repo>/.worktrees/`; tmux `M-a` new → `base/programs/bin/wm-new`, `M-o` list → `wm-list`) |
 | Folder shortcuts | `base/shortcuts/.config/shortcuts/dirs` (`name key path`; `~/bin/shortcut add/rm/ls/sync` → `$NAME` in `.exports`, yazi yamb bookmarks, zoxide, sesh `shortcuts.toml`, tmux `M-g` via `tmux-dir-pick`) |
+| Box mirror | `base/programs/bin/box-sync` (one-way rsync `~/Library/CloudStorage/Box-Box/Yasser/storage` → `~/code/storage`; `box-sync install [HH:MM]` writes launchd `com.yasser.box-sync`, daily 13:00, log `~/Library/Logs/box-sync.log`) |
 | Agent global instructions | `base/agents/.config/agents/AGENTS.md` (symlinked as Claude/Codex/pi/opencode global instructions) |
