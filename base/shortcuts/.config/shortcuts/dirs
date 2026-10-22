@@ -15,3 +15,10 @@ presentations   l  ~/code/presentations
 dotfiles        f  ~/code/personal/dotfiles
 icloud          i  ~/Library/Mobile Documents/com~apple~CloudDocs
 nec             n  ~/Library/Mobile Documents/com~apple~CloudDocs/yasser/business/NEC
+storage         S  ~/Library/CloudStorage/Box-Box/Yasser/storage
+travel          t  ~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/travel
+business        b  ~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/business
+documents       o  ~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/documents
+nec_box         N  ~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/business/NEC
+patents         a  ~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/business/NEC/Patents
+nec_projects    j  ~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/business/NEC/projects

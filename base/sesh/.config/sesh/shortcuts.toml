@@ -47,3 +47,31 @@ path = "~/Library/Mobile Documents/com~apple~CloudDocs"
 [[session]]
 name = "nec"
 path = "~/Library/Mobile Documents/com~apple~CloudDocs/yasser/business/NEC"
+
+[[session]]
+name = "storage"
+path = "~/Library/CloudStorage/Box-Box/Yasser/storage"
+
+[[session]]
+name = "travel"
+path = "~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/travel"
+
+[[session]]
+name = "business"
+path = "~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/business"
+
+[[session]]
+name = "documents"
+path = "~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/documents"
+
+[[session]]
+name = "nec_box"
+path = "~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/business/NEC"
+
+[[session]]
+name = "patents"
+path = "~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/business/NEC/Patents"
+
+[[session]]
+name = "nec_projects"
+path = "~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/business/NEC/projects"
