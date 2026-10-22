@@ -129,6 +129,9 @@ echo "Installing vim-plug for vim"
 [ -f "$HOME/.vim/autoload/plug.vim" ] || curl -fsSLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
 	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim || true
 
+echo "Making nvim-in-kitty the default app for Markdown / text files"
+"$(dirname "$0")/base/programs/bin/nvimkitty" install || echo "Warning: nvimkitty install failed"
+
 # Fonts come from the Brewfile casks (font-hack-nerd-font, font-jetbrains-mono-nerd-font, ...)
 
 echo "----------------------"

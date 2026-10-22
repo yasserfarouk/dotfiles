@@ -1,0 +1,216 @@
+#!/usr/bin/env bash
+# Open text files in nvim and folders in yazi inside kitty (VS Code / Finder when those are missing), and make
+# that the macOS default for Markdown, plain text and similar files, and for folders.
+# Usage: nvimkitty [FILE|DIR...]      open the files (no file: an empty nvim); a first argument that is a folder opens yazi
+#        nvimkitty install            build ~/Applications/NvimKitty.app and make it the default handler
+#        nvimkitty uninstall          remove the app (folders go back to Finder; text falls back to the next handler)
+#        nvimkitty status             show which app opens each file type
+# The app is a thin AppleScript applet that calls this script, so the behaviour lives here, in the dotfiles.
+set -euo pipefail
+app=$HOME/Applications/NvimKitty.app
+bundle_id=com.yasser.nvimkitty
+lsregister=/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister
+kitty_bin=/Applications/kitty.app/Contents/MacOS/kitty
+vscode_id=com.microsoft.VSCode
+# system types (UTIs) to take over; extensions without a system UTI are declared by the app (com.yasser.nvimkitty.<ext>)
+utis=(net.daringfireball.markdown public.plain-text public.utf8-plain-text com.apple.log public.json public.yaml
+      public.script public.shell-script public.python-script)
+declared_exts=(rst org toml ini conf cfg env)
+# folders: public.folder only, never public.directory (that would also catch .app bundles and other packages)
+folder_uti=public.folder
+finder_id=com.apple.finder
+exts=(md markdown txt text log json yaml yml "${declared_exts[@]}")
+die() { echo "nvimkitty: $*" >&2; exit 1; }
+
+# GUI launches get a bare PATH, so look in the usual places
+find_bin() {
+  local b
+  for b in "/opt/homebrew/bin/$1" "/usr/local/bin/$1" "$HOME/.local/bin/$1"; do [ -x "$b" ] && { echo "$b"; return; }; done
+  command -v "$1" 2>/dev/null || true
+}
+
+have_kitty() { [ -x "$kitty_bin" ] && [ -n "$(find_bin nvim)" ]; }
+have_yazi() { [ -x "$kitty_bin" ] && [ -n "$(find_bin yazi)" ]; }
+
+open_dirs() {
+  if have_yazi; then
+    # each extra folder becomes a yazi tab
+    nohup "$kitty_bin" --single-instance --directory "$1" "$(find_bin yazi)" "$@" >/dev/null 2>&1 &
+  else
+    # by Finder's bundle id: a plain `open` would come straight back here when this app is the folder handler
+    open -b "$finder_id" "$@"
+  fi
+}
+
+open_files() {
+  [ $# -gt 0 ] && [ -d "$1" ] && { open_dirs "$@"; return; }
+  if have_kitty; then
+    local nvim dir
+    nvim=$(find_bin nvim)
+    dir=$PWD
+    [ $# -gt 0 ] && dir=$(cd "$(dirname "$1")" && pwd)
+    # --single-instance: a new OS window in the running kitty, if there is one
+    nohup "$kitty_bin" --single-instance --directory "$dir" "$nvim" "$@" >/dev/null 2>&1 &
+  elif [ -d "/Applications/Visual Studio Code.app" ]; then
+    open -b "$vscode_id" "$@"
+  else
+    die "neither kitty+nvim nor VS Code is installed"
+  fi
+}
+
+plist_doc_types() {
+  local p=$1 i=0 u e
+  /usr/libexec/PlistBuddy -c "Delete :CFBundleDocumentTypes" "$p" 2>/dev/null || true
+  /usr/libexec/PlistBuddy -c "Delete :UTImportedTypeDeclarations" "$p" 2>/dev/null || true
+  /usr/libexec/PlistBuddy \
+    -c "Add :CFBundleDocumentTypes array" -c "Add :CFBundleDocumentTypes:0 dict" \
+    -c "Add :CFBundleDocumentTypes:0:CFBundleTypeName string Text" \
+    -c "Add :CFBundleDocumentTypes:0:CFBundleTypeRole string Editor" \
+    -c "Add :CFBundleDocumentTypes:0:LSHandlerRank string Alternate" \
+    -c "Add :CFBundleDocumentTypes:0:LSItemContentTypes array" \
+    -c "Add :CFBundleDocumentTypes:0:CFBundleTypeExtensions array" \
+    -c "Add :CFBundleDocumentTypes:1 dict" \
+    -c "Add :CFBundleDocumentTypes:1:CFBundleTypeName string Folder" \
+    -c "Add :CFBundleDocumentTypes:1:CFBundleTypeRole string Viewer" \
+    -c "Add :CFBundleDocumentTypes:1:LSHandlerRank string Alternate" \
+    -c "Add :CFBundleDocumentTypes:1:LSItemContentTypes array" \
+    -c "Add :CFBundleDocumentTypes:1:LSItemContentTypes:0 string $folder_uti" \
+    -c "Add :UTImportedTypeDeclarations array" "$p"
+  for u in "${utis[@]}"; do
+    /usr/libexec/PlistBuddy -c "Add :CFBundleDocumentTypes:0:LSItemContentTypes:$i string $u" "$p"; i=$((i + 1))
+  done
+  local j=0
+  for e in "${declared_exts[@]}"; do
+    /usr/libexec/PlistBuddy \
+      -c "Add :CFBundleDocumentTypes:0:LSItemContentTypes:$i string $bundle_id.$e" \
+      -c "Add :UTImportedTypeDeclarations:$j dict" \
+      -c "Add :UTImportedTypeDeclarations:$j:UTTypeIdentifier string $bundle_id.$e" \
+      -c "Add :UTImportedTypeDeclarations:$j:UTTypeDescription string .$e text file" \
+      -c "Add :UTImportedTypeDeclarations:$j:UTTypeConformsTo array" \
+      -c "Add :UTImportedTypeDeclarations:$j:UTTypeConformsTo:0 string public.plain-text" \
+      -c "Add :UTImportedTypeDeclarations:$j:UTTypeTagSpecification dict" \
+      -c "Add :UTImportedTypeDeclarations:$j:UTTypeTagSpecification:public.filename-extension array" \
+      -c "Add :UTImportedTypeDeclarations:$j:UTTypeTagSpecification:public.filename-extension:0 string $e" "$p"
+    i=$((i + 1)); j=$((j + 1))
+  done
+  i=0
+  for e in "${exts[@]}"; do
+    /usr/libexec/PlistBuddy -c "Add :CFBundleDocumentTypes:0:CFBundleTypeExtensions:$i string $e" "$p"; i=$((i + 1))
+  done
+}
+
+build_app() {
+  local self src
+  self=$HOME/bin/nvimkitty
+  [ -x "$self" ] || self=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/nvimkitty
+  src=$(mktemp -d)/NvimKitty.applescript
+  cat >"$src" <<EOF
+on open theFiles
+	set args to ""
+	repeat with f in theFiles
+		set args to args & " " & quoted form of (POSIX path of f)
+	end repeat
+	do shell script quoted form of "$self" & args & " > /dev/null 2>&1 &"
+end open
+
+on run
+	do shell script quoted form of "$self" & " > /dev/null 2>&1 &"
+end run
+EOF
+  mkdir -p "$HOME/Applications"
+  rm -rf "$app"
+  osacompile -o "$app" "$src"
+  local p=$app/Contents/Info.plist
+  /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $bundle_id" "$p" 2>/dev/null \
+    || /usr/libexec/PlistBuddy -c "Add :CFBundleIdentifier string $bundle_id" "$p"
+  /usr/libexec/PlistBuddy -c "Set :CFBundleName NvimKitty" "$p" 2>/dev/null || true
+  plist_doc_types "$p"
+  plutil -lint -s "$p"
+  codesign --force --deep -s - "$app" 2>/dev/null
+  "$lsregister" -f "$app"
+}
+
+duti_bin() {
+  local d
+  d=$(find_bin duti)
+  if [ -z "$d" ]; then
+    command -v brew >/dev/null 2>&1 || die "duti missing and Homebrew not found (brew install duti)"
+    brew install duti >/dev/null
+    d=$(find_bin duti)
+  fi
+  echo "$d"
+}
+
+# LaunchServices picks up a new registration a moment late: retry until each type reports the wanted handler
+# set_defaults HANDLER [UTI...]   (default: the text types)
+set_defaults() {
+  local handler=$1 duti u n
+  shift
+  duti=$(duti_bin)
+  local types=("${utis[@]}")
+  [ "$handler" = "$bundle_id" ] && for e in "${declared_exts[@]}"; do types+=("$bundle_id.$e"); done
+  [ $# -gt 0 ] && types=("$@")
+  for n in 1 2 3 4 5; do
+    local pending=()
+    for u in "${types[@]}"; do
+      "$duti" -s "$handler" "$u" all 2>/dev/null || true
+      [ "$("$duti" -d "$u" 2>/dev/null)" = "$handler" ] || pending+=("$u")
+    done
+    [ ${#pending[@]} -eq 0 ] && return 0
+    types=("${pending[@]}")
+    sleep "$n"
+  done
+  echo "nvimkitty: could not set $handler for: ${types[*]}" >&2
+  return 1
+}
+
+install() {
+  [ "$(uname)" = Darwin ] || die "install is macOS-only"
+  if have_kitty; then
+    build_app
+    set_defaults "$bundle_id"
+    echo "NvimKitty.app is now the default for: ${exts[*]}"
+    if have_yazi; then
+      # recent macOS refuses (paramErr -50) to hand public.folder to anything but Finder; then `nvimkitty DIR`,
+      # or dropping a folder on the app, still opens yazi
+      if set_defaults "$bundle_id" "$folder_uti" 2>/dev/null; then
+        echo "NvimKitty.app (yazi) is now the default for folders"
+      else
+        echo "macOS keeps Finder as the folder handler; folders open in yazi only via nvimkitty DIR or the app"
+      fi
+    else
+      echo "yazi not found; folders stay with Finder"
+    fi
+  elif [ -d "/Applications/Visual Studio Code.app" ]; then
+    echo "kitty or nvim not found; making VS Code the default instead"
+    set_defaults "$vscode_id"
+  else
+    die "neither kitty+nvim nor VS Code is installed"
+  fi
+}
+
+status() {
+  local duti u e tmp
+  duti=$(duti_bin)
+  tmp=$(mktemp -d)
+  printf "%-10s %-34s %s\n" ext type handler
+  for e in "${exts[@]}"; do
+    : >"$tmp/probe.$e"
+    u=$(mdls -raw -name kMDItemContentType "$tmp/probe.$e" 2>/dev/null || true)
+    case $u in dyn.*|""|"(null)") u="$bundle_id.$e (declared)";; esac
+    printf ".%-9s %-34s %s\n" "$e" "$u" "$("$duti" -d "${u% (declared)}" 2>/dev/null || true)"
+  done
+  printf "%-10s %-34s %s\n" "(folder)" "$folder_uti" "$("$duti" -d "$folder_uti" 2>/dev/null || true)"
+  rm -rf "$tmp"
+}
+
+case ${1:-} in
+  install) install ;;
+  uninstall)
+    # folders go back to Finder explicitly; text types fall back to whatever LaunchServices picks next
+    [ "$("$(duti_bin)" -d "$folder_uti" 2>/dev/null)" = "$bundle_id" ] && set_defaults "$finder_id" "$folder_uti"
+    "$lsregister" -u "$app" 2>/dev/null || true; rm -rf "$app"; echo "removed $app" ;;
+  status) status ;;
+  -h|--help) sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *) open_files "$@" ;;
+esac

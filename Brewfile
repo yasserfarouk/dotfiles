@@ -79,6 +79,7 @@ brew "dnsmasq", restart_service: :changed
 brew "docx2txt"
 brew "doxygen"
 brew "duckdb"
+brew "duti"
 brew "node"
 brew "emscripten"
 brew "entr"
