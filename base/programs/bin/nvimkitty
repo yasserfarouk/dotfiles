@@ -2,12 +2,17 @@
 # Open text files in nvim and folders in yazi inside kitty (VS Code / Finder when those are missing), and make
 # that the macOS default for Markdown, plain text and similar files, and for folders.
 # Usage: nvimkitty [FILE|DIR...]      open the files (no file: an empty nvim); a first argument that is a folder opens yazi
-#        nvimkitty install            build ~/Applications/NvimKitty.app and make it the default handler
+#        nvimkitty yazi [PATH...]     open yazi in kitty at the folders (a file: its folder, with the file selected)
+#        nvimkitty install            build ~/Applications/NvimKitty.app, make it the default handler, and add the
+#                                     Finder Quick Action "Open in Yazi" (right-click, or ctrl-opt-cmd-Y)
 #        nvimkitty uninstall          remove the app (folders go back to Finder; text falls back to the next handler)
 #        nvimkitty status             show which app opens each file type
 # The app is a thin AppleScript applet that calls this script, so the behaviour lives here, in the dotfiles.
 set -euo pipefail
 app=$HOME/Applications/NvimKitty.app
+service_name="Open in Yazi"
+service=$HOME/Library/Services/$service_name.workflow
+service_key='^~@y'   # ctrl-opt-cmd-Y
 bundle_id=com.yasser.nvimkitty
 lsregister=/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister
 kitty_bin=/Applications/kitty.app/Contents/MacOS/kitty
@@ -33,9 +38,12 @@ have_kitty() { [ -x "$kitty_bin" ] && [ -n "$(find_bin nvim)" ]; }
 have_yazi() { [ -x "$kitty_bin" ] && [ -n "$(find_bin yazi)" ]; }
 
 open_dirs() {
+  [ $# -gt 0 ] || set -- "$HOME"
   if have_yazi; then
-    # each extra folder becomes a yazi tab
-    nohup "$kitty_bin" --single-instance --directory "$1" "$(find_bin yazi)" "$@" >/dev/null 2>&1 &
+    local dir=$1
+    [ -d "$dir" ] || dir=$(dirname "$dir")
+    # each extra folder becomes a yazi tab; a file opens its folder with the file selected
+    nohup "$kitty_bin" --single-instance --directory "$dir" "$(find_bin yazi)" "$@" >/dev/null 2>&1 &
   else
     # by Finder's bundle id: a plain `open` would come straight back here when this app is the folder handler
     open -b "$finder_id" "$@"
@@ -99,10 +107,15 @@ plist_doc_types() {
   done
 }
 
+self_path() {
+  local self=$HOME/bin/nvimkitty
+  [ -x "$self" ] || self=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/nvimkitty
+  echo "$self"
+}
+
 build_app() {
   local self src
-  self=$HOME/bin/nvimkitty
-  [ -x "$self" ] || self=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/nvimkitty
+  self=$(self_path)
   src=$(mktemp -d)/NvimKitty.applescript
   cat >"$src" <<EOF
 on open theFiles
@@ -128,6 +141,122 @@ EOF
   plutil -lint -s "$p"
   codesign --force --deep -s - "$app" 2>/dev/null
   "$lsregister" -f "$app"
+}
+
+# Finder Quick Action (Automator service) on selected files/folders: runs `nvimkitty yazi <selection>`
+build_service() {
+  local self
+  self=$(self_path)
+  rm -rf "$service"
+  mkdir -p "$service/Contents"
+  cat >"$service/Contents/Info.plist" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSServices</key>
+	<array>
+		<dict>
+			<key>NSMenuItem</key>
+			<dict><key>default</key><string>$service_name</string></dict>
+			<key>NSMessage</key>
+			<string>runWorkflowAsService</string>
+			<key>NSRequiredContext</key>
+			<dict><key>NSApplicationIdentifier</key><string>$finder_id</string></dict>
+			<key>NSSendFileTypes</key>
+			<array><string>public.item</string></array>
+		</dict>
+	</array>
+</dict>
+</plist>
+EOF
+  cat >"$service/Contents/document.wflow" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AMApplicationBuild</key><string>534</string>
+	<key>AMApplicationVersion</key><string>2.10</string>
+	<key>AMDocumentVersion</key><string>2</string>
+	<key>actions</key>
+	<array>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key><string>List</string>
+					<key>Optional</key><true/>
+					<key>Types</key><array><string>com.apple.cocoa.string</string></array>
+				</dict>
+				<key>AMActionVersion</key><string>2.0.3</string>
+				<key>AMApplication</key><array><string>Automator</string></array>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>COMMAND_STRING</key><dict/>
+					<key>CheckedForUserDefaultShell</key><dict/>
+					<key>inputMethod</key><dict/>
+					<key>shell</key><dict/>
+					<key>source</key><dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key><string>List</string>
+					<key>Types</key><array><string>com.apple.cocoa.string</string></array>
+				</dict>
+				<key>ActionBundlePath</key><string>/System/Library/Automator/Run Shell Script.action</string>
+				<key>ActionName</key><string>Run Shell Script</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>COMMAND_STRING</key><string>'$self' yazi "\$@"</string>
+					<key>CheckedForUserDefaultShell</key><true/>
+					<key>inputMethod</key><integer>1</integer>
+					<key>shell</key><string>/bin/bash</string>
+					<key>source</key><string></string>
+				</dict>
+				<key>BundleIdentifier</key><string>com.apple.RunShellScript</string>
+				<key>CFBundleVersion</key><string>2.0.3</string>
+				<key>CanShowSelectedItemsWhenRun</key><false/>
+				<key>CanShowWhenRun</key><true/>
+				<key>Category</key><array><string>AMCategoryUtilities</string></array>
+				<key>Class Name</key><string>RunShellScriptAction</string>
+				<key>InputUUID</key><string>5B0E7C1A-6F3D-4C55-9E21-0A7F3C2D9B11</string>
+				<key>OutputUUID</key><string>8D4A2E6F-1B7C-4F09-A3D5-6C2E9F0B7A22</string>
+				<key>UUID</key><string>C3F91D84-2A6E-4B7D-8E15-9F0A4C6B2D33</string>
+				<key>UnlocalizedApplications</key><array><string>Automator</string></array>
+				<key>isViewVisible</key><integer>1</integer>
+				<key>location</key><string>309.000000:305.000000</string>
+				<key>nibPath</key><string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/Base.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key><integer>1</integer>
+		</dict>
+	</array>
+	<key>connectors</key><dict/>
+	<key>workflowMetaData</key>
+	<dict>
+		<key>applicationBundleID</key><string>$finder_id</string>
+		<key>applicationPath</key><string>/System/Library/CoreServices/Finder.app</string>
+		<key>inputTypeIdentifier</key><string>com.apple.Automator.fileSystemObject</string>
+		<key>outputTypeIdentifier</key><string>com.apple.Automator.nothing</string>
+		<key>presentationMode</key><integer>15</integer>
+		<key>processesInput</key><false/>
+		<key>serviceApplicationBundleID</key><string>$finder_id</string>
+		<key>serviceApplicationPath</key><string>/System/Library/CoreServices/Finder.app</string>
+		<key>serviceInputTypeIdentifier</key><string>com.apple.Automator.fileSystemObject</string>
+		<key>serviceOutputTypeIdentifier</key><string>com.apple.Automator.nothing</string>
+		<key>serviceProcessesInput</key><false/>
+		<key>systemImageName</key><string>NSActionTemplate</string>
+		<key>useAutomaticInputType</key><false/>
+		<key>workflowTypeIdentifier</key><string>com.apple.Automator.servicesMenu</string>
+	</dict>
+</dict>
+</plist>
+EOF
+  plutil -lint -s "$service/Contents/Info.plist" "$service/Contents/document.wflow"
+  # enable it in the context menu with a keyboard shortcut, then make the services list reload
+  defaults write pbs NSServicesStatus -dict-add "'(null) - $service_name - runWorkflowAsService'" \
+    "{enabled_context_menu = 1; enabled_services_menu = 1; key_equivalent = \"$service_key\"; presentation_modes = {ContextMenu = 1; ServicesMenu = 1;};}"
+  /System/Library/CoreServices/pbs -update 2>/dev/null || true
 }
 
 duti_bin() {
@@ -171,6 +300,8 @@ install() {
     set_defaults "$bundle_id"
     echo "NvimKitty.app is now the default for: ${exts[*]}"
     if have_yazi; then
+      build_service
+      echo "Finder Quick Action \"$service_name\" installed (right-click > Quick Actions, or ctrl-opt-cmd-Y)"
       # recent macOS refuses (paramErr -50) to hand public.folder to anything but Finder; then `nvimkitty DIR`,
       # or dropping a folder on the app, still opens yazi
       if set_defaults "$bundle_id" "$folder_uti" 2>/dev/null; then
@@ -209,8 +340,11 @@ case ${1:-} in
   uninstall)
     # folders go back to Finder explicitly; text types fall back to whatever LaunchServices picks next
     [ "$("$(duti_bin)" -d "$folder_uti" 2>/dev/null)" = "$bundle_id" ] && set_defaults "$finder_id" "$folder_uti"
-    "$lsregister" -u "$app" 2>/dev/null || true; rm -rf "$app"; echo "removed $app" ;;
+    "$lsregister" -u "$app" 2>/dev/null || true; rm -rf "$app" "$service"; echo "removed $app and $service"
+    # (its shortcut entry in pbs NSServicesStatus is left behind, inert without the workflow)
+    /System/Library/CoreServices/pbs -update 2>/dev/null || true ;;
+  yazi) shift; open_dirs "$@" ;;
   status) status ;;
-  -h|--help) sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//' ;;
+  -h|--help) sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//' ;;
   *) open_files "$@" ;;
 esac
