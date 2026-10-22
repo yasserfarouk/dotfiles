@@ -48,7 +48,7 @@ root: <%= path %>
 # on_project_start: source .env
 
 windows:
-  - dev:
+  - "<%= File.basename(path) %>":
       panes:
         - nvim:
           - nvim

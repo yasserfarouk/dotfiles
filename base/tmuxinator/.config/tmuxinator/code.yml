@@ -4,11 +4,11 @@ name: <%= project %>
 root: ~/code/projects/<%= project %>
 
 windows:
-  - dev:
+  - "<%= project %>":
       panes:
         - nvim:
           - nvim
   - console:
 
-startup_window: dev
+startup_window: 1
 startup_pane: 1
