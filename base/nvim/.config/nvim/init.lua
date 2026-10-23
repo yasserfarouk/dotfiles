@@ -1,5 +1,6 @@
 -- Load platform utilities first for cross-platform path handling
 local platform = require("yasser.utils.platform")
+platform.ensure_path()
 
 require("yasser.settings")
 require("yasser.globals")

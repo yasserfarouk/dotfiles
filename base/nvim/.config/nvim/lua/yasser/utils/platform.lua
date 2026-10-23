@@ -43,6 +43,28 @@ function M.home()
 	end
 end
 
+-- Append the usual tool directories to $PATH when they are missing.
+-- Neovim started outside a login shell (kitty launched from Finder/Alfred via nvimkitty, a GUI app)
+-- inherits launchd's bare PATH, so pandoc, xelatex, node filters etc. are not found.
+function M.ensure_path()
+	if M.is_windows then return end
+	local home = M.home()
+	local dirs = {
+		"/opt/homebrew/bin", "/opt/homebrew/sbin", "/usr/local/bin", "/usr/local/sbin",
+		"/Library/TeX/texbin", home .. "/.local/bin", home .. "/bin", home .. "/.cargo/bin", home .. "/go/bin",
+	}
+	local path = vim.env.PATH or ""
+	local have = {}
+	for p in path:gmatch("[^:]+") do have[p] = true end
+	for _, d in ipairs(dirs) do
+		if not have[d] and vim.fn.isdirectory(d) == 1 then
+			path = path == "" and d or (path .. ":" .. d)
+			have[d] = true
+		end
+	end
+	vim.env.PATH = path
+end
+
 -- Get Neovim's standard paths (cross-platform)
 function M.config_dir()
 	return vim.fn.stdpath("config")
