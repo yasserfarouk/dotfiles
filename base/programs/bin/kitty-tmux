@@ -3,7 +3,11 @@
 # in the last folder), a file gets a shell in its folder. The session is named after the folder and reused.
 # A running, attached tmux client is switched to the session (and kitty raised); otherwise a new kitty window
 # attaches to it, starting the tmux server if needed.
-# Usage: kitty-tmux [PATH]      (no path: $HOME)
+# --project DIR opens the folder's project session instead: an existing session is just shown; a new one comes
+# from tmuxinator when the folder has its own config (DIR/.tmuxinator.yml, or a ~/.config/tmuxinator project whose
+# root: is DIR), otherwise it is a shell running claude.
+# Usage: kitty-tmux [PATH]              (no path: $HOME)
+#        kitty-tmux --project DIR
 set -euo pipefail
 kitty_bin=/Applications/kitty.app/Contents/MacOS/kitty
 
@@ -14,6 +18,22 @@ find_bin() {
   command -v "$1" 2>/dev/null || true
 }
 
+# tmuxinator project for DIR: prints its config file (DIR/.tmuxinator.yml) or project name, nothing if there is none
+tmuxinator_for() {
+  local dir=$1 f root
+  for f in "$dir/.tmuxinator.yml" "$dir/.tmuxinator.yaml"; do [ -f "$f" ] && { echo "$f"; return; }; done
+  for f in "$HOME"/.config/tmuxinator/*.yml; do
+    [ -f "$f" ] || continue
+    # only literal roots; templates (root: …/<%= project %>) serve many folders
+    root=$(sed -n 's/^root:[[:space:]]*//p' "$f" | head -1 | sed "s/[[:space:]]*\$//; s/^[\"']//; s/[\"']\$//")
+    [ -n "$root" ] && [[ $root != *"<%"* ]] || continue
+    root=${root/#\~/$HOME}
+    [ "${root%/}" = "$dir" ] && { basename "$f" .yml; return; }
+  done
+}
+
+project=
+[ "${1:-}" = --project ] && { project=1; shift; }
 path=${1:-$HOME}
 path=${path%/}
 [ -n "$path" ] || path=/
@@ -23,13 +43,28 @@ tmux=$(find_bin tmux)
 # tmux turns . and : in session names into _
 name=$(basename "$dir" | tr '.:' '__')
 
-if "$tmux" has-session -t "=$name" 2>/dev/null; then
+if [ -n "$project" ]; then
+  [ -d "$path" ] || { echo "kitty-tmux: not a folder: $path" >&2; exit 1; }
+  if ! "$tmux" has-session -t "=$name" 2>/dev/null; then
+    mux=$(tmuxinator_for "$dir")
+    if [ -n "$mux" ] && [ -n "$(find_bin tmuxinator)" ]; then
+      # tmuxinator runs tmux by name; from DIR so a relative root: (or none) means DIR
+      PATH=$(dirname "$tmux"):$PATH
+      [[ $mux == /* ]] && mux=(-p "$mux")
+      (cd "$dir" && "$(find_bin tmuxinator)" start "${mux[@]}" --name "$name" --no-attach >/dev/null)
+    else
+      "$tmux" new-session -d -s "$name" -c "$dir"
+      # typed into the shell so its PATH applies and quitting claude leaves the shell
+      "$tmux" send-keys -t "=$name:" "claude" Enter
+    fi
+  fi
+elif "$tmux" has-session -t "=$name" 2>/dev/null; then
   # a folder gets its own yazi window in the existing session
   [ -n "$folder" ] && "$tmux" new-window -t "=$name:" -c "$dir"
 else
   "$tmux" new-session -d -s "$name" -c "$dir"
 fi
-[ -n "$folder" ] && "$tmux" send-keys -t "=$name:" "y" Enter
+[ -z "$project" ] && [ -n "$folder" ] && "$tmux" send-keys -t "=$name:" "y" Enter
 
 client=$("$tmux" list-clients -F '#{client_activity} #{client_name}' 2>/dev/null | sort -rn | awk 'NR==1 {print $2}')
 if [ -n "$client" ]; then

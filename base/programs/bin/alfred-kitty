@@ -1,18 +1,42 @@
 #!/usr/bin/env bash
 # Alfred + kitty: file actions "Open in Yazi" (folders → `nvimkitty yazi`) and "Open in tmux" (any file or folder →
-# `kitty-tmux`), the keyword `note TEXT` (→ `tempnote`: ~/temp/<date>-<time>-<first word>.md, opened in nvim), and
+# `kitty-tmux`), the keyword `note TEXT` (→ `tempnote`: ~/temp/<date>-<time>-<first word>.md, opened in nvim), the
+# keyword `proj` (the folders of the tmux Alt-g picker, ~/bin/project-dirs → `kitty-tmux --project`: the folder's
+# tmux session, from tmuxinator if it has a config, else running claude; ⌘↩ opens it in yazi instead), and
 # kitty as Alfred's terminal (Features > Terminal > Custom), so `>cmd` and workflow terminal commands run in kitty.
 # Usage: alfred-kitty install       write the workflow into Alfred's preferences, set the terminal, restart Alfred
 #        alfred-kitty uninstall     remove the workflow, put the terminal back to Terminal.app
 #        alfred-kitty run CMD       run CMD in a new kitty window, staying in an interactive shell (Alfred's terminal)
+#        alfred-kitty projects      the `proj` items as Alfred script-filter JSON
 # The workflow and the AppleScript only call the scripts in ~/bin, so the behaviour lives here, in the dotfiles.
 set -euo pipefail
-prefs=$HOME/Library/Application\ Support/Alfred/Alfred.alfredpreferences
-workflow=$prefs/workflows/user.workflow.4B1E6A10-0000-4C1D-9A51-7E2D0C3F0000
-terminal_prefs=$prefs/preferences/features/terminal/prefs.plist
+alfred_support=$HOME/Library/Application\ Support/Alfred
 kitty_bin=/Applications/kitty.app/Contents/MacOS/kitty
 bin=$HOME/bin
 die() { echo "alfred-kitty: $*" >&2; exit 1; }
+
+# Alfred's preferences: the sync folder (Advanced > Syncing) when one is set, else the default location
+set_prefs() {
+  prefs=$(python3 -I -c 'import json, sys
+try: print(json.load(open(sys.argv[1])).get("current", ""))
+except Exception: pass' "$alfred_support/prefs.json")
+  [ -n "$prefs" ] || prefs=$alfred_support/Alfred.alfredpreferences
+  workflow=$prefs/workflows/user.workflow.4B1E6A10-0000-4C1D-9A51-7E2D0C3F0000
+  terminal_prefs=$prefs/preferences/features/terminal/prefs.plist
+}
+set_prefs
+
+# A fresh install has no preferences until Alfred has run once: start it and wait for them
+ensure_prefs() {
+  [ -d "$prefs" ] && return 0
+  open -b com.runningwithcrayons.Alfred 2>/dev/null || die "Alfred is not installed (brew install --cask alfred)"
+  for _ in $(seq 60); do
+    sleep 1
+    set_prefs
+    [ -d "$prefs" ] && { sleep 2; return 0; }
+  done
+  die "no Alfred preferences at $prefs yet; finish Alfred's first-run setup, then run: alfred-kitty install"
+}
 
 # Alfred may hand a multi-file selection over as one tab-separated argument
 script_body() {
@@ -23,6 +47,7 @@ write_workflow() {
   mkdir -p "$workflow"
   WF_YAZI=$(script_body "'$bin/nvimkitty' yazi") WF_TMUX=$(script_body "'$bin/kitty-tmux'") \
     WF_NOTE="'$bin/tempnote' \"\$1\" >/dev/null" \
+    WF_PROJ_LIST="'$bin/alfred-kitty' projects" WF_PROJ="'$bin/kitty-tmux' --project \"\$1\"" \
     python3 -I - "$workflow/info.plist" <<'EOF'
 import os, plistlib, sys
 def trigger(uid, name, filetypes, multi):
@@ -36,15 +61,26 @@ def keyword(uid, kw, title, subtext):
     # argumenttype 0: an argument is required; withspace: `note TEXT`
     return {"uid": uid, "type": "alfred.workflow.input.keyword", "version": 1,
             "config": {"keyword": kw, "text": title, "subtext": subtext, "withspace": True, "argumenttype": 0}}
-def link(dest):
-    return [{"destinationuid": dest, "modifiers": 0, "modifiersubtext": "", "vitoclose": False}]
+def scriptfilter(uid, kw, title, subtext, body):
+    # argumenttype 1: argument optional; Alfred runs the script once and filters its items itself
+    return {"uid": uid, "type": "alfred.workflow.input.scriptfilter", "version": 3,
+            "config": {"keyword": kw, "title": title, "subtext": subtext, "runningsubtext": "Listing projects…",
+                       "withspace": True, "argumenttype": 1, "argumenttrimmode": 0,
+                       "alfredfiltersresults": True, "alfredfiltersresultsmatchmode": 0,
+                       "script": body, "scriptargtype": 1, "scriptfile": "", "type": 0, "escaping": 102,
+                       "queuedelaycustom": 3, "queuedelayimmediatelyinitially": True,
+                       "queuedelaymode": 0, "queuemode": 1}}
+def link(dest, modifiers=0, subtext=""):
+    return {"destinationuid": dest, "modifiers": modifiers, "modifiersubtext": subtext, "vitoclose": False}
+CMD = 1048576
 ids = ["4B1E6A10-0001-4C1D-9A51-7E2D0C3F0001", "4B1E6A10-0002-4C1D-9A51-7E2D0C3F0002",
        "4B1E6A10-0003-4C1D-9A51-7E2D0C3F0003", "4B1E6A10-0004-4C1D-9A51-7E2D0C3F0004",
-       "4B1E6A10-0005-4C1D-9A51-7E2D0C3F0005", "4B1E6A10-0006-4C1D-9A51-7E2D0C3F0006"]
+       "4B1E6A10-0005-4C1D-9A51-7E2D0C3F0005", "4B1E6A10-0006-4C1D-9A51-7E2D0C3F0006",
+       "4B1E6A10-0007-4C1D-9A51-7E2D0C3F0007", "4B1E6A10-0008-4C1D-9A51-7E2D0C3F0008"]
 plist = {
     "bundleid": "com.yasser.alfred-kitty",
-    "name": "kitty: yazi / tmux / note",
-    "description": "File actions: open folders in yazi, open files/folders in a tmux session (kitty); note TEXT: Markdown note in ~/temp, opened in nvim",
+    "name": "kitty: yazi / tmux / note / projects",
+    "description": "File actions: open folders in yazi, open files/folders in a tmux session (kitty); note TEXT: Markdown note in ~/temp, opened in nvim; proj: project folder in its tmux session (tmuxinator or claude)",
     "createdby": "Yasser Mohammad",
     "readme": "Generated by ~/bin/alfred-kitty install (dotfiles: base/programs/bin/alfred-kitty); edits here are overwritten.",
     "webaddress": "", "version": "1.0", "disabled": False, "variablesdontexport": [],
@@ -55,11 +91,17 @@ plist = {
         script(ids[3], os.environ["WF_TMUX"]),
         keyword(ids[4], "note", "Note in ~/temp", "~/temp/<date>-<time>-<first word>.md, opened in nvim (kitty)"),
         script(ids[5], os.environ["WF_NOTE"]),
+        scriptfilter(ids[6], "proj", "Projects", "Open a project in its tmux session (tmuxinator or claude) in kitty",
+                     os.environ["WF_PROJ_LIST"]),
+        script(ids[7], os.environ["WF_PROJ"]),
     ],
-    "connections": {ids[0]: link(ids[1]), ids[2]: link(ids[3]), ids[4]: link(ids[5])},
+    # ⌘↩ on a project: the "Open in tmux" script (kitty-tmux PATH, yazi)
+    "connections": {ids[0]: [link(ids[1])], ids[2]: [link(ids[3])], ids[4]: [link(ids[5])],
+                    ids[6]: [link(ids[7]), link(ids[3], CMD, "Open in yazi in its tmux session")]},
     "uidata": {ids[0]: {"xpos": 30, "ypos": 15}, ids[1]: {"xpos": 230, "ypos": 15},
                ids[2]: {"xpos": 30, "ypos": 150}, ids[3]: {"xpos": 230, "ypos": 150},
-               ids[4]: {"xpos": 30, "ypos": 285}, ids[5]: {"xpos": 230, "ypos": 285}},
+               ids[4]: {"xpos": 30, "ypos": 285}, ids[5]: {"xpos": 230, "ypos": 285},
+               ids[6]: {"xpos": 30, "ypos": 420}, ids[7]: {"xpos": 230, "ypos": 420}},
 }
 with open(sys.argv[1], "wb") as f:
     plistlib.dump(plist, f)
@@ -84,14 +126,14 @@ restart_alfred() {
 }
 
 install() {
-  [ -d "$prefs" ] || die "no Alfred preferences at $prefs"
+  ensure_prefs
   [ -x "$kitty_bin" ] || die "kitty not installed"
   write_workflow
   set_terminal 1 "on alfred_script(q)
 	do shell script quoted form of \"$bin/alfred-kitty\" & \" run \" & quoted form of q & \" > /dev/null 2>&1 &\"
 end alfred_script"
   restart_alfred
-  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keyword \"note\" installed; terminal commands now run in kitty"
+  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keywords \"note\", \"proj\" installed; terminal commands now run in kitty"
 }
 
 uninstall() {
@@ -109,9 +151,29 @@ run_cmd() {
   nohup "$kitty_bin" --single-instance --directory "$HOME" "$shell" -lic "$1; exec $shell -l" >/dev/null 2>&1 &
 }
 
+# Script-filter items for `proj`: title = folder name, matched on the name and the path's words
+projects() {
+  "$bin/project-dirs" | python3 -I -c '
+import json, os, sys
+home = os.path.expanduser("~")
+items = []
+for line in sys.stdin:
+    path = line.rstrip("\n")
+    if not path:
+        continue
+    short = "~" + path[len(home):] if path == home or path.startswith(home + "/") else path
+    name = os.path.basename(path) or path
+    items.append({"uid": path, "title": name, "subtitle": short, "arg": path, "type": "file:skipcheck",
+                  "match": name + " " + short.replace("/", " ").replace("-", " ").replace("_", " "),
+                  "mods": {"cmd": {"arg": path, "subtitle": "Open in yazi in its tmux session"}}})
+json.dump({"items": items}, sys.stdout)
+'
+}
+
 case ${1:-} in
   install) install ;;
   uninstall) uninstall ;;
   run) shift; run_cmd "$*" ;;
-  *) sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//' ;;
+  projects) projects ;;
+  *) sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//' ;;
 esac
