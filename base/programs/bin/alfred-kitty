@@ -7,13 +7,14 @@
 # Outlook in front it also saves the open email + attachments), `sendto` (ctrl-opt-cmd-M, and the file action
 # "Send to project folder" → `sendto`: move Finder's selection to a project-dirs folder, ⌘ copy), `dl` / `shot`
 # (→ `recent`: latest downloads / CleanShot captures; dl ↩ opens, shot ↩ sends to a project folder, ⌘ the other,
-# ⌥ reveals in Finder), `alfredinstall` (reruns `alfred-kitty install`), and kitty as Alfred's terminal (Features > Terminal > Custom), so `>cmd` and workflow terminal commands run in kitty.
+# ⌥ reveals in Finder), `alfredinstall` (reruns `alfred-kitty install`), `ak` (menu of all of these: picking one
+# opens Alfred on its keyword), and kitty as Alfred's terminal (Features > Terminal > Custom), so `>cmd` and workflow terminal commands run in kitty.
 # Usage: alfred-kitty install       write the workflow into Alfred's preferences, set the terminal, restart Alfred
 #        alfred-kitty install-notify   the same, then a notification (the `alfredinstall` keyword)
 #        alfred-kitty uninstall     remove the workflow, put the terminal back to Terminal.app
 #        alfred-kitty run CMD       run CMD in a new kitty window, staying in an interactive shell (Alfred's terminal)
 #        alfred-kitty projects      the `proj` items as Alfred script-filter JSON
-#        alfred-kitty search TEXT   open Alfred with TEXT typed in (the file action and `dl`/`shot` → `sendto `)
+#        alfred-kitty search TEXT   open Alfred with TEXT typed in (the file action, `dl`/`shot` → `sendto `, `ak`)
 # The workflow and the AppleScript only call the scripts in ~/bin, so the behaviour lives here, in the dotfiles.
 set -euo pipefail
 alfred_support=$HOME/Library/Application\ Support/Alfred
@@ -59,6 +60,7 @@ write_workflow() {
     WF_SEND_STASH="$(script_body "'$bin/sendto' --stash")
 '$bin/alfred-kitty' search 'sendto '" \
     WF_INSTALL="nohup '$bin/alfred-kitty' install-notify >/dev/null 2>&1 &" \
+    WF_MENU="'$bin/alfred-kitty' search \"\$1\"" \
     WF_DL_LIST="'$bin/recent' --alfred downloads" WF_SHOT_LIST="'$bin/recent' --alfred shots" \
     WF_RECENT="case \$act in
   open) open \"\$1\" ;;
@@ -66,7 +68,7 @@ write_workflow() {
   send) '$bin/sendto' --stash \"\$1\"; '$bin/alfred-kitty' search 'sendto ' ;;
 esac" \
     python3 -I - "$workflow/info.plist" <<'EOF'
-import os, plistlib, sys
+import json, os, plistlib, sys
 def trigger(uid, name, filetypes, multi):
     return {"uid": uid, "type": "alfred.workflow.trigger.action", "version": 1,
             "config": {"name": name, "filetypes": filetypes, "acceptsmulti": multi}}
@@ -89,6 +91,12 @@ def scriptfilter(uid, kw, title, subtext, body, alfred_filters=True, running="Li
                        "script": body, "scriptargtype": 1, "scriptfile": "", "type": 0, "escaping": 102,
                        "queuedelaycustom": 3, "queuedelayimmediatelyinitially": True,
                        "queuedelaymode": 0, "queuemode": 1}}
+def listfilter(uid, kw, title, subtext, items):
+    # fixed list Alfred filters itself; items: (title, subtitle, arg)
+    return {"uid": uid, "type": "alfred.workflow.input.listfilter", "version": 1,
+            "config": {"keyword": kw, "title": title, "subtext": subtext, "withspace": True, "argumenttype": 1,
+                       "argumenttrimmode": 0, "fixedorder": True, "matchmode": 0, "runningsubtext": "",
+                       "items": json.dumps([{"title": t, "subtitle": st, "arg": a} for t, st, a in items])}}
 def hotkey(uid, keycode, char):
     # ctrl-opt-cmd-<char>; connected to a script filter it opens Alfred on that keyword
     return {"uid": uid, "type": "alfred.workflow.trigger.hotkey", "version": 2,
@@ -102,7 +110,14 @@ ids = ["4B1E6A10-0001-4C1D-9A51-7E2D0C3F0001", "4B1E6A10-0002-4C1D-9A51-7E2D0C3F
        "4B1E6A10-0003-4C1D-9A51-7E2D0C3F0003", "4B1E6A10-0004-4C1D-9A51-7E2D0C3F0004",
        "4B1E6A10-0005-4C1D-9A51-7E2D0C3F0005", "4B1E6A10-0006-4C1D-9A51-7E2D0C3F0006",
        "4B1E6A10-0007-4C1D-9A51-7E2D0C3F0007", "4B1E6A10-0008-4C1D-9A51-7E2D0C3F0008"]
-ids += [f"4B1E6A10-{i:04d}-4C1D-9A51-7E2D0C3F{i:04d}" for i in range(9, 22)]
+ids += [f"4B1E6A10-{i:04d}-4C1D-9A51-7E2D0C3F{i:04d}" for i in range(9, 24)]
+MENU = [("new", "New NEC project / patent / paper / code project / talk (⌃⌥⌘N)", "new "),
+        ("sendto", "Move Finder's selection to a project folder, ⌘ copy (⌃⌥⌘M)", "sendto "),
+        ("dl", "Latest downloads: open, ⌘ send to a project folder", "dl "),
+        ("shot", "Latest CleanShot captures: send to a project folder, ⌘ open", "shot "),
+        ("proj", "Open a project folder in its tmux session", "proj "),
+        ("note", "Markdown note in ~/temp, opened in nvim", "note "),
+        ("alfredinstall", "Reinstall this workflow (restarts Alfred)", "alfredinstall")]
 plist = {
     "bundleid": "com.yasser.alfred-kitty",
     "name": "kitty: yazi / tmux / note / projects / new / sendto",
@@ -137,6 +152,8 @@ plist = {
         script(ids[18], os.environ["WF_RECENT"]),
         keyword(ids[19], "alfredinstall", "Reinstall this workflow", "alfred-kitty install (restarts Alfred)", 2),
         script(ids[20], os.environ["WF_INSTALL"]),
+        listfilter(ids[21], "ak", "alfred-kitty commands", "new, sendto, dl, shot, proj, note, alfredinstall", MENU),
+        script(ids[22], os.environ["WF_MENU"]),
     ],
     # ⌘↩ on a project: the "Open in tmux" script (kitty-tmux PATH, yazi)
     "connections": {ids[0]: [link(ids[1])], ids[2]: [link(ids[3])], ids[4]: [link(ids[5])],
@@ -145,7 +162,7 @@ plist = {
                     ids[8]: [link(ids[9]), link(ids[9], OPT)], ids[10]: [link(ids[8])],
                     ids[11]: [link(ids[12]), link(ids[12], CMD)], ids[13]: [link(ids[11])], ids[14]: [link(ids[15])],
                     ids[16]: [link(ids[18]), link(ids[18], CMD), link(ids[18], OPT)],
-                    ids[17]: [link(ids[18]), link(ids[18], CMD), link(ids[18], OPT)], ids[19]: [link(ids[20])]},
+                    ids[17]: [link(ids[18]), link(ids[18], CMD), link(ids[18], OPT)], ids[19]: [link(ids[20])], ids[21]: [link(ids[22])]},
     "uidata": {ids[0]: {"xpos": 30, "ypos": 15}, ids[1]: {"xpos": 230, "ypos": 15},
                ids[2]: {"xpos": 30, "ypos": 150}, ids[3]: {"xpos": 230, "ypos": 150},
                ids[4]: {"xpos": 30, "ypos": 285}, ids[5]: {"xpos": 230, "ypos": 285},
@@ -154,7 +171,8 @@ plist = {
                ids[13]: {"xpos": 30, "ypos": 690}, ids[11]: {"xpos": 230, "ypos": 690}, ids[12]: {"xpos": 430, "ypos": 690},
                ids[14]: {"xpos": 30, "ypos": 825}, ids[15]: {"xpos": 230, "ypos": 825},
                ids[16]: {"xpos": 30, "ypos": 960}, ids[17]: {"xpos": 30, "ypos": 1095}, ids[18]: {"xpos": 230, "ypos": 1025},
-               ids[19]: {"xpos": 30, "ypos": 1230}, ids[20]: {"xpos": 230, "ypos": 1230}},
+               ids[19]: {"xpos": 30, "ypos": 1230}, ids[20]: {"xpos": 230, "ypos": 1230},
+               ids[21]: {"xpos": 30, "ypos": 1365}, ids[22]: {"xpos": 230, "ypos": 1365}},
 }
 with open(sys.argv[1], "wb") as f:
     plistlib.dump(plist, f)
@@ -186,7 +204,7 @@ install() {
 	do shell script quoted form of \"$bin/alfred-kitty\" & \" run \" & quoted form of q & \" > /dev/null 2>&1 &\"
 end alfred_script"
   restart_alfred
-  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keywords \"note\", \"proj\", \"new\" (⌃⌥⌘N), \"sendto\" (⌃⌥⌘M), \"dl\", \"shot\", \"alfredinstall\" installed; terminal commands now run in kitty"
+  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keywords \"note\", \"proj\", \"new\" (⌃⌥⌘N), \"sendto\" (⌃⌥⌘M), \"dl\", \"shot\", \"alfredinstall\", \"ak\" (menu) installed; terminal commands now run in kitty"
 }
 
 uninstall() {
@@ -232,5 +250,5 @@ case ${1:-} in
   run) shift; run_cmd "$*" ;;
   projects) projects ;;
   search) osascript -e "tell application id \"com.runningwithcrayons.Alfred\" to search \"$2\"" ;;
-  *) sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *) sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//' ;;
 esac
