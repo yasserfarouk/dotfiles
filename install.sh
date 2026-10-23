@@ -133,7 +133,7 @@ echo "Making nvim-in-kitty the default app for Markdown / text files"
 "$(dirname "$0")/base/programs/bin/nvimkitty" install || echo "Warning: nvimkitty install failed"
 
 if [ -d "/Applications/Alfred 5.app" ]; then
-	echo "Alfred: yazi / tmux file actions, note / proj keywords, kitty as terminal"
+	echo "Alfred: yazi / tmux / send-to file actions, note / proj / new / sendto / dl / shot keywords, kitty as terminal"
 	"$(dirname "$0")/base/programs/bin/alfred-kitty" install || echo "Warning: alfred-kitty install failed"
 fi
 
