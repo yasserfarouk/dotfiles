@@ -12,16 +12,16 @@ local function get_open_cmd()
 	end
 end
 
--- Run a pandoc command in background with statusline feedback
+-- Run a pandoc command in background with statusline feedback; show pandoc's output if it fails
 local function run_pandoc(cmd)
-	job.run(cmd)
+	job.run(cmd, { show_output = "on_failure" })
 end
 
 local function pandoc_pdf_bib()
 	local f = vim.fn.shellescape(vim.fn.expand("%"))
 	local o = vim.fn.shellescape(vim.fn.expand("%:r") .. ".pdf")
 	run_pandoc(string.format(
-		"pandoc %s -s --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable colorlinks=true --resource-path=. -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s && %s %s",
+		"pandoc %s -s --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable colorlinks=true --resource-path=. --lua-filter=$HOME/.config/nvim/pandoc/mermaid.lua --filter pandoc-latex-admonition --citeproc --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s && %s %s",
 		f, o, get_open_cmd(), o
 	))
 end
@@ -30,7 +30,7 @@ local function pandoc_pdf_bib_no_contents()
 	local f = vim.fn.shellescape(vim.fn.expand("%"))
 	local o = vim.fn.shellescape(vim.fn.expand("%:r") .. ".pdf")
 	run_pandoc(string.format(
-		"pandoc %s -s --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable colorlinks=true --resource-path=. -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable fontsize=10pt --variable version=2.0 -V geometry:margin=2cm --bibliography=references.bib -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s && %s %s",
+		"pandoc %s -s --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable colorlinks=true --resource-path=. --lua-filter=$HOME/.config/nvim/pandoc/mermaid.lua --filter pandoc-latex-admonition --citeproc --variable fontsize=10pt --variable version=2.0 -V geometry:margin=2cm --bibliography=references.bib -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s && %s %s",
 		f, o, get_open_cmd(), o
 	))
 end
@@ -39,7 +39,7 @@ local function pandoc_word()
 	local f = vim.fn.shellescape(vim.fn.expand("%"))
 	local o = vim.fn.shellescape(vim.fn.expand("%:r") .. ".docx")
 	run_pandoc(string.format(
-		"pandoc %s -s --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable mainfont='Palatino' --variable sansfont='Helvetica' --resource-path=. -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable monofont='Menlo' --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s && %s %s",
+		"pandoc %s -s --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable mainfont='Palatino' --variable sansfont='Helvetica' --resource-path=. --lua-filter=$HOME/.config/nvim/pandoc/mermaid.lua --filter pandoc-latex-admonition --citeproc --variable monofont='Menlo' --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s && %s %s",
 		f, o, get_open_cmd(), o
 	))
 end
@@ -48,7 +48,7 @@ local function pandoc_word_bib()
 	local f = vim.fn.shellescape(vim.fn.expand("%"))
 	local o = vim.fn.shellescape(vim.fn.expand("%:r") .. ".docx")
 	run_pandoc(string.format(
-		"pandoc %s -s --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable mainfont='Palatino' --variable sansfont='Helvetica' --resource-path=. -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable monofont='Menlo' --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -V geometry:margin=2cm -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s && %s %s",
+		"pandoc %s -s --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable mainfont='Palatino' --variable sansfont='Helvetica' --resource-path=. --lua-filter=$HOME/.config/nvim/pandoc/mermaid.lua --filter pandoc-latex-admonition --citeproc --variable monofont='Menlo' --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm --bibliography=references.bib -V geometry:margin=2cm -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s && %s %s",
 		f, o, get_open_cmd(), o
 	))
 end
@@ -57,7 +57,7 @@ local function pandoc_pdf()
 	local f = vim.fn.shellescape(vim.fn.expand("%"))
 	local o = vim.fn.shellescape(vim.fn.expand("%:r") .. ".pdf")
 	run_pandoc(string.format(
-		"pandoc %s -s --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable mainfont='Palatino' --variable sansfont='Helvetica' --resource-path=. -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable monofont='Menlo' --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s && %s %s",
+		"pandoc %s -s --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable mainfont='Palatino' --variable sansfont='Helvetica' --resource-path=. --lua-filter=$HOME/.config/nvim/pandoc/mermaid.lua --filter pandoc-latex-admonition --citeproc --variable monofont='Menlo' --variable fontsize=10pt --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=2cm -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s && %s %s",
 		f, o, get_open_cmd(), o
 	))
 end
@@ -66,7 +66,7 @@ local function pandoc_pdf_no_contents()
 	local f = vim.fn.shellescape(vim.fn.expand("%"))
 	local o = vim.fn.shellescape(vim.fn.expand("%:r") .. ".pdf")
 	run_pandoc(string.format(
-		"pandoc %s -s --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable mainfont='Palatino' --variable sansfont='Helvetica' --resource-path=. -F mermaid-filter --filter pandoc-latex-admonition --citeproc --variable monofont='Menlo' --variable fontsize=10pt --variable version=2.0 -V geometry:margin=2cm -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s && %s %s",
+		"pandoc %s -s --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable mainfont='Palatino' --variable sansfont='Helvetica' --resource-path=. --lua-filter=$HOME/.config/nvim/pandoc/mermaid.lua --filter pandoc-latex-admonition --citeproc --variable monofont='Menlo' --variable fontsize=10pt --variable version=2.0 -V geometry:margin=2cm -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s && %s %s",
 		f, o, get_open_cmd(), o
 	))
 end
@@ -75,7 +75,7 @@ local function pandoc_pdf_landscape()
 	local f = vim.fn.shellescape(vim.fn.expand("%"))
 	local o = vim.fn.shellescape(vim.fn.expand("%:r") .. ".pdf")
 	run_pandoc(string.format(
-		"pandoc --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable mainfont='Palatino' --variable sansfont='Helvetica' --variable monofont='Menlo' --variable fontsize=10pt -F mermaid-filter --filter pandoc-latex-admonition --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=1cm -V geometry:landscape -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s -s %s && %s %s",
+		"pandoc --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --variable mainfont='Palatino' --variable sansfont='Helvetica' --variable monofont='Menlo' --variable fontsize=10pt --lua-filter=$HOME/.config/nvim/pandoc/mermaid.lua --filter pandoc-latex-admonition --variable version=2.0 --toc --toc-depth=2 -V geometry:margin=1cm -V geometry:landscape -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s -s %s && %s %s",
 		o, f, get_open_cmd(), o
 	))
 end
@@ -84,7 +84,7 @@ local function pandoc_pdf_landscape_no_contents()
 	local f = vim.fn.shellescape(vim.fn.expand("%"))
 	local o = vim.fn.shellescape(vim.fn.expand("%:r") .. ".pdf")
 	run_pandoc(string.format(
-		"pandoc --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex -F mermaid-filter --filter pandoc-latex-admonition --variable mainfont='Palatino' --variable sansfont='Helvetica' --variable monofont='Menlo' --variable fontsize=10pt --variable version=2.0 -V geometry:margin=1cm -V geometry:landscape -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s -s %s && %s %s",
+		"pandoc --pdf-engine=xelatex --include-in-header=$HOME/.config/nvim/pandoc/unicode-fallback.tex --lua-filter=$HOME/.config/nvim/pandoc/mermaid.lua --filter pandoc-latex-admonition --variable mainfont='Palatino' --variable sansfont='Helvetica' --variable monofont='Menlo' --variable fontsize=10pt --variable version=2.0 -V geometry:margin=1cm -V geometry:landscape -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V toccolor=blue -o %s -s %s && %s %s",
 		o, f, get_open_cmd(), o
 	))
 end

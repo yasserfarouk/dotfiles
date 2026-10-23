@@ -207,7 +207,7 @@ mdpdf() {
         --variable fontsize=10pt \
         --variable version=2.0 \
         --resource-path="$dir" \
-        -F mermaid-filter \
+        --lua-filter="$HOME/.config/nvim/pandoc/mermaid.lua" \
         --filter pandoc-latex-admonition \
         --citeproc \
         --toc \

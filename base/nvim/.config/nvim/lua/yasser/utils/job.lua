@@ -101,7 +101,7 @@ end
 ---
 --- @param cmd  string  Shell command; executed via `sh -c`
 --- @param opts? {
----   show_output?: boolean,                  -- open scratch buffer with stdout/stderr on completion (default: false)
+---   show_output?: boolean|"on_failure",     -- open scratch buffer with stdout/stderr on completion, or only when it fails (default: false)
 ---   on_success?:  fun(),                    -- called when exit code is 0
 ---   on_failure?:  fun(exit_code: integer),  -- called when exit code is non-zero
 --- }
@@ -127,7 +127,7 @@ function M.run(cmd, opts)
 				else
 					if opts.on_success then opts.on_success() end
 				end
-				if opts.show_output then
+				if opts.show_output == true or (opts.show_output == "on_failure" and exit_code ~= 0) then
 					show_output(cmd, output, exit_code)
 				end
 				vim.cmd("redrawstatus")
@@ -150,7 +150,12 @@ function M.run(cmd, opts)
 		job_opts.on_stderr = collect
 	end
 
-	vim.fn.jobstart(cmd, job_opts)
+	if vim.fn.jobstart(cmd, job_opts) <= 0 then
+		state.running = math.max(0, state.running - 1)
+		state.failed  = state.failed + 1
+		vim.notify("job: could not start: " .. cmd, vim.log.levels.ERROR)
+		vim.cmd("redrawstatus")
+	end
 end
 
 --- Statusline component.
