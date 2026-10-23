@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# fzf picker over the running workmux agents of all repos (the ones in `workmux sidebar`), in
+# sidebar order, for tmux popups (Alt-c, prefix C-c). Preview shows the agent's pane.
+# enter switch to the agent's pane  ^r reload
+rows() {
+  local order
+  order=$(tmux show-options -gv @workmux_sidebar_agents 2>/dev/null)
+  workmux status --all --json | jq -r --arg order "$order" '
+    ($order | split(" ") | map(select(. != ""))) as $o
+    | .agents
+    | sort_by(.pane_id as $p | ($o | index($p)) // 1e9)
+    | .[] | [.pane_id, .session,
+      (.status // "-"),
+      (if .elapsed_secs == null then "-"
+       elif .elapsed_secs < 3600 then "\(.elapsed_secs / 60 | floor)m"
+       elif .elapsed_secs < 86400 then "\(.elapsed_secs / 3600 | floor)h"
+       else "\(.elapsed_secs / 86400 | floor)d" end),
+      .agent_kind, (.title // "" | sub("^[^[:alnum:]]+ "; ""))] | @tsv' | column -t -s $'\t'
+}
+[ "$1" = --rows ] && { rows; exit; }
+
+self=$(realpath "$0")
+sel=$(rows | fzf --reverse --height=100% --no-sort --with-nth 2.. --nth 1,5.. \
+  --border-label ' agents ' \
+  --header 'enter switch  ^r reload' \
+  --bind "ctrl-r:reload:$self --rows" \
+  --preview-window 'right:55%:follow' \
+  --preview 'tmux capture-pane -ep -t {1}')
+[ -n "$sel" ] || exit 0
+pane=${sel%% *}
+# switch the popup's client ($WM_CLIENT, from the tmux binding), never whichever client tmux guesses
+tmux switch-client ${WM_CLIENT:+-c "$WM_CLIENT"} -t "$pane" \; select-window -t "$pane" \; select-pane -t "$pane"
