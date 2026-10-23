@@ -1,18 +1,6 @@
 #!/usr/bin/env bash
-# Directory picker for tmux popups (prefix-g, Alt-g): folder shortcuts (~/bin/shortcut) and two levels
-# below each, zoxide and project dirs under ~/code, ~/code/papers, ~/koshodojo; opens each selection with
-# `tmuxinator any`. Nested shortcuts (a and a/b) overlap; awk drops the duplicates.
-shortcuts=()
-while IFS= read -r d; do [ -d "$d" ] && shortcuts+=("$d"); done < <(~/bin/shortcut paths 2>/dev/null)
-{
-  printf '%s\n' "${shortcuts[@]}"
-  zoxide query -l 2>/dev/null
-  # one fd over all shortcuts (parallel walk) instead of one process per shortcut
-  [ ${#shortcuts[@]} -gt 0 ] && fd . --type d --max-depth 2 "${shortcuts[@]}" 2>/dev/null &
-  fd . --type d --full-path "$HOME/code" --max-depth 2 &
-  fd . --type d --full-path "$HOME/code/papers" --max-depth 4 &
-  fd . --type d --full-path "$HOME/koshodojo" --max-depth 2 &
-  wait
-} | sed 's:/$::' | awk '!seen[$0]++' |
+# Directory picker for tmux popups (prefix-g, Alt-g) over ~/bin/project-dirs; opens each selection with
+# `tmuxinator any`.
+~/bin/project-dirs |
   fzf --multi --height=100% --preview-window=right:50% --preview 'ls -A --color=always {} 2>/dev/null || ls -AG {}' |
   xargs -I {} tmuxinator any {}

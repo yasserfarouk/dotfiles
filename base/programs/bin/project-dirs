@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Project folders, one per line, nearest first and without duplicates: folder shortcuts (~/bin/shortcut) and two
+# levels below each, zoxide, and project dirs under ~/code, ~/code/papers, ~/koshodojo. Feeds the tmux picker
+# (tmux-dir-pick, Alt-g) and Alfred's `proj` keyword (alfred-kitty). Nested shortcuts (a and a/b) overlap; awk
+# drops the duplicates.
+# GUI launches (Alfred) get a bare PATH
+PATH=/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH
+shortcuts=()
+while IFS= read -r d; do [ -d "$d" ] && shortcuts+=("$d"); done < <(~/bin/shortcut paths 2>/dev/null)
+{
+  [ ${#shortcuts[@]} -gt 0 ] && printf '%s\n' "${shortcuts[@]}"
+  zoxide query -l 2>/dev/null
+  # one fd over all shortcuts (parallel walk) instead of one process per shortcut
+  [ ${#shortcuts[@]} -gt 0 ] && fd . --type d --max-depth 2 "${shortcuts[@]}" 2>/dev/null &
+  fd . --type d --full-path "$HOME/code" --max-depth 2 &
+  fd . --type d --full-path "$HOME/code/papers" --max-depth 4 &
+  fd . --type d --full-path "$HOME/koshodojo" --max-depth 2 &
+  wait
+} | sed 's:/$::' | awk '!seen[$0]++'
