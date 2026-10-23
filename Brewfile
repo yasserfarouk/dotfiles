@@ -236,12 +236,13 @@ brew "sesh"
 brew "workmux"           # git worktrees + tmux windows for agents (tmux M-a)
 brew "btop"             # referenced by nvim (terminal monitor)
 
-# Referenced by mac/* and base/* configs (aerospace, hammerspoon, karabiner, espanso, alacritty)
+# Referenced by mac/* and base/* configs (aerospace, hammerspoon, karabiner, espanso, alacritty, alfred: alfred-kitty)
 cask "nikitabobko/tap/aerospace"
 cask "hammerspoon"
 cask "karabiner-elements"
 cask "espanso"
 cask "alacritty"
+cask "alfred"
 
 cask "db-browser-for-sqlite"
 cask "dbeaver-community"
