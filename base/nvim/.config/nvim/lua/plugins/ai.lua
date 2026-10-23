@@ -180,6 +180,17 @@ return {
 				},
 			}
 		end,
+		config = function(_, opts)
+			require("sidekick").setup(opts)
+			-- sidekick registers its tmux backend whenever tmux is installed, so outside tmux it still finds
+			-- the CLIs running in tmux panes; one in the same cwd (e.g. the project's workmux session) wins
+			-- and <leader>ac "attaches" to it without opening anything. Outside tmux use only nvim terminals.
+			if not opts.cli.mux.enabled then
+				local Session = require("sidekick.cli.session")
+				Session.setup()
+				Session.backends.tmux = nil
+			end
+		end,
 		keys = (function()
 			-- Multi-line scratchpad shared by <leader>a. and <leader>a<CR>
 			local function ai_scratchpad()
