@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Write TEXT to a new Markdown note ~/temp/YYYYMMDD-HHMMSS-NAME.md, NAME being TEXT's first word, and open it in
+# nvim in kitty (`nvimkitty`). Alfred's keyword `note TEXT` calls this (see alfred-kitty).
+# Usage: tempnote TEXT...       the whole TEXT (first word included) becomes the note's content
+#        echo TEXT | tempnote   TEXT from stdin when there are no arguments
+set -euo pipefail
+dir=$HOME/temp
+text=$*
+[ -n "$text" ] || [ -t 0 ] || text=$(cat)
+[ -n "${text//[[:space:]]/}" ] || { sed -n '2,5p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 1; }
+
+# first word, reduced to characters that are safe in a file name
+read -r first _ <<<"$text"
+name=$(printf '%s' "$first" | tr -c 'A-Za-z0-9._-' '-' | sed 's/--*/-/g; s/^[-.]*//; s/-*$//' | cut -c1-40)
+[ -n "$name" ] || name=note
+
+mkdir -p "$dir"
+file=$dir/$(date +%Y%m%d-%H%M%S)-$name.md
+n=1
+while [ -e "$file" ]; do file=$dir/$(date +%Y%m%d-%H%M%S)-$name-$((n++)).md; done
+printf '%s\n' "$text" >"$file"
+"$(dirname "$(realpath "$0")")/nvimkitty" "$file"
+echo "$file"
