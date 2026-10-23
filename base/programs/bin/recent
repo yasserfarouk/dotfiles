@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# The newest downloads or CleanShot captures, newest first (by creation time, which a move keeps).
+#   downloads: ~/Downloads and the files in its sorting folders (names starting with _); partial downloads are skipped,
+#              and a .zip whose unpacked folder sits next to it is replaced by the folder
+#   shots:     CleanShot X captures (CleanShot *) in its export folder (default ~/Desktop)
+# Usage: recent downloads|shots [N]     print the N (default 1) newest paths
+#        recent --alfred downloads|shots   Alfred Script Filter JSON (Alfred keywords `dl` and `shot`, alfred-kitty)
+set -euo pipefail
+
+candidates() {
+  case $1 in
+    downloads)
+      find "$HOME/Downloads" -mindepth 1 -maxdepth 1 ! -name '_*' ! -name '.*' 2>/dev/null
+      # the sorting folders hold category folders (_media/images), so only their files count
+      find "$HOME/Downloads" -mindepth 2 -maxdepth 3 -path "$HOME/Downloads/_*/*" -type f ! -name '.*' 2>/dev/null ;;
+    shots)
+      local dir
+      dir=$(defaults read pl.maketheweb.cleanshotx exportPath 2>/dev/null || true)
+      [ -d "$dir" ] || dir=$HOME/Desktop
+      find "$dir" -mindepth 1 -maxdepth 1 -name 'CleanShot *' 2>/dev/null ;;
+    *) echo "recent: downloads or shots" >&2; exit 1 ;;
+  esac
+}
+
+newest() {
+  candidates "$1" | grep -v -E '\.(crdownload|download|part|partial|tmp)$' |
+    while IFS= read -r f; do
+      # a zip that was unpacked (Safari, The Unarchiver): its folder stands for it
+      [[ $f == *.zip && -d ${f%.zip} ]] && continue
+      printf '%s\t%s\n' "$(stat -f %B "$f")" "$f"
+    done | sort -rn | head -n "$2" | cut -f2-
+}
+
+alfred() {
+  local kind=$1
+  newest "$kind" 20 | python3 -I -c '
+import json, os, sys, time
+kind, home = sys.argv[1], os.path.expanduser("~")
+items = []
+for p in sys.stdin.read().splitlines():
+    short = "~" + p[len(home):] if p.startswith(home) else p
+    age = time.time() - os.stat(p).st_birthtime
+    when = f"{int(age // 60)} min ago" if age < 3600 else f"{int(age // 3600)} h ago" if age < 86400 else time.strftime("%Y-%m-%d", time.localtime(os.stat(p).st_birthtime))
+    send = {"arg": p, "subtitle": f"Send to a project folder ({when})", "variables": {"act": "send"}}
+    opn = {"arg": p, "subtitle": f"Open ({when})", "variables": {"act": "open"}}
+    main, cmd = (opn, send) if kind == "downloads" else (send, opn)
+    items.append({"uid": p, "title": os.path.basename(p), "subtitle": main["subtitle"] + f"   {short}",
+                  "arg": p, "type": "file", "quicklookurl": p, "icon": {"type": "fileicon", "path": p},
+                  "variables": main["variables"], "mods": {"cmd": cmd,
+                  "alt": {"arg": p, "subtitle": "Reveal in Finder", "variables": {"act": "reveal"}}}})
+if not items:
+    items = [{"title": "Nothing found", "valid": False}]
+print(json.dumps({"items": items}))' "$kind"
+}
+
+case ${1:-} in
+  --alfred) alfred "${2:?downloads or shots}" ;;
+  downloads | shots) newest "$1" "${2:-1}" ;;
+  *) sed -n '2,7p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 1 ;;
+esac

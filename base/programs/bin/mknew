@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+# Start a new piece of work in its usual place and open it in its tmux session running claude (kitty-tmux):
+#   project  NAME   NEC project      nec_projects/YYYY<name_in_snake_case>     (Box)
+#   patent   NAME   NEC patent       patents/YYYY<NameInCamelCase>             (Box)
+#   paper    NAME   paper            papers_current/YYYY<venue_name>, git init
+#   code     NAME   code project     ~/code/projects/<name-in-kebab-case>, git init
+#   talk     DESC   NEC presentation claude "/nec-presentation DESC" in ~/code/presentations (the skill names the deck)
+# A NAME that already starts with a year keeps it. --mail also saves the email open in Outlook, with its attachments,
+# into the new folder (for a talk: presentations/materials/YYYYMMDD-<slug>/, named in the prompt).
+# Usage: mknew [--mail] KIND NAME...
+#        mknew --alfred QUERY     Alfred Script Filter JSON (keyword `new`, ctrl-opt-cmd-N; Outlook in front → --mail)
+set -euo pipefail
+PATH=/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH
+bin=$(dirname "$(realpath "$0")")
+die() { notify "$*"; exit 1; }
+notify() {
+  printf '%s\n' "$1" >&2
+  [ -t 2 ] || osascript -e "display notification \"$(printf '%s' "$1" | sed 's/["\\]/\\&/g')\" with title \"mknew\"" >/dev/null 2>&1 || true
+}
+shortcut_dir() { "$bin/shortcut" ls | awk -v n="$1" '$1 == n {sub(/^[^ ]+ +[^ ]+ +/, ""); print; exit}'; }
+
+# canonical kind for a (prefix of a) kind name or alias
+kind_of() {
+  local k
+  for k in project patent paper code talk presentation deck slides; do
+    [[ -n $1 && $k == "$1"* ]] || continue
+    case $k in presentation | deck | slides) echo talk ;; *) echo "$k" ;; esac
+    return
+  done
+}
+
+year_prefix() { [[ $1 =~ ^[0-9]{4} ]] && echo "$1" || echo "$(date +%Y)$1"; }
+words() { printf '%s' "$1" | tr -c 'A-Za-z0-9' ' ' | xargs; }
+target() { # KIND NAME → folder (talk: the materials folder)
+  local w
+  w=$(words "$2")
+  [ -n "$w" ] || return 1
+  case $1 in
+    project) echo "$(shortcut_dir nec_projects)/$(year_prefix "$(tr 'A-Z ' 'a-z_' <<<"$w")")" ;;
+    patent) echo "$(shortcut_dir patents)/$(year_prefix "$(awk '{for (i = 1; i <= NF; i++) printf "%s", toupper(substr($i, 1, 1)) substr($i, 2)}' <<<"$w")")" ;;
+    paper) echo "$(shortcut_dir papers_current)/$(year_prefix "$(tr 'A-Z ' 'a-z_' <<<"$w")")" ;;
+    code) echo "$HOME/code/projects/$(tr 'A-Z ' 'a-z-' <<<"$w")" ;;
+    talk) echo "$(shortcut_dir presentations)/materials/$(date +%Y%m%d)-$(cut -d' ' -f1-4 <<<"$w" | tr 'A-Z ' 'a-z-')" ;;
+  esac
+}
+
+create() {
+  local mail=$1 kind=$2 name=$3 dir saved=
+  dir=$(target "$kind" "$name") || die "no name given"
+  if [ "$kind" = talk ]; then
+    if [ -n "$mail" ]; then
+      mkdir -p "$dir"
+      saved=$("$bin/outlook-save" "$dir" 2>&1) || { notify "email not saved: $saved"; saved=; }
+      [ -n "$saved" ] && name+=$'\n\n'"Material for the talk (an email and its attachments) is in $dir — read it first."
+      [ -n "$saved" ] || rmdir "$dir" 2>/dev/null || true
+    fi
+    "$bin/kitty-tmux" --project "$(shortcut_dir presentations)" --name "talk-$(basename "$dir" | cut -c10-)" \
+      --claude "/nec-presentation $name"
+    return
+  fi
+  [ -e "$dir" ] && die "already exists: ${dir/#$HOME/~}"
+  mkdir -p "$dir"
+  case $kind in paper | code) git -C "$dir" init -q ;; esac
+  if [ -n "$mail" ]; then
+    saved=$("$bin/outlook-save" "$dir" 2>&1) || { notify "email not saved: $saved"; saved=; }
+  fi
+  notify "created ${dir/#$HOME/~}${saved:+ with the email and $(($(wc -l <<<"$saved") - 1)) attachment(s)}"
+  "$bin/kitty-tmux" --project "$dir"
+}
+
+alfred() {
+  local q=$1 first rest kind mail=
+  read -r first rest <<<"$q" || true
+  kind=$(kind_of "$first")
+  "$bin/outlook-save" --frontmost && mail=1
+  {
+    if [ -z "$kind" ] || [ -z "$rest" ]; then
+      for k in project patent paper code talk; do
+        [[ -z $first || $k == "$first"* || $k == "$kind" ]] || continue
+        printf 'kind\t%s\t\n' "$k"
+      done
+    else
+      printf 'item\t%s\t%s\t%s\n' "$kind" "$rest" "$(target "$kind" "$rest")"
+    fi
+  } | python3 -I -c '
+import json, os, sys
+mail, home = sys.argv[1] == "1", os.path.expanduser("~")
+what = {"project": "NEC project (Box)", "patent": "NEC patent (Box)", "paper": "paper in papers/current",
+        "code": "code project in ~/code/projects", "talk": "NEC presentation (claude /nec-presentation)"}
+hint = {"talk": "DESCRIPTION"}
+items = []
+for line in sys.stdin.read().splitlines():
+    f = line.split("\t")
+    if f[0] == "kind":
+        items.append({"title": "new " + f[1] + " " + hint.get(f[1], "NAME"), "subtitle": what[f[1]],
+                      "autocomplete": f[1] + " ", "valid": False})
+        continue
+    _, kind, name, path = f
+    short = "~" + path[len(home):] if path.startswith(home) else path
+    title = f"Presentation: {name}" if kind == "talk" else os.path.basename(path)
+    sub = "claude /nec-presentation in ~/code/presentations" if kind == "talk" else f"{what[kind]}: {short}"
+    item = {"title": title, "subtitle": sub, "arg": name, "variables": {"kind": kind, "mail": ""}}
+    if mail:
+        item["subtitle"] += "  + the Outlook email & attachments (⌥ without)"
+        item["variables"]["mail"] = "1"
+        item["mods"] = {"alt": {"arg": name, "subtitle": sub + "  (without the email)", "variables": {"kind": kind, "mail": ""}}}
+    if kind != "talk" and os.path.exists(path):
+        item.update(valid=False, subtitle="already exists: " + short)
+    items.append(item)
+print(json.dumps({"items": items}))' "$mail"
+}
+
+case ${1:-} in
+  --alfred) alfred "${2:-}" ;;
+  --mail) shift; k=$(kind_of "${1:-}"); [ -n "$k" ] || die "unknown kind: ${1:-}"; shift; create 1 "$k" "$*" ;;
+  '' | -h | --help) sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *) k=$(kind_of "$1"); [ -n "$k" ] || die "unknown kind: $1"; shift; create "" "$k" "$*" ;;
+esac

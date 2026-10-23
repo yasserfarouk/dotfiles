@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+# Save the email open (or selected) in Microsoft Outlook into DIR as YYYYMMDD-<subject>.eml and extract its
+# attachments next to it (inline signature images are skipped). Prints the saved paths.
+# Tries Outlook's AppleScript first (legacy Outlook); New Outlook has no message scripting, so it then drives
+# File > Save As… through System Events (Alfred needs Accessibility + Automation permission for that).
+# Usage: outlook-save DIR
+#        outlook-save --extract FILE.eml DIR    only extract the attachments of FILE.eml into DIR
+#        outlook-save --frontmost               exit 0 if Outlook is the frontmost app
+set -euo pipefail
+die() { echo "outlook-save: $*" >&2; exit 1; }
+
+extract() {
+  python3 -I - "$1" "$2" <<'EOF'
+import email, email.policy, os, re, sys
+eml, out = sys.argv[1], sys.argv[2]
+with open(eml, "rb") as f:
+    msg = email.message_from_binary_file(f, policy=email.policy.default)
+for part in msg.iter_attachments():
+    name = part.get_filename()
+    if not name or (part.get_content_disposition() == "inline" and part.get_content_maintype() == "image"):
+        continue
+    if part.get_content_type() == "message/rfc822":  # forwarded mail: keep it as .eml
+        data = part.get_payload(0).as_bytes() if part.is_multipart() else part.get_content()
+        name = name if name.lower().endswith(".eml") else name + ".eml"
+    else:
+        data = part.get_payload(decode=True)
+    if data is None:
+        continue
+    name = re.sub(r'[/\\:\0]', "_", name).strip() or "attachment"
+    base, ext = os.path.splitext(name)
+    path, n = os.path.join(out, name), 1
+    while os.path.exists(path):
+        path, n = os.path.join(out, f"{base}-{n}{ext}"), n + 1
+    with open(path, "wb") as f:
+        f.write(data if isinstance(data, bytes) else data.encode())
+    print(path)
+EOF
+}
+
+frontmost() {
+  [ "$(osascript -e 'tell application "System Events" to get bundle identifier of first process whose frontmost is true' 2>/dev/null)" = com.microsoft.Outlook ]
+}
+
+# legacy Outlook: save the open message (else the selected one) directly
+save_applescript() {
+  osascript - "$1" <<'EOF' 2>/dev/null
+on run argv
+  tell application "Microsoft Outlook"
+    set m to missing value
+    try
+      set m to item 1 of (get current messages)
+    end try
+    if m is missing value then set m to item 1 of (get selected objects)
+    save m in (POSIX file (item 1 of argv))
+  end tell
+end run
+EOF
+}
+
+# New Outlook: File > Save As… saves the open/selected message as .eml; type the folder into the save sheet
+save_gui() {
+  local dir=$1
+  osascript - "$dir" <<'EOF'
+on run argv
+  set d to item 1 of argv
+  tell application "Microsoft Outlook" to activate
+  delay 0.3
+  tell application "System Events" to tell process "Microsoft Outlook"
+    click menu item "Save As..." of menu 1 of menu bar item "File" of menu bar 1
+    repeat 50 times
+      if exists sheet 1 of window 1 then exit repeat
+      if (count of (windows whose subrole is "AXDialog")) > 0 then exit repeat
+      delay 0.1
+    end repeat
+    delay 0.3
+    keystroke "g" using {command down, shift down}
+    delay 0.5
+    keystroke d
+    delay 0.3
+    key code 36
+    delay 0.6
+    key code 36
+  end tell
+end run
+EOF
+}
+
+[ "${1:-}" = --frontmost ] && { frontmost; exit; }
+[ "${1:-}" = --extract ] && { extract "$2" "$3"; exit; }
+[ $# -eq 1 ] || { sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 1; }
+dir=$(cd "$1" && pwd) || die "no folder $1"
+pgrep -xq "Microsoft Outlook" || die "Outlook is not running"
+
+tmp=$dir/.outlook-save-$$
+mkdir "$tmp"
+trap 'rm -rf "$tmp"' EXIT
+if ! save_applescript "$tmp/mail.eml"; then
+  save_gui "$tmp" || die "could not drive Outlook's File > Save As… (give Alfred Accessibility permission?)"
+fi
+eml=
+for _ in $(seq 1 100); do
+  eml=$(find "$tmp" -maxdepth 1 -type f -name '*.eml' | head -1)
+  # wait until Outlook has finished writing it
+  [ -n "$eml" ] && [ -s "$eml" ] && sleep 0.5 && break
+  sleep 0.1
+done
+[ -n "$eml" ] || die "Outlook saved no .eml (is a message open or selected?)"
+
+subject=$(python3 -I -c '
+import email, email.policy, sys
+m = email.message_from_binary_file(open(sys.argv[1], "rb"), policy=email.policy.default)
+print(m.get("subject", "") or "")' "$eml" | tr -c 'A-Za-z0-9._ -' ' ' | tr -s ' ' | sed 's/^ //; s/ $//' | cut -c1-60)
+[ -n "$subject" ] || subject=mail
+final=$dir/$(date +%Y%m%d)-$subject.eml
+n=1
+while [ -e "$final" ]; do final=$dir/$(date +%Y%m%d)-$subject-$((n++)).eml; done
+mv "$eml" "$final"
+echo "$final"
+extract "$final" "$dir"

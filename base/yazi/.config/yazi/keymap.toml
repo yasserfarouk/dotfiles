@@ -426,3 +426,10 @@ desc = "Delete bookmark by key"
 on = [ "g", "R" ]
 run = "plugin yamb -- rename_by_key"
 desc = "Rename bookmark by key"
+
+[[mgr.prepend_keymap]]
+on = [ "g", "m" ]
+run = '''
+  shell --block '~/bin/sendto --pick "$@"'
+'''
+desc = "Move selection to a project folder (fzf over tmux Alt-g folders; ctrl-y copies)"

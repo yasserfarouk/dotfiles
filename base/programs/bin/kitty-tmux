@@ -5,9 +5,10 @@
 # attaches to it, starting the tmux server if needed.
 # --project DIR opens the folder's project session instead: an existing session is just shown; a new one comes
 # from tmuxinator when the folder has its own config (DIR/.tmuxinator.yml, or a ~/.config/tmuxinator project whose
-# root: is DIR), otherwise it is a shell running claude.
+# root: is DIR), otherwise it is a shell running claude. --name NAME names the session instead of the folder,
+# --claude PROMPT starts claude with PROMPT (always the claude shell, not tmuxinator; mknew uses both for talks).
 # Usage: kitty-tmux [PATH]              (no path: $HOME)
-#        kitty-tmux --project DIR
+#        kitty-tmux --project DIR [--name NAME] [--claude PROMPT]
 set -euo pipefail
 kitty_bin=/Applications/kitty.app/Contents/MacOS/kitty
 
@@ -32,21 +33,29 @@ tmuxinator_for() {
   done
 }
 
-project=
+project= sname= prompt=
 [ "${1:-}" = --project ] && { project=1; shift; }
 path=${1:-$HOME}
+if [ -n "$project" ]; then
+  shift || true
+  while [ $# -gt 1 ]; do
+    case $1 in --name) sname=$2 ;; --claude) prompt=$2 ;; *) break ;; esac
+    shift 2
+  done
+fi
 path=${path%/}
 [ -n "$path" ] || path=/
 if [ -d "$path" ]; then dir=$path; folder=1; else dir=$(dirname "$path"); folder=; fi
 tmux=$(find_bin tmux)
 [ -n "$tmux" ] || { echo "kitty-tmux: tmux not found" >&2; exit 1; }
 # tmux turns . and : in session names into _
-name=$(basename "$dir" | tr '.:' '__')
+name=$(basename "${sname:-$dir}" | tr '.:' '__')
 
 if [ -n "$project" ]; then
   [ -d "$path" ] || { echo "kitty-tmux: not a folder: $path" >&2; exit 1; }
   if ! "$tmux" has-session -t "=$name" 2>/dev/null; then
-    mux=$(tmuxinator_for "$dir")
+    mux=
+    [ -n "$prompt" ] || mux=$(tmuxinator_for "$dir")
     if [ -n "$mux" ] && [ -n "$(find_bin tmuxinator)" ]; then
       # tmuxinator runs tmux by name; from DIR so a relative root: (or none) means DIR
       PATH=$(dirname "$tmux"):$PATH
@@ -55,7 +64,10 @@ if [ -n "$project" ]; then
     else
       "$tmux" new-session -d -s "$name" -c "$dir"
       # typed into the shell so its PATH applies and quitting claude leaves the shell
-      "$tmux" send-keys -t "=$name:" "claude" Enter
+      cmd=claude
+      [ -n "$prompt" ] && cmd+=" '$(printf '%s' "$prompt" | sed "s/'/'\\\\''/g")'"
+      "$tmux" send-keys -t "=$name:" -l "$cmd"
+      "$tmux" send-keys -t "=$name:" Enter
     fi
   fi
 elif "$tmux" has-session -t "=$name" 2>/dev/null; then

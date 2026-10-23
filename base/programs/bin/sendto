@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# Move (or copy) files and folders into one of the tmux Alt-g folders (`project-dirs`: folder shortcuts such
+# as nec_projects, patents, papers_current, presentations first, then two levels below them, zoxide, ~/code, ...).
+# Never overwrites: an item whose name already exists in the destination is skipped and reported.
+# Usage: sendto [-c] DEST FILE...    move FILE... into DEST (-c: copy)
+#        sendto --pick FILE...       fzf over the folders (enter move, ctrl-y copy); yazi binds this (g m)
+#        sendto --stash FILE...      remember FILE... for the next Alfred `sendto` (the Alfred file action does this)
+#        sendto --alfred             Alfred Script Filter JSON over the folders (Alfred keyword `sendto`, ctrl-opt-cmd-M)
+#        sendto --files              the stashed files (if stashed in the last 2 minutes), else Finder's selection
+set -euo pipefail
+PATH=/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH
+bin=$(dirname "$(realpath "$0")")
+stash=${TMPDIR:-/tmp}/sendto-files
+
+notify() {
+  printf '%s\n' "$1"
+  [ -t 1 ] || osascript -e "display notification \"$(printf '%s' "$1" | sed 's/["\\]/\\&/g')\" with title \"sendto\"" >/dev/null 2>&1 || true
+}
+
+send() {
+  local copy= dest moved=0 skipped=()
+  [ "$1" = -c ] && { copy=1; shift; }
+  dest=${1%/}; shift
+  [ -d "$dest" ] || { notify "not a folder: $dest"; exit 1; }
+  for f in "$@"; do
+    f=${f%/}
+    [ -e "$f" ] || continue
+    if [ -e "$dest/$(basename "$f")" ]; then skipped+=("$(basename "$f")"); continue; fi
+    if [ -n "$copy" ]; then cp -Rp "$f" "$dest/"; else mv "$f" "$dest/"; fi
+    moved=$((moved + 1))
+  done
+  local msg="$([ -n "$copy" ] && echo copied || echo moved) $moved to ${dest/#$HOME/~}"
+  [ ${#skipped[@]} -eq 0 ] || msg+="; skipped (already there): ${skipped[*]}"
+  notify "$msg"
+}
+
+files() {
+  if [ -s "$stash" ] && [ -n "$(find "$stash" -mmin -2 2>/dev/null)" ]; then
+    cat "$stash"
+  else
+    osascript -e 'tell application "Finder" to set s to selection as alias list' \
+      -e 'set out to ""' -e 'repeat with f in s' -e 'set out to out & POSIX path of f & linefeed' -e 'end repeat' \
+      -e 'return out' 2>/dev/null | sed '/^$/d' || true
+  fi
+}
+
+alfred() {
+  local n
+  n=$(files | wc -l | tr -d ' ')
+  "$bin/project-dirs" | python3 -I -c '
+import json, os, sys
+home, n = os.path.expanduser("~"), int(sys.argv[1])
+what = f"{n} item" + ("s" if n != 1 else "") if n else "nothing selected in Finder"
+items = []
+for d in sys.stdin.read().splitlines():
+    short = "~" + d[len(home):] if d.startswith(home) else d
+    items.append({"uid": d, "title": os.path.basename(d) or d, "subtitle": f"{short}   (move {what}; ⌘ copy)",
+                  "arg": d, "match": short.replace("/", " "), "type": "file:skipcheck", "icon": {"type": "fileicon", "path": d},
+                  "variables": {"copy": "0"},
+                  "mods": {"cmd": {"arg": d, "subtitle": f"copy {what} to {short}", "variables": {"copy": "1"}}}})
+print(json.dumps({"items": items}))' "$n"
+}
+
+case ${1:-} in
+  --stash) shift; printf '%s\n' "$@" >"$stash" ;;
+  --files) files ;;
+  --alfred) alfred ;;
+  --alfred-send) # Alfred Run Script: $2 = destination, $3 = 1 to copy; files from the stash or Finder
+    paths=()
+    while IFS= read -r f; do paths+=("$f"); done < <(files)
+    rm -f "$stash"
+    [ ${#paths[@]} -gt 0 ] || { notify "nothing to send (select files in Finder)"; exit 1; }
+    if [ "${3:-}" = 1 ]; then send -c "$2" "${paths[@]}"; else send "$2" "${paths[@]}"; fi ;;
+  --pick)
+    shift
+    [ $# -gt 0 ] || { echo "sendto --pick FILE..." >&2; exit 1; }
+    out=$("$bin/project-dirs" | fzf --height=100% --reverse --expect ctrl-y \
+      --header "enter move $# item(s) there  ctrl-y copy" \
+      --preview-window=right:50% --preview 'ls -A --color=always {} 2>/dev/null || ls -AG {}') || exit 0
+    key=$(head -1 <<<"$out") dest=$(sed -n 2p <<<"$out")
+    [ -n "$dest" ] || exit 0
+    if [ "$key" = ctrl-y ]; then send -c "$dest" "$@"; else send "$dest" "$@"; fi
+    sleep 1 ;; # let the message be read before yazi comes back
+  '' | -h | --help) sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *) send "$@" ;;
+esac
