@@ -289,7 +289,6 @@ mas "LINE", id: 539883307
 mas "Magnet", id: 441258766
 mas "ManabiReader", id: 1247286380
 mas "MeetingBar", id: 1532419400
-mas "Messenger", id: 1480068668
 mas "Numbers", id: 409203825
 mas "One Thing", id: 1604176982
 mas "Pages", id: 409201541

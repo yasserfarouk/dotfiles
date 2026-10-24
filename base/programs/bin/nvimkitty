@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Open text files in nvim and folders in yazi inside kitty (VS Code / Finder when those are missing), and make
-# that the macOS default for Markdown, plain text and similar files, and for folders.
+# that the macOS default for Markdown, plain text, LaTeX, CSV, source code and similar files, and for folders.
 # Usage: nvimkitty [FILE|DIR...]      open the files (no file: an empty nvim); a first argument that is a folder opens yazi
 #        nvimkitty yazi [PATH...]     open yazi in kitty at the folders (a file: its folder, with the file selected)
 #        nvimkitty install            build ~/Applications/NvimKitty.app, make it the default handler, and add the
@@ -17,14 +17,25 @@ bundle_id=com.yasser.nvimkitty
 lsregister=/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister
 kitty_bin=/Applications/kitty.app/Contents/MacOS/kitty
 vscode_id=com.microsoft.VSCode
-# system types (UTIs) to take over; extensions without a system UTI are declared by the app (com.yasser.nvimkitty.<ext>)
-utis=(net.daringfireball.markdown public.plain-text public.utf8-plain-text com.apple.log public.json public.yaml
-      public.script public.shell-script public.python-script)
-declared_exts=(rst org toml ini conf cfg env)
+# extensions to take over. install asks LaunchServices for each one's type (UTI) and takes that type over
+# (org.tug.tex from TeXShop, public.comma-separated-values-text from Numbers, public.c-source from Xcode, ...);
+# an extension with no type of its own (dyn.*) is declared by the app as com.yasser.nvimkitty.<ext>.
+# Left out on purpose: html/svg/rtf/plist/ipynb (better in their apps) and ts (MPEG transport stream to macOS).
+exts=(md markdown txt text log json yaml yml toml ini conf cfg env rst org adoc typ qmd rmd
+      tex ltx sty cls dtx ins bib bst bbl aux tikz ris
+      csv tsv
+      sh bash zsh fish py lua vim r jl c h cc cpp hpp rs go java kt scala swift rb pl php hs ml el
+      js mjs jsx tsx css scss sql xml diff patch mk cmake nix tf gp sbt gradle properties lock)
+# types taken over even when no extension maps to them (yet): generic text, and the types TeXShop, BibDesk and
+# Sequel Ace declare, so installing one of those later on a new machine does not hand them .tex/.bib/.sql
+extra_utis=(public.utf8-plain-text public.script
+            org.tug.tex org.tug.ltx org.tug.sty org.tug.cls org.tug.dtx org.tug.tex.bibtex org.tug.bst org.tug.aux
+            org.tug.lua com.unknown.ins com.unknown.adoc com.unknown.typ net.sourceforge.bibdesk.ris
+            com.sequel-ace.sequel-ace.sql)
 # folders: public.folder only, never public.directory (that would also catch .app bundles and other packages)
 folder_uti=public.folder
 finder_id=com.apple.finder
-exts=(md markdown txt text log json yaml yml "${declared_exts[@]}")
+utis=() declared_exts=()   # filled by resolve_types
 die() { echo "nvimkitty: $*" >&2; exit 1; }
 
 # GUI launches get a bare PATH, so look in the usual places
@@ -66,6 +77,32 @@ open_files() {
   fi
 }
 
+# ext_uti EXT: the type LaunchServices gives a .EXT file (mdls on an empty probe file)
+ext_uti() {
+  local tmp u
+  tmp=$(mktemp -d)
+  : >"$tmp/probe.$1"
+  u=$(mdls -raw -name kMDItemContentType "$tmp/probe.$1" 2>/dev/null || true)
+  rm -rf "$tmp"
+  echo "$u"
+}
+
+# fill utis (system types to take over, each once) and declared_exts (extensions the app declares itself);
+# types the app declared on an earlier install count as declared again
+resolve_types() {
+  local e u seen=" "
+  utis=("${extra_utis[@]}") declared_exts=()
+  for e in "${exts[@]}"; do
+    u=$(ext_uti "$e")
+    case $u in
+      dyn.*|""|"(null)"|"$bundle_id".*) declared_exts+=("$e"); u=$bundle_id.$e ;;
+    esac
+    case $seen in *" $u "*) continue ;; esac
+    seen+="$u "
+    utis+=("$u")
+  done
+}
+
 plist_doc_types() {
   local p=$1 i=0 u e
   /usr/libexec/PlistBuddy -c "Delete :CFBundleDocumentTypes" "$p" 2>/dev/null || true
@@ -84,13 +121,13 @@ plist_doc_types() {
     -c "Add :CFBundleDocumentTypes:1:LSItemContentTypes array" \
     -c "Add :CFBundleDocumentTypes:1:LSItemContentTypes:0 string $folder_uti" \
     -c "Add :UTImportedTypeDeclarations array" "$p"
+  resolve_types
   for u in "${utis[@]}"; do
     /usr/libexec/PlistBuddy -c "Add :CFBundleDocumentTypes:0:LSItemContentTypes:$i string $u" "$p"; i=$((i + 1))
   done
   local j=0
   for e in "${declared_exts[@]}"; do
     /usr/libexec/PlistBuddy \
-      -c "Add :CFBundleDocumentTypes:0:LSItemContentTypes:$i string $bundle_id.$e" \
       -c "Add :UTImportedTypeDeclarations:$j dict" \
       -c "Add :UTImportedTypeDeclarations:$j:UTTypeIdentifier string $bundle_id.$e" \
       -c "Add :UTImportedTypeDeclarations:$j:UTTypeDescription string .$e text file" \
@@ -99,7 +136,7 @@ plist_doc_types() {
       -c "Add :UTImportedTypeDeclarations:$j:UTTypeTagSpecification dict" \
       -c "Add :UTImportedTypeDeclarations:$j:UTTypeTagSpecification:public.filename-extension array" \
       -c "Add :UTImportedTypeDeclarations:$j:UTTypeTagSpecification:public.filename-extension:0 string $e" "$p"
-    i=$((i + 1)); j=$((j + 1))
+    j=$((j + 1))
   done
   i=0
   for e in "${exts[@]}"; do
@@ -276,9 +313,15 @@ set_defaults() {
   local handler=$1 duti u n
   shift
   duti=$(duti_bin)
-  local types=("${utis[@]}")
-  [ "$handler" = "$bundle_id" ] && for e in "${declared_exts[@]}"; do types+=("$bundle_id.$e"); done
-  [ $# -gt 0 ] && types=("$@")
+  local types=("$@")
+  if [ $# -eq 0 ]; then
+    [ ${#utis[@]} -gt 0 ] || resolve_types
+    # the app's own declared types mean nothing to another handler
+    for u in "${utis[@]}"; do
+      [ "$handler" != "$bundle_id" ] && [ "${u#"$bundle_id".}" != "$u" ] && continue
+      types+=("$u")
+    done
+  fi
   for n in 1 2 3 4 5; do
     local pending=()
     for u in "${types[@]}"; do
@@ -321,18 +364,16 @@ install() {
 }
 
 status() {
-  local duti u e tmp
+  local duti u e
   duti=$(duti_bin)
-  tmp=$(mktemp -d)
-  printf "%-10s %-34s %s\n" ext type handler
+  printf "%-12s %-36s %s\n" ext type handler
   for e in "${exts[@]}"; do
-    : >"$tmp/probe.$e"
-    u=$(mdls -raw -name kMDItemContentType "$tmp/probe.$e" 2>/dev/null || true)
-    case $u in dyn.*|""|"(null)") u="$bundle_id.$e (declared)";; esac
-    printf ".%-9s %-34s %s\n" "$e" "$u" "$("$duti" -d "${u% (declared)}" 2>/dev/null || true)"
+    u=$(ext_uti "$e")
+    # Spotlight (mdls) can lag behind the app's own declarations
+    case $u in dyn.*|""|"(null)") u=$bundle_id.$e;; esac
+    printf ".%-11s %-36s %s\n" "$e" "$u" "$("$duti" -d "$u" 2>/dev/null || true)"
   done
-  printf "%-10s %-34s %s\n" "(folder)" "$folder_uti" "$("$duti" -d "$folder_uti" 2>/dev/null || true)"
-  rm -rf "$tmp"
+  printf "%-12s %-36s %s\n" "(folder)" "$folder_uti" "$("$duti" -d "$folder_uti" 2>/dev/null || true)"
 }
 
 case ${1:-} in

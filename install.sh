@@ -129,8 +129,11 @@ echo "Installing vim-plug for vim"
 [ -f "$HOME/.vim/autoload/plug.vim" ] || curl -fsSLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
 	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim || true
 
-echo "Making nvim-in-kitty the default app for Markdown / text files"
+echo "Making nvim-in-kitty the default app for Markdown / text / LaTeX / CSV / source files"
 "$(dirname "$0")/base/programs/bin/nvimkitty" install || echo "Warning: nvimkitty install failed"
+
+echo "Making Preview the default app for PDFs"
+command -v duti >/dev/null 2>&1 && duti -s com.apple.Preview com.adobe.pdf all || echo "Warning: could not set Preview for PDFs"
 
 if [ -d "/Applications/Alfred 5.app" ]; then
 	echo "Alfred: yazi / tmux / send-to file actions, note / proj / new / sendto / dl / shot keywords, kitty as terminal"
