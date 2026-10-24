@@ -4,11 +4,7 @@ name: <%= project %>
 root: ~/code/projects/<%= project %>
 
 windows:
-  - "<%= project %>":
-      panes:
-        - nvim:
-          - nvim
-  - console:
+  - "<%= project %>": tmux-ide
 
 startup_window: 1
 startup_pane: 1

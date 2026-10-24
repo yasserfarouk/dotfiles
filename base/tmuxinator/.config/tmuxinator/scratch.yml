@@ -47,8 +47,4 @@ on_project_first_start:
 # attach: false
 
 windows:
-  - "<%= project %>":
-      panes:
-        - nvim:
-          - nvim
-  - console:
+  - "<%= project %>": tmux-ide

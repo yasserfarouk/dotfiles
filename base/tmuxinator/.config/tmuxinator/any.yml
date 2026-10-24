@@ -48,8 +48,4 @@ root: <%= path %>
 # on_project_start: source .env
 
 windows:
-  - "<%= File.basename(path) %>":
-      panes:
-        - nvim:
-          - nvim
-  - console:
+  - "<%= File.basename(path) %>": tmux-ide
