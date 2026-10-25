@@ -74,10 +74,10 @@ key-mapping.preset = 'qwerty'
 #                 https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 gaps.inner.horizontal = 5
 gaps.inner.vertical =   5
-gaps.outer.left =       0
-gaps.outer.bottom =     0
+gaps.outer.left =       5
+gaps.outer.bottom =     5
 gaps.outer.top =        0
-gaps.outer.right =      0
+gaps.outer.right =      5
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -109,14 +109,23 @@ gaps.outer.right =      0
     # 'tell application "Terminal" to tell (do script) to activate' '''
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-    alt-slash = 'layout tiles horizontal vertical'
-    alt-comma = 'layout accordion horizontal vertical'
+    # whole-workspace layouts (layout-cycle.sh): grid (default) → main → vertical → horizontal → accordion
+    alt-slash = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh'   # next layout
+    alt-shift-slash = 'mode layout'   # then g grid, m main, t two-left, v vertical, h horizontal, a accordion
+    alt-period = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh grid'   # grid: 3 windows → one left, two right; 4 → 2x2
+    alt-comma = 'layout accordion horizontal vertical'   # only the focused window's container
+    # focused window takes the whole left/right/top/bottom half, the others share the rest
+    cmd-alt-left = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh left'
+    cmd-alt-right = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh right'
+    cmd-alt-up = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh up'
+    cmd-alt-down = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh down'
 	alt-shift-m = 'move-node-to-monitor --wrap-around --focus-follows-window next'
     alt-m = 'focus-monitor --wrap-around next'   # jump focus to the other screen
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#fullscreen
     alt-cmd-enter = 'fullscreen'     # toggle: maximize focused window / restore it to its previous place
     alt-w = 'exec-and-forget ~/.config/aerospace/workspace-picker.sh'   # list workspaces + apps, pick one
+    alt-shift-t = 'exec-and-forget ~/.config/aerospace/safari-tab-to-workspace.sh'   # Safari: move current tab to a picked workspace
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#focus
     alt-h = 'focus --boundaries all-monitors-outer-frame left'
@@ -180,6 +189,17 @@ gaps.outer.right =      0
     alt-shift-j = ['join-with down', 'mode main']
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
+
+# 'layout' binding mode: jump straight to a whole-workspace layout (alt-shift-slash, then a letter).
+[mode.layout.binding]
+    esc = 'mode main'
+    alt-shift-slash = 'mode main'
+    g = ['exec-and-forget ~/.config/aerospace/layout-cycle.sh grid', 'mode main']
+    m = ['exec-and-forget ~/.config/aerospace/layout-cycle.sh main', 'mode main']
+    t = ['exec-and-forget ~/.config/aerospace/layout-cycle.sh two', 'mode main']
+    v = ['exec-and-forget ~/.config/aerospace/layout-cycle.sh vertical', 'mode main']
+    h = ['exec-and-forget ~/.config/aerospace/layout-cycle.sh horizontal', 'mode main']
+    a = ['exec-and-forget ~/.config/aerospace/layout-cycle.sh accordion', 'mode main']
 
 # 'workspace' binding mode: letter workspaces A-Z (plain alt-letters clash with focus/move bindings).
 # Enter with alt-shift-space, then press a letter to switch, or shift-letter to move the focused window there.
@@ -338,3 +358,9 @@ gaps.outer.right =      0
 [[on-window-detected]]
     if.app-id = 'com.epson.edca'
     run = 'layout floating'
+
+# Grid is the default layout: rebuild grid/main when a tiled window appears on the focused workspace
+# (last, so the floating rules above match first and stop here).
+[[on-window-detected]]
+    if = 'true'
+    run = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh regrid'
