@@ -1,0 +1,53 @@
+#!/usr/bin/env zsh
+# Searchable tmux shortcut list (Alt-?, prefix-?): every root/prefix binding (copy-mode and mouse ones
+# left out) with its description — the `bind -N` note, else the comment above the bind in ~/.tmux.conf —
+# in fzf; Enter runs the chosen binding's command. The popup can't run it itself (no popup inside a
+# popup, and it would lose the client context), so the command goes to $out and the key binding
+# sources that file once the popup has closed.
+out=/tmp/tmux-keys-$UID.conf
+/bin/rm -f $out
+prefix=$(tmux show -gv prefix)
+
+typeset -A desc
+# comments above each bind in the config (a comment block applies to all binds right under it)
+conf=${${:-~/.tmux.conf}:A}
+[[ -r $conf ]] && awk '
+  /^[[:space:]]*#/ { sub(/^[[:space:]]*#+[[:space:]]?/, ""); c = (c == "" || b ? $0 : c " " $0); b = 0; next }
+  /^[[:space:]]*(bind|bind-key)[[:space:]]/ {
+    t = "prefix"
+    for (i = 2; i <= NF && $i ~ /^-/; i++) {
+      if ($i ~ /n/) t = "root"
+      if ($i ~ /T$/) t = $(++i)
+      else if ($i ~ /N$/) i++
+    }
+    k = $i; gsub(/^["\x27]|["\x27]$/, "", k); sub(/^\\/, "", k)
+    d = c; if (match($0, /[[:space:]]#[[:space:]]/)) d = substr($0, RSTART + 3)
+    if (d != "") print t "\t" k "\t" d
+    b = 1; next
+  }
+  { c = ""; b = 0 }' $conf | while IFS=$'\t' read -r t k c; do desc[$t:$k]=$c; done
+# tmux notes (default bindings and bind -N) win
+for t in prefix root; do
+  tmux list-keys -N -T $t 2>/dev/null | while read -r line; do
+    [[ $t == prefix ]] && line=${line#$prefix }
+    [[ $line =~ '^([^ ]+) +(.*)$' ]] && desc[$t:${match[1]#\\}]=${match[2]}
+  done
+done
+
+typeset -A table_order=(prefix 0 root 1)
+sel=$(tmux list-keys | while IFS= read -r line; do
+  [[ $line =~ '^bind-key +(-r +)?-T +([^ ]+) +([^ ]+) +(.*)$' ]] || continue
+  t=${match[2]} k=${match[3]} cmd=${match[4]}
+  [[ $t == copy-mode* || $k == *(Mouse|Click|Wheel|Drag)* ]] && continue
+  case $t in
+    prefix) label="$prefix ${k#\\}" ;;
+    root)   label=${k#\\} ;;
+    *)      label="$t ${k#\\}" ;;
+  esac
+  print -r -- "${table_order[$t]:-2}"$'\t'"$label"$'\t'"${desc[$t:${k#\\}]:-}"$'\t'"$cmd"
+done | sort -t$'\t' -k1,1n -k2,2 | cut -f2- | awk -F'\t' '{ printf "%-16s\t%s\t%s\n", $1, ($2 == "" ? "·" : $2), $3 }' |
+  fzf --reverse --height=100% --delimiter=$'\t' --with-nth=1,2 --nth=1,2,3 \
+    --prompt='keys> ' --header='Enter: run · Esc: close · search matches key, description and command' \
+    --preview='print -r -- {3}' --preview-window=down,4,wrap)
+[[ -n $sel ]] && print -r -- "${${(ps:\t:)sel}[3]}" >$out
+exit 0
