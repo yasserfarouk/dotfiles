@@ -59,3 +59,21 @@ panes:
     focus: true
   - split: vertical
     percentage: 25
+
+# Sidebar rows are labelled with the tmux session, i.e. the folder name (see mode: session
+# above; kitty-tmux, tmuxinator and Alt-g name sessions after their folder too), instead of
+# {primary}/{pane_title}, which follow the window name and the agent's task title and so keep
+# changing while it works.
+sidebar:
+  templates:
+    compact: "{status_icon} {session} {pane_suffix} {fill} {elapsed}"
+    tiles:
+      - "{session} {pane_suffix} {fill} {elapsed}"
+      - "{git_branch} {fill} {git_stats}"
+    horizontal:
+      - "{status_icon} {session} {pane_suffix} {fill} {elapsed}"
+      - "{git_branch} {fill} {git_stats}"
+    grouped:
+      tiles:
+        - "{session} {pane_suffix} {fill} {pr_number} {pr_checks} {elapsed}"
+        - "{git_branch} {fill} {git_stats}"
