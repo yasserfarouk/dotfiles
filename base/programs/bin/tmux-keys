@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-# Searchable tmux shortcut list (Alt-?, prefix-?): every root/prefix binding (copy-mode and mouse ones
+# Searchable tmux shortcut list (Alt-u, prefix-?): every root/prefix binding (copy-mode and mouse ones
 # left out) with its description — the `bind -N` note, else the comment above the bind in ~/.tmux.conf —
 # in fzf; Enter runs the chosen binding's command. The popup can't run it itself (no popup inside a
 # popup, and it would lose the client context), so the command goes to $out and the key binding
