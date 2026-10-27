@@ -109,9 +109,9 @@ gaps.outer.right =      5
     # 'tell application "Terminal" to tell (do script) to activate' '''
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-    # whole-workspace layouts (layout-cycle.sh): grid (default) → main → vertical → horizontal → accordion
+    # whole-workspace layouts (layout-cycle.sh): grid (default) → master-accordion → main → two → vertical → horizontal → accordion
     alt-slash = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh'   # next layout
-    alt-shift-slash = 'mode layout'   # then g grid, m main, t two-left, v vertical, h horizontal, a accordion
+    alt-shift-slash = 'mode layout'   # then g grid, s master-accordion, m main, t two-left, v vertical, h horizontal, a accordion
     alt-period = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh grid'   # grid: 3 windows → one left, two right; 4 → 2x2
     alt-comma = 'layout accordion horizontal vertical'   # only the focused window's container
     # focused window takes the whole left/right/top/bottom half, the others share the rest
@@ -195,6 +195,7 @@ gaps.outer.right =      5
     esc = 'mode main'
     alt-shift-slash = 'mode main'
     g = ['exec-and-forget ~/.config/aerospace/layout-cycle.sh grid', 'mode main']
+    s = ['exec-and-forget ~/.config/aerospace/layout-cycle.sh master-accordion', 'mode main']
     m = ['exec-and-forget ~/.config/aerospace/layout-cycle.sh main', 'mode main']
     t = ['exec-and-forget ~/.config/aerospace/layout-cycle.sh two', 'mode main']
     v = ['exec-and-forget ~/.config/aerospace/layout-cycle.sh vertical', 'mode main']
@@ -359,7 +360,13 @@ gaps.outer.right =      5
     if.app-id = 'com.epson.edca'
     run = 'layout floating'
 
-# Grid is the default layout: rebuild grid/main when a tiled window appears on the focused workspace
+# The workmux dashboard window (~/bin/wm-dash, Alfred `wm`) floats; wm-dash centers and raises it.
+[[on-window-detected]]
+    if.app-id = 'net.kovidgoyal.kitty'
+    if.window-title-regex-substring = '^workmux-dashboard$'
+    run = 'layout floating'
+
+# Grid is the default layout: rebuild grid/master-accordion/main/two when a tiled window appears on the focused workspace
 # (last, so the floating rules above match first and stop here).
 [[on-window-detected]]
     if = 'true'

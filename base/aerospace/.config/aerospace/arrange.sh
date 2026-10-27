@@ -2,9 +2,10 @@
 # Arrange a workspace's tiled windows as two columns (or rows), the second one stacked:
 #   grid   1 → full, 2 → left|right, 3 → one left, two right, 4 → 2x2, n → n/2 left, the rest right
 #   main   one window left, all the others stacked on the right
+#   master-accordion   one window left, all the others in an accordion on the right (one in front)
 #   two    two windows stacked on the left, all the others stacked on the right
 #   left|right|up|down   the focused window takes that whole half, the others share the other half
-# Usage: arrange.sh WORKSPACE grid|main|two|left|right|up|down
+# Usage: arrange.sh WORKSPACE grid|main|master-accordion|two|left|right|up|down
 # (focus walks over the windows and comes back; another workspace gets focused briefly)
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 unset AEROSPACE_WINDOW_ID  # set for callbacks; aerospace commands would all target that window
@@ -63,4 +64,5 @@ stack() {
 }
 stack "$first" "$n"
 stack 0 "$first"
+[ "$kind" != master-accordion ] || (( n < 3 )) || aerospace layout --window-id "${ids[1]}" v_accordion
 aerospace balance-sizes --workspace "$ws"
