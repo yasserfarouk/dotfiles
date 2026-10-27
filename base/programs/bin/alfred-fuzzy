@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# fzf-style fuzzy filter for Alfred Script Filter JSON: reads {"items": [...]} on stdin and prints the items
+# that match QUERY, best first (`fzf --filter`; a plain subsequence match if fzf is missing). Each item is
+# matched on its "match" field, else its title; paths (keys starting with / or ~) use fzf's path scheme, so
+# hits in the last path component rank first; other items keep their order on equal scores. An empty QUERY
+# passes the items through in their order.
+# Used by the alfred-kitty script filters (proj, sendto, dl, shot, ak), which turn Alfred's own filtering off.
+# Usage: ... | alfred-fuzzy [--limit N] QUERY
+set -euo pipefail
+
+limit=80
+[ "${1:-}" = --limit ] && { limit=$2; shift 2; }
+fzf=$(PATH="$PATH:/opt/homebrew/bin:/usr/local/bin" command -v fzf || true)
+
+python3 -I -c '
+import json, subprocess, sys
+query, fzf, limit = sys.argv[1].strip(), sys.argv[2], int(sys.argv[3])
+data = json.load(sys.stdin)
+items = data.get("items", [])
+if query:
+    keys = [" ".join(str(it.get("match") or it.get("title", "")).split()) for it in items]
+    if fzf:
+        scheme = "path" if keys and all(k[:1] in "/~" for k in keys) else "default"
+        # equal scores keep the input order (recent files newest first, the menu as listed)
+        ties = [] if scheme == "path" else ["--tiebreak=index"]
+        lines = "\n".join(f"{i}\t{k}" for i, k in enumerate(keys))
+        out = subprocess.run([fzf, "--filter", query, "--delimiter", "\t", "--nth", "2..", f"--scheme={scheme}", *ties],
+                             input=lines, capture_output=True, text=True).stdout
+        order = [int(l.split("\t", 1)[0]) for l in out.splitlines() if l]
+    else:
+        def hit(k, terms=query.lower().split()):
+            k = k.lower()
+            for t in terms:
+                it = iter(k)
+                if not all(c in it for c in t):
+                    return False
+            return True
+        order = [i for i, k in enumerate(keys) if hit(k)]
+    items = [items[i] for i in order]
+    if not items:
+        items = [{"title": f"No match for “{query}”", "valid": False}]
+data["items"] = items[:limit]
+json.dump(data, sys.stdout)
+' "${1:-}" "$fzf" "$limit"

@@ -7,13 +7,13 @@
 # Outlook in front it also saves the open email + attachments), `sendto` (ctrl-opt-cmd-M, and the file action
 # "Send to project folder" → `sendto`: move Finder's selection to a project-dirs folder, ⌘ copy), `dl` / `shot`
 # (→ `recent`: latest downloads / CleanShot captures; dl ↩ opens, shot ↩ sends to a project folder, ⌘ the other,
-# ⌥ reveals in Finder), `alfredinstall` (reruns `alfred-kitty install`), `ak` (menu of all of these: picking one
+# ⌥ reveals in Finder), `wm` (→ `wm-dash`: workmux dashboard in a centered, floating kitty window), `alfredinstall` (reruns `alfred-kitty install`), `ak` (menu of all of these: picking one
 # opens Alfred on its keyword), and kitty as Alfred's terminal (Features > Terminal > Custom), so `>cmd` and workflow terminal commands run in kitty.
 # Usage: alfred-kitty install       write the workflow into Alfred's preferences, set the terminal, restart Alfred
 #        alfred-kitty install-notify   the same, then a notification (the `alfredinstall` keyword)
 #        alfred-kitty uninstall     remove the workflow, put the terminal back to Terminal.app
 #        alfred-kitty run CMD       run CMD in a new kitty window, staying in an interactive shell (Alfred's terminal)
-#        alfred-kitty projects      the `proj` items as Alfred script-filter JSON
+#        alfred-kitty projects [Q]  the `proj` items as Alfred script-filter JSON, fuzzy-ranked by Q (fzf)
 #        alfred-kitty search TEXT   open Alfred with TEXT typed in (the file action, `dl`/`shot` → `sendto `, `ak`)
 # The workflow and the AppleScript only call the scripts in ~/bin, so the behaviour lives here, in the dotfiles.
 set -euo pipefail
@@ -54,21 +54,23 @@ write_workflow() {
   mkdir -p "$workflow"
   WF_YAZI=$(script_body "'$bin/nvimkitty' yazi") WF_TMUX=$(script_body "'$bin/kitty-tmux'") \
     WF_NOTE="'$bin/tempnote' \"\$1\" >/dev/null" \
-    WF_PROJ_LIST="'$bin/alfred-kitty' projects" WF_PROJ="'$bin/kitty-tmux' --project \"\$1\"" \
+    WF_PROJ_LIST="'$bin/alfred-kitty' projects \"\$1\"" WF_PROJ="'$bin/kitty-tmux' --project \"\$1\"" \
     WF_NEW_LIST="'$bin/mknew' --alfred \"\$1\"" WF_NEW="'$bin/mknew' \${mail:+--mail} \"\$kind\" \"\$1\"" \
-    WF_SEND_LIST="'$bin/sendto' --alfred" WF_SEND="'$bin/sendto' --alfred-send \"\$1\" \"\${copy:-0}\"" \
+    WF_SEND_LIST="'$bin/sendto' --alfred \"\$1\"" WF_SEND="'$bin/sendto' --alfred-send \"\$1\" \"\${copy:-0}\" \"\${mail:-0}\"" \
     WF_SEND_STASH="$(script_body "'$bin/sendto' --stash")
 '$bin/alfred-kitty' search 'sendto '" \
     WF_INSTALL="nohup '$bin/alfred-kitty' install-notify >/dev/null 2>&1 &" \
+    WF_DASH="'$bin/wm-dash' >/dev/null 2>&1 &" \
     WF_MENU="'$bin/alfred-kitty' search \"\$1\"" \
-    WF_DL_LIST="'$bin/recent' --alfred downloads" WF_SHOT_LIST="'$bin/recent' --alfred shots" \
+    WF_DL_LIST="'$bin/recent' --alfred downloads \"\$1\"" WF_SHOT_LIST="'$bin/recent' --alfred shots \"\$1\"" \
+    WF_FUZZY="'$bin/alfred-fuzzy'" \
     WF_RECENT="case \$act in
   open) open \"\$1\" ;;
   reveal) open -R \"\$1\" ;;
   send) '$bin/sendto' --stash \"\$1\"; '$bin/alfred-kitty' search 'sendto ' ;;
 esac" \
     python3 -I - "$workflow/info.plist" <<'EOF'
-import json, os, plistlib, sys
+import json, os, plistlib, shlex, sys
 def trigger(uid, name, filetypes, multi):
     return {"uid": uid, "type": "alfred.workflow.trigger.action", "version": 1,
             "config": {"name": name, "filetypes": filetypes, "acceptsmulti": multi}}
@@ -92,11 +94,10 @@ def scriptfilter(uid, kw, title, subtext, body, alfred_filters=True, running="Li
                        "queuedelaycustom": 3, "queuedelayimmediatelyinitially": True,
                        "queuedelaymode": 0, "queuemode": 1}}
 def listfilter(uid, kw, title, subtext, items):
-    # fixed list Alfred filters itself; items: (title, subtitle, arg)
-    return {"uid": uid, "type": "alfred.workflow.input.listfilter", "version": 1,
-            "config": {"keyword": kw, "title": title, "subtext": subtext, "withspace": True, "argumenttype": 1,
-                       "argumenttrimmode": 0, "fixedorder": True, "matchmode": 0, "runningsubtext": "",
-                       "items": json.dumps([{"title": t, "subtitle": st, "arg": a} for t, st, a in items])}}
+    # fixed list, fuzzy-filtered by alfred-fuzzy (fzf) like the other script filters; items: (title, subtitle, arg)
+    body = ("printf '%s' " + shlex.quote(json.dumps({"items": [{"title": t, "subtitle": st, "arg": a} for t, st, a in items]}))
+            + " | " + os.environ["WF_FUZZY"] + ' "$1"')
+    return scriptfilter(uid, kw, title, subtext, body, alfred_filters=False, running="")
 def hotkey(uid, keycode, char):
     # ctrl-opt-cmd-<char>; connected to a script filter it opens Alfred on that keyword
     return {"uid": uid, "type": "alfred.workflow.trigger.hotkey", "version": 2,
@@ -110,18 +111,19 @@ ids = ["4B1E6A10-0001-4C1D-9A51-7E2D0C3F0001", "4B1E6A10-0002-4C1D-9A51-7E2D0C3F
        "4B1E6A10-0003-4C1D-9A51-7E2D0C3F0003", "4B1E6A10-0004-4C1D-9A51-7E2D0C3F0004",
        "4B1E6A10-0005-4C1D-9A51-7E2D0C3F0005", "4B1E6A10-0006-4C1D-9A51-7E2D0C3F0006",
        "4B1E6A10-0007-4C1D-9A51-7E2D0C3F0007", "4B1E6A10-0008-4C1D-9A51-7E2D0C3F0008"]
-ids += [f"4B1E6A10-{i:04d}-4C1D-9A51-7E2D0C3F{i:04d}" for i in range(9, 24)]
+ids += [f"4B1E6A10-{i:04d}-4C1D-9A51-7E2D0C3F{i:04d}" for i in range(9, 26)]
 MENU = [("new", "New NEC project / patent / paper / code project / talk (⌃⌥⌘N)", "new "),
-        ("sendto", "Move Finder's selection to a project folder, ⌘ copy (⌃⌥⌘M)", "sendto "),
+        ("sendto", "Move Finder's selection (or save the Outlook email) to a project folder, ⌘ copy (⌃⌥⌘M)", "sendto "),
         ("dl", "Latest downloads: open, ⌘ send to a project folder", "dl "),
         ("shot", "Latest CleanShot captures: send to a project folder, ⌘ open", "shot "),
         ("proj", "Open a project folder in its tmux session", "proj "),
         ("note", "Markdown note in ~/temp, opened in nvim", "note "),
+        ("wm", "workmux dashboard in a centered floating kitty window", "wm"),
         ("alfredinstall", "Reinstall this workflow (restarts Alfred)", "alfredinstall")]
 plist = {
     "bundleid": "com.yasser.alfred-kitty",
     "name": "kitty: yazi / tmux / note / projects / new / sendto",
-    "description": "File actions: open folders in yazi, open files/folders in a tmux session (kitty); note TEXT: Markdown note in ~/temp, opened in nvim; proj: project folder in its tmux session (tmuxinator or claude); new: NEC project/patent, paper, code, talk (+ Outlook email); sendto: move files to a project folder; dl/shot: latest download / CleanShot capture",
+    "description": "File actions: open folders in yazi, open files/folders in a tmux session (kitty); note TEXT: Markdown note in ~/temp, opened in nvim; proj: project folder in its tmux session (tmuxinator or claude); new: NEC project/patent, paper, code, talk (+ Outlook email); sendto: move files (or the Outlook email) to a project folder; dl/shot: latest download / CleanShot capture; wm: workmux dashboard",
     "createdby": "Yasser Mohammad",
     "readme": "Generated by ~/bin/alfred-kitty install (dotfiles: base/programs/bin/alfred-kitty); edits here are overwritten.",
     "webaddress": "", "version": "1.0", "disabled": False, "variablesdontexport": [],
@@ -133,36 +135,39 @@ plist = {
         keyword(ids[4], "note", "Note in ~/temp", "~/temp/<date>-<time>-<first word>.md, opened in nvim (kitty)"),
         script(ids[5], os.environ["WF_NOTE"]),
         scriptfilter(ids[6], "proj", "Projects", "Open a project in its tmux session (tmuxinator or claude) in kitty",
-                     os.environ["WF_PROJ_LIST"]),
+                     os.environ["WF_PROJ_LIST"], alfred_filters=False),
         script(ids[7], os.environ["WF_PROJ"]),
         scriptfilter(ids[8], "new", "New project / patent / paper / code / talk", "new KIND NAME",
                      os.environ["WF_NEW_LIST"], alfred_filters=False, running="…"),
         script(ids[9], os.environ["WF_NEW"]),
         hotkey(ids[10], 45, "N"),
-        scriptfilter(ids[11], "sendto", "Send to a project folder", "Move Finder's selection (⌘ copy)",
-                     os.environ["WF_SEND_LIST"], running="Listing folders…"),
+        scriptfilter(ids[11], "sendto", "Send to a project folder", "Move Finder's selection (⌘ copy); Outlook in front: save its email + attachments",
+                     os.environ["WF_SEND_LIST"], alfred_filters=False, running="Listing folders…"),
         script(ids[12], os.environ["WF_SEND"]),
         hotkey(ids[13], 46, "M"),
         trigger(ids[14], "Send to project folder", [], 1),
         script(ids[15], os.environ["WF_SEND_STASH"]),
         scriptfilter(ids[16], "dl", "Latest downloads", "↩ open  ⌘ send to a project folder  ⌥ reveal",
-                     os.environ["WF_DL_LIST"], running="…"),
+                     os.environ["WF_DL_LIST"], alfred_filters=False, running="…"),
         scriptfilter(ids[17], "shot", "Latest CleanShot captures", "↩ send to a project folder  ⌘ open  ⌥ reveal",
-                     os.environ["WF_SHOT_LIST"], running="…"),
+                     os.environ["WF_SHOT_LIST"], alfred_filters=False, running="…"),
         script(ids[18], os.environ["WF_RECENT"]),
         keyword(ids[19], "alfredinstall", "Reinstall this workflow", "alfred-kitty install (restarts Alfred)", 2),
         script(ids[20], os.environ["WF_INSTALL"]),
-        listfilter(ids[21], "ak", "alfred-kitty commands", "new, sendto, dl, shot, proj, note, alfredinstall", MENU),
+        listfilter(ids[21], "ak", "alfred-kitty commands", "new, sendto, dl, shot, proj, note, wm, alfredinstall", MENU),
         script(ids[22], os.environ["WF_MENU"]),
+        keyword(ids[23], "wm", "workmux dashboard", "In a centered, floating kitty window", 2),
+        script(ids[24], os.environ["WF_DASH"]),
     ],
     # ⌘↩ on a project: the "Open in tmux" script (kitty-tmux PATH, yazi)
     "connections": {ids[0]: [link(ids[1])], ids[2]: [link(ids[3])], ids[4]: [link(ids[5])],
                     ids[6]: [link(ids[7]), link(ids[3], CMD, "Open in yazi in its tmux session")],
                     # the items' mods set the variables (mail, copy, act); each modifier still needs its connection
                     ids[8]: [link(ids[9]), link(ids[9], OPT)], ids[10]: [link(ids[8])],
-                    ids[11]: [link(ids[12]), link(ids[12], CMD)], ids[13]: [link(ids[11])], ids[14]: [link(ids[15])],
+                    ids[11]: [link(ids[12]), link(ids[12], CMD), link(ids[12], OPT)], ids[13]: [link(ids[11])], ids[14]: [link(ids[15])],
                     ids[16]: [link(ids[18]), link(ids[18], CMD), link(ids[18], OPT)],
-                    ids[17]: [link(ids[18]), link(ids[18], CMD), link(ids[18], OPT)], ids[19]: [link(ids[20])], ids[21]: [link(ids[22])]},
+                    ids[17]: [link(ids[18]), link(ids[18], CMD), link(ids[18], OPT)], ids[19]: [link(ids[20])], ids[21]: [link(ids[22])],
+                    ids[23]: [link(ids[24])]},
     "uidata": {ids[0]: {"xpos": 30, "ypos": 15}, ids[1]: {"xpos": 230, "ypos": 15},
                ids[2]: {"xpos": 30, "ypos": 150}, ids[3]: {"xpos": 230, "ypos": 150},
                ids[4]: {"xpos": 30, "ypos": 285}, ids[5]: {"xpos": 230, "ypos": 285},
@@ -172,7 +177,8 @@ plist = {
                ids[14]: {"xpos": 30, "ypos": 825}, ids[15]: {"xpos": 230, "ypos": 825},
                ids[16]: {"xpos": 30, "ypos": 960}, ids[17]: {"xpos": 30, "ypos": 1095}, ids[18]: {"xpos": 230, "ypos": 1025},
                ids[19]: {"xpos": 30, "ypos": 1230}, ids[20]: {"xpos": 230, "ypos": 1230},
-               ids[21]: {"xpos": 30, "ypos": 1365}, ids[22]: {"xpos": 230, "ypos": 1365}},
+               ids[21]: {"xpos": 30, "ypos": 1365}, ids[22]: {"xpos": 230, "ypos": 1365},
+               ids[23]: {"xpos": 30, "ypos": 1500}, ids[24]: {"xpos": 230, "ypos": 1500}},
 }
 with open(sys.argv[1], "wb") as f:
     plistlib.dump(plist, f)
@@ -204,7 +210,7 @@ install() {
 	do shell script quoted form of \"$bin/alfred-kitty\" & \" run \" & quoted form of q & \" > /dev/null 2>&1 &\"
 end alfred_script"
   restart_alfred
-  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keywords \"note\", \"proj\", \"new\" (⌃⌥⌘N), \"sendto\" (⌃⌥⌘M), \"dl\", \"shot\", \"alfredinstall\", \"ak\" (menu) installed; terminal commands now run in kitty"
+  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keywords \"note\", \"proj\", \"new\" (⌃⌥⌘N), \"sendto\" (⌃⌥⌘M), \"dl\", \"shot\", \"wm\", \"alfredinstall\", \"ak\" (menu) installed; terminal commands now run in kitty"
 }
 
 uninstall() {
@@ -222,7 +228,7 @@ run_cmd() {
   nohup "$kitty_bin" --single-instance --directory "$HOME" "$shell" -lic "$1; exec $shell -l" >/dev/null 2>&1 &
 }
 
-# Script-filter items for `proj`: title = folder name, matched on the name and the path's words
+# Script-filter items for `proj`: title = folder name, fuzzy-matched (alfred-fuzzy: fzf) on the ~ path by the query $1
 projects() {
   "$bin/project-dirs" | python3 -I -c '
 import json, os, sys
@@ -234,11 +240,10 @@ for line in sys.stdin:
         continue
     short = "~" + path[len(home):] if path == home or path.startswith(home + "/") else path
     name = os.path.basename(path) or path
-    items.append({"uid": path, "title": name, "subtitle": short, "arg": path, "type": "file:skipcheck",
-                  "match": name + " " + short.replace("/", " ").replace("-", " ").replace("_", " "),
+    items.append({"uid": path, "title": name, "subtitle": short, "arg": path, "type": "file:skipcheck", "match": short,
                   "mods": {"cmd": {"arg": path, "subtitle": "Open in yazi in its tmux session"}}})
 json.dump({"items": items}, sys.stdout)
-'
+' | "$bin/alfred-fuzzy" "${1:-}"
 }
 
 case ${1:-} in
@@ -248,7 +253,7 @@ case ${1:-} in
     osascript -e "display notification \"$(printf '%s' "$msg" | sed 's/["\\]/\\&/g')\" with title \"alfred-kitty\"" ;;
   uninstall) uninstall ;;
   run) shift; run_cmd "$*" ;;
-  projects) projects ;;
+  projects) projects "${2:-}" ;;
   search) osascript -e "tell application id \"com.runningwithcrayons.Alfred\" to search \"$2\"" ;;
   *) sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//' ;;
 esac

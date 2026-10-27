@@ -4,8 +4,9 @@
 #              and a .zip whose unpacked folder sits next to it is replaced by the folder
 #   shots:     CleanShot X captures (CleanShot *) in its export folder (default ~/Desktop)
 # Usage: recent downloads|shots [N]     print the N (default 1) newest paths
-#        recent --alfred downloads|shots   Alfred Script Filter JSON (Alfred keywords `dl` and `shot`, alfred-kitty)
+#        recent --alfred downloads|shots [Q]   Alfred Script Filter JSON, fuzzy-matched by Q (alfred-fuzzy) (Alfred keywords `dl` and `shot`, alfred-kitty)
 set -euo pipefail
+bin=$(dirname "$(realpath "$0")")
 
 candidates() {
   case $1 in
@@ -50,11 +51,11 @@ for p in sys.stdin.read().splitlines():
                   "alt": {"arg": p, "subtitle": "Reveal in Finder", "variables": {"act": "reveal"}}}})
 if not items:
     items = [{"title": "Nothing found", "valid": False}]
-print(json.dumps({"items": items}))' "$kind"
+print(json.dumps({"items": items}))' "$kind" | "$bin/alfred-fuzzy" "${2:-}"
 }
 
 case ${1:-} in
-  --alfred) alfred "${2:?downloads or shots}" ;;
+  --alfred) alfred "${2:?downloads or shots}" "${3:-}" ;;
   downloads | shots) newest "$1" "${2:-1}" ;;
   *) sed -n '2,7p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 1 ;;
 esac

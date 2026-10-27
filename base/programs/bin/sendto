@@ -5,7 +5,9 @@
 # Usage: sendto [-c] DEST FILE...    move FILE... into DEST (-c: copy)
 #        sendto --pick FILE...       fzf over the folders (enter move, ctrl-y copy); yazi binds this (g m)
 #        sendto --stash FILE...      remember FILE... for the next Alfred `sendto` (the Alfred file action does this)
-#        sendto --alfred             Alfred Script Filter JSON over the folders (Alfred keyword `sendto`, ctrl-opt-cmd-M)
+#        sendto --alfred [Q]         Alfred Script Filter JSON over the folders, fuzzy-matched by Q (alfred-fuzzy) (Alfred keyword `sendto`, ctrl-opt-cmd-M);
+#                                    Outlook in front (and nothing stashed): ↩ saves its email + attachments there (outlook-save), ⌥ the files instead
+#        sendto --mail DEST          save the email open/selected in Outlook, with its attachments, into DEST
 #        sendto --files              the stashed files (if stashed in the last 2 minutes), else Finder's selection
 set -euo pipefail
 PATH=/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH
@@ -35,7 +37,7 @@ send() {
 }
 
 files() {
-  if [ -s "$stash" ] && [ -n "$(find "$stash" -mmin -2 2>/dev/null)" ]; then
+  if stashed; then
     cat "$stash"
   else
     osascript -e 'tell application "Finder" to set s to selection as alias list' \
@@ -44,28 +46,45 @@ files() {
   fi
 }
 
+stashed() { [ -s "$stash" ] && [ -n "$(find "$stash" -mmin -2 2>/dev/null)" ]; }
+
+save_mail() {
+  local saved
+  saved=$("$bin/outlook-save" "$1" 2>&1) || { notify "email not saved: $saved"; exit 1; }
+  notify "saved the email and $(($(wc -l <<<"$saved") - 1)) attachment(s) to ${1/#$HOME/~}"
+}
+
 alfred() {
-  local n
+  local n mail=0
   n=$(files | wc -l | tr -d ' ')
+  # Outlook in front: the email is what to send, unless files were stashed on purpose (file action, dl/shot)
+  ! stashed && "$bin/outlook-save" --frontmost && mail=1
   "$bin/project-dirs" | python3 -I -c '
 import json, os, sys
-home, n = os.path.expanduser("~"), int(sys.argv[1])
+home, n, mail = os.path.expanduser("~"), int(sys.argv[1]), sys.argv[2] == "1"
 what = f"{n} item" + ("s" if n != 1 else "") if n else "nothing selected in Finder"
 items = []
 for d in sys.stdin.read().splitlines():
     short = "~" + d[len(home):] if d.startswith(home) else d
-    items.append({"uid": d, "title": os.path.basename(d) or d, "subtitle": f"{short}   (move {what}; ⌘ copy)",
-                  "arg": d, "match": short.replace("/", " "), "type": "file:skipcheck", "icon": {"type": "fileicon", "path": d},
-                  "variables": {"copy": "0"},
-                  "mods": {"cmd": {"arg": d, "subtitle": f"copy {what} to {short}", "variables": {"copy": "1"}}}})
-print(json.dumps({"items": items}))' "$n"
+    item = {"uid": d, "title": os.path.basename(d) or d, "subtitle": f"{short}   (move {what}; ⌘ copy)",
+            "arg": d, "match": short, "type": "file:skipcheck", "icon": {"type": "fileicon", "path": d},
+            "variables": {"copy": "0", "mail": "0"},
+            "mods": {"cmd": {"arg": d, "subtitle": f"copy {what} to {short}", "variables": {"copy": "1", "mail": "0"}}}}
+    if mail:
+        item["subtitle"] = f"{short}   (save the Outlook email & attachments; ⌥ move {what}, ⌘ copy)"
+        item["variables"]["mail"] = "1"
+        item["mods"]["alt"] = {"arg": d, "subtitle": f"move {what} to {short}", "variables": {"copy": "0", "mail": "0"}}
+    items.append(item)
+print(json.dumps({"items": items}))' "$n" "$mail" | "$bin/alfred-fuzzy" "${1:-}"
 }
 
 case ${1:-} in
   --stash) shift; printf '%s\n' "$@" >"$stash" ;;
   --files) files ;;
-  --alfred) alfred ;;
-  --alfred-send) # Alfred Run Script: $2 = destination, $3 = 1 to copy; files from the stash or Finder
+  --alfred) alfred "${2:-}" ;;
+  --mail) save_mail "${2:?sendto --mail DEST}" ;;
+  --alfred-send) # Alfred Run Script: $2 = destination, $3 = 1 to copy, $4 = 1 for the Outlook email; files from the stash or Finder
+    [ "${4:-}" = 1 ] && { rm -f "$stash"; save_mail "$2"; exit; }
     paths=()
     while IFS= read -r f; do paths+=("$f"); done < <(files)
     rm -f "$stash"
@@ -81,6 +100,6 @@ case ${1:-} in
     [ -n "$dest" ] || exit 0
     if [ "$key" = ctrl-y ]; then send -c "$dest" "$@"; else send "$dest" "$@"; fi
     sleep 1 ;; # let the message be read before yazi comes back
-  '' | -h | --help) sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//' ;;
+  '' | -h | --help) sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//' ;;
   *) send "$@" ;;
 esac

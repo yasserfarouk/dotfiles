@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# `workmux dashboard` in its own kitty window, floating (the aerospace rule matching the title workmux-dashboard),
+# centered on the screen under the mouse at 75% of its size, and raised above everything. Already open: just
+# centered and raised again. Quitting the dashboard (q, or jumping to an agent) closes the window.
+# Usage: wm-dash            (the Alfred keyword `wm`)
+set -euo pipefail
+kitty_bin=/Applications/kitty.app/Contents/MacOS/kitty
+title=workmux-dashboard
+aerospace=/opt/homebrew/bin/aerospace
+[ -x "$aerospace" ] || aerospace=$(command -v aerospace 2>/dev/null || true)
+
+pid=$(pgrep -f -- "--title $title" | head -1 || true)
+# a kitty whose dashboard has quit but that stayed running without a window (from before the quit option below):
+# replace it, else we would only "raise" nothing
+if [ -n "$pid" ] && ! pgrep -P "$pid" -x workmux >/dev/null; then
+  kill "$pid" 2>/dev/null || true
+  pid=
+fi
+if [ -z "$pid" ]; then
+  # a kitty instance of its own (not --single-instance) so the title and options apply. No login shell (slow to
+  # start): GUI launches get a bare PATH, so add the usual places for workmux, tmux, git and gh.
+  # Outside tmux, workmux takes $KITTY_WINDOW_ID to mean the kitty backend (no agents there): force tmux, so a jump
+  # switches the attached tmux client. macOS kitty keeps running after its last window closes: quit instead
+  nohup "$kitty_bin" --title "$title" -o macos_quit_when_last_window_closed=yes -o remember_window_size=no -o confirm_os_window_close=0 -o background_opacity=1 \
+    --directory "$HOME" /usr/bin/env -u KITTY_WINDOW_ID WORKMUX_BACKEND=tmux \
+    PATH="$HOME/bin:$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" \
+    workmux dashboard >/dev/null 2>&1 &
+  pid=$!
+fi
+
+# wait for aerospace to have floated the window, so it doesn't move it again after we place it
+wid=
+if [ -n "$aerospace" ]; then
+  for _ in $(seq 50); do
+    wid=$("$aerospace" list-windows --all --format '%{window-id}|%{app-pid}|%{window-layout}' 2>/dev/null |
+      awk -F'|' -v p="$pid" '$2 == p && $3 == "floating" {print $1; exit}')
+    [ -n "$wid" ] && break
+    sleep 0.1
+  done
+fi
+
+osascript -l JavaScript - "$pid" >/dev/null <<'EOF'
+ObjC.import('AppKit');
+function run(argv) {
+  const se = Application('System Events'), pid = Number(argv[0]);
+  let proc, win;
+  for (let i = 0; i < 50 && !win; i++) {
+    const ps = se.processes.whose({unixId: pid});
+    if (ps.length && ps[0].windows.length) { proc = ps[0]; win = proc.windows[0]; } else delay(0.1);
+  }
+  if (!win) return;
+  // the screen under the mouse; Cocoa frames start bottom-left of the primary screen, AX positions top-left
+  const screens = $.NSScreen.screens.js, m = $.NSEvent.mouseLocation;
+  const s = screens.find(s => { const f = s.frame; return m.x >= f.origin.x && m.x < f.origin.x + f.size.width &&
+    m.y >= f.origin.y && m.y < f.origin.y + f.size.height; }) || $.NSScreen.mainScreen;
+  const v = s.visibleFrame, primaryH = screens[0].frame.size.height;
+  const w = Math.round(v.size.width * 0.75), h = Math.round(v.size.height * 0.75);
+  win.size = [w, h];
+  win.position = [Math.round(v.origin.x + (v.size.width - w) / 2),
+                  Math.round(primaryH - v.origin.y - v.size.height + (v.size.height - h) / 2)];
+  proc.frontmost = true;
+  win.actions['AXRaise'].perform();
+}
+EOF
+[ -n "$wid" ] && "$aerospace" focus --window-id "$wid" >/dev/null 2>&1 || true
