@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+# Keep the Mac awake while any coding agent is running: every minute, if `workmux status --all`
+# reports an agent (claude/codex/opencode/pi, any repo, worktree or not) as working or waiting
+# (on a permission prompt / question), hold a 90 s idle-sleep assertion (caffeinate -i).
+# caffeinate -i only blocks idle sleep, so closing the lid still sleeps the machine (unless it's
+# in clamshell mode on an external display) and the display still turns off.
+# Claude Code holds its own caffeinate while it works; this also covers the other agents and the
+# time an agent waits for an answer.
+# Usage: agent-awake [run]               loop forever (what launchd runs)
+#        agent-awake check               exit 0 if an agent is running now (lists them)
+#        agent-awake install | uninstall | status
+# Env:   AGENT_AWAKE_STATUSES (default "working waiting"; workmux also has "done")
+set -euo pipefail
+label=com.yasser.agent-awake
+plist=$HOME/Library/LaunchAgents/$label.plist
+log=$HOME/Library/Logs/agent-awake.log
+statuses=${AGENT_AWAKE_STATUSES:-working waiting}
+die() { echo "agent-awake: $*" >&2; exit 1; }
+
+# launchd's PATH lacks homebrew (workmux needs tmux) and its C locale makes tmux replace the
+# separators in workmux's pane queries with "_"
+export PATH=/opt/homebrew/bin:/usr/local/bin:$PATH LANG=${LANG:-en_US.UTF-8}
+
+# prints "status<TAB>session" for each running agent; fails if there is none
+running() {
+  workmux status --all --json 2>/dev/null | /usr/bin/python3 -c '
+import json, sys
+want = sys.argv[1].split()
+hits = [a for a in json.load(sys.stdin).get("agents", []) if a.get("status") in want]
+for a in hits:
+    print(a["status"], a.get("session") or a.get("worktree"), sep="\t")
+sys.exit(0 if hits else 1)
+' "$statuses"
+}
+
+# Overlapping timed assertions instead of one long-lived caffeinate: nothing to track or kill,
+# and the machine can sleep at most ~90 s after the last agent stops or this loop dies.
+run() {
+  while :; do
+    running >/dev/null && caffeinate -i -t 90 &
+    sleep 60
+  done
+}
+
+install() {
+  # the script's real path, not ~/bin: install.sh runs before setup.sh stows ~/bin
+  local self
+  self=$(/usr/bin/python3 -c 'import os, sys; print(os.path.realpath(sys.argv[1]))' "$0")
+  mkdir -p "${plist%/*}" "${log%/*}"
+  cat >"$plist" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>$label</string>
+  <key>ProgramArguments</key><array><string>/bin/bash</string><string>$self</string><string>run</string></array>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>StandardOutPath</key><string>$log</string>
+  <key>StandardErrorPath</key><string>$log</string>
+</dict></plist>
+EOF
+  launchctl bootout "gui/$(id -u)/$label" 2>/dev/null || true
+  launchctl bootstrap "gui/$(id -u)" "$plist"
+  echo "agent-awake: keeping the Mac awake while agents run (log $log)"
+}
+
+uninstall() {
+  launchctl bootout "gui/$(id -u)/$label" 2>/dev/null || true
+  rm -f "$plist"
+  echo "agent-awake: removed"
+}
+
+status() {
+  if [ -f "$plist" ]; then
+    echo "launchd: $plist"
+    launchctl print "gui/$(id -u)/$label" 2>/dev/null | grep -E '^\t(state|pid) ' | sed 's/^\t/  /' || echo "  (not loaded)"
+  else
+    echo "launchd: not installed (agent-awake install)"
+  fi
+  echo "agents counted as running ($statuses):"
+  running | sed 's/^/  /' || echo "  none"
+  # ours are in the launchd loop's process group (it leads one); the others are Claude Code's own
+  local loop n=0 pid
+  loop=$(launchctl print "gui/$(id -u)/$label" 2>/dev/null | awk '/^\tpid = /{print $3}')
+  for pid in $(pgrep caffeinate); do
+    [ -n "$loop" ] && [ "$(ps -o pgid= -p "$pid" | tr -d ' ')" = "$loop" ] && n=$((n + 1))
+  done
+  echo "keep-awake holds: $n from agent-awake, $(($(pgrep caffeinate | wc -l) - n)) from other tools"
+  [ -s "$log" ] && { echo "last log lines ($log):"; tail -n 5 "$log"; }
+  return 0
+}
+
+case ${1:-run} in
+  run) run ;;
+  check) running ;;
+  install) install ;;
+  uninstall) uninstall ;;
+  status) status ;;
+  -h|--help|help) sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *) die "unknown command: $1 (run|check|install|uninstall|status)" ;;
+esac
