@@ -1,33 +1,46 @@
 #!/usr/bin/env zsh
-# Editor layout for the current tmux window (the tmuxinator profiles run it in their only pane): nvim in this pane
-# on the left 40% of the width, a shell under it taking 20% of the height, claude on the right 60% (typed into a
-# shell, so quitting it leaves the shell). A window-resized hook keeps those proportions whenever the window changes
-# size: a detached tmuxinator session starts at 80x24 and only gets its real size when a client attaches.
-# Sizes are shares of the nvim + claude columns, not of the window, so the workmux sidebar is left out.
-# Usage: tmux-ide [NVIM_ARGS…]        tmux-ide --fit NVIM_PANE CLAUDE_PANE TERM_PANE (what the hook runs)
+# Editor layout for the current tmux session (the tmuxinator profiles run it in their only pane): this window becomes
+# `nvim` (on diffview's view of the uncommitted changes when the folder is a git repo) and a second window `claude`
+# runs claude (typed into a shell, so quitting it leaves the shell); each gets a shell under it taking 20% of the
+# height. A window-resized hook keeps that share whenever the window changes size: a detached tmuxinator session
+# starts at 80x24 and only gets its real size when a client attaches.
+# Usage: tmux-ide [NVIM_ARGS…]
+#        tmux-ide --term PANE           (a 20% shell under PANE, kept at 20%; kitty-tmux's claude sessions use it)
+#        tmux-ide --fit PANE TERM_PANE  (what the hook runs)
+self=${0:A}
 if [[ $1 == --fit ]]; then
   # `display -t` on a closed pane prints empty fields and still exits 0: once one of the panes is gone the layout
   # is no longer ours, so drop the hook (set on the window of whichever pane is left) instead of failing every resize
   panes=(${(f)"$(tmux list-panes -a -F '#{pane_id}')"})
-  for p in $2 $3 $4; do
+  for p in $2 $3; do
     (( ${panes[(Ie)$p]} )) && continue
-    for q in $2 $3 $4; do (( ${panes[(Ie)$q]} )) && { tmux set-hook -uw -t $q window-resized; break; }; done
+    for q in $2 $3; do (( ${panes[(Ie)$q]} )) && { tmux set-hook -uw -t $q window-resized; break; }; done
     exit 0
   done
-  geo=$(tmux display -p -t $2 '#{pane_width} #{pane_height}') || exit 0
-  cw=$(tmux display -p -t $3 '#{pane_width}') || exit 0
-  th=$(tmux display -p -t $4 '#{pane_height}') || exit 0
-  read nw nh <<< $geo
+  mh=$(tmux display -p -t $2 '#{pane_height}') || exit 0
+  th=$(tmux display -p -t $3 '#{pane_height}') || exit 0
   # a zoomed window can't be resized, and a failed resize would show up as a "returned 1" message
   [[ $(tmux display -p -t $2 '#{window_zoomed_flag}') == 1 ]] && exit 0
-  tmux resize-pane -t $2 -x $(( (nw + cw + 1) * 40 / 100 )) \; resize-pane -t $4 -y $(( (nh + th + 1) * 20 / 100 )) 2>/dev/null
+  tmux resize-pane -t $3 -y $(( (mh + th + 1) * 20 / 100 )) 2>/dev/null
+  exit 0
+fi
+# a shell under pane $1 taking 20% of its height, with the hook that keeps it so
+term_under() {
+  local dir=$(tmux display -p -t $1 '#{pane_current_path}')
+  local term=$(tmux split-window -v -d -l 20% -t $1 -c ${dir:-$PWD} -P -F '#{pane_id}')
+  local fit="$self --fit $1 $term"
+  tmux set-hook -w -t $1 window-resized "run-shell -b '$fit'"
+  $=fit
+}
+if [[ $1 == --term ]]; then
+  term_under $2
   exit 0
 fi
 [[ -n $TMUX_PANE ]] || { print -u2 "tmux-ide: not inside tmux"; exit 1; }
-claude=$(tmux split-window -h -d -l 60% -t $TMUX_PANE -c $PWD -P -F '#{pane_id}')
-term=$(tmux split-window -v -d -l 20% -t $TMUX_PANE -c $PWD -P -F '#{pane_id}')
+tmux rename-window -t $TMUX_PANE nvim
+claude=$(tmux new-window -a -d -n claude -t $(tmux display -p -t $TMUX_PANE '#{window_id}') -c $PWD -P -F '#{pane_id}')
 tmux send-keys -t $claude claude Enter
-fit="${0:A} --fit $TMUX_PANE $claude $term"
-tmux set-hook -w -t $TMUX_PANE window-resized "run-shell -b '$fit'"
-$=fit
+term_under $claude
+term_under $TMUX_PANE
+git rev-parse --is-inside-work-tree &>/dev/null && set -- +DiffviewOpen "$@"
 exec nvim "$@"

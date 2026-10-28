@@ -5,7 +5,7 @@
 # attaches to it, starting the tmux server if needed.
 # --project DIR opens the folder's project session instead: an existing session is just shown; a new one comes
 # from tmuxinator when the folder has its own config (DIR/.tmuxinator.yml, or a ~/.config/tmuxinator project whose
-# root: is DIR), otherwise it is a shell running claude. --name NAME names the session instead of the folder,
+# root: is DIR), otherwise it is a shell running claude with a 20% shell under it (tmux-ide --term). --name NAME names the session instead of the folder,
 # --claude PROMPT starts claude with PROMPT (always the claude shell, not tmuxinator; mknew uses both for talks).
 # Usage: kitty-tmux [PATH]              (no path: $HOME)
 #        kitty-tmux --project DIR [--name NAME] [--claude PROMPT]
@@ -68,6 +68,8 @@ if [ -n "$project" ]; then
       [ -n "$prompt" ] && cmd+=" '$(printf '%s' "$prompt" | sed "s/'/'\\\\''/g")'"
       "$tmux" send-keys -t "=$name:" -l "$cmd"
       "$tmux" send-keys -t "=$name:" Enter
+      # with a small shell under claude (tmux-ide runs tmux by name)
+      PATH=$(dirname "$tmux"):$PATH "$(dirname "$0")/tmux-ide" --term "$("$tmux" display -p -t "=$name:" '#{pane_id}')"
     fi
   fi
 elif "$tmux" has-session -t "=$name" 2>/dev/null; then
