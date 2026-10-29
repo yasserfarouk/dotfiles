@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# Which browser opens which URL: edits the rules table in ~/.config/finicky/finicky.js (Finicky
+# reloads it on save). Finicky must be the macOS default browser (`browser-rule install`).
+#   browser-rule ls                       list the rules and the default browser
+#   browser-rule add PATTERN [BROWSER]    PATTERN like github.com/org/* (a bare host or org/path also
+#                                         gets its /* form); BROWSER defaults to "Microsoft Edge"
+#   browser-rule rm PATTERN               remove the rule(s) for PATTERN (and its /* form)
+#   browser-rule default BROWSER          browser for everything else
+#   browser-rule edit                     open the file in $EDITOR
+#   browser-rule test URL                 open URL through Finicky
+#   browser-rule install                  start Finicky at login and ask macOS to make it the default browser
+cfg=$(realpath "${FINICKY_CONFIG:-$HOME/.config/finicky/finicky.js}")
+cmd=${1:-ls}
+shift || true
+
+edit() { # edit.py-style: python rewrites the `const rules = {...};` block / defaultBrowser line
+  python3 - "$cfg" "$@" <<'PY'
+import json, re, sys
+path, op, *args = sys.argv[1:]
+src = open(path).read()
+m = re.search(r"const rules = \{\n(.*?)\n?\};", src, re.S)
+rules = [json.loads("[" + l.strip().rstrip(",").replace('": "', '", "') + "]")
+         for l in (m.group(1).splitlines() if m else []) if l.strip().startswith('"')]
+default = re.search(r'defaultBrowser: "([^"]*)"', src).group(1)
+def variants(p):
+    p = re.sub(r"^https?://", "", p).rstrip("/")
+    return [p] if p.endswith("*") else [p, p + "/*"]
+if op == "ls":
+    w = max([len(p) for p, _ in rules] + [7])
+    for p, b in rules:
+        print(f"{p:<{w}}  {b}")
+    print(f"{'(other)':<{w}}  {default}")
+    sys.exit()
+if op == "add":
+    for v in variants(args[0]):
+        rules = [r for r in rules if r[0] != v] + [[v, args[1]]]
+elif op == "rm":
+    vs = variants(args[0])
+    if not any(p in vs for p, _ in rules):
+        sys.exit(f"no rule for {args[0]}")
+    rules = [r for r in rules if r[0] not in vs]
+elif op == "default":
+    src = src.replace(f'defaultBrowser: "{default}"', f"defaultBrowser: {json.dumps(args[0])}")
+body = "".join(f"  {json.dumps(p)}: {json.dumps(b)},\n" for p, b in rules)
+src = src[:m.start()] + "const rules = {\n" + body + "};" + src[m.end():]
+open(path, "w").write(src)
+PY
+}
+
+case $cmd in
+ls) edit ls ;;
+add)
+  [ -n "${1:-}" ] || { echo "usage: browser-rule add PATTERN [BROWSER]" >&2; exit 2; }
+  edit add "$1" "${2:-Microsoft Edge}" && edit ls ;;
+rm) [ -n "${1:-}" ] || { echo "usage: browser-rule rm PATTERN" >&2; exit 2; }
+  edit rm "$1" && edit ls ;;
+default) [ -n "${1:-}" ] || { echo "usage: browser-rule default BROWSER" >&2; exit 2; }
+  edit default "$1" && edit ls ;;
+edit) exec "${EDITOR:-nvim}" "$cfg" ;;
+test) open -a Finicky "${1:?usage: browser-rule test URL}" ;;
+install)
+  open -a Finicky
+  osascript -e 'tell application "System Events" to if not (exists login item "Finicky") then make login item at end with properties {path:"/Applications/Finicky.app", hidden:true}' >/dev/null
+  # macOS only switches the default browser after the user confirms its dialog
+  swift - <<'SWIFT'
+import AppKit
+let app = URL(fileURLWithPath: "/Applications/Finicky.app")
+let sem = DispatchSemaphore(value: 0)
+NSWorkspace.shared.setDefaultApplication(at: app, toOpenURLsWithScheme: "http") { _ in sem.signal() }
+sem.wait()
+SWIFT
+  echo "Confirm \"Use Finicky\" in the macOS dialog if it appears." ;;
+*) sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; exit 2 ;;
+esac

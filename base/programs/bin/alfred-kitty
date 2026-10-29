@@ -7,13 +7,16 @@
 # Outlook in front it also saves the open email + attachments), `sendto` (ctrl-opt-cmd-M, and the file action
 # "Send to project folder" → `sendto`: move Finder's selection to a project-dirs folder, ⌘ copy), `dl` / `shot`
 # (→ `recent`: latest downloads / CleanShot captures; dl ↩ opens, shot ↩ sends to a project folder, ⌘ the other,
-# ⌥ reveals in Finder), `wm` (→ `wm-dash`: workmux dashboard in a centered, floating kitty window), `alfredinstall` (reruns `alfred-kitty install`), `ak` (menu of all of these: picking one
+# ⌥ reveals in Finder), `term` (ctrl-opt-cmd-T: a plain kitty shell in ~ (↩ straight away) or in a project-dirs folder; ⌥↩ floating),
+# `wm` (→ `wm-dash`: workmux dashboard in a centered, floating kitty window), `alfredinstall` (reruns `alfred-kitty install`), `ak` (menu of all of these: picking one
 # opens Alfred on its keyword), and kitty as Alfred's terminal (Features > Terminal > Custom), so `>cmd` and workflow terminal commands run in kitty.
 # Usage: alfred-kitty install       write the workflow into Alfred's preferences, set the terminal, restart Alfred
 #        alfred-kitty install-notify   the same, then a notification (the `alfredinstall` keyword)
 #        alfred-kitty uninstall     remove the workflow, put the terminal back to Terminal.app
 #        alfred-kitty run CMD       run CMD in a new kitty window, staying in an interactive shell (Alfred's terminal)
 #        alfred-kitty projects [Q]  the `proj` items as Alfred script-filter JSON, fuzzy-ranked by Q (fzf)
+#        alfred-kitty terms [Q]     the `term` items: ~ first, then the `proj` folders
+#        alfred-kitty term [--float] DIR   a new kitty window with a shell in DIR (--float: floating in aerospace)
 #        alfred-kitty search TEXT   open Alfred with TEXT typed in (the file action, `dl`/`shot` → `sendto `, `ak`)
 # The workflow and the AppleScript only call the scripts in ~/bin, so the behaviour lives here, in the dotfiles.
 set -euo pipefail
@@ -60,6 +63,7 @@ write_workflow() {
     WF_SEND_STASH="$(script_body "'$bin/sendto' --stash")
 '$bin/alfred-kitty' search 'sendto '" \
     WF_INSTALL="nohup '$bin/alfred-kitty' install-notify >/dev/null 2>&1 &" \
+    WF_TERM_LIST="'$bin/alfred-kitty' terms \"\$1\"" WF_TERM="'$bin/alfred-kitty' term \${float:+--float} \"\$1\"" \
     WF_DASH="'$bin/wm-dash' >/dev/null 2>&1 &" \
     WF_MENU="'$bin/alfred-kitty' search \"\$1\"" \
     WF_DL_LIST="'$bin/recent' --alfred downloads \"\$1\"" WF_SHOT_LIST="'$bin/recent' --alfred shots \"\$1\"" \
@@ -111,12 +115,13 @@ ids = ["4B1E6A10-0001-4C1D-9A51-7E2D0C3F0001", "4B1E6A10-0002-4C1D-9A51-7E2D0C3F
        "4B1E6A10-0003-4C1D-9A51-7E2D0C3F0003", "4B1E6A10-0004-4C1D-9A51-7E2D0C3F0004",
        "4B1E6A10-0005-4C1D-9A51-7E2D0C3F0005", "4B1E6A10-0006-4C1D-9A51-7E2D0C3F0006",
        "4B1E6A10-0007-4C1D-9A51-7E2D0C3F0007", "4B1E6A10-0008-4C1D-9A51-7E2D0C3F0008"]
-ids += [f"4B1E6A10-{i:04d}-4C1D-9A51-7E2D0C3F{i:04d}" for i in range(9, 26)]
+ids += [f"4B1E6A10-{i:04d}-4C1D-9A51-7E2D0C3F{i:04d}" for i in range(9, 29)]
 MENU = [("new", "New NEC project / patent / paper / code project / talk (⌃⌥⌘N)", "new "),
         ("sendto", "Move Finder's selection (or save the Outlook email) to a project folder, ⌘ copy (⌃⌥⌘M)", "sendto "),
         ("dl", "Latest downloads: open, ⌘ send to a project folder", "dl "),
         ("shot", "Latest CleanShot captures: send to a project folder, ⌘ open", "shot "),
         ("proj", "Open a project folder in its tmux session", "proj "),
+        ("term", "kitty shell in ~ or a project folder (⌃⌥⌘T)", "term "),
         ("note", "Markdown note in ~/temp, opened in nvim", "note "),
         ("wm", "workmux dashboard in a centered floating kitty window", "wm"),
         ("alfredinstall", "Reinstall this workflow (restarts Alfred)", "alfredinstall")]
@@ -154,10 +159,14 @@ plist = {
         script(ids[18], os.environ["WF_RECENT"]),
         keyword(ids[19], "alfredinstall", "Reinstall this workflow", "alfred-kitty install (restarts Alfred)", 2),
         script(ids[20], os.environ["WF_INSTALL"]),
-        listfilter(ids[21], "ak", "alfred-kitty commands", "new, sendto, dl, shot, proj, note, wm, alfredinstall", MENU),
+        listfilter(ids[21], "ak", "alfred-kitty commands", "new, sendto, dl, shot, proj, term, note, wm, alfredinstall", MENU),
         script(ids[22], os.environ["WF_MENU"]),
         keyword(ids[23], "wm", "workmux dashboard", "In a centered, floating kitty window", 2),
         script(ids[24], os.environ["WF_DASH"]),
+        scriptfilter(ids[25], "term", "kitty terminal", "↩ a shell in ~, or type to pick a project folder; ⌥↩ floating",
+                     os.environ["WF_TERM_LIST"], alfred_filters=False, running="Listing folders…"),
+        script(ids[26], os.environ["WF_TERM"]),
+        hotkey(ids[27], 17, "T"),
     ],
     # ⌘↩ on a project: the "Open in tmux" script (kitty-tmux PATH, yazi)
     "connections": {ids[0]: [link(ids[1])], ids[2]: [link(ids[3])], ids[4]: [link(ids[5])],
@@ -167,7 +176,7 @@ plist = {
                     ids[11]: [link(ids[12]), link(ids[12], CMD), link(ids[12], OPT)], ids[13]: [link(ids[11])], ids[14]: [link(ids[15])],
                     ids[16]: [link(ids[18]), link(ids[18], CMD), link(ids[18], OPT)],
                     ids[17]: [link(ids[18]), link(ids[18], CMD), link(ids[18], OPT)], ids[19]: [link(ids[20])], ids[21]: [link(ids[22])],
-                    ids[23]: [link(ids[24])]},
+                    ids[23]: [link(ids[24])], ids[25]: [link(ids[26]), link(ids[26], OPT)], ids[27]: [link(ids[25])]},
     "uidata": {ids[0]: {"xpos": 30, "ypos": 15}, ids[1]: {"xpos": 230, "ypos": 15},
                ids[2]: {"xpos": 30, "ypos": 150}, ids[3]: {"xpos": 230, "ypos": 150},
                ids[4]: {"xpos": 30, "ypos": 285}, ids[5]: {"xpos": 230, "ypos": 285},
@@ -178,7 +187,8 @@ plist = {
                ids[16]: {"xpos": 30, "ypos": 960}, ids[17]: {"xpos": 30, "ypos": 1095}, ids[18]: {"xpos": 230, "ypos": 1025},
                ids[19]: {"xpos": 30, "ypos": 1230}, ids[20]: {"xpos": 230, "ypos": 1230},
                ids[21]: {"xpos": 30, "ypos": 1365}, ids[22]: {"xpos": 230, "ypos": 1365},
-               ids[23]: {"xpos": 30, "ypos": 1500}, ids[24]: {"xpos": 230, "ypos": 1500}},
+               ids[23]: {"xpos": 30, "ypos": 1500}, ids[24]: {"xpos": 230, "ypos": 1500},
+               ids[27]: {"xpos": 30, "ypos": 1635}, ids[25]: {"xpos": 230, "ypos": 1635}, ids[26]: {"xpos": 430, "ypos": 1635}},
 }
 with open(sys.argv[1], "wb") as f:
     plistlib.dump(plist, f)
@@ -210,7 +220,7 @@ install() {
 	do shell script quoted form of \"$bin/alfred-kitty\" & \" run \" & quoted form of q & \" > /dev/null 2>&1 &\"
 end alfred_script"
   restart_alfred
-  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keywords \"note\", \"proj\", \"new\" (⌃⌥⌘N), \"sendto\" (⌃⌥⌘M), \"dl\", \"shot\", \"wm\", \"alfredinstall\", \"ak\" (menu) installed; terminal commands now run in kitty"
+  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keywords \"note\", \"proj\", \"new\" (⌃⌥⌘N), \"sendto\" (⌃⌥⌘M), \"term\" (⌃⌥⌘T), \"dl\", \"shot\", \"wm\", \"alfredinstall\", \"ak\" (menu) installed; terminal commands now run in kitty"
 }
 
 uninstall() {
@@ -228,22 +238,28 @@ run_cmd() {
   nohup "$kitty_bin" --single-instance --directory "$HOME" "$shell" -lic "$1; exec $shell -l" >/dev/null 2>&1 &
 }
 
-# Script-filter items for `proj`: title = folder name, fuzzy-matched (alfred-fuzzy: fzf) on the ~ path by the query $1
+# Script-filter items for `proj`: title = folder name, fuzzy-matched (alfred-fuzzy: fzf) on the ~ path by the query $1.
+# term=1: the `term` items instead: ~ first (so ↩ on an empty query opens it), no ⌘ yazi
 projects() {
   "$bin/project-dirs" | python3 -I -c '
 import json, os, sys
-home = os.path.expanduser("~")
-items = []
+home, term = os.path.expanduser("~"), sys.argv[1] == "1"
+float_mod = lambda p: {"alt": {"arg": p, "subtitle": "Floating kitty window", "variables": {"float": "1"}}}
+items = [{"uid": home, "title": "Home", "subtitle": "~", "arg": home, "type": "file:skipcheck", "match": "~ home",
+          "mods": float_mod(home)}] if term else []
 for line in sys.stdin:
     path = line.rstrip("\n")
     if not path:
         continue
     short = "~" + path[len(home):] if path == home or path.startswith(home + "/") else path
     name = os.path.basename(path) or path
-    items.append({"uid": path, "title": name, "subtitle": short, "arg": path, "type": "file:skipcheck", "match": short,
-                  "mods": {"cmd": {"arg": path, "subtitle": "Open in yazi in its tmux session"}}})
+    if term and path == home:
+        continue
+    item = {"uid": path, "title": name, "subtitle": short, "arg": path, "type": "file:skipcheck", "match": short}
+    item["mods"] = float_mod(path) if term else {"cmd": {"arg": path, "subtitle": "Open in yazi in its tmux session"}}
+    items.append(item)
 json.dump({"items": items}, sys.stdout)
-' | "$bin/alfred-fuzzy" "${1:-}"
+' "${term:-0}" | "$bin/alfred-fuzzy" "${1:-}"
 }
 
 case ${1:-} in
@@ -254,6 +270,12 @@ case ${1:-} in
   uninstall) uninstall ;;
   run) shift; run_cmd "$*" ;;
   projects) projects "${2:-}" ;;
+  terms) term=1 projects "${2:-}" ;;
+  term) shift
+    # --float: the title aerospace's on-window-detected rule floats (--title also keeps the shell from retitling it)
+    title=()
+    [ "${1:-}" = --float ] && { shift; title=(--title "kitty-float ${1:-$HOME}"); }
+    nohup "$kitty_bin" --single-instance "${title[@]}" --directory "${1:-$HOME}" >/dev/null 2>&1 & ;;
   search) osascript -e "tell application id \"com.runningwithcrayons.Alfred\" to search \"$2\"" ;;
   *) sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//' ;;
 esac

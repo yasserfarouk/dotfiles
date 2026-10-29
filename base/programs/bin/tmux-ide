@@ -1,9 +1,9 @@
 #!/usr/bin/env zsh
 # Editor layout for the current tmux session (the tmuxinator profiles run it in their only pane): this window becomes
-# `nvim` (on diffview's view of the uncommitted changes when the folder is a git repo) and a second window `claude`
-# runs claude (typed into a shell, so quitting it leaves the shell); each gets a shell under it taking 20% of the
-# height. A window-resized hook keeps that share whenever the window changes size: a detached tmuxinator session
-# starts at 80x24 and only gets its real size when a client attaches.
+# `nvim` (on diffview's view of the uncommitted changes when the folder is a git repo) and a window `claude` before
+# it, the active one at the end, runs claude (typed into a shell, so quitting it leaves the shell); each gets a shell
+# under it taking 20% of the height. A window-resized hook keeps that share whenever the window changes size: a
+# detached tmuxinator session starts at 80x24 and only gets its real size when a client attaches.
 # Usage: tmux-ide [NVIM_ARGS…]
 #        tmux-ide --term PANE           (a 20% shell under PANE, kept at 20%; kitty-tmux's claude sessions use it)
 #        tmux-ide --fit PANE TERM_PANE  (what the hook runs)
@@ -38,9 +38,11 @@ if [[ $1 == --term ]]; then
 fi
 [[ -n $TMUX_PANE ]] || { print -u2 "tmux-ide: not inside tmux"; exit 1; }
 tmux rename-window -t $TMUX_PANE nvim
-claude=$(tmux new-window -a -d -n claude -t $(tmux display -p -t $TMUX_PANE '#{window_id}') -c $PWD -P -F '#{pane_id}')
+claude=$(tmux new-window -b -d -n claude -t $(tmux display -p -t $TMUX_PANE '#{window_id}') -c $PWD -P -F '#{pane_id}')
 tmux send-keys -t $claude claude Enter
 term_under $claude
 term_under $TMUX_PANE
+# after tmuxinator's own startup_window selection, which ran before this shell started
+tmux select-window -t $claude
 git rev-parse --is-inside-work-tree &>/dev/null && set -- +DiffviewOpen "$@"
 exec nvim "$@"

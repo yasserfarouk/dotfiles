@@ -368,6 +368,12 @@ gaps.outer.right =      5
     if.window-title-regex-substring = '^workmux-dashboard$'
     run = 'layout floating'
 
+# floating kitty shell (Alfred `term`, ⌥↩ → alfred-kitty term --float)
+[[on-window-detected]]
+    if.app-id = 'net.kovidgoyal.kitty'
+    if.window-title-regex-substring = '^kitty-float '
+    run = 'layout floating'
+
 # Grid is the default layout: rebuild grid/master-accordion/main/two when a tiled window appears on the focused workspace
 # (last, so the floating rules above match first and stop here).
 [[on-window-detected]]

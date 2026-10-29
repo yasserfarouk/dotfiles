@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Rename the current agent's tmux session (the name `workmux sidebar` shows), from a tmux popup (Alt-N, prefix N).
+#   workmux worktree (session = its handle)  `workmux rename OLD NEW`: folder, handle and session
+#   session holding several windows          the current window moves to a new session NEW, so an
+#                                            agent sharing its repo's session gets its own name
+#   any other session                        plain rename-session
+# Usage: wm-rename [NEW]   (pane from $WM_PANE, client from $WM_CLIENT, both set by the tmux binding)
+pane=${WM_PANE:-$(tmux display -p '#{pane_id}')}
+fail() { printf '\n%s\n[enter to close]' "$*"; read -r _; exit 1; }
+IFS=$'\t' read -r session win nwin path < <(tmux display -p -t "$pane" '#{session_name}	#{window_id}	#{session_windows}	#{pane_current_path}')
+
+new=${1:-}
+if [ -z "$new" ]; then
+  printf 'Rename session %s%s\n' "$session" "$([ "$nwin" -gt 1 ] && echo "  (this window moves to its own session)")"
+  read -r -e -i "$session" -p 'new name: ' new || exit 0
+fi
+new=$(printf %s "$new" | sed -E 's/[^A-Za-z0-9._-]+/-/g; s/^-+|-+$//g')
+[ -n "$new" ] && [ "$new" != "$session" ] || exit 0
+tmux has-session -t "=$new" 2>/dev/null && fail "a session called $new already exists"
+
+handle=$(cd "$path" 2>/dev/null && workmux list --json 2>/dev/null |
+  jq -r --arg p "$(git rev-parse --show-toplevel 2>/dev/null)" '.[] | select(.path == $p and (.is_main | not)) | .handle')
+if [ -n "$handle" ] && [ "$handle" = "$session" ]; then
+  (cd "$path" && workmux rename "$handle" "$new") || fail "workmux rename $handle $new failed"
+elif [ "$nwin" -gt 1 ]; then
+  # new-session needs a window of its own; drop it once this window has moved in
+  tmp=$(tmux new-session -d -P -F '#{window_id}' -s "$new" -c "$path") || fail "could not create session $new"
+  tmux move-window -s "$win" -t "=$new:" && tmux kill-window -t "$tmp"
+  tmux switch-client ${WM_CLIENT:+-c "$WM_CLIENT"} -t "=$new"
+else
+  tmux rename-session -t "=$session" "$new"
+fi
