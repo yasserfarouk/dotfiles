@@ -130,3 +130,10 @@ run = '''
   shell --block '~/bin/sendto --pick %s'
 '''
 desc = "Move selection to a project folder (fzf over tmux Alt-g folders; ctrl-y copies)"
+
+[[mgr.prepend_keymap]]
+on = [ "g", "o" ]
+run = '''
+  shell 'open -R %s'
+'''
+desc = "Reveal selection (or hovered) in Finder"
