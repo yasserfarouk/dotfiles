@@ -61,3 +61,9 @@
 	insteadOf = ssh://git@github.com/autoneg/
 [url "ssh://git@yf/yasserfarouk/"]
 	insteadOf = ssh://git@github.com/yasserfarouk/
+[credential "https://nec-corporation-emu.ghe.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.nec-corporation-emu.ghe.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential

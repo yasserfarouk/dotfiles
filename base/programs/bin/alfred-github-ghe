@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Point Alfred's GitHub workflow (gharlan/alfred-github-workflow) `ghe` at a GHE.com tenant.
+# The workflow assumes `<url>/api/v3` (GitHub Enterprise Server); GHE.com tenants use
+# `api.<tenant>.ghe.com` and `gist.<tenant>.ghe.com`. This patches src/workflow.php (idempotent;
+# re-run after the workflow is updated) and sets the enterprise url.
+# Usage: alfred-github-ghe [URL]     (default https://nec-corporation-emu.ghe.com)
+#        then in Alfred: `ghe > login <token>` (classic PAT, scopes repo + read:org, SSO-authorized)
+set -euo pipefail
+url=${1:-https://nec-corporation-emu.ghe.com}
+wf=
+for d in "$HOME"/Library/Application\ Support/Alfred/Alfred.alfredpreferences/workflows/*/; do
+  grep -q '<string>de.gh01.alfred.github</string>' "${d}info.plist" 2>/dev/null && { wf=${d%/}; break; }
+done
+[ -n "$wf" ] || { echo "alfred-github-ghe: GitHub workflow not found" >&2; exit 1; }
+f=$wf/src/workflow.php
+if grep -q "ends_with(\$host, '.ghe.com')\|str_ends_with(\$host, '.ghe.com')" "$f"; then
+  echo "already patched: $f"
+else
+  python3 - "$f" <<'PY'
+import sys
+p = sys.argv[1]
+s = open(p).read()
+old = """                self::$baseUrl = $url;
+                self::$apiUrl = $url ? $url . '/api/v3' : null;
+                self::$gistUrl = $url ? $url . '/gist' : null;"""
+new = """                self::$baseUrl = $url;
+                $host = $url ? parse_url($url, PHP_URL_HOST) : null;
+                if (is_string($host) && str_ends_with($host, '.ghe.com')) { // GHE.com tenant (data residency)
+                    self::$apiUrl = 'https://api.' . $host;
+                    self::$gistUrl = 'https://gist.' . $host;
+                } else {
+                    self::$apiUrl = $url ? $url . '/api/v3' : null;
+                    self::$gistUrl = $url ? $url . '/gist' : null;
+                }"""
+if old not in s:
+    sys.exit("alfred-github-ghe: workflow.php changed upstream; patch needs updating")
+open(p, 'w').write(s.replace(old, new))
+print("patched", p)
+PY
+fi
+php -l "$f" >/dev/null
+php "$wf/src/action.php" "e > enterprise-url ${url%/}" >/dev/null
+echo "ghe url set to ${url%/}"
