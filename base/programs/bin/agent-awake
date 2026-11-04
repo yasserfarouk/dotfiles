@@ -20,24 +20,42 @@ die() { echo "agent-awake: $*" >&2; exit 1; }
 # launchd's PATH lacks homebrew (workmux needs tmux) and its C locale makes tmux replace the
 # separators in workmux's pane queries with "_"
 export PATH=/opt/homebrew/bin:/usr/local/bin:$PATH LANG=${LANG:-en_US.UTF-8}
+case $LANG in *UTF-8* | *utf8*) ;; *) export LANG=en_US.UTF-8 ;; esac
+export LC_ALL=$LANG
 
-# prints "status<TAB>session" for each running agent; fails if there is none
+# prints "status<TAB>session" for each running agent; exit 1 if there is none, 2 if workmux
+# itself failed (the reason goes to the log, with a timestamp)
 running() {
-  workmux status --all --json 2>/dev/null | /usr/bin/python3 -c '
+  local out err rc=0
+  err=$(mktemp)
+  out=$(workmux status --all --json 2>"$err") || { sleep 2; out=$(workmux status --all --json 2>"$err") || rc=$?; }
+  if [ "$rc" = 0 ]; then
+    printf '%s' "$out" | /usr/bin/python3 -c '
 import json, sys
 want = sys.argv[1].split()
-hits = [a for a in json.load(sys.stdin).get("agents", []) if a.get("status") in want]
+try:
+    agents = json.load(sys.stdin).get("agents", [])
+except ValueError:
+    sys.exit(2)
+hits = [a for a in agents if a.get("status") in want]
 for a in hits:
     print(a["status"], a.get("session") or a.get("worktree"), sep="\t")
 sys.exit(0 if hits else 1)
-' "$statuses"
+' "$statuses" || rc=$?
+  fi
+  [ "$rc" -gt 1 ] && echo "$(date '+%F %T') workmux status failed (rc $rc): $(head -c 300 "$err")" >&2
+  rm -f "$err"
+  return "$rc"
 }
 
 # Overlapping timed assertions instead of one long-lived caffeinate: nothing to track or kill,
 # and the machine can sleep at most ~90 s after the last agent stops or this loop dies.
 run() {
   while :; do
-    running >/dev/null && caffeinate -i -t 90 &
+    rc=0
+    running >/dev/null || rc=$?
+    # 2 = could not tell: stay awake if a tmux server (so agents) exists rather than sleep blindly
+    if [ "$rc" = 0 ] || { [ "$rc" = 2 ] && pgrep -qx tmux; }; then caffeinate -i -t 90 & fi
     sleep 60
   done
 }
