@@ -9,12 +9,15 @@
 # Usage: agent-awake [run]               loop forever (what launchd runs)
 #        agent-awake check               exit 0 if an agent is running now (lists them)
 #        agent-awake install | uninstall | status
-# Env:   AGENT_AWAKE_STATUSES (default "working waiting"; workmux also has "done")
+# Env:   AGENT_AWAKE_STATUSES (default "working waiting")
+#        AGENT_AWAKE_DONE_SECS (default 7200): an agent that finished a turn ("done", waiting for
+#        your next prompt, e.g. from your phone) still counts for this long after it finished
 set -euo pipefail
 label=com.yasser.agent-awake
 plist=$HOME/Library/LaunchAgents/$label.plist
 log=$HOME/Library/Logs/agent-awake.log
 statuses=${AGENT_AWAKE_STATUSES:-working waiting}
+done_secs=${AGENT_AWAKE_DONE_SECS:-7200}
 die() { echo "agent-awake: $*" >&2; exit 1; }
 
 # launchd's PATH lacks homebrew (workmux needs tmux) and its C locale makes tmux replace the
@@ -37,11 +40,13 @@ try:
     agents = json.load(sys.stdin).get("agents", [])
 except ValueError:
     sys.exit(2)
-hits = [a for a in agents if a.get("status") in want]
+grace = int(sys.argv[2])  # a finished agent waits for you (e.g. on your phone) for this long
+hits = [a for a in agents if a.get("status") in want
+        or (a.get("status") == "done" and a.get("elapsed_secs", grace) < grace)]
 for a in hits:
     print(a["status"], a.get("session") or a.get("worktree"), sep="\t")
 sys.exit(0 if hits else 1)
-' "$statuses" || rc=$?
+' "$statuses" "$done_secs" || rc=$?
   fi
   [ "$rc" -gt 1 ] && echo "$(date '+%F %T') workmux status failed (rc $rc): $(head -c 300 "$err")" >&2
   rm -f "$err"
@@ -114,6 +119,6 @@ case ${1:-run} in
   install) install ;;
   uninstall) uninstall ;;
   status) status ;;
-  -h|--help|help) sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//' ;;
+  -h|--help|help) sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//' ;;
   *) die "unknown command: $1 (run|check|install|uninstall|status)" ;;
 esac
