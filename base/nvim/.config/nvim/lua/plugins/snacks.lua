@@ -1,3 +1,17 @@
+-- Re-render document images in BUF with the current Snacks.image.config.doc
+-- (after toggling enabled / inline): drop the hover float, inline placements
+-- and both modes' autocmds, then attach again.
+local function image_reattach(buf)
+	Snacks.image.doc.hover_close()
+	Snacks.image.placement.clean(buf)
+	pcall(vim.api.nvim_del_augroup_by_name, "snacks.image.doc." .. buf)
+	pcall(vim.api.nvim_del_augroup_by_name, "snacks.image.inline." .. buf)
+	vim.b[buf].snacks_image_attached = false
+	if Snacks.image.config.doc.enabled then
+		Snacks.image.doc._attach(buf)
+	end
+end
+
 return {
 	-- Laravel snippets (lazy loaded for PHP files only)
 	{"rafamadriz/friendly-snippets", ft = "php"},
@@ -52,6 +66,10 @@ return {
 			end,
 		},
 		indent = { enabled = true },
+		styles = {
+			-- hover image: top-right corner of the window instead of under the cursor
+			snacks_image = { relative = "win", row = 0, col = -1 },
+		},
 		image = {
 			enabled = true,
 			doc = {
@@ -136,36 +154,23 @@ return {
 		{
 			"<leader>vi",
 			function()
-				local buf = vim.api.nvim_get_current_buf()
 				local cfg = Snacks.image.config
 				cfg.doc.enabled = not cfg.doc.enabled
-				if not cfg.doc.enabled then
-					Snacks.image.doc.hover_close()
-					Snacks.image.placement.clean(buf)
-					pcall(vim.api.nvim_del_augroup_by_name, "snacks.image.doc." .. buf)
-				else
-					vim.b[buf].snacks_image_attached = false
-					Snacks.image.doc._attach(buf)
-				end
+				image_reattach(vim.api.nvim_get_current_buf())
+				vim.notify("Image preview " .. (cfg.doc.enabled and "on" or "off"))
 			end,
 			desc = "toggle image preview",
 		},
 		{
 			"<leader>vI",
 			function()
-				local buf = vim.api.nvim_get_current_buf()
 				local cfg = Snacks.image.config.doc
-				-- Clean current state
-				Snacks.image.doc.hover_close()
-				Snacks.image.placement.clean(buf)
-				pcall(vim.api.nvim_del_augroup_by_name, "snacks.image.doc." .. buf)
-				-- Toggle between inline and float
 				cfg.inline = not cfg.inline
-				-- Re-attach buffer with new mode
-				vim.b[buf].snacks_image_attached = false
-				Snacks.image.doc._attach(buf)
+				image_reattach(vim.api.nvim_get_current_buf())
+				local inline = cfg.inline and Snacks.image.terminal.env().placeholders
+				vim.notify("Images: " .. (inline and "inline" or "top-right float"))
 			end,
-			desc = "toggle inline/float preview",
+			desc = "toggle images inline / top-right float",
 		},
 	},
 	init = function()
