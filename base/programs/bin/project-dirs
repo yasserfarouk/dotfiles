@@ -2,7 +2,7 @@
 # Project folders, one per line, nearest first and without duplicates: folder shortcuts (~/bin/shortcut) and two
 # levels below each, zoxide, and project dirs under ~/code, ~/code/papers, ~/koshodojo. Feeds the tmux picker
 # (tmux-dir-pick, Alt-g) and Alfred's `proj` keyword (alfred-kitty). Nested shortcuts (a and a/b) overlap; awk
-# drops the duplicates.
+# drops the duplicates. Finally stable-partitioned: ~/code first, then Box's NEC folder, then everything else.
 # GUI launches (Alfred) get a bare PATH
 PATH=/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH
 shortcuts=()
@@ -16,4 +16,7 @@ while IFS= read -r d; do [ -d "$d" ] && shortcuts+=("$d"); done < <(~/bin/shortc
   fd . --type d --full-path "$HOME/code/papers" --max-depth 4 &
   fd . --type d --full-path "$HOME/koshodojo" --max-depth 2 &
   wait
-} | sed 's:/$::' | awk '!seen[$0]++'
+} | sed 's:/$::' | awk -v code="$HOME/code" -v nec="$HOME/Library/CloudStorage/Box-Box/Yasser/storage/yasser/business/NEC" '
+  function under(p, d) { return p == d || index(p, d "/") == 1 }
+  !seen[$0]++ { g = under($0, code) ? 0 : under($0, nec) ? 1 : 2; n[g]++; l[g, n[g]] = $0 }
+  END { for (g = 0; g < 3; g++) for (i = 1; i <= n[g]; i++) print l[g, i] }'

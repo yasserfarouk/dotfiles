@@ -87,3 +87,12 @@ if [ -f "$HOME/.cargo/env" ]; then
 elif [ -d "$HOME/.cargo/bin" ]; then
   export PATH="$HOME/.cargo/bin:$PATH"
 fi
+
+# TeX Live / MacTeX: /etc/paths.d/TeX only applies to login shells, so add it
+# here for non-login shells too (agents, scripts, editors).
+if [ -d /Library/TeX/texbin ]; then
+  case ":$PATH:" in
+    *:/Library/TeX/texbin:*) ;;
+    *) export PATH="$PATH:/Library/TeX/texbin" ;;
+  esac
+fi
