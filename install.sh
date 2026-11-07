@@ -141,6 +141,7 @@ command -v duti >/dev/null 2>&1 && duti -s com.apple.Preview com.adobe.pdf all |
 if [ -d "/Applications/Alfred 5.app" ]; then
 	echo "Alfred: yazi / tmux / send-to file actions, note / proj / new / sendto / dl / shot keywords, kitty as terminal"
 	"$(dirname "$0")/base/programs/bin/alfred-kitty" install || echo "Warning: alfred-kitty install failed"
+	"$(dirname "$0")/base/programs/bin/alfred-translate" || echo "Warning: alfred-translate failed (install the Translate workflow, dev.nikitadev.translate, then re-run it)"
 fi
 
 # Fonts come from the Brewfile casks (font-hack-nerd-font, font-jetbrains-mono-nerd-font, ...)
