@@ -3,7 +3,8 @@
 # its own keyword so Alfred's built-in `translate` web search (opens translate.google.com in the browser)
 # keeps working, and patches main.py so each result carries large-type/copy text: `tr TEXT` shows the
 # translation as the result title, ↩ copies, ⇧↩ pastes, ⌥↩ Text View, ⌘L large-type popup, ⌘C copy.
-# Languages: output_language (ja) / input_language (en, used when the text already is in the output language).
+# Languages: output_language en (any other language comes out English) / input_language ja (used when the text
+# already is English).
 # Idempotent; re-run after the workflow is updated.
 # Usage: alfred-translate [KEYWORD]     (default tr)
 set -euo pipefail
@@ -16,7 +17,8 @@ done
 prefs=$wf/prefs.plist
 [ -f "$prefs" ] || plutil -create xml1 "$prefs"
 plutil -replace keyword -string "$kw" "$prefs"
-plutil -extract output_language raw "$prefs" >/dev/null 2>&1 || plutil -replace output_language -string ja "$prefs"
+plutil -replace output_language -string en "$prefs"
+plutil -replace input_language -string ja "$prefs"
 f=$wf/main.py
 if grep -q '"largetype"' "$f"; then
   echo "already patched: $f"
