@@ -34,7 +34,14 @@ const rules = {
   "*.usembassy.gov/*": "Microsoft Edge",
 };
 
+const settings = { defaultBrowser: "Safari" };
+
+// Safari and Edge links go through helper apps (`browser-rule helpers`) that open them in the
+// current AeroSpace workspace: a new tab in the browser's window there, else a new window.
+const here = { "Safari": "com.yasser.safari-here", "Microsoft Edge": "com.yasser.edge-here" };
+const viaHere = (browser) => (here[browser] ? { name: here[browser], appType: "bundleId" } : browser);
+
 export default {
-  defaultBrowser: "Safari",
-  handlers: Object.entries(rules).map(([match, browser]) => ({ match, browser })),
+  defaultBrowser: viaHere(settings.defaultBrowser),
+  handlers: Object.entries(rules).map(([match, browser]) => ({ match, browser: viaHere(browser) })),
 };

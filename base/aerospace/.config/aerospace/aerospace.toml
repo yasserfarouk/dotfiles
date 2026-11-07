@@ -128,6 +128,26 @@ gaps.outer.right =      5
     alt-cmd-enter = 'fullscreen'     # toggle: maximize focused window / restore it to its previous place
     alt-w = 'exec-and-forget ~/.config/aerospace/workspace-picker.sh'   # list workspaces + apps, pick one
     alt-shift-t = 'exec-and-forget ~/.config/aerospace/safari-tab-to-workspace.sh'   # Safari: move current tab to a picked workspace
+    alt-shift-b = 'exec-and-forget ~/.config/aerospace/browser-home.sh'   # browser window opened here by a link → back to the browser's main workspace (Safari: its tabs join that window)
+
+    # Hyper (cmd-alt-ctrl-shift; right ⌘ via Superkey) + letter: app's home workspace, focus or start
+    # it there (app-ws.sh). Workspaces: 1 kitty, 2 Safari, 3 Edge (NEC), 4 Outlook/Teams/Zoom, 9 Koma.
+    cmd-alt-ctrl-shift-t = 'exec-and-forget ~/.config/aerospace/app-ws.sh 1 net.kovidgoyal.kitty'
+    cmd-alt-ctrl-shift-s = 'exec-and-forget ~/.config/aerospace/app-ws.sh 2 com.apple.Safari'
+    cmd-alt-ctrl-shift-e = 'exec-and-forget ~/.config/aerospace/app-ws.sh 3 com.microsoft.edgemac'
+    cmd-alt-ctrl-shift-o = 'exec-and-forget ~/.config/aerospace/app-ws.sh 4 com.microsoft.Outlook'
+    cmd-alt-ctrl-shift-m = 'exec-and-forget ~/.config/aerospace/app-ws.sh 4 com.microsoft.teams2'
+    cmd-alt-ctrl-shift-k = 'exec-and-forget ~/.config/aerospace/app-ws.sh 9 com.apple.Safari.WebApp.56AA5E4D-53C5-45DC-A65F-07DCC0084513'   # Koma App (Safari web app; koma-app-id.sh)
+    cmd-alt-ctrl-shift-z = 'exec-and-forget ~/.config/aerospace/app-ws.sh 4 us.zoom.xos'   # Zoom, with the meeting apps
+    cmd-alt-ctrl-shift-1 = 'workspace 1'
+    cmd-alt-ctrl-shift-2 = 'workspace 2'
+    cmd-alt-ctrl-shift-3 = 'workspace 3'
+    cmd-alt-ctrl-shift-4 = 'workspace 4'
+    cmd-alt-ctrl-shift-5 = 'workspace 5'
+    cmd-alt-ctrl-shift-6 = 'workspace 6'
+    cmd-alt-ctrl-shift-7 = 'workspace 7'
+    cmd-alt-ctrl-shift-8 = 'workspace 8'
+    cmd-alt-ctrl-shift-9 = 'workspace 9'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#focus
     alt-h = 'focus --boundaries all-monitors-outer-frame left'
@@ -174,10 +194,31 @@ gaps.outer.right =      5
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#mode
     alt-shift-semicolon = 'mode service'
+    f10 = 'mode launch'   # then t/s/e/o/m/k/z: kitty/Safari/Edge/Outlook/Teams/Koma/Zoom here; shift+letter: in its home workspace
     alt-shift-space = 'mode workspace'   # then a-z: go to workspace A-Z, shift-a..z: move window there
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
+# F10 chord: a letter opens/focuses the app in THIS workspace (a new window for kitty/Safari/Edge,
+# else its window is pulled here); shift+letter = Hyper+letter (the app's home workspace). esc/f10 cancel.
+[mode.launch.binding]
+    esc = 'mode main'
+    f10 = 'mode main'
+    t = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh here net.kovidgoyal.kitty']
+    shift-t = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh 1 net.kovidgoyal.kitty']
+    s = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh here com.apple.Safari']
+    shift-s = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh 2 com.apple.Safari']
+    e = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh here com.microsoft.edgemac']
+    shift-e = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh 3 com.microsoft.edgemac']
+    o = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh here com.microsoft.Outlook']
+    shift-o = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh 4 com.microsoft.Outlook']
+    m = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh here com.microsoft.teams2']
+    shift-m = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh 4 com.microsoft.teams2']
+    k = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh here com.apple.Safari.WebApp.56AA5E4D-53C5-45DC-A65F-07DCC0084513']   # Koma App (koma-app-id.sh)
+    shift-k = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh 9 com.apple.Safari.WebApp.56AA5E4D-53C5-45DC-A65F-07DCC0084513']   # Koma App (koma-app-id.sh)
+    z = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh here us.zoom.xos']
+    shift-z = ['mode main', 'exec-and-forget ~/.config/aerospace/app-ws.sh 4 us.zoom.xos']
+
 [mode.service.binding]
     esc = ['reload-config', 'mode main']
     r = ['flatten-workspace-tree', 'mode main'] # reset layout
@@ -373,6 +414,18 @@ gaps.outer.right =      5
     if.app-id = 'net.kovidgoyal.kitty'
     if.window-title-regex-substring = '^kitty-float '
     run = 'layout floating'
+
+# Home workspaces for the Hyper-key apps (app-ws.sh): Outlook/Teams → 4, Koma → 9. kitty, Safari and
+# Edge are not routed (links open where you click them; alt-shift-b sends a browser window home).
+[[on-window-detected]]
+    if.app-id = 'com.microsoft.Outlook'
+    run = 'move-node-to-workspace 4'
+[[on-window-detected]]
+    if.app-id = 'com.microsoft.teams2'
+    run = 'move-node-to-workspace 4'
+[[on-window-detected]]
+    if.app-id = 'com.apple.Safari.WebApp.56AA5E4D-53C5-45DC-A65F-07DCC0084513'   # Koma App (koma-app-id.sh)
+    run = 'move-node-to-workspace 9'
 
 # Grid is the default layout: rebuild grid/master-accordion/main/two when a tiled window appears on the focused workspace
 # (last, so the floating rules above match first and stop here).

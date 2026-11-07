@@ -8,7 +8,11 @@
 #   browser-rule default BROWSER          browser for everything else
 #   browser-rule edit                     open the file in $EDITOR
 #   browser-rule test URL                 open URL through Finicky
-#   browser-rule install                  start Finicky at login and ask macOS to make it the default browser
+#   browser-rule install                  start Finicky at login, ask macOS to make it the default browser,
+#                                         and build the helper apps (browser-rule helpers)
+#   browser-rule helpers                  build ~/Applications/{Safari,Edge}Here.app: Finicky hands links to
+#                                         them so they open in the current AeroSpace workspace
+#                                         (~/.config/aerospace/browser-here.sh; alt-shift-b sends one home)
 cfg=$(realpath "${FINICKY_CONFIG:-$HOME/.config/finicky/finicky.js}")
 cmd=${1:-ls}
 shift || true
@@ -47,6 +51,24 @@ open(path, "w").write(src)
 PY
 }
 
+helpers() { # tiny AppleScript apps, no Dock icon, that pass the URL to browser-here.sh
+  local name kind id app
+  for spec in "SafariHere safari com.yasser.safari-here" "EdgeHere edge com.yasser.edge-here"; do
+    read -r name kind id <<<"$spec"
+    app="$HOME/Applications/$name.app"
+    rm -rf "$app" && mkdir -p "$HOME/Applications"
+    osacompile -o "$app" -e "on open location u
+  do shell script \"$HOME/.config/aerospace/browser-here.sh $kind \" & quoted form of u & \" >/dev/null 2>&1 &\"
+end open location" || return 1
+    plutil -replace CFBundleIdentifier -string "$id" "$app/Contents/Info.plist"
+    plutil -replace LSUIElement -bool true "$app/Contents/Info.plist"
+    plutil -replace CFBundleURLTypes -json '[{"CFBundleURLName":"Web URL","CFBundleURLSchemes":["http","https"]}]' "$app/Contents/Info.plist"
+    codesign -f -s - "$app" 2>/dev/null
+    /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$app"
+    echo "built $app ($id)"
+  done
+}
+
 case $cmd in
 ls) edit ls ;;
 add)
@@ -58,7 +80,9 @@ default) [ -n "${1:-}" ] || { echo "usage: browser-rule default BROWSER" >&2; ex
   edit default "$1" && edit ls ;;
 edit) exec "${EDITOR:-nvim}" "$cfg" ;;
 test) open -a Finicky "${1:?usage: browser-rule test URL}" ;;
+helpers) helpers ;;
 install)
+  helpers
   open -a Finicky
   osascript -e 'tell application "System Events" to if not (exists login item "Finicky") then make login item at end with properties {path:"/Applications/Finicky.app", hidden:true}' >/dev/null
   # macOS only switches the default browser after the user confirms its dialog
