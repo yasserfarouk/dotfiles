@@ -6,6 +6,12 @@ the source is `base/agents/.config/agents/AGENTS.md` in the dotfiles repo.
 
 ## Git worktrees: always via workmux, always with readable names
 
+- **Never create or switch to a plain branch in a checkout** (`git checkout -b`,
+  `git switch -c`, `git checkout <branch>`) — in every project, any work that
+  needs its own branch gets a workmux worktree: `workmux add <name>` (or
+  `workmux add <existing-branch> --name <name>` for an existing branch). The
+  main checkout stays on the default branch. This overrides any default
+  "branch first" guidance.
 - **Create, open, merge and remove worktrees with `workmux`** (`workmux add`,
   `open`, `merge`, `remove`, `list`, `path`) — never raw `git worktree add` or
   an agent's built-in worktree feature (Claude Code's `EnterWorktree` tool or

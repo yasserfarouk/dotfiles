@@ -121,7 +121,7 @@ gaps.outer.right =      5
     cmd-alt-right = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh right'
     cmd-alt-up = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh up'
     cmd-alt-down = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh down'
-    ctrl-alt-shift-m = 'move-node-to-monitor --wrap-around --focus-follows-window next'
+    alt-shift-m = 'move-node-to-monitor --wrap-around --focus-follows-window next'
     alt-m = 'focus-monitor --wrap-around next'   # jump focus to the other screen
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#fullscreen
@@ -187,24 +187,50 @@ gaps.outer.right =      5
     alt-shift-8 = ['move-node-to-workspace 8', 'workspace 8']
     alt-shift-9 = ['move-node-to-workspace 9', 'workspace 9']
 
-    # alt-shift-letter: go to workspace LETTER, for every letter not already used by AeroSpace (b h j k l t)
-    # or tmux (M-B M-G M-N M-Q M-W). M = meetings (meeting-ws.sh). All letters: alt-shift-space, then a letter.
-    alt-shift-a = 'workspace A'
-    alt-shift-c = 'workspace C'
-    alt-shift-d = 'workspace D'
-    alt-shift-e = 'workspace E'
-    alt-shift-f = 'workspace F'
-    alt-shift-i = 'workspace I'
-    alt-shift-m = 'workspace M'
-    alt-shift-o = 'workspace O'
-    alt-shift-p = 'workspace P'
-    alt-shift-r = 'workspace R'
-    alt-shift-s = 'workspace S'
-    alt-shift-u = 'workspace U'
-    alt-shift-v = 'workspace V'
-    alt-shift-x = 'workspace X'
-    alt-shift-y = 'workspace Y'
-    alt-shift-z = 'workspace Z'
+    # Letter workspaces A-Z: alt-ctrl-letter goes there; alt-shift-letter moves the focused window there
+    # (and follows), except letters taken elsewhere: AeroSpace b h j k l m t, Hammerspoon e (AeroSpace
+    # toggle), tmux B G N Q W. Those: alt-shift-space, then shift-letter. Z = meetings (meeting-ws.sh).
+    alt-ctrl-a = 'workspace A'
+    alt-ctrl-b = 'workspace B'
+    alt-ctrl-c = 'workspace C'
+    alt-ctrl-d = 'workspace D'
+    alt-ctrl-e = 'workspace E'
+    alt-ctrl-f = 'workspace F'
+    alt-ctrl-g = 'workspace G'
+    alt-ctrl-h = 'workspace H'
+    alt-ctrl-i = 'workspace I'
+    alt-ctrl-j = 'workspace J'
+    alt-ctrl-k = 'workspace K'
+    alt-ctrl-l = 'workspace L'
+    alt-ctrl-m = 'workspace M'
+    alt-ctrl-n = 'workspace N'
+    alt-ctrl-o = 'workspace O'
+    alt-ctrl-p = 'workspace P'
+    alt-ctrl-q = 'workspace Q'
+    alt-ctrl-r = 'workspace R'
+    alt-ctrl-s = 'workspace S'
+    alt-ctrl-t = 'workspace T'
+    alt-ctrl-u = 'workspace U'
+    alt-ctrl-v = 'workspace V'
+    alt-ctrl-w = 'workspace W'
+    alt-ctrl-x = 'workspace X'
+    alt-ctrl-y = 'workspace Y'
+    alt-ctrl-z = 'workspace Z'
+    alt-shift-a = ['move-node-to-workspace A', 'workspace A']
+    alt-shift-c = ['move-node-to-workspace C', 'workspace C']
+    alt-shift-d = ['move-node-to-workspace D', 'workspace D']
+    alt-shift-f = ['move-node-to-workspace F', 'workspace F']
+    alt-shift-g = ['move-node-to-workspace G', 'workspace G']
+    alt-shift-i = ['move-node-to-workspace I', 'workspace I']
+    alt-shift-o = ['move-node-to-workspace O', 'workspace O']
+    alt-shift-p = ['move-node-to-workspace P', 'workspace P']
+    alt-shift-r = ['move-node-to-workspace R', 'workspace R']
+    alt-shift-s = ['move-node-to-workspace S', 'workspace S']
+    alt-shift-u = ['move-node-to-workspace U', 'workspace U']
+    alt-shift-v = ['move-node-to-workspace V', 'workspace V']
+    alt-shift-x = ['move-node-to-workspace X', 'workspace X']
+    alt-shift-y = ['move-node-to-workspace Y', 'workspace Y']
+    alt-shift-z = ['move-node-to-workspace Z', 'workspace Z']
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-tab = 'workspace-back-and-forth'
@@ -435,17 +461,17 @@ gaps.outer.right =      5
     run = 'layout floating'
 
 # Home workspaces for the Hyper-key apps (app-ws.sh): Outlook/Teams → 4, Koma → 9; meeting windows
-# (Teams, Zoom) → M via meeting-ws.sh, Google Meet links → M via browser-here.sh. kitty, Safari and
+# (Teams, Zoom) → Z via meeting-ws.sh, Google Meet links → Z via browser-here.sh. kitty, Safari and
 # Edge are not routed (links open where you click them; alt-shift-b sends a browser window home).
 [[on-window-detected]]
     if.app-id = 'com.microsoft.Outlook'
     run = 'move-node-to-workspace 4'
 [[on-window-detected]]
     if.app-id = 'com.microsoft.teams2'
-    run = ['move-node-to-workspace 4', 'exec-and-forget ~/.config/aerospace/meeting-ws.sh']   # meeting windows → M
+    run = ['move-node-to-workspace 4', 'exec-and-forget ~/.config/aerospace/meeting-ws.sh']   # meeting windows → Z
 [[on-window-detected]]
     if.app-id = 'us.zoom.xos'
-    run = ['exec-and-forget ~/.config/aerospace/meeting-ws.sh', 'exec-and-forget ~/.config/aerospace/layout-cycle.sh regrid']   # "Zoom Meeting" → M
+    run = ['exec-and-forget ~/.config/aerospace/meeting-ws.sh', 'exec-and-forget ~/.config/aerospace/layout-cycle.sh regrid']   # "Zoom Meeting" → Z
 [[on-window-detected]]
     if.app-id = 'com.apple.Safari.WebApp.56AA5E4D-53C5-45DC-A65F-07DCC0084513'   # Koma App (koma-app-id.sh)
     run = 'move-node-to-workspace 9'

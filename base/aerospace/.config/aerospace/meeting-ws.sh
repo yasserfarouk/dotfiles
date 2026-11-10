@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Meeting windows go to workspace M (on-window-detected for Zoom and Teams; Google Meet links are
+# Meeting windows go to workspace Z (on-window-detected for Zoom and Teams; Google Meet links are
 # sent there by browser-here.sh). Called with AEROSPACE_WINDOW_ID = the new window. Its title can
 # settle late (Teams), so it is checked for up to 5 s. A meeting window is moved once only, so
-# taking it out of M by hand sticks.
+# taking it out of Z by hand sticks.
 #   Zoom:  "Zoom Meeting", "Zoom Webinar"
 #   Teams: "<subject> | Microsoft Teams" whose first part is not a main-window section
 #          (Chat, Calendar, …); "Microsoft Teams" alone (still loading) is not a meeting.
@@ -10,7 +10,7 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 win=$AEROSPACE_WINDOW_ID
 unset AEROSPACE_WINDOW_ID  # otherwise every aerospace command would target that window
 [ -n "$win" ] || exit 0
-ws=M
+ws=Z
 state=$HOME/.cache/aerospace-layout/.meetings
 mkdir -p "${state%/*}"
 grep -qxF "$win" "$state" 2>/dev/null && exit 0
