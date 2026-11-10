@@ -13,6 +13,9 @@ edge) bundle=com.microsoft.edgemac ;;  # by bundle id: the name "Microsoft Edge"
 *) echo "usage: browser-here.sh safari|edge URL" >&2; exit 2 ;;
 esac
 
+# a Google Meet meeting link opens in the meeting workspace M instead (meeting-ws.sh: Teams/Zoom)
+[[ $url =~ ^https?://meet\.google\.com/[a-z]{3}-[a-z]{4}-[a-z]{3} ]] && aerospace workspace M 2>/dev/null
+
 # not running, or no AeroSpace: the plain way (a fresh browser opens in the focused workspace anyway)
 if ! aerospace list-apps --format '%{app-bundle-id}' 2>/dev/null | grep -qxF "$bundle" || ! win=$(aerospace list-windows --workspace focused --app-bundle-id "$bundle" --format '%{window-id}' 2>/dev/null); then
   exec open -b "$bundle" "$url"

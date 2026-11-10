@@ -121,7 +121,7 @@ gaps.outer.right =      5
     cmd-alt-right = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh right'
     cmd-alt-up = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh up'
     cmd-alt-down = 'exec-and-forget ~/.config/aerospace/layout-cycle.sh down'
-	alt-shift-m = 'move-node-to-monitor --wrap-around --focus-follows-window next'
+    ctrl-alt-shift-m = 'move-node-to-monitor --wrap-around --focus-follows-window next'
     alt-m = 'focus-monitor --wrap-around next'   # jump focus to the other screen
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#fullscreen
@@ -186,6 +186,25 @@ gaps.outer.right =      5
     alt-shift-7 = ['move-node-to-workspace 7', 'workspace 7']
     alt-shift-8 = ['move-node-to-workspace 8', 'workspace 8']
     alt-shift-9 = ['move-node-to-workspace 9', 'workspace 9']
+
+    # alt-shift-letter: go to workspace LETTER, for every letter not already used by AeroSpace (b h j k l t)
+    # or tmux (M-B M-G M-N M-Q M-W). M = meetings (meeting-ws.sh). All letters: alt-shift-space, then a letter.
+    alt-shift-a = 'workspace A'
+    alt-shift-c = 'workspace C'
+    alt-shift-d = 'workspace D'
+    alt-shift-e = 'workspace E'
+    alt-shift-f = 'workspace F'
+    alt-shift-i = 'workspace I'
+    alt-shift-m = 'workspace M'
+    alt-shift-o = 'workspace O'
+    alt-shift-p = 'workspace P'
+    alt-shift-r = 'workspace R'
+    alt-shift-s = 'workspace S'
+    alt-shift-u = 'workspace U'
+    alt-shift-v = 'workspace V'
+    alt-shift-x = 'workspace X'
+    alt-shift-y = 'workspace Y'
+    alt-shift-z = 'workspace Z'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-tab = 'workspace-back-and-forth'
@@ -415,14 +434,18 @@ gaps.outer.right =      5
     if.window-title-regex-substring = '^kitty-float '
     run = 'layout floating'
 
-# Home workspaces for the Hyper-key apps (app-ws.sh): Outlook/Teams → 4, Koma → 9. kitty, Safari and
+# Home workspaces for the Hyper-key apps (app-ws.sh): Outlook/Teams → 4, Koma → 9; meeting windows
+# (Teams, Zoom) → M via meeting-ws.sh, Google Meet links → M via browser-here.sh. kitty, Safari and
 # Edge are not routed (links open where you click them; alt-shift-b sends a browser window home).
 [[on-window-detected]]
     if.app-id = 'com.microsoft.Outlook'
     run = 'move-node-to-workspace 4'
 [[on-window-detected]]
     if.app-id = 'com.microsoft.teams2'
-    run = 'move-node-to-workspace 4'
+    run = ['move-node-to-workspace 4', 'exec-and-forget ~/.config/aerospace/meeting-ws.sh']   # meeting windows → M
+[[on-window-detected]]
+    if.app-id = 'us.zoom.xos'
+    run = ['exec-and-forget ~/.config/aerospace/meeting-ws.sh', 'exec-and-forget ~/.config/aerospace/layout-cycle.sh regrid']   # "Zoom Meeting" → M
 [[on-window-detected]]
     if.app-id = 'com.apple.Safari.WebApp.56AA5E4D-53C5-45DC-A65F-07DCC0084513'   # Koma App (koma-app-id.sh)
     run = 'move-node-to-workspace 9'
