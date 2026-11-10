@@ -128,7 +128,7 @@ gaps.outer.right =      5
     alt-cmd-enter = 'fullscreen'     # toggle: maximize focused window / restore it to its previous place
     alt-w = 'exec-and-forget ~/.config/aerospace/workspace-picker.sh'   # list workspaces + apps, pick one
     alt-shift-t = 'exec-and-forget ~/.config/aerospace/safari-tab-to-workspace.sh'   # Safari: move current tab to a picked workspace
-    alt-shift-b = 'exec-and-forget ~/.config/aerospace/browser-home.sh'   # browser window opened here by a link → back to the browser's main workspace (Safari: its tabs join that window)
+    alt-shift-b = 'exec-and-forget ~/.config/aerospace/browser-home.sh'   # browser window opened here by a link → back to the browser's main workspace (Safari: its tabs join that window); Finder window → 8
 
     # Hyper (cmd-alt-ctrl-shift; right ⌘ via Superkey) + letter: app's home workspace, focus or start
     # it there (app-ws.sh). Workspaces: 1 kitty, 2 Safari, 3 Edge (NEC), 4 Outlook/Teams/Zoom, 9 Koma.

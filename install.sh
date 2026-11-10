@@ -135,6 +135,22 @@ echo "Making nvim-in-kitty the default app for Markdown / text / LaTeX / CSV / s
 echo "Keeping the Mac awake while coding agents run (lid open)"
 "$(dirname "$0")/base/programs/bin/agent-awake" install || echo "Warning: agent-awake install failed"
 
+echo "Turning off window / Dock / Finder animations (instant window moves with AeroSpace)"
+defaults write -g NSAutomaticWindowAnimationsEnabled -bool false
+defaults write -g NSWindowResizeTime -float 0.001
+defaults write -g NSToolbarFullScreenAnimationDuration -float 0
+defaults write -g QLPanelAnimationDuration -float 0
+defaults write -g NSBrowserColumnAnimationSpeedMultiplier -float 0
+defaults write com.apple.finder DisableAllAnimations -bool true
+defaults write com.apple.dock launchanim -bool false
+defaults write com.apple.dock expose-animation-duration -float 0
+defaults write com.apple.dock autohide-time-modifier -float 0
+defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock springboard-show-duration -float 0
+defaults write com.apple.dock springboard-hide-duration -float 0
+defaults write com.apple.universalaccess reduceMotion -bool true 2>/dev/null || echo "Warning: turn on Reduce motion in System Settings > Accessibility > Display"
+killall Dock 2>/dev/null || true
+
 echo "Making Preview the default app for PDFs"
 command -v duti >/dev/null 2>&1 && duti -s com.apple.Preview com.adobe.pdf all || echo "Warning: could not set Preview for PDFs"
 

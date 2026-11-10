@@ -23,13 +23,14 @@ mode=$(cat "$state/$ws" 2>/dev/null || echo grid)
 
 case ${1:-next} in
   regrid) # one run per burst (AeroSpace start reports every window), after the window is in the tree
-    echo $$ >"$state/.regrid"; sleep 0.3; [ "$(cat "$state/.regrid")" = $$ ] || exit 0
+    echo $$ >"$state/.regrid"; sleep 0.05; [ "$(cat "$state/.regrid")" = $$ ] || exit 0
     # skip floating windows (dialogs) and windows that opened on another workspace
     info=$(aerospace list-windows --all --format '%{window-id}|%{window-layout}|%{workspace}' |
       awk -F'|' -v w="$win" '$1 == w { print $2 "|" $3 }')
     [ "${info%%|*}" != floating ] || exit 0
     [ -z "$info" ] || [ "${info#*|}" = "$ws" ] || exit 0
-    case $mode in grid | master-accordion | main | two) exec "$dir/arrange.sh" "$ws" "$mode" ;; esac; exit 0 ;;
+    # one arrange at a time (windows arriving a little apart)
+    case $mode in grid | master-accordion | main | two) exec lockf -k "$state/.lock" "$dir/arrange.sh" "$ws" "$mode" ;; esac; exit 0 ;;
   next) i=-1; for j in "${!modes[@]}"; do [ "${modes[j]}" = "$mode" ] && i=$j; done
     mode=${modes[(i + 1) % ${#modes[@]}]} ;;
   grid | master-accordion | main | two | vertical | horizontal | accordion) mode=$1 ;;

@@ -32,6 +32,12 @@ const rules = {
   "*.ustraveldocs.com/*": "Microsoft Edge",
   "*.usembassy.gov": "Microsoft Edge",
   "*.usembassy.gov/*": "Microsoft Edge",
+  "nec.anaqua.com": "Microsoft Edge",
+  "nec.anaqua.com/*": "Microsoft Edge",
+  "necglobal.sharepoint.com": "Microsoft Edge",
+  "necglobal.sharepoint.com/*": "Microsoft Edge",
+  "necglobal-my.sharepoint.com": "Microsoft Edge",
+  "necglobal-my.sharepoint.com/*": "Microsoft Edge",
 };
 
 const settings = { defaultBrowser: "Safari" };

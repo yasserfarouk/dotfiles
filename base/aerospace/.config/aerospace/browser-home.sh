@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # alt-shift-b: send the focused browser window back to the browser's home workspace (Safari 2,
-# Edge 3, as for the Hyper keys; any other app: the other workspace holding most of its windows)
-# — the undo of browser-here.sh opening links in place. Safari: its tabs move into the first Safari
+# Edge 3, as for the Hyper keys; Finder 8; any other app: the other workspace holding most of its
+# windows) — the undo of browser-here.sh opening links in place (and of Finder windows opening in
+# the current workspace). Finder windows move as separate windows: AeroSpace treats a native
+# Finder tab as its own window, so a hidden tab would leave an empty tile. Safari: its tabs move into the first Safari
 # window there (the emptied window closes); with none there, or another app, the window moves.
 # You stay in the current workspace.
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
@@ -12,6 +14,7 @@ IFS='|' read -r win bundle ws < <(aerospace list-windows --focused --format '%{w
 case $bundle in  # home workspaces of the Hyper keys (app-ws.sh)
 com.apple.Safari) home=2 ;;
 com.microsoft.edgemac) home=3 ;;
+com.apple.finder) home=8 ;;
 *) home=$(aerospace list-windows --monitor all --app-bundle-id "$bundle" --format '%{workspace}' |
   grep -vxF "$ws" | sort | uniq -c | sort -k1,1nr | awk 'NR == 1 { print $2 }') ;;
 esac
