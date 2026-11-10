@@ -30,3 +30,12 @@ the source is `base/agents/.config/agents/AGENTS.md` in the dotfiles repo.
   `workmux merge --rebase`; never push unless the project/user allows it.
 - For dispatching tasks to parallel worktree agents, use the `worktree` /
   `coordinator` skills (both drive workmux).
+
+## About me: NEC affiliation
+
+I am Yasser Mohammad (NEC). Use this affiliation on every NEC document (invention
+proposals / Idea Sheets, decks, forms, author fields) — never guess another one:
+
+- **Department:** Knowledge Science Research Laboratories (KSR)
+- **Main group:** Agent Orchestration Platform Research Group (AOPRG)
+- **Secondary group:** AFF
