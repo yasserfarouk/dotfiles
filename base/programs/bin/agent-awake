@@ -2,8 +2,8 @@
 # Keep the Mac awake while any coding agent is running: every minute, if `workmux status --all`
 # reports an agent (claude/codex/opencode/pi, any repo, worktree or not) as working or waiting
 # (on a permission prompt / question), hold a 90 s idle-sleep assertion (caffeinate -i).
-# caffeinate -i only blocks idle sleep, so closing the lid still sleeps the machine (unless it's
-# in clamshell mode on an external display) and the display still turns off.
+# Closing the lid always sleeps: while the lid is closed it holds nothing, and if the Mac is still
+# fully awake (clamshell mode on an external display, another app's hold) it runs pmset sleepnow.
 # Claude Code holds its own caffeinate while it works; this also covers the other agents and the
 # time an agent waits for an answer.
 # Usage: agent-awake [run]               loop forever (what launchd runs)
@@ -53,15 +53,38 @@ sys.exit(0 if hits else 1)
   return "$rc"
 }
 
+lid_closed() { ioreg -r -k AppleClamshellState -d 1 | grep -q '"AppleClamshellState" = Yes'; }
+# full wake has Graphics; the short dark wakes (Power Nap, network) of a sleeping Mac don't
+full_wake() { pmset -g systemstate | grep -q 'Capabilities are:.*Graphics'; }
+
+# Lid closed = sleep, whatever is running: drop our holds and, if the Mac is still fully awake
+# (clamshell mode on an external display, or another app holding it awake), put it to sleep.
+lid_guard() {
+  lid_closed || return 1
+  pkill -g "$$" -x caffeinate 2>/dev/null || true
+  if full_wake; then
+    echo "$(date '+%F %T') lid closed while awake: sleeping now"
+    pmset sleepnow >/dev/null || true
+  fi
+  return 0
+}
+
 # Overlapping timed assertions instead of one long-lived caffeinate: nothing to track or kill,
 # and the machine can sleep at most ~90 s after the last agent stops or this loop dies.
+# The lid is checked every 5 s, the agents every 60 s.
 run() {
+  local t=0
   while :; do
-    rc=0
-    running >/dev/null || rc=$?
-    # 2 = could not tell: stay awake if a tmux server (so agents) exists rather than sleep blindly
-    if [ "$rc" = 0 ] || { [ "$rc" = 2 ] && pgrep -qx tmux; }; then caffeinate -i -t 90 & fi
-    sleep 60
+    if lid_guard; then t=0; sleep 5; continue; fi
+    if [ "$t" -le 0 ]; then
+      rc=0
+      running >/dev/null || rc=$?
+      # 2 = could not tell: stay awake if a tmux server (so agents) exists rather than sleep blindly
+      if [ "$rc" = 0 ] || { [ "$rc" = 2 ] && pgrep -qx tmux; }; then caffeinate -i -t 90 & fi
+      t=60
+    fi
+    sleep 5
+    t=$((t - 5))
   done
 }
 
