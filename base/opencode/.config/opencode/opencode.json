@@ -84,5 +84,15 @@
         }
       }
     }
+  },
+  "mcp": {
+    "koma": {
+      "type": "local",
+      "command": [
+        "/Users/yasser/.local/bin/koma",
+        "mcp"
+      ],
+      "enabled": true
+    }
   }
 }
