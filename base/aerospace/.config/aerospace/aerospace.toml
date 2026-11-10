@@ -232,6 +232,12 @@ gaps.outer.right =      5
     alt-shift-y = ['move-node-to-workspace Y', 'workspace Y']
     alt-shift-z = ['move-node-to-workspace Z', 'workspace Z']
 
+    # next/previous workspace with windows: alt-ctrl-] / alt-ctrl-[; next/previous empty one: add shift (ws-cycle.sh)
+    alt-ctrl-rightSquareBracket = 'exec-and-forget ~/.config/aerospace/ws-cycle.sh next busy'
+    alt-ctrl-leftSquareBracket = 'exec-and-forget ~/.config/aerospace/ws-cycle.sh prev busy'
+    alt-ctrl-shift-rightSquareBracket = 'exec-and-forget ~/.config/aerospace/ws-cycle.sh next empty'
+    alt-ctrl-shift-leftSquareBracket = 'exec-and-forget ~/.config/aerospace/ws-cycle.sh prev empty'
+
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-tab = 'workspace-back-and-forth'
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
