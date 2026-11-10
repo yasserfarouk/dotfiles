@@ -146,6 +146,7 @@ brew "jupyterlab", restart_service: :changed
 brew "languagetool", restart_service: :changed
 brew "perl"
 brew "latexindent"
+brew "texlive"
 brew "lazydocker"
 brew "lazygit"
 brew "libfido2"

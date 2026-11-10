@@ -51,7 +51,7 @@ function M.ensure_path()
 	local home = M.home()
 	local dirs = {
 		"/opt/homebrew/bin", "/opt/homebrew/sbin", "/usr/local/bin", "/usr/local/sbin",
-		"/Library/TeX/texbin", home .. "/.local/bin", home .. "/bin", home .. "/.cargo/bin", home .. "/go/bin",
+		home .. "/.local/bin", home .. "/bin", home .. "/.cargo/bin", home .. "/go/bin",
 	}
 	local path = vim.env.PATH or ""
 	local have = {}
