@@ -187,6 +187,7 @@ gaps.outer.right =      5
     alt-shift-7 = ['move-node-to-workspace 7', 'workspace 7']
     alt-shift-8 = ['move-node-to-workspace 8', 'workspace 8']
     alt-shift-9 = ['move-node-to-workspace 9', 'workspace 9']
+    alt-shift-0 = 'exec-and-forget ~/.config/aerospace/ws-cycle.sh next empty move'   # focused window → next empty workspace, follow it
 
     # Letter workspaces A-Z: alt-ctrl-letter goes there; alt-shift-letter moves the focused window there
     # (and follows), except letters taken elsewhere: AeroSpace b h j k l m t, Hammerspoon e (AeroSpace
