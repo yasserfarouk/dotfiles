@@ -134,6 +134,7 @@ echo "Making nvim-in-kitty the default app for Markdown / text / LaTeX / CSV / s
 
 echo "Keeping the Mac awake while coding agents run (lid open)"
 "$(dirname "$0")/base/programs/bin/agent-awake" install || echo "Warning: agent-awake install failed"
+"$(dirname "$0")/base/programs/bin/screen-translate" build || echo "Warning: screen-translate build failed (needs the Xcode command line tools)"
 
 echo "Turning off window / Dock / Finder animations (instant window moves with AeroSpace)"
 defaults write -g NSAutomaticWindowAnimationsEnabled -bool false

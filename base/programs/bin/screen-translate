@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Snap a screen region, OCR it (macOS Vision: Japanese + English) and translate it on-device (Apple Translation:
+# Japanese → English; English text → Japanese). Nothing leaves the Mac.
+#   screen-translate          copy the translation to the clipboard + a notification     (AeroSpace ⌃⌥⌘J)
+#   screen-translate show     a small floating panel near the mouse with the translation and the original,
+#                             until Esc / ⌘W / its close button or the next snap; ⌘C copies the selection, else the translation;
+#                             the translation is also copied                              (AeroSpace ⌃⌥⌘L)
+#   screen-translate text     copy the recognized text itself (OCR only, what TRex does but with Japanese)   (AeroSpace ⌃⌥⌘O)
+#   screen-translate build    (re)compile the Swift helper (done automatically when the source changes)
+#   screen-translate MODE FILE   use an existing image instead of capturing one
+# Needs the Japanese translation language downloaded (System Settings > General > Language & Region >
+# Translation Languages) and Screen Recording permission for the app that launches it (AeroSpace).
+set -euo pipefail
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin:$PATH
+src=$(dirname "$(readlink -f "$0")")/screen-translate.swift
+cache=${XDG_CACHE_HOME:-$HOME/Library/Caches}/screen-translate
+bin=$cache/screen-translate-helper
+
+build() {
+  mkdir -p "$cache"
+  swiftc -O -parse-as-library "$src" -o "$bin.tmp" && mv "$bin.tmp" "$bin"
+}
+
+mode=${1:-copy}
+case $mode in
+build) build; echo "built $bin"; exit ;;
+copy | show | text) ;;
+-h | --help | help) sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; exit ;;
+*) sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2 ;;
+esac
+[ -x "$bin" ] && [ "$bin" -nt "$src" ] || build
+
+if [ -n "${2:-}" ]; then
+  img=$2
+else
+  img=$(mktemp -t screen-translate)
+  trap 'rm -f "$img"' EXIT
+  screencapture -i -x "$img" || true
+  [ -s "$img" ] || exit 0 # Esc: nothing captured
+fi
+[ "$mode" = show ] && pkill -f "$bin show" || true # one panel at a time: a new snap replaces it
+"$bin" "$mode" "$img"
