@@ -4,7 +4,8 @@
 #   ws-cycle.sh next|prev [busy|empty] [move]   (busy = has windows, the default;
 #                                               move = take the focused window along)
 # Order is AeroSpace's (1-9, then A-Z), on the focused monitor, wrapping around; empty falls back
-# to all monitors when the focused one has none.
+# to all monitors when the focused one has none. Empty skips the app home workspaces (1 kitty,
+# 2 Safari, 3 Edge, 4 Outlook/Teams/Zoom, 9 Koma App; app-ws.sh), which are kept for their apps.
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 dir=${1:-next} kind=${2:-busy} move=$3
 case $dir in next | prev) ;; *) echo "usage: ws-cycle.sh next|prev [busy|empty] [move]" >&2; exit 2 ;; esac
@@ -12,7 +13,8 @@ case $kind in busy) empty=(--empty no) ;; empty) empty=(--empty) ;; *) echo "usa
 
 cur=$(aerospace list-workspaces --focused)
 list=$(aerospace list-workspaces --monitor focused "${empty[@]}")
-[ -n "$list" ] || [ "$kind" = busy ] || list=$(aerospace list-workspaces --monitor all --empty)
+[ "$kind" = empty ] && list=$(echo "$list" | grep -vxE '[12349]')
+[ -n "$list" ] || [ "$kind" = busy ] || list=$(aerospace list-workspaces --monitor all --empty | grep -vxE '[12349]')
 # the focused workspace counts as a position even when it is not in the list (e.g. empty, going busy)
 all=$(aerospace list-workspaces --all | grep -xF -f <( { echo "$list"; echo "$cur"; } | grep -v '^$'))
 [ "$dir" = prev ] && all=$(echo "$all" | tail -r)

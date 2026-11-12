@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Dictate a Koma task: opens Alfred on Koma's `t` (add task) keyword and starts Handy recording. Speak,
+# press ⌘Y (Handy's key) to stop: the text lands in Alfred, which shows how Koma parses it (due dates,
+# durations, +project…); ↩ adds it to the inbox, or fix the text first. Bound to ⌃⌥⌘D in aerospace.toml.
+osascript -e 'tell application id "com.runningwithcrayons.Alfred" to search "t "'
+sleep 0.4
+/Applications/Handy.app/Contents/MacOS/handy --toggle-transcription >/dev/null 2>&1 &

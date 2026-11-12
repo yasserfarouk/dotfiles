@@ -395,20 +395,30 @@ alias kitty='kitty --single-instance --start-as=maximized --listen-on=unix:/tmp/
 #   -N -W -L -R -D -J     (port forwarding / proxying only)
 #   <remote command>      (anything positional after the destination, e.g.
 #                          `ssh host foo=bar` for shells that branch on argv)
+# Plain ssh never sends TERM=xterm-kitty: hosts without kitty's terminfo (e.g. Brown's
+# gateway hosts) would get "unknown terminal type" and broken backspace/clear. Inside tmux
+# TERM is screen-256color and stays.
+_ssh_plain() {
+	if [[ "$TERM" == "xterm-kitty" ]]; then
+		TERM=xterm-256color command ssh "$@"
+	else
+		command ssh "$@"
+	fi
+}
 ssh() {
 	if [[ "$TERM_PROGRAM" != "kitty" && -z "$KITTY_WINDOW_ID" ]] || ! command -v kitten >/dev/null 2>&1; then
-		command ssh "$@"
+		_ssh_plain "$@"
 		return
 	fi
 	local arg seen_dest=0 skip_next=0
 	for arg in "$@"; do
 		if [[ $skip_next -eq 1 ]]; then skip_next=0; continue; fi
 		case "$arg" in
-			-N|-W|-L|-R|-D|-J) command ssh "$@"; return ;;
+			-N|-W|-L|-R|-D|-J) _ssh_plain "$@"; return ;;
 			-[bBcEeFIilmOopQS]) skip_next=1 ;;
 			-*) ;;
 			*)
-				if [[ $seen_dest -eq 1 ]]; then command ssh "$@"; return; fi
+				if [[ $seen_dest -eq 1 ]]; then _ssh_plain "$@"; return; fi
 				seen_dest=1
 				;;
 		esac

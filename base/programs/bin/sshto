@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# Pick an ssh target in fzf (Brown, DAIBA, aurora) and open it in kitty itself, never inside tmux
+# (you run tmux on the remote side): a new tab in the running kitty by default, --window for its own
+# OS window. kitty is started if it is not running. The tab keeps a shell after the connection ends
+# (--hold), so ↑↩ reconnects. TERM is xterm-256color: the remote hosts lack kitty's terminfo.
+# Usage: sshto [--window] [QUERY]     (a QUERY matching one target connects without asking)
+#        sshto --list                 (the targets, one per line)
+# Targets: edit TARGETS below ("label<TAB>command"). DAIBA needs the daiba/sshrelay hosts in ~/.ssh/config.
+set -euo pipefail
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+
+brown="ssh -i ~/.ssh/mybrown_rsa -t ymohamm1@ssh.cs.brown.edu"
+TARGETS="brown anac	$brown host=anac
+brown scml	$brown host=scml
+aurora	ssh aurora
+daiba gateway	ssh daiba
+daiba tunnels (jupyter :18888, web :1080, rdp :13389)	ssh -N -L 18888:192.168.101.15:8888 -L 1080:192.168.101.6:80 -L 13389:192.168.101.7:3389 daiba"
+for n in 11 12 13 14 15 16 17 18 19; do
+  TARGETS+="
+daiba $n	ssh -A -J daiba yasser@192.168.101.$n"
+done
+
+kitty_app=/Applications/kitty.app/Contents/MacOS
+kitty=$kitty_app/kitty kitten=$kitty_app/kitten
+[ -x "$kitty" ] || { kitty=$(command -v kitty) kitten=$(command -v kitten); } || { echo "sshto: kitty not found" >&2; exit 1; }
+
+window=
+[ "${1:-}" = --window ] && { window=1; shift; }
+[ "${1:-}" = --list ] && { cut -f1 <<<"$TARGETS"; exit 0; }
+
+pick=$(fzf --delimiter='\t' --with-nth=1 --select-1 --exit-0 --query="$*" --height=40% --reverse \
+  --prompt='ssh> ' --header='enter: new kitty tab' <<<"$TARGETS") || exit 0
+label=${pick%%$'\t'*} cmd=${pick#*$'\t'}
+
+# the live kitty: a listen socket (kitty.conf listen_on unix:/tmp/mykitty → /tmp/mykitty-PID) whose pid runs
+# and has OS windows (a windowless instance can linger); the one with the focused window wins
+sock=
+for s in /tmp/mykitty-* /tmp/kitty-*; do
+  [ -S "$s" ] && kill -0 "${s##*-}" 2>/dev/null || continue
+  state=$("$kitten" @ --to "unix:$s" ls 2>/dev/null | python3 -Ic '
+import json, sys
+d = json.load(sys.stdin)
+print("focused" if any(w.get("is_focused") for w in d) else "windows" if d else "")' 2>/dev/null) || continue
+  [ "$state" = focused ] && { sock=unix:$s; break; }
+  [ "$state" = windows ] && [ -z "$sock" ] && sock=unix:$s
+done
+
+shell=${SHELL:-/bin/zsh}
+if [ -n "$sock" ]; then
+  type=tab; [ -n "$window" ] && type=os-window
+  "$kitten" @ --to "$sock" launch --type="$type" --tab-title="$label" --cwd="$HOME" --hold \
+    "$shell" -lc "echo '$label: $cmd'; TERM=xterm-256color $cmd" >/dev/null
+  open -a kitty
+else
+  nohup "$kitty" --single-instance --directory "$HOME" --title "$label" \
+    "$shell" -lc "TERM=xterm-256color $cmd; exec $shell -l" >/dev/null 2>&1 &
+fi

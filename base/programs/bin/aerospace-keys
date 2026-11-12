@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# All AeroSpace keybindings (main mode and the modes it enters: layout, launch, workspace, service) with
+# their commands and the comment next to them in aerospace.toml; pick one to run it. A key inside a
+# mode is listed as "ENTRY KEY" (e.g. "alt-shift-slash g") and runs that binding's commands directly,
+# without the mode. `mode main` steps are dropped; a lone `mode X` enters the mode.
+# Usage: aerospace-keys                 fzf picker in the terminal (enter runs the binding)
+#        aerospace-keys --alfred QUERY  Script Filter JSON (the Alfred keyword `aero`, alfred-kitty)
+#        aerospace-keys run ID          run binding ID (MODE:KEY), after a short pause so the window
+#                                       Alfred hands focus back to is the focused one again
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+conf=${AEROSPACE_CONF:-$HOME/.config/aerospace/aerospace.toml}
+
+list() { # TSV: id, keys, commands, comment
+  python3 -I - "$conf" <<'EOF'
+import re, sys, tomllib
+path = sys.argv[1]
+text = open(path, encoding="utf-8").read()
+modes = tomllib.loads(text).get("mode", {})
+# trailing comments, per mode and key, from the raw lines
+notes, mode = {}, None
+for line in text.splitlines():
+    m = re.match(r"\s*\[mode\.([\w-]+)\.binding\]", line)
+    if m: mode = m.group(1); continue
+    if re.match(r"\s*\[", line): mode = None; continue
+    m = re.match(r"\s*([\w-]+)\s*=.*?#\s*(.*)$", line)
+    if mode and m and "'" in line.split("#")[0]: notes[(mode, m.group(1))] = m.group(2).strip()
+def cmds(v): return v if isinstance(v, list) else [v]
+main = modes.get("main", {}).get("binding", {})
+entry = {}  # mode → key in main that enters it
+for k, v in main.items():
+    for c in cmds(v):
+        if c.startswith("mode ") and c != "mode main": entry.setdefault(c.split()[1], k)
+def emit(mode, key, label, v):
+    steps = [c for c in cmds(v) if c != "mode main"]
+    if not steps: return
+    print(f"{mode}:{key}\t{label}\t{' ; '.join(steps)}\t{notes.get((mode, key), '')}")
+for k, v in main.items(): emit("main", k, k, v)
+for mode, d in modes.items():
+    if mode == "main": continue
+    for k, v in d.get("binding", {}).items():
+        if k == "esc" or k == entry.get(mode): continue
+        emit(mode, k, f"{entry.get(mode, mode)} {k}", v)
+EOF
+}
+
+run() {
+  local id=$1 cmds
+  cmds=$(list | awk -F'\t' -v id="$id" '$1 == id { print $3; exit }')
+  [ -n "$cmds" ] || { echo "aerospace-keys: no binding $id" >&2; exit 1; }
+  sleep 0.3
+  local IFS=$'\n' c
+  for c in $(sed 's/ ; /\n/g' <<<"$cmds"); do
+    case $c in
+    exec-and-forget\ *) bash -c "${c#exec-and-forget }" >/dev/null 2>&1 & ;;
+    *) eval "aerospace $c" ;;
+    esac
+  done
+}
+
+case ${1:-} in
+--alfred)
+  list | python3 -I -c '
+import json, sys
+items = []
+for line in sys.stdin:
+    i, keys, cmds, note = line.rstrip("\n").split("\t")
+    items.append({"uid": i, "title": keys + (f"  —  {note}" if note else ""), "subtitle": cmds, "arg": i,
+                  "match": f"{keys} {cmds} {note}"})
+print(json.dumps({"items": items}))' | "$(dirname "$0")/alfred-fuzzy" "${2:-}" ;;
+run) run "$2" ;;
+"")
+  pick=$(list | fzf --delimiter='\t' --with-nth=2,3,4 --reverse --prompt='aerospace> ' \
+    --header='enter: run the binding') || exit 0
+  run "${pick%%$'\t'*}" ;;
+*) sed -n '2,10s/^# \{0,1\}//p' "$0"; exit 2 ;;
+esac

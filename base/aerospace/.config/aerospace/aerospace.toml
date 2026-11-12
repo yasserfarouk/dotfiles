@@ -126,6 +126,7 @@ gaps.outer.right =      5
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#fullscreen
     alt-cmd-enter = 'fullscreen'     # toggle: maximize focused window / restore it to its previous place
+    cmd-alt-ctrl-d = 'exec-and-forget ~/bin/koma-dictate'   # dictate a Koma task: Alfred `t` + Handy recording; ⌘Y stops, ↩ adds
     alt-w = 'exec-and-forget ~/.config/aerospace/workspace-picker.sh'   # list workspaces + apps, pick one
     alt-shift-t = 'exec-and-forget ~/.config/aerospace/safari-tab-to-workspace.sh'   # Safari: move current tab to a picked workspace
     alt-shift-b = 'exec-and-forget ~/.config/aerospace/browser-home.sh'   # browser window opened here by a link → back to the browser's main workspace (Safari: its tabs join that window); Finder window → 8
