@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 # New workmux worktree (own tmux session + default agent) for the current repo, from a tmux popup (Alt-a).
+# The line is edited in nvim via popup-edit (your config, no status/number/sign chrome, starts in
+# insert mode): first word = name, the rest of the buffer (may span lines) =
+# prompt; C-s or normal-mode Enter (or ZZ) submits, C-c / ZQ / an empty buffer cancels. Without nvim
+# it falls back to a readline prompt.
 #   name            create it (or reopen an existing one) and switch to its session
 #   name prompt...  create it in the background with the agent started on "prompt..." (stay here);
 #                   if it already runs, the prompt is sent to its agent instead
@@ -25,8 +29,14 @@ if [ "$agent" = pick ]; then
     fzf --reverse --height=100% --prompt 'agent> ') || exit 0
 fi
 
-printf 'New worktree in %s%s\n' "${root/#$HOME/~}" "${agent:+  [$agent]}"
-read -r -e -p 'name [/agent/] [prompt]: ' line || exit 0
+header=$(printf 'New worktree in %s%s' "${root/#$HOME/~}" "${agent:+  [$agent]}")
+# popup-edit: nvim (full config, no chrome); first word = name, the rest (may span lines) = prompt.
+line=$("${BASH_SOURCE%/*}/popup-edit" --hint "$header"$'\n''name [/agent/] [prompt…]   C-s / normal CR: go · C-c: cancel')
+case $? in
+  0) ;;
+  3) printf '%s\n' "$header"; read -r -e -p 'name [/agent/] [prompt]: ' line || exit 0 ;;
+  *) exit 0 ;;
+esac
 # A /agent/ token anywhere in the line (only known agents) picks the agent and is stripped out;
 # an explicit pick (prefix-A) still wins. Then split the rest into name (first word) + prompt.
 agents_re=$(IFS='|'; echo "${agents[*]}")
@@ -35,7 +45,11 @@ if [[ $line =~ (^|[[:space:]])/(${agents_re})/([[:space:]]|$) ]]; then
   tok=/${BASH_REMATCH[2]}/
   line=${line//"$tok"/ }
 fi
-read -r name prompt <<<"$line"
+line=${line#"${line%%[![:space:]]*}"}  # trim leading whitespace
+name=${line%%[[:space:]]*}
+prompt=${line#"$name"}
+prompt=${prompt#"${prompt%%[![:space:]]*}"}
+prompt=${prompt%"${prompt##*[![:space:]]}"}
 # kebab-case, keep "/" so feature/x style branches still work
 slug=$(printf %s "$name" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9._/-]+/-/g; s/^-+|-+$//g')
 [ -n "$slug" ] || exit 0

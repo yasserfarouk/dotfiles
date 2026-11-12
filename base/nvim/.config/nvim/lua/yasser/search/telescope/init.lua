@@ -174,4 +174,4 @@ telescope.setup({
 })
 telescope.load_extension("media_files")
 telescope.load_extension("ui-select")
-telescope.load_extension("dap")
+-- "dap" is loaded by telescope-dap.nvim's config (lua/plugins/debug.lua), only for dap filetypes

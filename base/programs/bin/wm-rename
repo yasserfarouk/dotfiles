@@ -11,8 +11,14 @@ IFS=$'\t' read -r session win nwin path < <(tmux display -p -t "$pane" '#{sessio
 
 new=${1:-}
 if [ -z "$new" ]; then
-  printf 'Rename session %s%s\n' "$session" "$([ "$nwin" -gt 1 ] && echo "  (this window moves to its own session)")"
-  read -r -e -i "$session" -p 'new name: ' new || exit 0
+  header=$(printf 'Rename session %s%s' "$session" "$([ "$nwin" -gt 1 ] && echo "  (this window moves to its own session)")")
+  # popup-edit: nvim (full config, no chrome) on the current name; Enter / C-s rename, C-c cancel
+  new=$("${BASH_SOURCE%/*}/popup-edit" --line --init "$session" --hint "$header"$'\n''new name   Enter / C-s: rename · C-c: cancel')
+  case $? in
+    0) ;;
+    3) printf '%s\n' "$header"; read -r -e -i "$session" -p 'new name: ' new || exit 0 ;;
+    *) exit 0 ;;
+  esac
 fi
 new=$(printf %s "$new" | sed -E 's/[^A-Za-z0-9._-]+/-/g; s/^-+|-+$//g')
 [ -n "$new" ] && [ "$new" != "$session" ] || exit 0

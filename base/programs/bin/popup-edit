@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Edit a short text in nvim for a tmux popup: your full nvim config, but no status/tab line, command
+# line row, number or sign columns (nvim lua/yasser/prompt_popup.lua); starts in insert mode at the
+# end of the text. Prints the result on stdout.
+#   popup-edit [--hint TEXT] [--init TEXT] [--line] [--syntax NAME] [--history]
+#     --hint TEXT    dim hint (newlines = several lines)
+#     --init TEXT    initial text
+#     --line         single-line result: the line under the cursor; insert-mode Enter submits too
+#     --history      (with --line) stdin lines go above the input line, oldest first, to search
+#                    (/ ?), edit and submit like nvim's q: window
+#     --syntax NAME  syntax highlighting (e.g. zsh)
+# Keys: C-s or normal-mode Enter (or ZZ) submit; C-c (normal) / ZQ / :q! cancel.
+# Exit 0 with the text, 1 when cancelled or empty, 3 when nvim is missing (callers fall back).
+hint= init= mode= syntax= history=
+while [ $# -gt 0 ]; do
+  case $1 in
+    --hint) hint=$2; shift ;;
+    --init) init=$2; shift ;;
+    --line) mode=line ;;
+    --history) history=1 ;;
+    --syntax) syntax=$2; shift ;;
+    *) echo "popup-edit: unknown option $1" >&2; exit 2 ;;
+  esac
+  shift
+done
+command -v nvim >/dev/null || exit 3
+tmp=$(mktemp "${TMPDIR:-/tmp}/popup-edit.XXXXXX") || exit 1
+trap 'rm -f "$tmp"' EXIT
+{ [ -n "$history" ] && cat; printf '%s\n' "$init"; } >"$tmp"
+PROMPT_POPUP_HINT=$hint PROMPT_POPUP_MODE=$mode PROMPT_POPUP_SYNTAX=$syntax \
+  nvim -n -c 'lua require("yasser.prompt_popup").setup()' "$tmp" </dev/tty >/dev/tty || exit 1
+out=$(<"$tmp")
+[ -n "${out//[[:space:]]/}" ] || exit 1
+printf '%s\n' "$out"

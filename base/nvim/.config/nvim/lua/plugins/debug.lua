@@ -143,8 +143,13 @@ return {
 	{
 		"nvim-telescope/telescope-dap.nvim",
 		ft = dap_types,
-		-- dependencies = {{"mfussenegger/nvim-dap", lazy=true},{ "nvim-telescope/telescope.nvim", opt=true}},
-		config = dapuiconfig,
+		dependencies = { "mfussenegger/nvim-dap", "nvim-telescope/telescope.nvim" },
+		-- Register the extension here, not in the telescope config: loading it from there pulled
+		-- telescope-dap (and, via a copied dapuiconfig, dap-ui's setup, which creates dap's REPL
+		-- prompt buffer and drops insert mode) into every startup.
+		config = function()
+			require("telescope").load_extension("dap")
+		end,
 	},
 	{
 		"theHamsta/nvim-dap-virtual-text",

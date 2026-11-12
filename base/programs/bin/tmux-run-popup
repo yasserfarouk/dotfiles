@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 # Run-a-command popup for tmux (Alt-r, prefix-R): opened in the current pane's folder, prompts for a
-# command (zsh line editor, Up/Down = shell history from $HISTFILE), runs it in an interactive zsh so
+# command in nvim via popup-edit (recent $HISTFILE commands above the input line to search and edit;
+# zsh's line editor when nvim is missing), runs it in an interactive zsh so
 # aliases/functions work, then waits: Enter/r = run another, any other key (q, Esc, Space…) = close.
 # `tmux-run-popup CMD…` runs CMD first. Ctrl-C or an empty line at the prompt closes too.
 zmodload zsh/datetime
@@ -11,8 +12,15 @@ fc -R "$HISTFILE" 2>/dev/null
 cmd="$*"
 while true; do
   if [[ -z $cmd ]]; then
-    print -P "%F{blue}%~%f"
-    vared -h -p '%F{green}❯%f ' cmd || exit 0
+    # popup-edit: nvim (full config, no chrome) with the last 300 distinct history commands above
+    # the input line (search / ?, edit any of them); Enter / C-s runs the line under the cursor.
+    cmd=$(fc -ln -3000 2>/dev/null | tail -r | awk '!seen[$0]++' | head -300 | tail -r |
+      ${0:A:h}/popup-edit --line --history --syntax zsh --hint "${(D)PWD}   Enter / C-s: run · C-c: close")
+    case $? in
+      0) ;;
+      3) print -P "%F{blue}%~%f"; vared -h -p '%F{green}❯%f ' cmd || exit 0 ;;
+      *) exit 0 ;;
+    esac
     [[ -z ${cmd// /} ]] && exit 0
     print -s -- "$cmd"
     print -r -- ": $EPOCHSECONDS:0;$cmd" >>"$HISTFILE"
