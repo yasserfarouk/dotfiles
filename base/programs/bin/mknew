@@ -7,8 +7,12 @@
 #   talk     DESC   NEC presentation claude "/nec-presentation DESC" in ~/code/presentations (the skill names the deck)
 # A NAME that already starts with a year keeps it. --mail also saves the email open in Outlook, with its attachments,
 # into the new folder (for a talk: presentations/materials/YYYYMMDD-<slug>/, named in the prompt).
-# Usage: mknew [--mail] KIND NAME...
-#        mknew --alfred QUERY     Alfred Script Filter JSON (keyword `new`, ctrl-opt-cmd-N; Outlook in front → --mail)
+# --send / --send-copy moves / copies the files `sendto --take` gives (stashed by the Alfred file action "Send to
+# project folder" or dl/shot in the last 2 minutes, else Finder's selection) into the new folder the same way.
+# Usage: mknew [--mail] [--send|--send-copy] KIND NAME...
+#        mknew --alfred QUERY       Alfred Script Filter JSON (keyword `new`, ctrl-opt-cmd-N; Outlook in front → --mail)
+#        mknew --alfred-send QUERY  the same for keyword `sendtonew`: the files (⌘ copy), or with Outlook in front
+#                                   and nothing stashed the email (⌥ move the files, ⌘ copy them)
 set -euo pipefail
 PATH=/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH
 bin=$(dirname "$(realpath "$0")")
@@ -44,15 +48,29 @@ target() { # KIND NAME → folder (talk: the materials folder)
   esac
 }
 
+# move (send=move) or copy (send=copy) the files from `sendto --take` into DIR; prints how many
+send_files() {
+  local dir=$1 paths=() f
+  while IFS= read -r f; do [ -n "$f" ] && paths+=("$f"); done < <("$bin/sendto" --take)
+  [ ${#paths[@]} -gt 0 ] || { echo 0; return; }
+  if [ "$send" = copy ]; then "$bin/sendto" -c "$dir" "${paths[@]}" >&2; else "$bin/sendto" "$dir" "${paths[@]}" >&2; fi
+  echo "${#paths[@]}"
+}
+
 create() {
-  local mail=$1 kind=$2 name=$3 dir saved=
+  local mail=$1 kind=$2 name=$3 dir saved= sent=0 what
   dir=$(target "$kind" "$name") || die "no name given"
   if [ "$kind" = talk ]; then
-    if [ -n "$mail" ]; then
+    if [ -n "$mail$send" ]; then
       mkdir -p "$dir"
-      saved=$("$bin/outlook-save" "$dir" 2>&1) || { notify "email not saved: $saved"; saved=; }
-      [ -n "$saved" ] && name+=$'\n\n'"Material for the talk (an email and its attachments) is in $dir — read it first."
-      [ -n "$saved" ] || rmdir "$dir" 2>/dev/null || true
+      if [ -n "$mail" ]; then
+        saved=$("$bin/outlook-save" "$dir" 2>&1) || { notify "email not saved: $saved"; saved=; }
+      fi
+      [ -n "$send" ] && sent=$(send_files "$dir")
+      what=${saved:+an email and its attachments}
+      [ "$sent" -gt 0 ] && what+="${what:+, and }$sent file(s)"
+      [ -n "$what" ] && name+=$'\n\n'"Material for the talk ($what) is in $dir — read it first."
+      [ -n "$what" ] || rmdir "$dir" 2>/dev/null || true
     fi
     "$bin/kitty-tmux" --project "$(shortcut_dir presentations)" --name "talk-$(basename "$dir" | cut -c10-)" \
       --claude "/nec-presentation $name"
@@ -64,15 +82,23 @@ create() {
   if [ -n "$mail" ]; then
     saved=$("$bin/outlook-save" "$dir" 2>&1) || { notify "email not saved: $saved"; saved=; }
   fi
-  notify "created ${dir/#$HOME/~}${saved:+ with the email and $(($(wc -l <<<"$saved") - 1)) attachment(s)}"
+  [ -n "$send" ] && sent=$(send_files "$dir")
+  what=${saved:+the email and $(($(wc -l <<<"$saved") - 1)) attachment(s)}
+  [ "$sent" -gt 0 ] && what+="${what:+ and }$sent file(s) ($send)"
+  notify "created ${dir/#$HOME/~}${what:+ with $what}"
   "$bin/kitty-tmux" --project "$dir"
 }
 
-alfred() {
-  local q=$1 first rest kind mail=
+alfred() { # QUERY [send]: for `sendtonew`, also send the files (or the Outlook email) to the new folder
+  local q=$1 sending=${2:-} first rest kind mail= n=0
   read -r first rest <<<"$q" || true
   kind=$(kind_of "$first")
-  "$bin/outlook-save" --frontmost && mail=1
+  if [ -n "$sending" ]; then
+    n=$("$bin/sendto" --files | wc -l | tr -d ' ')
+    ! "$bin/sendto" --stashed && "$bin/outlook-save" --frontmost && mail=1
+  else
+    "$bin/outlook-save" --frontmost && mail=1
+  fi
   {
     if [ -z "$kind" ] || [ -z "$rest" ]; then
       for k in project patent paper code talk; do
@@ -84,7 +110,8 @@ alfred() {
     fi
   } | python3 -I -c '
 import json, os, sys
-mail, home = sys.argv[1] == "1", os.path.expanduser("~")
+mail, home, sending, n = sys.argv[1] == "1", os.path.expanduser("~"), sys.argv[2] == "1", int(sys.argv[3])
+files = f"{n} item" + ("s" if n != 1 else "") if n else "nothing selected in Finder"
 what = {"project": "NEC project (Box)", "patent": "NEC patent (Box)", "paper": "paper in papers/current",
         "code": "code project in ~/code/projects", "talk": "NEC presentation (claude /nec-presentation)"}
 hint = {"talk": "DESCRIPTION"}
@@ -99,20 +126,41 @@ for line in sys.stdin.read().splitlines():
     short = "~" + path[len(home):] if path.startswith(home) else path
     title = f"Presentation: {name}" if kind == "talk" else os.path.basename(path)
     sub = "claude /nec-presentation in ~/code/presentations" if kind == "talk" else f"{what[kind]}: {short}"
-    item = {"title": title, "subtitle": sub, "arg": name, "variables": {"kind": kind, "mail": ""}}
-    if mail:
+    item = {"title": title, "subtitle": sub, "arg": name, "variables": {"kind": kind, "mail": "", "send": ""}}
+    if sending:
+        v = lambda m, s: {"kind": kind, "mail": m, "send": s}
+        copy = {"arg": name, "subtitle": f"{sub}  + copy {files}", "variables": v("", "copy")}
+        if mail:
+            item["subtitle"] += "  + the Outlook email & attachments (⌥ move " + files + ", ⌘ copy)"
+            item["variables"] = v("1", "")
+            item["mods"] = {"alt": {"arg": name, "subtitle": f"{sub}  + move {files}", "variables": v("", "move")}, "cmd": copy}
+        else:
+            item["subtitle"] += f"  + move {files} (⌘ copy)"
+            item["variables"] = v("", "move")
+            item["mods"] = {"cmd": copy}
+    elif mail:
         item["subtitle"] += "  + the Outlook email & attachments (⌥ without)"
         item["variables"]["mail"] = "1"
-        item["mods"] = {"alt": {"arg": name, "subtitle": sub + "  (without the email)", "variables": {"kind": kind, "mail": ""}}}
+        item["mods"] = {"alt": {"arg": name, "subtitle": sub + "  (without the email)", "variables": {"kind": kind, "mail": "", "send": ""}}}
     if kind != "talk" and os.path.exists(path):
         item.update(valid=False, subtitle="already exists: " + short)
     items.append(item)
-print(json.dumps({"items": items}))' "$mail"
+print(json.dumps({"items": items}))' "$mail" "${sending:+1}" "$n"
 }
 
+send=
+mail=
+while :; do
+  case ${1:-} in
+    --mail) mail=1; shift ;;
+    --send | --send-move) send=move; shift ;;
+    --send-copy) send=copy; shift ;;
+    *) break ;;
+  esac
+done
 case ${1:-} in
   --alfred) alfred "${2:-}" ;;
-  --mail) shift; k=$(kind_of "${1:-}"); [ -n "$k" ] || die "unknown kind: ${1:-}"; shift; create 1 "$k" "$*" ;;
-  '' | -h | --help) sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//' ;;
-  *) k=$(kind_of "$1"); [ -n "$k" ] || die "unknown kind: $1"; shift; create "" "$k" "$*" ;;
+  --alfred-send) alfred "${2:-}" send ;;
+  '' | -h | --help) sed -n '2,16p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *) k=$(kind_of "$1"); [ -n "$k" ] || die "unknown kind: $1"; shift; create "$mail" "$k" "$*" ;;
 esac
