@@ -9,6 +9,9 @@
 # (→ `mknew --send`: create it as `new` does, then move Finder's selection (⌘ copy) or the Outlook email there), `dl` / `shot`
 # (→ `recent`: latest downloads / CleanShot captures; dl ↩ opens, shot ↩ sends to a project folder, ⌘ the other,
 # ⌥ reveals in Finder), `term` (ctrl-opt-cmd-T: a plain kitty shell in ~ (↩ straight away) or in a project-dirs folder; ⌥↩ floating),
+# `finder` (a project-dirs folder in a new Finder window in the current AeroSpace workspace; ⌘↩ reveals it in its parent;
+# `finder` with no query also offers "Folder of the open document"), ctrl-opt-cmd-F (the folder of the front app's open document,
+# e.g. Word/PowerPoint/Excel, in a new Finder window with the file selected),
 # `wm` (→ `wm-dash`: workmux dashboard in a centered, floating kitty window), `aero` (→ `aerospace-keys`: every AeroSpace
 # keybinding with its command and comment, fuzzy-found; ↩ runs it), `repo` (→ `gh-repos`: the repos of every gh account on
 # github.com and the NEC GHE.com tenant; ↩ opens, ⌘ copies the ssh clone URL), `alfredinstall` (reruns `alfred-kitty install`), `ak` (menu of all of these: picking one
@@ -19,6 +22,9 @@
 #        alfred-kitty run CMD       run CMD in a new kitty window, staying in an interactive shell (Alfred's terminal)
 #        alfred-kitty projects [Q]  the `proj` items as Alfred script-filter JSON, fuzzy-ranked by Q (fzf)
 #        alfred-kitty terms [Q]     the `term` items: ~ first, then the `proj` folders
+#        alfred-kitty finders [Q]   the `finder` items: the `proj` folders
+#        alfred-kitty finder [--reveal] DIR   DIR in a new Finder window (so AeroSpace puts it in the focused workspace)
+#        alfred-kitty finder --doc  the folder of the front app's document (else Word/PowerPoint/Excel's), file selected
 #        alfred-kitty term [--float] DIR   a new kitty window with a shell in DIR (--float: floating in aerospace)
 #        alfred-kitty search TEXT   open Alfred with TEXT typed in (the file action, `dl`/`shot` → `sendto `, `ak`)
 # The workflow and the AppleScript only call the scripts in ~/bin, so the behaviour lives here, in the dotfiles.
@@ -69,6 +75,8 @@ write_workflow() {
 '$bin/alfred-kitty' search 'sendto '" \
     WF_INSTALL="nohup '$bin/alfred-kitty' install-notify >/dev/null 2>&1 &" \
     WF_TERM_LIST="'$bin/alfred-kitty' terms \"\$1\"" WF_TERM="'$bin/alfred-kitty' term \${float:+--float} \"\$1\"" \
+    WF_FINDER_LIST="'$bin/alfred-kitty' finders \"\$1\"" WF_FINDER="'$bin/alfred-kitty' finder \${reveal:+--reveal} \"\$1\"" \
+    WF_FINDER_DOC="'$bin/alfred-kitty' finder --doc" \
     WF_DASH="'$bin/wm-dash' >/dev/null 2>&1 &" \
     WF_AERO_LIST="'$bin/aerospace-keys' --alfred \"\$1\"" WF_AERO="nohup '$bin/aerospace-keys' run \"\$1\" >/dev/null 2>&1 &" \
     WF_MENU="'$bin/alfred-kitty' search \"\$1\"" \
@@ -127,13 +135,14 @@ ids = ["4B1E6A10-0001-4C1D-9A51-7E2D0C3F0001", "4B1E6A10-0002-4C1D-9A51-7E2D0C3F
        "4B1E6A10-0003-4C1D-9A51-7E2D0C3F0003", "4B1E6A10-0004-4C1D-9A51-7E2D0C3F0004",
        "4B1E6A10-0005-4C1D-9A51-7E2D0C3F0005", "4B1E6A10-0006-4C1D-9A51-7E2D0C3F0006",
        "4B1E6A10-0007-4C1D-9A51-7E2D0C3F0007", "4B1E6A10-0008-4C1D-9A51-7E2D0C3F0008"]
-ids += [f"4B1E6A10-{i:04d}-4C1D-9A51-7E2D0C3F{i:04d}" for i in range(9, 35)]
+ids += [f"4B1E6A10-{i:04d}-4C1D-9A51-7E2D0C3F{i:04d}" for i in range(9, 39)]
 MENU = [("new", "New NEC project / patent / paper / code project / talk (⌃⌥⌘N)", "new "),
         ("sendto", "Move Finder's selection (or save the Outlook email) to a project folder, ⌘ copy (⌃⌥⌘M)", "sendto "),
         ("sendtonew", "New project / patent / paper / code / talk, and send Finder's selection (or the Outlook email) there", "sendtonew "),
         ("dl", "Latest downloads: open, ⌘ send to a project folder", "dl "),
         ("shot", "Latest CleanShot captures: send to a project folder, ⌘ open", "shot "),
         ("proj", "Open a project folder in its tmux session", "proj "),
+        ("finder", "Open a project folder in Finder, in the current workspace (⌘ reveal in its parent); ⌃⌥⌘F: the open document's folder", "finder "),
         ("term", "kitty shell in ~ or a project folder (⌃⌥⌘T)", "term "),
         ("note", "Markdown note in ~/temp, opened in nvim", "note "),
         ("wm", "workmux dashboard in a centered floating kitty window", "wm"),
@@ -174,7 +183,7 @@ plist = {
         script(ids[18], os.environ["WF_RECENT"]),
         keyword(ids[19], "alfredinstall", "Reinstall this workflow", "alfred-kitty install (restarts Alfred)", 2),
         script(ids[20], os.environ["WF_INSTALL"]),
-        listfilter(ids[21], "ak", "alfred-kitty commands", "new, sendto, sendtonew, dl, shot, proj, term, note, wm, aero, repo, alfredinstall", MENU),
+        listfilter(ids[21], "ak", "alfred-kitty commands", "new, sendto, sendtonew, dl, shot, proj, finder, term, note, wm, aero, repo, alfredinstall", MENU),
         script(ids[22], os.environ["WF_MENU"]),
         keyword(ids[23], "wm", "workmux dashboard", "In a centered, floating kitty window", 2),
         script(ids[24], os.environ["WF_DASH"]),
@@ -192,6 +201,11 @@ plist = {
                      "sendtonew KIND NAME: create it (as `new`), move Finder's selection there (⌘ copy); Outlook in front: its email",
                      os.environ["WF_SENDNEW_LIST"], alfred_filters=False, running="…"),
         script(ids[33], os.environ["WF_SENDNEW"]),
+        scriptfilter(ids[34], "finder", "Project folder in Finder", "Open it in a new Finder window in the current workspace; ⌘↩ reveal in its parent",
+                     os.environ["WF_FINDER_LIST"], alfred_filters=False, running="Listing folders…"),
+        script(ids[35], os.environ["WF_FINDER"]),
+        hotkey(ids[36], 3, "F"),
+        script(ids[37], os.environ["WF_FINDER_DOC"]),
     ],
     # ⌘↩ on a project: the "Open in tmux" script (kitty-tmux PATH, yazi)
     "connections": {ids[0]: [link(ids[1])], ids[2]: [link(ids[3])], ids[4]: [link(ids[5])],
@@ -203,7 +217,8 @@ plist = {
                     ids[17]: [link(ids[18]), link(ids[18], CMD), link(ids[18], OPT)], ids[19]: [link(ids[20])], ids[21]: [link(ids[22])],
                     ids[23]: [link(ids[24])], ids[25]: [link(ids[26]), link(ids[26], OPT)], ids[27]: [link(ids[25])],
                     ids[28]: [link(ids[29])], ids[30]: [link(ids[31]), link(ids[31], CMD), link(ids[31], OPT)],
-                    ids[32]: [link(ids[33]), link(ids[33], CMD), link(ids[33], OPT)]},
+                    ids[32]: [link(ids[33]), link(ids[33], CMD), link(ids[33], OPT)],
+                    ids[34]: [link(ids[35]), link(ids[35], CMD)], ids[36]: [link(ids[37])]},
     "uidata": {ids[0]: {"xpos": 30, "ypos": 15}, ids[1]: {"xpos": 230, "ypos": 15},
                ids[2]: {"xpos": 30, "ypos": 150}, ids[3]: {"xpos": 230, "ypos": 150},
                ids[4]: {"xpos": 30, "ypos": 285}, ids[5]: {"xpos": 230, "ypos": 285},
@@ -218,7 +233,9 @@ plist = {
                ids[27]: {"xpos": 30, "ypos": 1635}, ids[25]: {"xpos": 230, "ypos": 1635}, ids[26]: {"xpos": 430, "ypos": 1635},
                ids[28]: {"xpos": 30, "ypos": 1770}, ids[29]: {"xpos": 230, "ypos": 1770},
                ids[30]: {"xpos": 30, "ypos": 1905}, ids[31]: {"xpos": 230, "ypos": 1905},
-               ids[32]: {"xpos": 30, "ypos": 2040}, ids[33]: {"xpos": 230, "ypos": 2040}},
+               ids[32]: {"xpos": 30, "ypos": 2040}, ids[33]: {"xpos": 230, "ypos": 2040},
+               ids[34]: {"xpos": 30, "ypos": 2175}, ids[35]: {"xpos": 230, "ypos": 2175},
+               ids[36]: {"xpos": 30, "ypos": 2310}, ids[37]: {"xpos": 230, "ypos": 2310}},
 }
 with open(sys.argv[1], "wb") as f:
     plistlib.dump(plist, f)
@@ -250,7 +267,7 @@ install() {
 	do shell script quoted form of \"$bin/alfred-kitty\" & \" run \" & quoted form of q & \" > /dev/null 2>&1 &\"
 end alfred_script"
   restart_alfred
-  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keywords \"note\", \"proj\", \"new\" (⌃⌥⌘N), \"sendto\" (⌃⌥⌘M), \"sendtonew\", \"term\" (⌃⌥⌘T), \"dl\", \"shot\", \"wm\", \"aero\", \"repo\", \"alfredinstall\", \"ak\" (menu) installed; terminal commands now run in kitty"
+  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keywords \"note\", \"proj\", \"new\" (⌃⌥⌘N), \"sendto\" (⌃⌥⌘M), \"sendtonew\", \"finder\", \"term\" (⌃⌥⌘T), \"dl\", \"shot\", \"wm\", \"aero\", \"repo\", \"alfredinstall\", \"ak\" (menu) installed; terminal commands now run in kitty"
 }
 
 uninstall() {
@@ -269,14 +286,16 @@ run_cmd() {
 }
 
 # Script-filter items for `proj`: title = folder name, fuzzy-matched (alfred-fuzzy: fzf) on the ~ path by the query $1.
-# term=1: the `term` items instead: ~ first (so ↩ on an empty query opens it), no ⌘ yazi
+# term=1: the `term` items instead: ~ first (so ↩ on an empty query opens it), no ⌘ yazi; finder=1: ⌘ reveals in Finder
 projects() {
   "$bin/project-dirs" | python3 -I -c '
 import json, os, sys
-home, term = os.path.expanduser("~"), sys.argv[1] == "1"
+home, term, finder = os.path.expanduser("~"), sys.argv[1] == "1", sys.argv[2] == "1"
 float_mod = lambda p: {"alt": {"arg": p, "subtitle": "Floating kitty window", "variables": {"float": "1"}}}
-items = [{"uid": home, "title": "Home", "subtitle": "~", "arg": home, "type": "file:skipcheck", "match": "~ home",
-          "mods": float_mod(home)}] if term else []
+doc = [{"uid": "--doc", "title": "Folder of the open document", "subtitle": "The document of the front app (else Word / PowerPoint / Excel), selected in Finder (⌃⌥⌘F)",
+        "arg": "--doc", "match": "document open word powerpoint excel"}] if finder else []
+items = doc + ([{"uid": home, "title": "Home", "subtitle": "~", "arg": home, "type": "file:skipcheck", "match": "~ home",
+          "mods": float_mod(home)}] if term else [])
 for line in sys.stdin:
     path = line.rstrip("\n")
     if not path:
@@ -286,10 +305,53 @@ for line in sys.stdin:
     if term and path == home:
         continue
     item = {"uid": path, "title": name, "subtitle": short, "arg": path, "type": "file:skipcheck", "match": short}
-    item["mods"] = float_mod(path) if term else {"cmd": {"arg": path, "subtitle": "Open in yazi in its tmux session"}}
+    if finder:
+        item["mods"] = {"cmd": {"arg": path, "subtitle": "Reveal it in its parent folder", "variables": {"reveal": "1"}}}
+    else:
+        item["mods"] = float_mod(path) if term else {"cmd": {"arg": path, "subtitle": "Open in yazi in its tmux session"}}
     items.append(item)
 json.dump({"items": items}, sys.stdout)
-' "${term:-0}" | "$bin/alfred-fuzzy" "${1:-}"
+' "${term:-0}" "${finder:-0}" | "$bin/alfred-fuzzy" "${1:-}"
+}
+
+# The file of the front app's document: its window's AXDocument (most document apps, Office included), else the
+# active document of Word, PowerPoint or Excel (first running one with a saved document). Prints a POSIX path.
+front_doc() {
+  osascript <<'AS' 2>/dev/null | sed -n '/^\//p' | grep .
+on posixOf(f)
+  if f is missing value then return ""
+  set f to f as text
+  if f starts with "file://" then
+    return do shell script "python3 -I -c 'import sys, urllib.parse; print(urllib.parse.unquote(urllib.parse.urlparse(sys.argv[1]).path))' " & quoted form of f
+  else if f contains ":" and f does not start with "http" then
+    return POSIX path of f
+  end if
+  return ""
+end posixOf
+set p to ""
+try
+  tell application "System Events"
+    set front to first process whose frontmost is true
+    if name of front is not "Alfred" then set p to my posixOf(value of attribute "AXDocument" of window 1 of front)
+  end tell
+end try
+if p is "" then
+  repeat with spec in {{"Microsoft Word", "doc"}, {"Microsoft PowerPoint", "ppt"}, {"Microsoft Excel", "xls"}}
+    if p is "" and application (item 1 of spec) is running then
+      try
+        if item 2 of spec is "doc" then
+          tell application "Microsoft Word" to set p to my posixOf(full name of active document)
+        else if item 2 of spec is "ppt" then
+          tell application "Microsoft PowerPoint" to set p to my posixOf(full name of active presentation)
+        else
+          tell application "Microsoft Excel" to set p to my posixOf(full name of active workbook)
+        end if
+      end try
+    end if
+  end repeat
+end if
+return p
+AS
 }
 
 case ${1:-} in
@@ -301,11 +363,37 @@ case ${1:-} in
   run) shift; run_cmd "$*" ;;
   projects) projects "${2:-}" ;;
   terms) term=1 projects "${2:-}" ;;
+  finders) finder=1 projects "${2:-}" ;;
+  finder) shift
+    if [ "${1:-}" = --doc ]; then
+      doc=$(front_doc) || { osascript -e 'display notification "no open document with a file (front app, Word, PowerPoint, Excel)" with title "finder"'; exit 1; }
+      set -- --reveal "$doc"
+    fi
+    # a new window (not `open DIR`, which may reuse a Finder window or tab on another workspace), so AeroSpace
+    # puts it in the focused workspace; --reveal: the parent folder with DIR selected
+    reveal=0
+    [ "${1:-}" = --reveal ] && { shift; reveal=1; }
+    osascript - "${1:?alfred-kitty finder DIR}" "$reveal" <<'AS' >/dev/null
+on run argv
+  set dir to POSIX file (item 1 of argv) as alias
+  tell application "Finder"
+    if item 2 of argv is "1" then
+      set w to make new Finder window to (container of dir)
+      select dir
+    else
+      set w to make new Finder window to dir
+    end if
+    set index of w to 1
+    activate
+  end tell
+end run
+AS
+    ;;
   term) shift
     # --float: the title aerospace's on-window-detected rule floats (--title also keeps the shell from retitling it)
     title=()
     [ "${1:-}" = --float ] && { shift; title=(--title "kitty-float ${1:-$HOME}"); }
     nohup "$kitty_bin" --single-instance "${title[@]}" --directory "${1:-$HOME}" >/dev/null 2>&1 & ;;
   search) osascript -e "tell application id \"com.runningwithcrayons.Alfred\" to search \"$2\"" ;;
-  *) sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *) sed -n '2,21p' "$0" | sed 's/^# \{0,1\}//' ;;
 esac
