@@ -433,7 +433,16 @@ return {
 		cmd = "Copilot",
 		event = "InsertEnter",
 		config = function()
+			-- Account: `copilot-account yassernec|yassernec-personal` writes "LABEL HOST" to ~/.config/copilot-account;
+			-- without it the NEC GHE.com tenant (yassernec). github.com needs no auth_provider_url.
+			local copilot_host = "nec-corporation-emu.ghe.com"
+			local state = io.open((vim.env.XDG_CONFIG_HOME or vim.fn.expand("~/.config")) .. "/copilot-account")
+			if state then
+				copilot_host = (state:read("l") or ""):match("^%S+%s+(%S+)") or copilot_host
+				state:close()
+			end
 			require("copilot").setup({
+				auth_provider_url = copilot_host ~= "github.com" and ("https://" .. copilot_host .. "/") or nil,
 				panel = {
 					enabled = false,
 					auto_refresh = false,

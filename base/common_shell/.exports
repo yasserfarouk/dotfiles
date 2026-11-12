@@ -258,3 +258,11 @@ if [ "$(uname -s)" = "Darwin" ]; then
     export NODE_EXTRA_CA_CERTS="$MACOS_CA_BUNDLE"
   fi
 fi
+# GitHub Copilot CLI account (~/bin/copilot-account writes "LABEL HOST" to ~/.config/copilot-account; default the
+# NEC GHE.com tenant, "yassernec"). github.com (yassernec-personal) is the CLI's own default, so nothing is exported.
+_copilot_host=nec-corporation-emu.ghe.com
+if [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/copilot-account" ]; then
+	read -r _copilot_label _copilot_host <"${XDG_CONFIG_HOME:-$HOME/.config}/copilot-account"
+fi
+if [ "${_copilot_host:-github.com}" = github.com ]; then unset COPILOT_GH_HOST; else export COPILOT_GH_HOST=$_copilot_host; fi
+unset _copilot_label _copilot_host

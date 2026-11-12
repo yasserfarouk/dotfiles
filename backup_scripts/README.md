@@ -330,7 +330,7 @@ Helper to add repositories to the ignore list.
 ### 1. GitHub Accounts
 Edit `update_git_repos.sh` line ~40:
 ```bash
-MY_GITHUB_ACCOUNTS=("yasserfarouk" "autoneg" "yassernec")
+MY_GITHUB_ACCOUNTS=("yasserfarouk" "autoneg" "yassernec-personal" "yassernec")  # yassernec: old name of yassernec-personal (old remotes)
 ```
 
 ### 2. Code Directory

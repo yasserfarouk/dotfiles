@@ -87,7 +87,7 @@ GITHUB_API_DELAY=3  # seconds between GitHub repo creations
 MAX_GITHUB_REPOS_PER_RUN=50  # Safety limit to prevent abuse
 
 # My GitHub usernames/organizations
-MY_GITHUB_ACCOUNTS=("yasserfarouk" "autoneg" "yassernec")
+MY_GITHUB_ACCOUNTS=("yasserfarouk" "autoneg" "yassernec-personal" "yassernec")  # yassernec: old name of yassernec-personal (old remotes)
 
 # Function to check if a remote URL belongs to my accounts
 is_my_repo() {
