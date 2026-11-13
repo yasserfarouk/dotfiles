@@ -14,7 +14,7 @@
 # e.g. Word/PowerPoint/Excel, in a new Finder window with the file selected),
 # `wm` (→ `wm-dash`: workmux dashboard in a centered, floating kitty window), `aero` (→ `aerospace-keys`: every AeroSpace
 # keybinding with its command and comment, fuzzy-found; ↩ runs it), `repo` (→ `gh-repos`: the repos of every gh account on
-# github.com and the NEC GHE.com tenant; ↩ opens, ⌘ copies the ssh clone URL), `alfredinstall` (reruns `alfred-kitty install`), `ak` (menu of all of these: picking one
+# github.com and the NEC GHE.com tenant; ↩ opens, ⌘ copies the ssh clone URL), `alfredinstall` (reruns `alfred-kitty install`), `go` (menu of all of these: picking one
 # opens Alfred on its keyword), and kitty as Alfred's terminal (Features > Terminal > Custom), so `>cmd` and workflow terminal commands run in kitty.
 # Usage: alfred-kitty install       write the workflow into Alfred's preferences, set the terminal, restart Alfred
 #        alfred-kitty install-notify   the same, then a notification (the `alfredinstall` keyword)
@@ -26,7 +26,7 @@
 #        alfred-kitty finder [--reveal] DIR   DIR in a new Finder window (so AeroSpace puts it in the focused workspace)
 #        alfred-kitty finder --doc  the folder of the front app's document (else Word/PowerPoint/Excel's), file selected
 #        alfred-kitty term [--float] DIR   a new kitty window with a shell in DIR (--float: floating in aerospace)
-#        alfred-kitty search TEXT   open Alfred with TEXT typed in (the file action, `dl`/`shot` → `sendto `, `ak`)
+#        alfred-kitty search TEXT   open Alfred with TEXT typed in (the file action, `dl`/`shot` → `sendto `, `go`)
 # The workflow and the AppleScript only call the scripts in ~/bin, so the behaviour lives here, in the dotfiles.
 set -euo pipefail
 alfred_support=$HOME/Library/Application\ Support/Alfred
@@ -185,7 +185,7 @@ plist = {
         script(ids[18], os.environ["WF_RECENT"]),
         keyword(ids[19], "alfredinstall", "Reinstall this workflow", "alfred-kitty install (restarts Alfred)", 2),
         script(ids[20], os.environ["WF_INSTALL"]),
-        listfilter(ids[21], "ak", "alfred-kitty commands", "new, sendto, sendtonew, dl, lastdl, shot, proj, finder, term, note, wm, aero, repo, alfredinstall", MENU),
+        listfilter(ids[21], "go", "alfred-kitty commands", "new, sendto, sendtonew, dl, lastdl, shot, proj, finder, term, note, wm, aero, repo, alfredinstall", MENU),
         script(ids[22], os.environ["WF_MENU"]),
         keyword(ids[23], "wm", "workmux dashboard", "In a centered, floating kitty window", 2),
         script(ids[24], os.environ["WF_DASH"]),
@@ -272,7 +272,7 @@ install() {
 	do shell script quoted form of \"$bin/alfred-kitty\" & \" run \" & quoted form of q & \" > /dev/null 2>&1 &\"
 end alfred_script"
   restart_alfred
-  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keywords \"note\", \"proj\", \"new\" (⌃⌥⌘N), \"sendto\" (⌃⌥⌘M), \"sendtonew\", \"finder\", \"term\" (⌃⌥⌘T), \"dl\", \"lastdl\", \"shot\", \"wm\", \"aero\", \"repo\", \"alfredinstall\", \"ak\" (menu) installed; terminal commands now run in kitty"
+  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keywords \"note\", \"proj\", \"new\" (⌃⌥⌘N), \"sendto\" (⌃⌥⌘M), \"sendtonew\", \"finder\", \"term\" (⌃⌥⌘T), \"dl\", \"lastdl\", \"shot\", \"wm\", \"aero\", \"repo\", \"alfredinstall\", \"go\" (menu) installed; terminal commands now run in kitty"
 }
 
 uninstall() {

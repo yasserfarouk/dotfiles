@@ -4,7 +4,7 @@
 # matched on its "match" field, else its title; paths (keys starting with / or ~) use fzf's path scheme, so
 # hits in the last path component rank first; other items keep their order on equal scores. An empty QUERY
 # passes the items through in their order.
-# Used by the alfred-kitty script filters (proj, sendto, dl, shot, ak), which turn Alfred's own filtering off.
+# Used by the alfred-kitty script filters (proj, sendto, dl, shot, go), which turn Alfred's own filtering off.
 # Usage: ... | alfred-fuzzy [--limit N] QUERY
 set -euo pipefail
 
