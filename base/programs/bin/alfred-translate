@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Inline translation in Alfred: gives the Translate workflow (dev.nikitadev.translate, Google Translate API)
 # its own keyword so Alfred's built-in `translate` web search (opens translate.google.com in the browser)
-# keeps working, and patches main.py so each result carries large-type/copy text: `tr TEXT` shows the
-# translation as the result title, ↩ copies, ⇧↩ pastes, ⌥↩ Text View, ⌘L large-type popup, ⌘C copy.
+# keeps working, and patches main.py so the translation is wrapped over several result rows in Alfred's normal font (all of it
+# visible; each row carries the whole text as large-type/copy text): `tr TEXT` shows the translation, ↩ (with a notification) or ⌘C on any row copies all of it, ⇧↩ pastes, ⌥↩ Text View (and copies it), ⌘L large-type popup.
 # Languages: output_language en (any other language comes out English) / input_language ja (used when the text
 # already is English).
 # Idempotent; re-run after the workflow is updated.
@@ -20,22 +20,87 @@ plutil -replace keyword -string "$kw" "$prefs"
 plutil -replace output_language -string en "$prefs"
 plutil -replace input_language -string ja "$prefs"
 f=$wf/main.py
-if grep -q '"largetype"' "$f"; then
-  echo "already patched: $f"
-else
-  python3 - "$f" <<'PY'
-import sys
+# replace generate_worflow_output (upstream or an older patch) with one that wraps the translation over several
+# result rows in Alfred's normal font, so all of it is visible; ↩ on any row copies the whole text
+python3 - "$f" <<'PY'
+import re, sys
 p = sys.argv[1]
 s = open(p).read()
-old = '''                "arg": translation,
-            }'''
-new = '''                "arg": translation,
+new = r"""def _wrap(text, width=WRAP_COLS):
+    # alfred-translate: split into rows of about `width` columns (CJK characters count 2), at a space when one
+    # falls in the last 40% of the row
+    import unicodedata
+    rows = []
+    for para in text.splitlines() or [""]:
+        line, w, cut, cutw = "", 0, -1, 0
+        for ch in para:
+            line += ch
+            w += 2 if unicodedata.east_asian_width(ch) in "WF" else 1
+            if ch == " ":
+                cut, cutw = len(line), w
+            if w > width:
+                if cut > 0 and cutw >= width * 0.6:  # a space late enough in the row, else break anywhere (CJK)
+                    rows.append(line[:cut].rstrip()); line = line[cut:]
+                else:
+                    rows.append(line[:-1]); line = line[-1:]
+                w = sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in line)
+                cut, cutw = -1, 0
+        if line.strip():
+            rows.append(line.rstrip())
+    return rows or [text]
+
+
+def generate_worflow_output(translations: List[str]):
+    items = []
+    for translation in translations:
+        rows = _wrap(translation)
+        for i, row in enumerate(rows):
+            items.append({
+                "title": row,
+                "subtitle": "↩ or ⌘C copy all  ⇧↩ paste  ⌥↩ Text View (+ copy)  ⌘L large type",
+                "arg": translation,
                 "text": {"largetype": translation, "copy": translation},
-            }'''
-if old not in s:
+            })
+    return json.dumps({"items": items}, ensure_ascii=False)
+
+
+"""
+m = re.search(r"(def _wrap\(.*?)?def generate_worflow_output\(.*?\n\n\n(?=if __name__)", s, re.S)
+if not m:
     sys.exit("alfred-translate: main.py changed upstream; patch needs updating")
-open(p, 'w').write(s.replace(old, new))
-print("patched", f"{p}")
+s = s[:m.start()] + new + s[m.end():]
+if "WRAP_COLS =" not in s:
+    s = s.replace("\n\nclass Translate:", "\n\nWRAP_COLS = 56  # alfred-translate: columns per result row\n\n\nclass Translate:", 1)
+open(p, "w").write(s)
+print("patched", p)
 PY
-fi
+# info.plist: a notification after ↩ copies (Alfred's clipboard output is silent) and the keys in the Text View footer
+python3 - "$wf/info.plist" <<'PY'
+import plistlib, sys
+p = sys.argv[1]
+d = plistlib.load(open(p, "rb"))
+objs = {o["uid"]: o for o in d["objects"]}
+copy = next(u for u, o in objs.items() if o["type"] == "alfred.workflow.output.clipboard" and not o["config"].get("autopaste"))
+note = "A1F7E000-0000-4000-8000-00000000C0B1"
+if note not in objs:
+    d["objects"].append({"uid": note, "type": "alfred.workflow.output.notification", "version": 1,
+                         "config": {"lastpathcomponent": False, "onlyshowifquerypopulated": True,
+                                    "removeextension": False, "text": "{query}", "title": "Translation copied"}})
+    d.setdefault("uidata", {})[note] = {"xpos": 900, "ypos": 200}
+links = d["connections"].setdefault(copy, [])
+if not any(l["destinationuid"] == note for l in links):
+    links.append({"destinationuid": note, "modifiers": 0, "modifiersubtext": "", "vitoclose": False})
+# ⌥↩ (Text View) copies the whole translation too, so the Text View needs no key to copy it
+sf = next(u for u, o in objs.items() if o["type"] == "alfred.workflow.input.scriptfilter")
+sflinks = d["connections"].setdefault(sf, [])
+if not any(l["destinationuid"] == copy and l["modifiers"] == 524288 for l in sflinks):
+    sflinks.append({"destinationuid": copy, "modifiers": 524288, "modifiersubtext": "Open in Text View (copied)", "vitoclose": False})
+for l in sflinks:
+    if l["modifiers"] == 524288:
+        l["modifiersubtext"] = "Open in Text View (copied)"
+for o in d["objects"]:
+    if o["type"] == "alfred.workflow.userinterface.text":
+        o["config"]["footertext"] = "Copied to the clipboard · ⌘C copies a selection"
+plistlib.dump(d, open(p, "wb"))
+PY
 echo "Translate workflow keyword: $kw (Alfred's built-in 'translate' still opens the browser)"

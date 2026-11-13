@@ -149,6 +149,18 @@ keymap("n", "<leader>bj", "<cmd>bfirst<cr>", { desc = "first" })
 keymap("n", "<leader>bn", "<cmd>bnext<cr>", { desc = "next-buffer" })
 keymap("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "previous-buffer" })
 keymap("n", "<leader>bd", "<cmd>Bdelete<cr>", { desc = "delete-buffer" })
+-- reveal the buffer's file in Finder (selected); elsewhere open its folder in the file manager
+keymap("n", "<leader>bf", function()
+	local file = vim.fn.expand("%:p")
+	if file == "" then
+		return vim.notify("buffer has no file", vim.log.levels.WARN)
+	end
+	if vim.fn.has("mac") == 1 then
+		vim.system({ "open", "-R", file })
+	else
+		vim.ui.open(vim.fn.fnamemodify(file, ":h"))
+	end
+end, { desc = "reveal in Finder" })
 -- folding operations
 keymap("n", "<leader>FO", "<cmd>set foldlevel=20<cr>", { desc = "open all" })
 keymap("n", "<leader>FC", "<cmd>set foldlevel=0<cr>", { desc = "close all" })
