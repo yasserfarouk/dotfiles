@@ -5,7 +5,9 @@
 #   paper    NAME   paper            papers_current/YYYY<venue_name>, git init
 #   code     NAME   code project     ~/code/projects/<name-in-kebab-case>, git init
 #   talk     DESC   NEC presentation claude "/nec-presentation DESC" in ~/code/presentations (the skill names the deck)
-# A NAME that already starts with a year keeps it. --mail also saves the email open in Outlook, with its attachments,
+# A NAME that already starts with a year keeps it. Every new folder (not a talk) gets a PLAN.md that is linked into
+# Koma (`koma source add`) under the matching task: project → nec-projects, patent → patents, paper → papers,
+# code → dev (KOMA_PARENT_<KIND> overrides one); the agents there register their todos in it. --mail also saves the email open in Outlook, with its attachments,
 # into the new folder (for a talk: presentations/materials/YYYYMMDD-<slug>/, named in the prompt).
 # --send / --send-copy moves / copies the files `sendto --take` gives (stashed by the Alfred file action "Send to
 # project folder" or dl/shot in the last 2 minutes, else Finder's selection) into the new folder the same way.
@@ -48,6 +50,28 @@ target() { # KIND NAME → folder (talk: the materials folder)
   esac
 }
 
+# PLAN.md in DIR for Koma: an unscheduled placeholder task under the kind's Koma task, linked as a source
+koma_parent() {
+  local v="KOMA_PARENT_$(tr a-z A-Z <<<"$1")"
+  [ -n "${!v:-}" ] && { echo "${!v}"; return; }
+  case $1 in project) echo nec-projects ;; patent) echo 95pe ;; paper) echo jj66 ;; code) echo 366y ;; esac
+}
+plan_file() { # KIND DIR → prints the Koma id (empty if Koma isn't there)
+  local kind=$1 dir=$2 base id parent n=1 try
+  base=$(basename "$dir")
+  parent=$(koma_parent "$kind")
+  case $kind in project) id=nec-$base ;; patent) id=patent-$base ;; paper) id=paper-$base ;; *) id=$base ;; esac
+  id=$(tr 'A-Z' 'a-z' <<<"$id")
+  try=$id
+  if command -v koma >/dev/null; then
+    while koma op tasks.get "{\"id\": \"$try\"}" >/dev/null 2>&1; do n=$((n + 1)); try=$id-$n; done
+  fi
+  printf -- '---\nid: %s\nparent: %s\nnosched: true\n---\n# %s\n\n' "$try" "$parent" "$base" >"$dir/PLAN.md"
+  command -v koma >/dev/null || { notify "koma not found: PLAN.md not linked"; return; }
+  koma source add "$dir/PLAN.md" >&2 || { notify "koma source add failed for $dir/PLAN.md"; return; }
+  echo "$try"
+}
+
 # move (send=move) or copy (send=copy) the files from `sendto --take` into DIR; prints how many
 send_files() {
   local dir=$1 paths=() f
@@ -58,7 +82,7 @@ send_files() {
 }
 
 create() {
-  local mail=$1 kind=$2 name=$3 dir saved= sent=0 what
+  local mail=$1 kind=$2 name=$3 dir saved= sent=0 what kid
   dir=$(target "$kind" "$name") || die "no name given"
   if [ "$kind" = talk ]; then
     if [ -n "$mail$send" ]; then
@@ -79,13 +103,14 @@ create() {
   [ -e "$dir" ] && die "already exists: ${dir/#$HOME/~}"
   mkdir -p "$dir"
   case $kind in paper | code) git -C "$dir" init -q ;; esac
+  kid=$(plan_file "$kind" "$dir")
   if [ -n "$mail" ]; then
     saved=$("$bin/outlook-save" "$dir" 2>&1) || { notify "email not saved: $saved"; saved=; }
   fi
   [ -n "$send" ] && sent=$(send_files "$dir")
   what=${saved:+the email and $(($(wc -l <<<"$saved") - 1)) attachment(s)}
   [ "$sent" -gt 0 ] && what+="${what:+ and }$sent file(s) ($send)"
-  notify "created ${dir/#$HOME/~}${what:+ with $what}"
+  notify "created ${dir/#$HOME/~}${what:+ with $what}${kid:+, Koma ^$kid}"
   "$bin/kitty-tmux" --project "$dir"
 }
 
@@ -161,6 +186,6 @@ done
 case ${1:-} in
   --alfred) alfred "${2:-}" ;;
   --alfred-send) alfred "${2:-}" send ;;
-  '' | -h | --help) sed -n '2,16p' "$0" | sed 's/^# \{0,1\}//' ;;
+  '' | -h | --help) sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//' ;;
   *) k=$(kind_of "$1"); [ -n "$k" ] || die "unknown kind: $1"; shift; create "$mail" "$k" "$*" ;;
 esac
