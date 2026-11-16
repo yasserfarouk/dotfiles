@@ -5,6 +5,8 @@
 # (--hold), so ↑↩ reconnects. TERM is xterm-256color: the remote hosts lack kitty's terminfo.
 # Usage: sshto [--window] [QUERY]     (a QUERY matching one target connects without asking)
 #        sshto --list                 (the targets, one per line)
+#        sshto [--window] --exact LABEL   (connect to exactly that target, no fzf; used by Alfred)
+#        sshto --alfred [QUERY]       (the targets as Alfred script-filter JSON, fuzzy-ranked; ⌥ = own window)
 # Targets: edit TARGETS below ("label<TAB>command"). DAIBA needs the daiba/sshrelay hosts in ~/.ssh/config.
 set -euo pipefail
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
@@ -24,12 +26,29 @@ kitty_app=/Applications/kitty.app/Contents/MacOS
 kitty=$kitty_app/kitty kitten=$kitty_app/kitten
 [ -x "$kitty" ] || { kitty=$(command -v kitty) kitten=$(command -v kitten); } || { echo "sshto: kitty not found" >&2; exit 1; }
 
-window=
+window= exact=
 [ "${1:-}" = --window ] && { window=1; shift; }
 [ "${1:-}" = --list ] && { cut -f1 <<<"$TARGETS"; exit 0; }
+if [ "${1:-}" = --alfred ]; then
+  printf '%s' "$TARGETS" | python3 -I -c '
+import json, sys
+items = []
+for line in sys.stdin:
+    label = line.split("\t", 1)[0]
+    items.append({"uid": label, "title": label, "arg": label, "subtitle": "New kitty tab",
+                  "mods": {"alt": {"arg": label, "subtitle": "Own kitty window", "variables": {"window": "1"}}}})
+json.dump({"items": items}, sys.stdout)' | "$(dirname "$0")/alfred-fuzzy" "${2:-}"
+  exit 0
+fi
+[ "${1:-}" = --exact ] && { exact=${2:?sshto --exact LABEL}; shift 2; }
 
+if [ -n "$exact" ]; then
+  pick=$(awk -F'\t' -v l="$exact" '$1 == l' <<<"$TARGETS")
+  [ -n "$pick" ] || { echo "sshto: no target '$exact'" >&2; exit 1; }
+else
 pick=$(fzf --delimiter='\t' --with-nth=1 --select-1 --exit-0 --query="$*" --height=40% --reverse \
   --prompt='ssh> ' --header='enter: new kitty tab' <<<"$TARGETS") || exit 0
+fi
 label=${pick%%$'\t'*} cmd=${pick#*$'\t'}
 
 # the live kitty: a listen socket (kitty.conf listen_on unix:/tmp/mykitty → /tmp/mykitty-PID) whose pid runs
