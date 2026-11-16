@@ -14,6 +14,7 @@
 # e.g. Word/PowerPoint/Excel, in a new Finder window with the file selected),
 # `jpsnip` / `jptr` / `jpshow` (→ `screen-translate text`, `screen-translate`, `screen-translate show`, the AeroSpace ⌃⌥⌘O / J / L: snip a screen region,
 # copy its text (OCR, Japanese too) / copy its ja ↔ en translation / show the translation in a floating panel),
+# `pypi TEXT` (search pypi.org in the browser),
 # `dictate` (→ `koma-dictate`, the AeroSpace ⌃⌥⌘D: Alfred on Koma's `t` + Handy recording),
 # `ssh` (→ `sshto`: fuzzy-pick an ssh target, ↩ opens it in a new kitty tab, ⌥↩ in its own window),
 # `wm` (→ `wm-dash`: workmux dashboard in a centered, floating kitty window), `aero` (→ `aerospace-keys`: every AeroSpace
@@ -96,6 +97,7 @@ esac" \
     WF_JPSNIP="nohup '$bin/screen-translate' text >/dev/null 2>&1 &" \
     WF_JPTR="nohup '$bin/screen-translate' >/dev/null 2>&1 &" \
     WF_JPSHOW="nohup '$bin/screen-translate' show >/dev/null 2>&1 &" \
+    WF_PYPI="open \"https://pypi.org/search/?q=\$(python3 -I -c 'import sys, urllib.parse; print(urllib.parse.quote_plus(sys.argv[1]))' \"\$1\")\"" \
     WF_DICTATE="(sleep 0.3; '$bin/koma-dictate') >/dev/null 2>&1 &" \
     WF_FUZZY="'$bin/alfred-fuzzy'" \
     WF_RECENT="case \$act in
@@ -145,7 +147,7 @@ ids = ["4B1E6A10-0001-4C1D-9A51-7E2D0C3F0001", "4B1E6A10-0002-4C1D-9A51-7E2D0C3F
        "4B1E6A10-0003-4C1D-9A51-7E2D0C3F0003", "4B1E6A10-0004-4C1D-9A51-7E2D0C3F0004",
        "4B1E6A10-0005-4C1D-9A51-7E2D0C3F0005", "4B1E6A10-0006-4C1D-9A51-7E2D0C3F0006",
        "4B1E6A10-0007-4C1D-9A51-7E2D0C3F0007", "4B1E6A10-0008-4C1D-9A51-7E2D0C3F0008"]
-ids += [f"4B1E6A10-{i:04d}-4C1D-9A51-7E2D0C3F{i:04d}" for i in range(9, 51)]
+ids += [f"4B1E6A10-{i:04d}-4C1D-9A51-7E2D0C3F{i:04d}" for i in range(9, 53)]
 MENU = [("new", "New NEC project / patent / paper / code project / talk (⌃⌥⌘N)", "new "),
         ("sendto", "Move Finder's selection (or save the Outlook email) to a project folder, ⌘ copy (⌃⌥⌘M)", "sendto "),
         ("sendtonew", "New project / patent / paper / code / talk, and send Finder's selection (or the Outlook email) there", "sendtonew "),
@@ -164,6 +166,7 @@ MENU = [("new", "New NEC project / patent / paper / code project / talk (⌃⌥�
         ("jptr", "Snip a screen region, copy its translation ja ↔ en (⌃⌥⌘J)", "jptr"),
         ("jpshow", "Snip a screen region, show its translation in a floating panel (⌃⌥⌘L)", "jpshow"),
         ("dictate", "Dictate a Koma task: Alfred `t` + Handy recording, ⌘Y stops, ↩ adds (⌃⌥⌘D)", "dictate"),
+        ("pypi", "Search the Python Package Index", "pypi "),
         ("alfredinstall", "Reinstall this workflow (restarts Alfred)", "alfredinstall")]
 plist = {
     "bundleid": "com.yasser.alfred-kitty",
@@ -199,7 +202,7 @@ plist = {
         script(ids[18], os.environ["WF_RECENT"]),
         keyword(ids[19], "alfredinstall", "Reinstall this workflow", "alfred-kitty install (restarts Alfred)", 2),
         script(ids[20], os.environ["WF_INSTALL"]),
-        listfilter(ids[21], "go", "alfred-kitty commands", "new, sendto, sendtonew, dl, lastdl, shot, proj, finder, term, ssh, note, wm, aero, repo, jpsnip, jptr, jpshow, dictate, alfredinstall", MENU),
+        listfilter(ids[21], "go", "alfred-kitty commands", "new, sendto, sendtonew, dl, lastdl, shot, proj, finder, term, ssh, note, wm, aero, repo, jpsnip, jptr, jpshow, dictate, pypi, alfredinstall", MENU),
         script(ids[22], os.environ["WF_MENU"]),
         keyword(ids[23], "wm", "workmux dashboard", "In a centered, floating kitty window", 2),
         script(ids[24], os.environ["WF_DASH"]),
@@ -235,6 +238,8 @@ plist = {
         scriptfilter(ids[48], "ssh", "ssh targets", "↩ a new kitty tab running ssh (Brown, aurora, DAIBA); ⌥↩ its own window",
                      os.environ["WF_SSH_LIST"], alfred_filters=False, running="…"),
         script(ids[49], os.environ["WF_SSH"]),
+        keyword(ids[50], "pypi", "Search PyPI", "pypi TEXT: search the Python Package Index in the browser"),
+        script(ids[51], os.environ["WF_PYPI"]),
     ],
     # ⌘↩ on a project: the "Open in tmux" script (kitty-tmux PATH, yazi)
     "connections": {ids[0]: [link(ids[1])], ids[2]: [link(ids[3])], ids[4]: [link(ids[5])],
@@ -249,7 +254,7 @@ plist = {
                     ids[32]: [link(ids[33]), link(ids[33], CMD), link(ids[33], OPT)],
                     ids[34]: [link(ids[35]), link(ids[35], CMD)], ids[36]: [link(ids[37])], ids[38]: [link(ids[39])],
                     ids[40]: [link(ids[41])], ids[42]: [link(ids[43])], ids[44]: [link(ids[45])], ids[46]: [link(ids[47])],
-                    ids[48]: [link(ids[49]), link(ids[49], OPT)]},
+                    ids[48]: [link(ids[49]), link(ids[49], OPT)], ids[50]: [link(ids[51])]},
     "uidata": {ids[0]: {"xpos": 30, "ypos": 15}, ids[1]: {"xpos": 230, "ypos": 15},
                ids[2]: {"xpos": 30, "ypos": 150}, ids[3]: {"xpos": 230, "ypos": 150},
                ids[4]: {"xpos": 30, "ypos": 285}, ids[5]: {"xpos": 230, "ypos": 285},
@@ -272,7 +277,8 @@ plist = {
                ids[42]: {"xpos": 30, "ypos": 2715}, ids[43]: {"xpos": 230, "ypos": 2715},
                ids[44]: {"xpos": 30, "ypos": 2850}, ids[45]: {"xpos": 230, "ypos": 2850},
                ids[46]: {"xpos": 30, "ypos": 2985}, ids[47]: {"xpos": 230, "ypos": 2985},
-               ids[48]: {"xpos": 30, "ypos": 3120}, ids[49]: {"xpos": 230, "ypos": 3120}},
+               ids[48]: {"xpos": 30, "ypos": 3120}, ids[49]: {"xpos": 230, "ypos": 3120},
+               ids[50]: {"xpos": 30, "ypos": 3255}, ids[51]: {"xpos": 230, "ypos": 3255}},
 }
 with open(sys.argv[1], "wb") as f:
     plistlib.dump(plist, f)
@@ -304,7 +310,7 @@ install() {
 	do shell script quoted form of \"$bin/alfred-kitty\" & \" run \" & quoted form of q & \" > /dev/null 2>&1 &\"
 end alfred_script"
   restart_alfred
-  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keywords \"note\", \"proj\", \"new\" (⌃⌥⌘N), \"sendto\" (⌃⌥⌘M), \"sendtonew\", \"finder\", \"term\" (⌃⌥⌘T), \"ssh\", \"dl\", \"lastdl\", \"shot\", \"jpsnip\", \"jptr\", \"jpshow\", \"dictate\", \"wm\", \"aero\", \"repo\", \"alfredinstall\", \"go\" (menu) installed; terminal commands now run in kitty"
+  echo "Alfred: file actions \"Open in Yazi\" / \"Open in tmux\" and keywords \"note\", \"proj\", \"new\" (⌃⌥⌘N), \"sendto\" (⌃⌥⌘M), \"sendtonew\", \"finder\", \"term\" (⌃⌥⌘T), \"ssh\", \"dl\", \"lastdl\", \"shot\", \"jpsnip\", \"jptr\", \"jpshow\", \"dictate\", \"pypi\", \"wm\", \"aero\", \"repo\", \"alfredinstall\", \"go\" (menu) installed; terminal commands now run in kitty"
 }
 
 uninstall() {
