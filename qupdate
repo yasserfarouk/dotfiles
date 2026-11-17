@@ -1,65 +1,59 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
+# Re-link everything: stow base/ and the platform folder (mac/ or linux/), sync folder shortcuts, set up fzf's
+# shell integration. Safe to re-run; works with bash alone (zsh is optional).
+# Usage: ./qupdate [--zsh | --bash | --shell=zsh|bash]
+#   default: the shell recorded by quick-install.sh (~/.config/dotfiles-shell), else zsh if installed, else bash.
+set -u
+MYDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=lib/dotfiles-shell.sh
+source "$MYDIR/lib/dotfiles-shell.sh"
 
-MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+SHELL_MODE=
+while [ $# -gt 0 ]; do
+    case $1 in
+        --shell) SHELL_MODE=${2:-}; shift; parse_shell_arg "--shell=$SHELL_MODE" ;;
+        -h|--help) sed -n '2,5p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        *) parse_shell_arg "$1" || { echo "Unknown option: $1" >&2; exit 2; } ;;
+    esac
+    shift
+done
+case $SHELL_MODE in
+    zsh|bash) DOTFILES_SHELL=$SHELL_MODE ;;
+    *) DOTFILES_SHELL=$(saved_shell_choice) || { _have zsh && DOTFILES_SHELL=zsh || DOTFILES_SHELL=bash; } ;;
+esac
+if [ "$DOTFILES_SHELL" = zsh ] && ! _have zsh; then
+    echo "ERROR: zsh is not installed; run ./quick-install.sh (installs it when root is available) or use --bash" >&2
+    exit 1
+fi
+save_shell_choice
+echo "Shell: $DOTFILES_SHELL"
 
-function replace_tag_in_file(){
-  python -c "s=open('$3', 'r').read().replace('$1','$2'); open('$3', 'w').write(s)" 2>&1 >/dev/null
-}
 export PATH="$HOME/.local/bin:$PATH"
+for b in /opt/homebrew/bin/brew /usr/local/bin/brew "$HOME/.linuxbrew/bin/brew" /home/linuxbrew/.linuxbrew/bin/brew; do
+    [ -x "$b" ] && { eval "$("$b" shellenv)"; break; }
+done
 
-# Get neovim python paths from uv venvs
-neovim2_py="$HOME/.local/share/uv/venvs/neovim2/bin/python"
-neovim3_py="$HOME/.local/share/uv/venvs/neovim3/bin/python"
+# vim and neovim share ~/.local/share/nvim/site (~/.vimrc itself comes from the vim package)
+mkdir -p "$HOME/.local/share/nvim/site"
+# (a relative link: an absolute one makes stow 2.3 report "BUG in find_stowed_path")
+[ "$(readlink "$HOME/.vim" 2>/dev/null)" = "$HOME/.local/share/nvim/site" ] && rm "$HOME/.vim"
+[ -e "$HOME/.vim" ] || [ -L "$HOME/.vim" ] || ln -s .local/share/nvim/site "$HOME/.vim"
+mkdir -p "$HOME/.vim/doc" 2>/dev/null || true
 
-replace_tag_in_file '<<nvimpy2>>' $neovim2_py "$HOME/.config/nvim/init.vim"
-replace_tag_in_file '<<nvimpy3>>' $neovim3_py "$HOME/.config/nvim/init.vim"
-
-# share configs between vim and neovim
-mkdir -p ~/.local/share/nvim/site
-ln -s ~/.local/share/nvim/site ~/.vim 
-rm ~/.vimrc
-ln -s ~/.config/nvim/init.vim ~/.vimrc
-
-
-yes | $(brew --prefix)/opt/fzf/install --all
 echo "Stowing all files"
 echo "------------------"
-CURRENT = `pwd`
-cd $MYDIR/base
-./stowall
-~/bin/shortcut sync  # folder shortcuts -> zoxide, sesh
-cd $CURRENT
-
+stow_packages "$MYDIR/base"
 case "$(uname -s)" in
-   Darwin)
-	CURRENT = `pwd`
-	cd $MYDIR/mac
-	./stowall
-	cd $CURRENT
-    ;;
-   Linux)
-	CURRENT = `pwd`
-	cd $MYDIR/linux
-	./stowall
-	cd $CURRENT
-	test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
-	test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-	test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.bash_profile
-	echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.profile
-	zsh
-	test -r ~/.postzsh && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.postzsh
-	echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.profile
-	echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.zprofile
-    ;;
+    Darwin) stow_packages "$MYDIR/mac" ;;
+    Linux)  stow_packages "$MYDIR/linux" ;;
 esac
+[ -x "$HOME/bin/shortcut" ] && "$HOME/bin/shortcut" sync  # folder shortcuts -> zoxide, sesh
 
-echo "Sourcing all files"
-echo "------------------"
-mkdir $HOME/.vim/doc 2>&1 >/dev/null
-#vim --cmd "helptags $HOME/.vim/doc" --cmd "q"
-[ -f  ~/.bash_profile ] && source ~/.bash_profile
-[ -f  ~/.bashrc ] && source ~/.bashrc
-[ -f  ~/.zshrc ] && source ~/.zshrc
+# fzf key bindings/completion: brew's installer writes ~/.fzf.{bash,zsh}; without it the rc files fall back to
+# `fzf --bash` / `fzf --zsh` (fzf >= 0.48)
+if _have brew && [ -x "$(brew --prefix)/opt/fzf/install" ]; then
+    "$(brew --prefix)/opt/fzf/install" --key-bindings --completion --no-update-rc >/dev/null || true
+fi
 
-
-
+echo "------------------------------------------------------------"
+echo "Done. Open a new shell (or: exec $DOTFILES_SHELL -l) to load the configs."

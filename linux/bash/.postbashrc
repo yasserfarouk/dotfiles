@@ -23,3 +23,12 @@ fi
 export PATH="$HOME/.local/bin:$PATH"
 
 # Note: starship init is handled in base .bashrc
+
+# same as linux/zsh/.postzsh
+alias vi=vim
+alias v=nvim
+# always use the jdk in home if it exists. Works well on daiba
+if [ -d "$HOME/jdk" ]; then
+	export JAVA_HOME=$HOME/jdk
+	PATH=".:$JAVA_HOME/bin:$PATH"
+fi

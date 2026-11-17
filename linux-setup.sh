@@ -13,6 +13,8 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/linux-common.sh
 source "$SCRIPT_DIR/lib/linux-common.sh"
+# shellcheck source=lib/dotfiles-shell.sh
+source "$SCRIPT_DIR/lib/dotfiles-shell.sh"
 
 echo "========================================"
 echo "Linux Development Environment Setup"
@@ -123,17 +125,8 @@ echo "Stowing Dotfiles"
 echo "========================================"
 echo ""
 
-cd "$SCRIPT_DIR/base"
-chmod +x ./stowall 2>/dev/null || true
-./stowall 2>/dev/null || for d in */ ; do stow -v -R -t ~ "$d" || true; done
-
-if [ -d "$SCRIPT_DIR/linux" ]; then
-    cd "$SCRIPT_DIR/linux"
-    chmod +x ./stowall 2>/dev/null || true
-    ./stowall 2>/dev/null || for d in */ ; do stow -v -R -t ~ "$d" || true; done
-fi
-
-cd "$SCRIPT_DIR"
+stow_packages "$SCRIPT_DIR/base" || true
+stow_packages "$SCRIPT_DIR/linux" || true
 
 install_tpm_plugins
 enable_git_hooks
@@ -148,7 +141,7 @@ echo "========================================"
 echo ""
 echo "Next Steps:"
 echo "1. Close and reopen your terminal to refresh PATH"
-echo "2. Change your default shell: chsh -s \$(which zsh)"
+echo "2. Run ./quick-install.sh (picks zsh or bash, --zsh/--bash to choose) unless setup.sh already did"
 echo "3. Open nvim - lazy.nvim will auto-install plugins"
 echo ""
 echo "Neovim Python environments:"

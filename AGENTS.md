@@ -48,9 +48,20 @@ let g:python3_host_prog = expand('~/.local/share/uv/venvs/neovim3/bin/python')
 ## Post-install
 
 ```bash
-./qupdate              # Updates vim config paths, runs stow, sources shell files
-./quick-install.sh     # Sets zsh as default shell, runs qupdate
+./quick-install.sh [--zsh|--bash]  # picks the shell, chsh to it (soft-fails), macOS defaults, then qupdate
+./qupdate [--zsh|--bash]           # stow base/ + mac/ or linux/, ~/.vim link, folder shortcuts, fzf integration
+./setup.sh [--zsh|--bash]          # passes the option on to quick-install.sh
 ```
+
+- **zsh is optional; everything works with bash alone.** No option = auto: zsh if installed, else install it when
+  root is available (root ⇒ always zsh), else bash. `--zsh` without zsh and without root fails.
+- The choice is stored per machine in `~/.config/dotfiles-shell` (not in the repo; `qupdate` reuses it). It is read
+  by `base/programs/bin/preferred-shell` (tmux `default-shell`/popups, kitty `shell`) and by `~/.bash_profile`,
+  which `exec`s `zsh -l` for a top-level interactive bash login when zsh was chosen but `chsh` failed
+  (`DOTFILES_NO_ZSH=1 bash -l` stays in bash).
+- Shared logic: `lib/dotfiles-shell.sh` (`stow_packages` moves real `/etc/skel` dotfiles in `$HOME` aside to
+  `NAME.pre-dotfiles` before stowing, `choose_shell`, `set_login_shell`). Bash keeps its own `~/.bash_history`.
+- The tmux helpers (`tmux-ide`, `tmux-keys`, `tmux-run-popup`) are bash (3.2-compatible), not zsh.
 
 ## File Locations
 

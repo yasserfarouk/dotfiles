@@ -13,6 +13,8 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/linux-common.sh
 source "$SCRIPT_DIR/lib/linux-common.sh"
+# shellcheck source=lib/dotfiles-shell.sh
+source "$SCRIPT_DIR/lib/dotfiles-shell.sh"
 
 echo "========================================"
 echo "WSL Development Environment Setup"
@@ -140,7 +142,7 @@ echo "========================================"
 echo ""
 echo "Next Steps:"
 echo "1. Close and reopen your terminal to refresh PATH"
-echo "2. Change your default shell: chsh -s \$(which zsh)"
+echo "2. Run ./quick-install.sh (picks zsh or bash, --zsh/--bash to choose) unless setup.sh already did"
 echo "3. Open nvim - lazy.nvim will auto-install plugins on first run"
 echo ""
 echo "Neovim Python environments:"

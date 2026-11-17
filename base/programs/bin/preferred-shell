@@ -1,0 +1,16 @@
+#!/bin/sh
+# Print the absolute path of the interactive shell to use (tmux panes/popups, kitty): the choice recorded by
+# quick-install.sh / qupdate in ~/.config/dotfiles-shell (zsh|bash), else zsh when installed, else bash, else sh.
+# preferred-shell --exec [ARGS…]  runs that shell with ARGS instead (kitty: `--exec --login`).
+want=$(cat "$HOME/.config/dotfiles-shell" 2>/dev/null)
+sh_path=
+for s in $want zsh bash sh; do
+  if [ -x "/bin/$s" ]; then sh_path=/bin/$s; break; fi
+  p=$(command -v "$s" 2>/dev/null) && [ -n "$p" ] && { sh_path=$p; break; }
+done
+: "${sh_path:=/bin/sh}"
+if [ "$1" = --exec ]; then
+  shift
+  exec "$sh_path" "$@"
+fi
+echo "$sh_path"

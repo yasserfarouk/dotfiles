@@ -1,4 +1,2 @@
-# uv manages Python - ensure it's in PATH
+# uv manages Python - ensure it's in PATH (brew's shellenv is in ~/.profile)
 export PATH="$HOME/.local/bin:$PATH"
-
-eval $(/export/home/yasser/.linuxbrew/bin/brew shellenv)

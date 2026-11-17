@@ -219,7 +219,7 @@ mdpdf() {
         -V toccolor=blue \
         -o "$output"
 }
-source "$HOME/.sdkman/bin/sdkman-init.sh"
+[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # TLS: trust the macOS System keychain, not just bundled stores (Python, Node)
 #

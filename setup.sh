@@ -1,8 +1,19 @@
 #!/usr/bin/env bash
 # Unified Install Script
-# Detects the platform and runs the appropriate setup script
+# Detects the platform and runs the appropriate setup script, stows the dotfiles, then ./quick-install.sh.
+# Usage: ./setup.sh [--zsh | --bash | --shell=zsh|bash|auto]   (passed on to quick-install.sh;
+#   no option = auto: zsh if installed, else install it when root is available, else bash)
 
 set -e
+
+QUICK_ARGS=()
+for a in "$@"; do
+    case $a in
+        --zsh|--bash|--shell=*) QUICK_ARGS+=("$a") ;;
+        -h|--help) sed -n '2,4p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        *) echo "Unknown option: $a" >&2; exit 2 ;;
+    esac
+done
 
 echo "========================================"
 echo "Dotfiles Setup - Platform Detection"
@@ -39,59 +50,21 @@ detect_platform
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Function to stow dotfiles
+# shellcheck source=lib/dotfiles-shell.sh
+source "$SCRIPT_DIR/lib/dotfiles-shell.sh"
+
+# Stow base/ and the platform folder (real dotfiles from /etc/skel are moved aside to NAME.pre-dotfiles)
 stow_dotfiles() {
     echo ""
     echo "========================================"
     echo "Stowing Dotfiles"
     echo "========================================"
     echo ""
-    
-    # Stow base configs (cross-platform)
-    echo "Stowing base configs..."
-    cd "$SCRIPT_DIR/base"
-    if [ -f "./stowall" ]; then
-        chmod +x ./stowall
-        ./stowall
-    else
-        for d in */ ; do
-            stow -v -R -t ~ "$d" || echo "Warning: Failed to stow $d"
-        done
-    fi
-    
-    # Stow platform-specific configs
+    stow_packages "$SCRIPT_DIR/base" || true
     case $PLATFORM in
-        macos)
-            if [ -d "$SCRIPT_DIR/mac" ]; then
-                echo "Stowing macOS-specific configs..."
-                cd "$SCRIPT_DIR/mac"
-                if [ -f "./stowall" ]; then
-                    chmod +x ./stowall
-                    ./stowall
-                else
-                    for d in */ ; do
-                        stow -v -R -t ~ "$d" || echo "Warning: Failed to stow $d"
-                    done
-                fi
-            fi
-            ;;
-        linux|wsl)
-            if [ -d "$SCRIPT_DIR/linux" ]; then
-                echo "Stowing Linux-specific configs..."
-                cd "$SCRIPT_DIR/linux"
-                if [ -f "./stowall" ]; then
-                    chmod +x ./stowall
-                    ./stowall
-                else
-                    for d in */ ; do
-                        stow -v -R -t ~ "$d" || echo "Warning: Failed to stow $d"
-                    done
-                fi
-            fi
-            ;;
+        macos) stow_packages "$SCRIPT_DIR/mac" || true ;;
+        linux|wsl) stow_packages "$SCRIPT_DIR/linux" || true ;;
     esac
-    
-    cd "$SCRIPT_DIR"
 }
 
 case $PLATFORM in
@@ -168,7 +141,7 @@ echo "========================================"
 echo ""
 
 if [ -f "$SCRIPT_DIR/quick-install.sh" ]; then
-    bash "$SCRIPT_DIR/quick-install.sh"
+    bash "$SCRIPT_DIR/quick-install.sh" ${QUICK_ARGS[@]+"${QUICK_ARGS[@]}"}
 fi
 
 echo ""
@@ -179,7 +152,7 @@ echo ""
 echo "Platform: $PLATFORM"
 echo ""
 echo "Next steps:"
-echo "  1. Restart your terminal"
-echo "  2. Change shell to zsh: chsh -s \$(which zsh)"
-echo "  3. Open nvim - lazy.nvim will auto-install plugins"
+echo "  1. Restart your terminal (or log out and in, if the login shell changed)"
+echo "  2. Open nvim - lazy.nvim will auto-install plugins"
+echo "  Switch shells later with ./quick-install.sh --zsh or --bash"
 echo ""

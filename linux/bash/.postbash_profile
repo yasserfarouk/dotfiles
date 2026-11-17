@@ -1,5 +1,4 @@
 # uv manages Python - ensure it's in PATH
 export PATH="$HOME/.local/bin:$PATH"
-
-export PATH=".:$HOME/.linuxbrew/sbin:$PATH"
-eval $(/export/home/yasser/.linuxbrew/bin/brew shellenv)
+[ -d "$HOME/.linuxbrew/sbin" ] && export PATH="$HOME/.linuxbrew/sbin:$PATH"
+export PATH=".:$PATH"
