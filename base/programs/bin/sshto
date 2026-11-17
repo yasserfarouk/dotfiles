@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Pick an ssh target in fzf (Brown, DAIBA, aurora) and open it in kitty itself, never inside tmux
+# Pick an ssh target in fzf (Brown, DAIBA, aurora, nycb) and open it in kitty itself, never inside tmux
 # (you run tmux on the remote side): a new tab in the running kitty by default, --window for its own
 # OS window. kitty is started if it is not running. The tab keeps a shell after the connection ends
 # (--hold), so ↑↩ reconnects. TERM is xterm-256color: the remote hosts lack kitty's terminfo.
@@ -16,6 +16,7 @@ TARGETS="brown anac	$brown host=anac
 brown scml	$brown host=scml
 aurora	ssh aurora
 daiba gateway	ssh daiba
+nycb	ssh yasser@10.56.44.79
 daiba tunnels (jupyter :18888, web :1080, rdp :13389)	ssh -N -L 18888:192.168.101.15:8888 -L 1080:192.168.101.6:80 -L 13389:192.168.101.7:3389 daiba"
 for n in 11 12 13 14 15 16 17 18 19; do
   TARGETS+="

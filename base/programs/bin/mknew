@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Start a new piece of work in its usual place and open it in its tmux session running claude (kitty-tmux):
-#   project  NAME   NEC project      nec_projects/YYYY<name_in_snake_case>     (Box)
+#   project  NAME   NEC project      nec_projects/YYYY<name_in_snake_case>     (Box; long-running)
+#   activity NAME   NEC activity     nec_activities/YYYY<name_in_snake_case>   (Box; short, same handling as project)
 #   patent   NAME   NEC patent       patents/YYYY<NameInCamelCase>             (Box)
 #   paper    NAME   paper            papers_current/YYYY<venue_name>, git init
 #   code     NAME   code project     ~/code/projects/<name-in-kebab-case>, git init
 #   talk     DESC   NEC presentation claude "/nec-presentation DESC" in ~/code/presentations (the skill names the deck)
 # A NAME that already starts with a year keeps it. Every new folder (not a talk) gets a PLAN.md that is linked into
-# Koma (`koma source add`) under the matching task: project → nec-projects, patent → patents, paper → papers,
+# Koma (`koma source add`) under the matching task: project → nec-projects, activity → nec-activities, patent → patents, paper → papers,
 # code → dev (KOMA_PARENT_<KIND> overrides one); the agents there register their todos in it. --mail also saves the email open in Outlook, with its attachments,
 # into the new folder (for a talk: presentations/materials/YYYYMMDD-<slug>/, named in the prompt).
 # --send / --send-copy moves / copies the files `sendto --take` gives (stashed by the Alfred file action "Send to
@@ -28,7 +29,7 @@ shortcut_dir() { "$bin/shortcut" ls | awk -v n="$1" '$1 == n {sub(/^[^ ]+ +[^ ]+
 # canonical kind for a (prefix of a) kind name or alias
 kind_of() {
   local k
-  for k in project patent paper code talk presentation deck slides; do
+  for k in project activity patent paper code talk presentation deck slides; do
     [[ -n $1 && $k == "$1"* ]] || continue
     case $k in presentation | deck | slides) echo talk ;; *) echo "$k" ;; esac
     return
@@ -43,6 +44,7 @@ target() { # KIND NAME → folder (talk: the materials folder)
   [ -n "$w" ] || return 1
   case $1 in
     project) echo "$(shortcut_dir nec_projects)/$(year_prefix "$(tr 'A-Z ' 'a-z_' <<<"$w")")" ;;
+    activity) echo "$(shortcut_dir nec_activities)/$(year_prefix "$(tr 'A-Z ' 'a-z_' <<<"$w")")" ;;
     patent) echo "$(shortcut_dir patents)/$(year_prefix "$(awk '{for (i = 1; i <= NF; i++) printf "%s", toupper(substr($i, 1, 1)) substr($i, 2)}' <<<"$w")")" ;;
     paper) echo "$(shortcut_dir papers_current)/$(year_prefix "$(tr 'A-Z ' 'a-z_' <<<"$w")")" ;;
     code) echo "$HOME/code/projects/$(tr 'A-Z ' 'a-z-' <<<"$w")" ;;
@@ -54,13 +56,13 @@ target() { # KIND NAME → folder (talk: the materials folder)
 koma_parent() {
   local v="KOMA_PARENT_$(tr a-z A-Z <<<"$1")"
   [ -n "${!v:-}" ] && { echo "${!v}"; return; }
-  case $1 in project) echo nec-projects ;; patent) echo 95pe ;; paper) echo jj66 ;; code) echo 366y ;; esac
+  case $1 in project) echo nec-projects ;; activity) echo nec-activities ;; patent) echo 95pe ;; paper) echo jj66 ;; code) echo 366y ;; esac
 }
 plan_file() { # KIND DIR → prints the Koma id (empty if Koma isn't there)
   local kind=$1 dir=$2 base id parent n=1 try
   base=$(basename "$dir")
   parent=$(koma_parent "$kind")
-  case $kind in project) id=nec-$base ;; patent) id=patent-$base ;; paper) id=paper-$base ;; *) id=$base ;; esac
+  case $kind in project) id=nec-$base ;; activity) id=act-$base ;; patent) id=patent-$base ;; paper) id=paper-$base ;; *) id=$base ;; esac
   id=$(tr 'A-Z' 'a-z' <<<"$id")
   try=$id
   if command -v koma >/dev/null; then
@@ -126,7 +128,7 @@ alfred() { # QUERY [send]: for `sendtonew`, also send the files (or the Outlook 
   fi
   {
     if [ -z "$kind" ] || [ -z "$rest" ]; then
-      for k in project patent paper code talk; do
+      for k in project activity patent paper code talk; do
         [[ -z $first || $k == "$first"* || $k == "$kind" ]] || continue
         printf 'kind\t%s\t\n' "$k"
       done
@@ -137,7 +139,7 @@ alfred() { # QUERY [send]: for `sendtonew`, also send the files (or the Outlook 
 import json, os, sys
 mail, home, sending, n = sys.argv[1] == "1", os.path.expanduser("~"), sys.argv[2] == "1", int(sys.argv[3])
 files = f"{n} item" + ("s" if n != 1 else "") if n else "nothing selected in Finder"
-what = {"project": "NEC project (Box)", "patent": "NEC patent (Box)", "paper": "paper in papers/current",
+what = {"project": "NEC project (Box, long-running)", "activity": "NEC activity (Box, short)", "patent": "NEC patent (Box)", "paper": "paper in papers/current",
         "code": "code project in ~/code/projects", "talk": "NEC presentation (claude /nec-presentation)"}
 hint = {"talk": "DESCRIPTION"}
 items = []
@@ -186,6 +188,6 @@ done
 case ${1:-} in
   --alfred) alfred "${2:-}" ;;
   --alfred-send) alfred "${2:-}" send ;;
-  '' | -h | --help) sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//' ;;
+  '' | -h | --help) sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//' ;;
   *) k=$(kind_of "$1"); [ -n "$k" ] || die "unknown kind: $1"; shift; create "$mail" "$k" "$*" ;;
 esac

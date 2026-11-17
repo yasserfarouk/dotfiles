@@ -75,3 +75,7 @@ path = "~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/business/NEC/Patent
 [[session]]
 name = "nec_projects"
 path = "~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/business/NEC/projects"
+
+[[session]]
+name = "nec_activities"
+path = "~/Library/CloudStorage/Box-Box/Yasser/storage/yasser/business/NEC/activities"

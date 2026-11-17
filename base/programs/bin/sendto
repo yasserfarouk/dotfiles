@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Move (or copy) files and folders into one of the tmux Alt-g folders (`project-dirs`: folder shortcuts such
-# as nec_projects, patents, papers_current, presentations first, then two levels below them, zoxide, ~/code, ...).
+# as nec_projects, nec_activities, patents, papers_current, presentations first, then two levels below them, zoxide, ~/code, ...).
 # Never overwrites: an item whose name already exists in the destination is skipped and reported.
 # Usage: sendto [-c] DEST FILE...    move FILE... into DEST (-c: copy)
 #        sendto --pick FILE...       fzf over the folders (enter move, ctrl-y copy); yazi binds this (g m)
@@ -10,7 +10,7 @@
 #        sendto --mail DEST          save the email open/selected in Outlook, with its attachments, into DEST
 #        sendto --files              the stashed files (if stashed in the last 2 minutes), else Finder's selection
 #        sendto --take               the same, and forget the stash;  sendto --stashed: exit 0 if files are stashed
-# `sendtonew` (Alfred) is `mknew --send`: create a new project/patent/paper/code/talk folder and send them there.
+# `sendtonew` (Alfred) is `mknew --send`: create a new project/activity/patent/paper/code/talk folder and send them there.
 set -euo pipefail
 PATH=/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH
 bin=$(dirname "$(realpath "$0")")

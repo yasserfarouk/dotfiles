@@ -459,6 +459,10 @@ gaps.outer.right =      5
 [[on-window-detected]]
     if.app-id = 'com.epson.edca'
     run = 'layout floating'
+# Windows App (Remote Desktop, com.microsoft.rdc.macos): Windows VM windows float, in their own workspace V
+[[on-window-detected]]
+    if.app-id = 'com.microsoft.rdc.macos'
+    run = ['layout floating', 'move-node-to-workspace V']
 
 # The workmux dashboard window (~/bin/wm-dash, Alfred `wm`) floats; wm-dash centers and raises it.
 [[on-window-detected]]
