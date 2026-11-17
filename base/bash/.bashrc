@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 # Interactive bash. Login shells get here through ~/.bash_profile → ~/.profile.
+# Non-interactive shells (`ssh host cmd`) also read this file: they only get the user-level tool folders.
+export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+[ -d "$HOME/.cargo/bin" ] && PATH="$HOME/.cargo/bin:$PATH"
 case $- in *i*) ;; *) return ;; esac
+
+# system-wide defaults (RHEL-family distros load /etc/bashrc only through the user's ~/.bashrc)
+[ -f /etc/bashrc ] && . /etc/bashrc
 
 [ -f ~/.prebashrc ] && source ~/.prebashrc
 [ -f ~/.exports ] && source ~/.exports

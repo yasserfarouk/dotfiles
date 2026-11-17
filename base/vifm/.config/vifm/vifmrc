@@ -456,7 +456,7 @@ nnoremap <c-u> <c-w>x
 " Open console in current directory
 nnoremap <space>r :!open -n /Applications/Alacritty.app --args --config-file ~/.config/alacritty/oneoff.yml --working-directory=%d --title=%d<cr>
 nnoremap <space>g :!cd %d && lazygit<cr>
-nnoremap <space>t :!cd %d && zsh<cr>
+nnoremap <space>t :!cd %d && ${SHELL:-sh}<cr>
 
 
 

@@ -22,7 +22,7 @@ defbce on                    # Erase background with current bg color
 
 # Shell
 # -----
-shell /bin/zsh
+# shell: $SHELL (screen's default), so it is bash where zsh is missing
 
 # Prefix Key: C-space (matching tmux)
 # -----------------------------------

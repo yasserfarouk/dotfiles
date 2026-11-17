@@ -82,21 +82,27 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 
 export _Z_DATA="$HOME/.z-data"
-export LANGUAGE="en_US.UTF-8"
-export LANG="en_US.UTF-8"
-export LC_CTYPE="en_US.UTF-8"
-export LC_NUMERIC="en_US.UTF-8"
-export LC_TIME="en_US.UTF-8"
-export LC_COLLATE="en_US.UTF-8"
-export LC_MONETARY="en_US.UTF-8"
-export LC_MESSAGES="en_US.UTF-8"
-export LC_PAPER="en_US.UTF-8"
-export LC_NAME="en_US.UTF-8"
-export LC_ADDRESS="en_US.UTF-8"
-export LC_TELEPHONE="en_US.UTF-8"
-export LC_MEASUREMENT="en_US.UTF-8"
+# en_US.UTF-8, or C.UTF-8 on Linux machines without that locale (bash warns at every start otherwise)
+_loc=en_US.UTF-8
+case "${OSTYPE:-}" in linux*)
+	locale -a 2>/dev/null | grep -qiE '^en_US\.utf-?8$' || _loc=C.UTF-8 ;;
+esac
+export LANGUAGE="$_loc"
+export LANG="$_loc"
+export LC_CTYPE="$_loc"
+export LC_NUMERIC="$_loc"
+export LC_TIME="$_loc"
+export LC_COLLATE="$_loc"
+export LC_MONETARY="$_loc"
+export LC_MESSAGES="$_loc"
+export LC_PAPER="$_loc"
+export LC_NAME="$_loc"
+export LC_ADDRESS="$_loc"
+export LC_TELEPHONE="$_loc"
+export LC_MEASUREMENT="$_loc"
 export LC_IDENTIFICATIO="en_US.UTFUTF"
-export LC_ALL="en_US.UTF-8"
+export LC_ALL="$_loc"
+unset _loc
 export EDITOR="nvim"
 export VISUA="nvim"
 export VISUAL="nvim"

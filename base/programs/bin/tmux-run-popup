@@ -13,8 +13,12 @@ esac
 
 # the last 300 distinct commands, oldest first (zsh's ": <time>:0;" prefix stripped)
 recent() {
-  tail -n 3000 "$hist" 2>/dev/null | sed -E 's/^: [0-9]+:[0-9]+;//' |
-    awk '{ l[NR] = $0 } END { for (i = NR; i > 0; i--) if (l[i] != "" && !seen[l[i]]++ && n++ < 300) o[n] = l[i]; for (i = n; i > 0; i--) print o[i] }'
+  # zsh stores some bytes "metafied" (0x83, then the byte xor 0x20): undo that; LC_ALL=C for the byte work
+  tail -n 3000 "$hist" 2>/dev/null | LC_ALL=C perl -pe '$_ = "" if /^#\d+$/; s/^: \d+:\d+;//; s/\x83(.)/chr(ord($1) ^ 32)/ge' |
+    LC_ALL=C awk '
+      # multi-line entries (lines ending in a backslash) become one line with literal \n, as `fc -ln` shows them
+      { if (cont) { l[m] = l[m] "\\n" $0 } else { l[++m] = $0 } cont = sub(/\\$/, "", l[m]) }
+      END { for (i = m; i > 0 && n < 300; i--) if (l[i] != "" && !seen[l[i]]++) o[++n] = l[i]; for (i = n; i > 0; i--) print o[i] }'
 }
 
 cmd="$*"
