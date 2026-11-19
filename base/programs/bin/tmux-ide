@@ -9,6 +9,11 @@
 #        tmux-ide --fit PANE TERM_PANE  (what the hook runs)
 self=$(cd "$(dirname "$0")" && pwd)/$(basename "$0")
 if [[ $1 == --fit ]]; then
+  # this window-level hook hides workmux's global window-resized hook, which puts its sidebar back to its fixed
+  # width (tmux otherwise scales it with the window, so it changes width when switching sessions): run it here too
+  if command -v workmux >/dev/null && wid=$(tmux display -p -t $2 '#{window_id}' 2>/dev/null) && [[ -n $wid ]]; then
+    workmux _sidebar-reflow --window $wid 2>/dev/null
+  fi
   # `display -t` on a closed pane prints empty fields and still exits 0: once one of the panes is gone the layout
   # is no longer ours, so drop the hook (set on the window of whichever pane is left) instead of failing every resize
   panes=" $(tmux list-panes -a -F '#{pane_id}' | tr '\n' ' ') "
